@@ -1,6 +1,7 @@
 require 'ext_scaffold/ext_scaffold'
 require 'acts_as_app_container'
 require 'has_user_preferences'
+require 'erp_app_helper'
 
 #add the observers path to load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)}/app/observers"
