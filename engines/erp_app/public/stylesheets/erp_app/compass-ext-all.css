@@ -1,0 +1,210 @@
+.ext_tooltip li {
+  padding : 5px;
+}
+
+.icon-credit_cards {
+  background-image:url( /images/icons/creditcards/creditcards_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/creditcards/creditcards_16x16.png', sizingMethod='crop');
+}
+
+.icon-next {
+  background-image:url( /images/icons/next/next_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/next/next_16x16.png', sizingMethod='crop');
+}
+
+.icon-globe {
+  background-image:url( /images/icons/globe/globe_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/globe/globe_16x16.png', sizingMethod='crop');
+}
+
+.icon-data {
+  background-image:url( /images/icons/data/data_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/data/data_16x16.png', sizingMethod='crop');
+}
+
+.icon-monitor {
+  background-image:url( /images/icons/monitor/monitor_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/monitor/monitor_16x16.png', sizingMethod='crop');
+}
+
+.icon-print {
+  background-image:url( /images/icons/print/print_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/print/print_16x16.png', sizingMethod='crop');
+}
+
+.icon-key {
+  background-image:url( /images/icons/key/key_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/key/key_16x16.png', sizingMethod='crop');
+}
+
+.icon-add {
+  background-image:url( /images/icons/add/add_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/add/add_16x16.png', sizingMethod='crop');
+}
+
+.icon-user {
+  background-image:url( /images/icons/user/user_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/user/user_16x16.png', sizingMethod='crop');
+}
+
+.icon-recycle {
+  background-image:url( /images/icons/recycle/recycle_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/recycle/recycle_16x16.png', sizingMethod='crop');
+}
+
+.icon-edit {
+  background-image:url( /images/icons/edit/edit_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/edit/edit_16x16.png', sizingMethod='crop');
+}
+
+.icon-user {
+  background-image:url( /images/icons/user/user_16x16.png );
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/user/user_16x16.png', sizingMethod='crop');
+}
+
+.icon-grid {
+  background-image:url( /images/icons/grid/grid_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/grid/grid_16x16.png', sizingMethod='crop');
+}
+
+.icon-search {
+  background-image:url( /images/icons/search/search_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/search/search_16x16.png', sizingMethod='crop');
+}
+
+.icon-globe {
+  background-image:url( /images/icons/globe/globe_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/globe/globe_16x16.png', sizingMethod='crop');
+}
+
+.icon-info {
+  background-image:url( /images/icons/information/information_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/information/information_16x16.png', sizingMethod='crop');
+}
+
+.icon-gear {
+  background-image:url( /images/icons/gear/gear_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/gear/gear_16x16.png', sizingMethod='crop');
+}
+
+.icon-folder_gear {
+  background-image:url( /images/icons/folder_gear/folder_gear_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/folder_gear/folder_gear_16x16.png', sizingMethod='crop');
+}
+
+.icon-key {
+  background-image:url( /images/icons/key/key_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/key/key_16x16.png', sizingMethod='crop');
+}
+
+.icon-prodconfig {
+  background-image:url( /images/icons/prodconfig/prodconfig_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/prodconfig/prodconfig_16x16.png', sizingMethod='crop');
+}
+
+.icon-knowledge {
+  background-image:url( /images/icons/knowledge/knowledge_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/knowledge/knowledge_16x16.png', sizingMethod='crop');
+}
+
+.icon-content {
+  background-image:url( /images/icons/content/content_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/content/content_16x16.png', sizingMethod='crop');
+}
+
+.icon-delete {
+  background-image:url( /images/icons/delete/delete_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/delete/delete_16x16.png', sizingMethod='crop');
+}
+
+.icon-add {
+  background-image:url( /images/icons/add/add_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/add/add_16x16.png', sizingMethod='crop');
+}
+
+.icon-search {
+  background-image:url( /images/icons/search/search_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/search/search_16x16.png', sizingMethod='crop');
+}
+
+.icon-house {
+  background-image:url( /images/icons/house/house_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/house/house_16x16.png', sizingMethod='crop');
+}
+
+.icon-save {
+  background-image:url( /images/icons/save/save_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/save/save_16x16.png', sizingMethod='crop');
+}
+
+.icon-cut {
+  background-image:url( /images/icons/cut/cut_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/cut/cut_16x16.png', sizingMethod='crop');
+}
+
+.icon-copy {
+  background-image:url( /images/icons/copy/copy_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/copy/copy_16x16.png', sizingMethod='crop');
+}
+
+.icon-paste {
+  background-image:url( /images/icons/paste/paste_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/paste/paste_16x16.png', sizingMethod='crop');
+}
+
+.icon-undo {
+  background-image:url( /images/icons/undo/undo_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/undo/undo_16x16.png', sizingMethod='crop');
+}
+
+.icon-grid {
+  background-image:url( /images/icons/grid/grid_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/grid/grid_16x16.png', sizingMethod='crop');
+}
+
+.icon-calendar {
+  background-image:url( /images/icons/calendar/calendar_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/calendar/calendar_16x16.png', sizingMethod='crop');
+}
+
+.icon-exit {
+  background-image:url( /images/icons/exit/exit_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/exit/exit_16x16.png', sizingMethod='crop');
+}
+
+.icon-document_chart {
+  background-image:url( /images/icons/document_chart/document_chart_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_chart/document_chart_16x16.png', sizingMethod='crop');
+}
+
+.icon-message {
+  background-image:url( /images/icons/message/message_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/message/message_16x16.png', sizingMethod='crop');
+}
+
+.icon-settings {
+  background-image:url( /images/icons/settings/settings_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/settings/settings_16x16.png', sizingMethod='crop');
+}
+
+.icon-new {
+  background-image:url( /images/icons/new/new_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/new/new_16x16.png', sizingMethod='crop');
+}
+
+.icon-monitor {
+  background-image:url( /images/icons/monitor/monitor_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/monitor/monitor_16x16.png', sizingMethod='crop');
+}
+
+.icon-open {
+  background-image:url( /images/icons/open/open_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/open/open_16x16.png', sizingMethod='crop');
+}
+
+.icon-document {
+  background-image:url( /images/icons/document/document_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document/document_16x16.png', sizingMethod='crop');
+}
+
+

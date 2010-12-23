@@ -1,0 +1,20 @@
+ControllerBasedTabs
+===================
+
+This plugin extends the Widgets Tabnav to allow for the controllers to specify a tabnav using
+syntax similar to the specification of a layout, e.g. 
+
+controller_based_tabs "my_tabnav" 
+
+The plugin will then set an instance variable, @controller_tabs that will be available in the 
+view, like so:
+
+<% tabnav @controller_tabs  do %>
+	<div id="container" >
+  	<%= yield :layout %>
+	</div>
+<% end %>
+
+It will use a default called 'application_default_tabnav' if no tabnav is provided
+
+ 

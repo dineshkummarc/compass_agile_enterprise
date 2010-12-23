@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title></title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+
+  <%= stylesheet_link_tag("/shared/ext/resources/css/ext-all.css") -%>
+  <%= stylesheet_link_tag("/shared/ext/resources/css/xtheme-slate.css") -%>
+  <%= stylesheet_link_tag("/shared/stylesheets/compass-ext-all.css") -%>
+  <%= javascript_include_tag("/shared/ext/adapter/ext/ext-base.js") -%>
+  <%= javascript_include_tag("/shared/ext/ext-all.js") -%>
+  <%= javascript_include_tag("/shared/javascripts/compass-ext-all.js") -%>
+  <%= javascript_include_tag("/shared/javascripts/application.js") -%>
+
+  <%= stylesheet_link_tag("application.css") -%>
+  <%= javascript_include_tag("application.js") -%>
+</head>
+<body>
+  <%= yield -%>
+</body>
+</html>

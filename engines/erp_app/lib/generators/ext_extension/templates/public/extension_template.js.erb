@@ -1,0 +1,14 @@
+<%=javascript_class_name %> = Ext.extend(<%=ext_extension_class %>, {
+  initComponent: function() {
+    <%=javascript_class_name %>.superclass.initComponent.call(this, arguments);
+  },
+  
+  constructor : function(config) {
+    config = Ext.apply({}, config);
+
+    <%=javascript_class_name %>.superclass.constructor.call(this, config);
+  }
+});
+
+//uncomment and give an xtype if you want this class to use an xtype
+//Ext.reg('xtype', <%=javascript_class_name %>);

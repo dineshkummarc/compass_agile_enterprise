@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <style>
+<%
+@desktop.applications.each do |application|
+%>
+        #<%=application.shortcut_id%>-shortcut img{
+          background-image:url("../../images/icons/<%=application.icon.split('-')[1]%>/<%=application.icon.split('-')[1]%>_48x48.png");
+          height:48px;
+          width:48px;
+        }
+
+
+<%
+end
+%>
+      #control-panel-win-shortcut img{
+        background-image:url("../../images/icons/gear/gear_48x48.png");
+        height:48px;
+        width:48px;
+      }
+
+      #web-navigator-win-shortcut img{
+        background-image:url("../../images/icons/globe/globe_48x48.png");
+        height:48px;
+        width:48px;
+      }
+    </style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Compass Desktop</title>
+
+    <%= include_extjs('ext_3_3_0', 'xtheme-slate.css') %>
+    
+    <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css','GanttPlugin.css','treegrid.css') %>
+
+    <%=
+    javascript_include_tag("ext_3_3_0/RowEditor.js",
+      "erp_app/utility.js",
+      "erp_app/shared/dynamic_editable_grid.js",
+      "erp_app/shared/dynamic_editable_grid_loader_panel.js",
+      "erp_app/shared/preference_form.js",
+      "erp_app/desktop/App.js",
+      "erp_app/desktop/Module.js",
+      "erp_app/desktop/TaskBar.js",
+      "erp_app/desktop/StartMenu.js",
+      "erp_app/desktop/Desktop.js",
+      "erp_app/desktop/applications/control_panel/module.js",
+      "erp_app/desktop/applications/control_panel/desktop_management_panel.js",
+      "erp_app/desktop/applications/control_panel/application_management_panel.js",
+      "erp_app/desktop/applications/web_navigator/module.js",
+
+      #timeshare dev
+      "timeshare/TreeGrid.js",
+      "timeshare/GanttGrid.js"
+    )
+  %>
+
+    <%@desktop.applications.each do |application|%>
+      <script src="/javascripts/erp_app/desktop/applications/<%=application.internal_identifier%>/<%=application.javascript_src%>" type="text/javascript"></script>
+      <%application.widgets.each do |widget|%>
+        <%if @user.contains_roles?(widget.roles.collect{|r| r.internal_identifier})%>
+          <script src="/javascripts/erp_app/desktop/applications/<%=application.internal_identifier%>/<%=widget.javascript_src%>" type="text/javascript"></script>
+        <%end
+      end
+    end%>
+  </head>
+  <body scroll="no">
+
+    <div id="x-desktop">
+      <dl id="x-shortcuts">
+        <dt id="control-panel-win-shortcut" style="visibility:visible">
+          <a href="#"><img src="../../images/desktop/s.gif" />
+            <div>Control Panel</div></a>
+        </dt>
+
+        <dt id="web-navigator-win-shortcut" style="visibility:visible">
+          <a href="#"><img src="../../images/desktop/s.gif" />
+            <div>Web Navigator</div></a>
+        </dt>
+
+        <%
+        @desktop.applications.each do |application|
+          visiblity = 'none'
+          if application.get_user_preference(@user, :desktop_shortcut) == 'yes'
+            visiblity = 'block'
+          end
+        %>
+          <dt id="<%=application.shortcut_id%>-shortcut" style="display:<%=visiblity%>">
+            <a href="#"><img src="../../images/desktop/s.gif" />
+              <div><%=application.description%></div></a>
+          </dt>
+        <%
+        end
+      %>
+
+
+      </dl>
+    </div>
+
+    <div id="ux-taskbar">
+      <div id="ux-taskbar-start"></div>
+      <div id="ux-taskbuttons-panel"></div>
+      <div class="x-clear"></div>
+    </div>
+    <div style="position : absolute; left: 0; top: 0; z-index: -1;">
+      <img id="x-wallpaper" src="../../images/wallpaper/<%=@desktop.get_preference(:desktop_background) %> " style="width : 0px; height : 0px;"/>
+
+      <img id="x-watermark-logo" src="../../images/art/tn-logo-watermark-2.png" style="position: absolute; left: 50%; top: 50%; margin-left: -300px; margin-top: -300px; width : 600px; height : 600px; opacity: 0.5;"/>
+
+      <img id="x-watermark-logo" src="../../images/art/compass-logo-1-medium.png" style="position: absolute; left: 100%; top: 100%; margin-left: -260px; margin-top: -120px; width : 250; height : 89; opacity: 1.0;"/>
+
+    </div>
+    <script>
+      function fireResize(width, height) {
+        document.getElementById('x-wallpaper').style.width = width + "px";
+        document.getElementById('x-wallpaper').style.height = height + "px";
+      }
+      Ext.EventManager.onWindowResize(fireResize, document.getElementById('x-wallpaper'));
+      fireResize(Ext.lib.Dom.getViewWidth(), Ext.lib.Dom.getViewHeight());
+
+      var applications = [
+<%
+@desktop.applications.each do |application|
+%>
+      new <%=application.javascript_class_name%>({widgets:<%=application.available_widget_xtypes(@user)%>}),
+<%
+end
+%>
+    new Compass.ErpApp.Desktop.Applications.ControlPanel(),
+    new Compass.ErpApp.Desktop.Applications.WebNavigator()
+  ];
+
+  CompassDesktop = new Ext.app.App({
+    id:'compass_desktop',
+    init :function(){
+      Ext.QuickTips.init();
+    },
+
+    getModules : function(){
+      return applications;
+    },
+
+    // config for the start menu
+    getStartConfig : function(){
+      return {
+        title: '<%=@user.party.description%>',
+        iconCls: 'icon-user',
+        toolItems: [{
+            text:'Logout',
+            iconCls:'logout',
+            scope:this,
+            handler:function(){
+              window.location = '../logout'
+            }
+          }]
+      };
+    }
+  });
+  Ext.onReady(function() {
+<%
+
+@desktop.applications.each do |application|
+  if application.get_user_preference(@user, :autoload_application) == 'yes'
+
+  %>
+
+        CompassDesktop.getModule('<%=application.shortcut_id%>').createWindow();
+
+
+
+  <%
+  end
+end
+%>
+  });
+    </script>
+
+  </body>
+</html>

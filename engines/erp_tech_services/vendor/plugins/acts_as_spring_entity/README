@@ -1,0 +1,133 @@
+ActsAsSpringEntity
+==================
+
+Version
+=======
+0.3
+
+ActsAsSpringEntity is an integration plugin to allow ActiveRecord models to act as
+a facade to java/spring entities. It provides basic ActiveRecord CRUD method
+support
+
+Dependencies
+============
+
+This plugin requires a Java JDK and the RubyJavaBridge gem. To install the
+bridge execute
+
+gem install rjb
+
+Also you will need to configure two environment vars 'JAVA_HOME' and 'CLASSPATH'.
+They can be added to your config/environment.rb
+
+
+# set the java installation root (MUST use JDK not JRE)
+# ENV['JAVA_HOME'] = "/usr/java/jdk1.5.0_09"              # for linux
+# ENV['JAVA_HOME'] = "C:/Program Files/Java/jdk1.6.0_14"  # for windows
+
+#set the classpath to include all the jar files used by the bridge here
+os_path_separator=";" # for windows use ';' for *nix use ':'
+
+ENV['CLASSPATH'] = "C:/RJSDemo/dist/RJSDemo.jar"+
+ os_path_separator+"C:/lib/antlr-2.7.6.jar"
+
+
+
+Since the ActiveRecord models are not backed by database tables your models will
+need to extends ActiveRecord::BaseWithoutTable instead of ActiveRecord::Base. This
+requires the installation of the following plugin:
+
+ruby script/plugin install http://svn.viney.net.nz/things/rails/plugins/active_record_base_without_table/
+
+
+
+
+Plugin Configuration
+====================
+The plugin requires three configuration parameters be supplied:
+
+  :factory_class - The fully qualified class name of the Spring Bean factory
+                   that exposes the entity dao.
+  :dao_accessor  - The bean factory dao accessor method name. This
+                   method signature contains no parameters
+  :entity_model  - The fully qualified class name of the Spring entity
+
+DAO Conventions
+===============
+
+The plugin requires that the Spring DAO support the following minimum interface
+/**
+     * generic finder
+     * @param criteria
+     * @offset result set offset
+     * @limit  max number of records to return
+     * @return
+     * @throws DataAccessException
+     */
+    public List find(String criteria, int offset, int limit) throws DataAccessException;
+
+    /**
+     * delete the instance
+     * @param ptype
+     * @throws DataAccessException
+     */
+    public void delete(Object obj) throws DataAccessException;
+
+    /**
+     * save or update the instance
+     * @param ptype
+     * @throws DataAccessException
+     */
+    public void save(Object obj) throws DataAccessException;
+
+
+If the DAO does not support these features the user must supply the corresponding
+functionality
+
+Performance
+===========
+
+There is no initial server startup performance penalty when using this plugin. However,
+there is a slight performance penalty the first time a call is made to the bean factory
+singleton since it must be initialized. Subsequent calls to the bean factory
+are made through the previously initialized singleton.
+
+Accessors, Mutators and java Reflection
+=======================================
+
+Spring entity models accessor and mutator methods are provided to the Model in standard
+rails syntax. The java reflection API is used to determine the java accessors and mutators
+by inspecting the methods for standard 'get' and 'set' prefixes. These method names are stripped
+of the 'get' and 'set' prefixes and are converted from java CamelCase to rails snake_case format.
+
+Access to these methods is implemented using the method_missing mechanism. The
+method is checked for the '=' suffix and looks for the corresponding mutator. if
+found the corresponding spring entity instance method is invoked. If there is no
+'=' suffix the method checks the accessor list and will invoke a corresponding spring
+entity instance if one exists.
+
+Example
+=======
+
+
+
+class SpringBean < ActiveRecord::BaseWithoutTable
+
+
+   acts_as_spring_entity :factory_class=>'com.tnsolutionsinc.rjsdemo.RJSDemoBeanFactory',
+    :dao_accessor=>'getGenericDao',
+    :entity_model=>'com.tnsolutionsinc.rjsdemo.model.ProductType'
+
+end
+
+
+ActiveRecord support
+====================
+
+This plugin provide basic ActiveRecord CRUD method support. It is a work in progress
+and as such may or may not provide standard ActiveRecord features beyond the
+basic CRUD operations. Certain methods will raise "ActsAsSpringEntity Unsupported Feature"
+for unimplemented features.
+
+
+Copyright (c) 2010 [christopher woodward/TrueNorthSolutionsInc.], released under the MIT license

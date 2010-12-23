@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>RailsDbAdmin</title>
+
+    <%= include_extjs('ext_3_3_0', 'xtheme-slate.css') %>
+
+    <%= stylesheet_link_tag('erp_app/compass-ext-all.css','ext/resources/css/RowEditor.css') %>
+
+    <%= javascript_include_tag("ext_3_3_0/RowEditor.js",
+      "erp_app/utility.js",
+      "erp_app/organizer/layout.js",
+      "erp_app/organizer/default_menu_tree_panel.js",
+      "rails_db_admin/main.js",
+      "rails_db_admin/column_editors.js",
+      "rails_db_admin/query_panel.js",
+      "rails_db_admin/tables_tree_menu.js",
+      "rails_db_admin/queries_tree_menu.js",
+      "rails_db_admin/database_combo.js",
+      "rails_db_admin/readonly_table_data_grid.js",
+      "rails_db_admin/editable_table_data_grid.js") %>
+  </head>
+  <body scroll="no">
+
+    <script type="text/javascript">
+      Ext.onReady(function() {
+        var organizerLayout = new Compass.ErpApp.Organizer.Layout();
+
+        var tablesMenuTreePanel = new Compass.RailsDbAdmin.TablesMenuTreePanel();
+        var queriesTreePanel = new Compass.RailsDbAdmin.QueriesMenuTreePanel();
+
+        var RailsDbAdmin = new Compass.RailsDbAdmin.Main(organizerLayout, tablesMenuTreePanel, queriesTreePanel);
+        this.RailsDbAdmin = RailsDbAdmin;
+        
+        organizerLayout.addApplication(tablesMenuTreePanel, [this.RailsDbAdmin.Container]);
+        organizerLayout.addApplication(queriesTreePanel, []);
+        
+        organizerLayout.addToToolBar({
+          html:'<span style="padding-right:5px;color:white;">Database<span>'
+        });
+        
+        organizerLayout.addToToolBar({
+          xtype:'databasecombo'
+        });
+
+        organizerLayout.addToToolBar({
+          text: 'Connect',
+          iconCls:"icon-monitor",
+          enableToggle : false,
+          handler: function() {
+            RailsDbAdmin.connectToDatatbase();
+          }
+        });
+        organizerLayout.setupLogoutButton();
+        organizerLayout.setup();
+      });
+    </script>
+  </body>
+</html>
+
