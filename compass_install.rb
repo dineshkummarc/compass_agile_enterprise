@@ -61,7 +61,7 @@ patch_file 'config/environment.rb',
   #init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets",
  :patch_mode => :insert_after
 
-git :clone => 'git://github.com/portablemind-developers/compass.git "vendor/compass/engines" # this may take a bit grab a LARGE coffee...'
+git :clone => 'git://github.com/portablemind-developers/compass.git "vendor/compass" # this may take a bit grab a LARGE coffee...'
  
 inside('vendor/compass/engines') do
   run 'git checkout'
