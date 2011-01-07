@@ -4,8 +4,6 @@
 
 script/generate desktop_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
 
-Used to generate
-
 Will create
 
 1. folder structure for desktop application
