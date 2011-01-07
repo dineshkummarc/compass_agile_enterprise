@@ -34,8 +34,7 @@ class SetupDefaultDesktopApps
       :description => 'Application Management',
       :icon => 'icon-user',
       :xtype => 'controlpanel_userapplicationmgtpanel',
-      :internal_identifier => 'application_management',
-      :javascript_src => 'user_application_mgt_panel.js'
+      :internal_identifier => 'application_management'
     )
 
     app_mgr.roles << Role.iid('admin')
@@ -45,8 +44,7 @@ class SetupDefaultDesktopApps
       :description => 'Role Management',
       :icon => 'icon-user',
       :xtype => 'usermanagement_rolemanagementpanel',
-      :internal_identifier => 'role_management',
-      :javascript_src => 'role_management_panel.js'
+      :internal_identifier => 'role_management'
     )
 
     role_mgr.roles << Role.iid('admin')
@@ -56,8 +54,7 @@ class SetupDefaultDesktopApps
       :description => 'User Personal Info',
       :icon => 'icon-user',
       :xtype => 'usermanagement_personalinfopanel',
-      :internal_identifier => 'user_personal_info',
-      :javascript_src => 'personal_info_panel.js'
+      :internal_identifier => 'user_personal_info'
     )
 
     personal_info.roles << Role.iid('admin')
@@ -70,8 +67,7 @@ class SetupDefaultDesktopApps
       :icon => 'icon-user',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.UserManagement',
       :internal_identifier => 'user_management',
-      :shortcut_id => 'user-management-win',
-      :javascript_src => 'module.js'
+      :shortcut_id => 'user-management-win'
     )
 
     desktop_shortcut_pt.preferenced_records << user_mgr_app
@@ -109,8 +105,7 @@ class SetupDefaultDesktopApps
       :description => 'Application Role Management',
       :icon => 'icon-document',
       :xtype => 'systemmanagement_applicationrolemanagment',
-      :internal_identifier => 'application_role_management',
-      :javascript_src => 'application_role_management_panel.js'
+      :internal_identifier => 'application_role_management'
     )
 
     app_role_management.roles << Role.iid('admin')
@@ -121,8 +116,7 @@ class SetupDefaultDesktopApps
       :icon => 'icon-monitor',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.SystemManagement',
       :internal_identifier => 'system_management',
-      :shortcut_id => 'system_management-win',
-      :javascript_src => 'module.js'
+      :shortcut_id => 'system_management-win'
     )
 
     desktop_shortcut_pt.preferenced_records << system_management_app

@@ -98,9 +98,9 @@ class BaseAppFramework < ActiveRecord::Migration
         t.column :icon,                  :string
         t.column :internal_identifier,   :string
         t.column :javascript_class_name, :string
-        t.column :javascript_src,        :string
         t.column :shortcut_id,           :string
         t.column :type,                  :string
+        t.column :resource_loader,       :string, :default => 'ErpApp::ApplicationResourceLoader::DesktopApplicationLoader'
 
         t.timestamps
       end
@@ -132,7 +132,6 @@ class BaseAppFramework < ActiveRecord::Migration
         t.column :description,           :string
         t.column :internal_identifier,   :string
         t.column :icon,                  :string
-        t.column :javascript_src,        :string
         t.column :xtype,                 :string
 
         t.timestamps

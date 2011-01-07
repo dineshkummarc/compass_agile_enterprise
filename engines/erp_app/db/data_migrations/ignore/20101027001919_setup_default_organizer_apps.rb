@@ -5,8 +5,7 @@ class SetupDefaultOrganizerApps
       :description => 'Party Contact Management',
       :icon => 'icon-grid',
       :xtype => 'contactmechanismgrid',
-      :internal_identifier => 'party_contact_management',
-      :javascript_src => 'contact_mechanism_grid.js'
+      :internal_identifier => 'party_contact_management'
     )
 
     party_contact_mgm_widget.roles << Role.iid('admin')
@@ -17,8 +16,7 @@ class SetupDefaultOrganizerApps
       :description => 'Party Management',
       :icon => 'icon-grid',
       :xtype => 'partygrid',
-      :internal_identifier => 'party_management_widget',
-      :javascript_src => 'party_grid.js'
+      :internal_identifier => 'party_management_widget'
     )
 
     party_mgm_widget.roles << Role.iid('admin')
@@ -29,8 +27,7 @@ class SetupDefaultOrganizerApps
     crm_app = OrganizerApplication.create(
       :description => 'CRM',
       :icon => 'icon-user',
-      :internal_identifier => 'crm',
-      :javascript_src => 'base.js'
+      :internal_identifier => 'crm'
     )
 
     crm_app.widgets << party_contact_mgm_widget

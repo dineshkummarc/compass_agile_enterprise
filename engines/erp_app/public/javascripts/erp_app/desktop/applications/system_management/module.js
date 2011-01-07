@@ -19,7 +19,7 @@ Compass.ErpApp.Desktop.Applications.SystemManagement  = Ext.extend(Ext.app.Modul
                     {
                         title:'Roles',
                         xtype:'shared_dynamiceditablegridloaderpanel',
-                        editable:true,
+                        editable:ErpApp.Authentication.RoleManager.hasRole('admin'),
                         setupUrl:'./system_management/roles/setup',
                         dataUrl:'./system_management/roles/data',
                         page:true,

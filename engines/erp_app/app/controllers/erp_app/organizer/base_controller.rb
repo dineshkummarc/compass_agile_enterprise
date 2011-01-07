@@ -1,6 +1,6 @@
 class ErpApp::Organizer::BaseController < ErpApp::ApplicationController
   before_filter :login_required
-
+  
   def login_path
     return organizer_login_path
   end

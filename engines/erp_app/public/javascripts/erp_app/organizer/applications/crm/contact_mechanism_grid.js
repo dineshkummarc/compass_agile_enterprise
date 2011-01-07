@@ -144,20 +144,8 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
             errorSummary: false,
             RowEditor:true,
             listeners:{
-                'validateedit':function(e){
-                    var record = arguments[2];
-                    var changes = arguments[1];
-                    var dataIndexesChanged = arguments[4];
-                    var numberOfFieldsChanged = dataIndexesChanged.length;
-                    for(var i = 0; i < numberOfFieldsChanged; i++){
-                        var field = dataIndexesChanged[i];
-                        if(field != "contact_purpose_desc")
-                            continue;
-                        var newValue = changes[field];
-                        var description = config['contactPurposeStore'].getAt(config['contactPurposeStore'].find("id", newValue)).get("description");
-                        var nameField = field.replace("id", "name");
-                        record.data[nameField] = description;
-                    }
+                'validateedit':function(rowEditor, changes, record, rowIndex){
+                    
                 }
             }
         });

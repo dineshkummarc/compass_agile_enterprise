@@ -47,7 +47,6 @@ class ErpApp::ApplicationController < ActionController::Base
   end
 
   def password_authentication(name, password)
-    puts name, password
     user = User.authenticate(name, password)
     if user
       successful_login(user)

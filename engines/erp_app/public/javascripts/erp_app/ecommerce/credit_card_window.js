@@ -70,6 +70,7 @@ Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
             ],
             fieldLabel: 'Card Type',
             hiddenName: 'card_type',
+            forceSelection:true,
             name: 'card_type',
             allowBlank: false,
             value: 'visa',

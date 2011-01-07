@@ -20,8 +20,15 @@ class DesktopApplicationGenerator < Rails::Generator::NamedBase
       m.template "controllers/controller_template.rb", "vendor/plugins/#{@erp_application}/app/controllers/erp_app/desktop/#{file_name}/base_controller.rb"
 
       #public
+      #make javascript source and app folder
       m.directory "vendor/plugins/#{@erp_application}/public/javascripts/erp_app/desktop/applications/#{file_name}"
       m.template "public/module.js.erb", "vendor/plugins/#{@erp_application}/public/javascripts/erp_app/desktop/applications/#{file_name}/module.js"
+
+      #make css app folder
+      m.directory "vendor/plugins/#{@erp_application}/public/stylesheets/erp_app/desktop/applications/#{file_name}"
+
+      #make images app folder
+      m.directory "vendor/plugins/#{@erp_application}/public/images/erp_app/desktop/applications/#{file_name}"
 
       #Route
       m.template "routes/route_template.rb", "vendor/plugins/#{@erp_application}/config/#{file_name}_app_routes.rb"

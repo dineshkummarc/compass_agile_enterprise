@@ -10,8 +10,6 @@
           height:48px;
           width:48px;
         }
-
-
 <%
 end
 %>
@@ -27,16 +25,13 @@ end
         width:48px;
       }
     </style>
-
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Compass Desktop</title>
-
     <%= include_extjs('ext_3_3_0', 'xtheme-slate.css') %>
-    
     <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css','GanttPlugin.css','treegrid.css') %>
-
     <%=
     javascript_include_tag("ext_3_3_0/RowEditor.js",
+      "erp_app/authentication/role_manager.js",
       "erp_app/utility.js",
       "erp_app/shared/dynamic_editable_grid.js",
       "erp_app/shared/dynamic_editable_grid_loader_panel.js",
@@ -56,27 +51,20 @@ end
       "timeshare/GanttGrid.js"
     )
   %>
-
-    <%@desktop.applications.each do |application|%>
-      <script src="/javascripts/erp_app/desktop/applications/<%=application.internal_identifier%>/<%=application.javascript_src%>" type="text/javascript"></script>
-      <%application.widgets.each do |widget|%>
-        <%if @user.contains_roles?(widget.roles.collect{|r| r.internal_identifier})%>
-          <script src="/javascripts/erp_app/desktop/applications/<%=application.internal_identifier%>/<%=widget.javascript_src%>" type="text/javascript"></script>
-        <%end
-      end
-    end%>
+  <%=setup_role_manager(@user)%>
+  <%@desktop.applications.each do |application|%><%=application.load_resources%><%end%>
   </head>
   <body scroll="no">
 
     <div id="x-desktop">
       <dl id="x-shortcuts">
         <dt id="control-panel-win-shortcut" style="visibility:visible">
-          <a href="#"><img src="../../images/desktop/s.gif" />
+          <a href="#"><img src="../../images/erp_app/desktop/s.gif" />
             <div>Control Panel</div></a>
         </dt>
 
         <dt id="web-navigator-win-shortcut" style="visibility:visible">
-          <a href="#"><img src="../../images/desktop/s.gif" />
+          <a href="#"><img src="../../images/erp_app/desktop/s.gif" />
             <div>Web Navigator</div></a>
         </dt>
 
@@ -88,7 +76,7 @@ end
           end
         %>
           <dt id="<%=application.shortcut_id%>-shortcut" style="display:<%=visiblity%>">
-            <a href="#"><img src="../../images/desktop/s.gif" />
+            <a href="#"><img src="../../images/erp_app/desktop/s.gif" />
               <div><%=application.description%></div></a>
           </dt>
         <%
@@ -124,7 +112,7 @@ end
 <%
 @desktop.applications.each do |application|
 %>
-      new <%=application.javascript_class_name%>({widgets:<%=application.available_widget_xtypes(@user)%>}),
+      new <%=application.javascript_class_name%>({<%=application.build_widget_roles_js%>}),
 <%
 end
 %>
@@ -163,19 +151,13 @@ end
 
 @desktop.applications.each do |application|
   if application.get_user_preference(@user, :autoload_application) == 'yes'
-
   %>
-
         CompassDesktop.getModule('<%=application.shortcut_id%>').createWindow();
-
-
-
   <%
   end
 end
 %>
   });
     </script>
-
   </body>
 </html>

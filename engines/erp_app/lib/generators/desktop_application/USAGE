@@ -1,5 +1,22 @@
 ###########################################
-##### Extjs Class Extension Generator #####
+##### Desktop Application Generator   #####
 ###########################################
 
-Used to generate template for ExtJS Extension Class
+script/generate desktop_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
+
+Used to generate
+
+Will create
+
+1. folder structure for desktop application
+
+vendor/plugins/erp_app/public/javascripts/erp_app/desktop/applications/[YOUR APP NAME]
+vendor/plugins/erp_app/public/stylesheets/erp_app/desktop/applications/[YOUR APP NAME]
+vendor/plugins/erp_app/public/images/erp_app/desktop/applications/[YOUR APP NAME]
+
+2. template for javascript class needed for desktop application module
+
+3. route file for new application routes
+
+
+

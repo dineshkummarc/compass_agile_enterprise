@@ -30,7 +30,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement = Ext.extend(Ext.app.Module, 
                 items:[{
                     xtype:'usermanagement_usersgrid',
                     tabPanel:tabPanel,
-                    widgets:this.initialConfig['widgets']
+                    widget_roles:this.initialConfig['widget_roles']
                 },tabPanel]
             });
         }
@@ -128,7 +128,10 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
                         success: function(responseObject) {
                             var response =  Ext.util.JSON.decode(responseObject.responseText);
                             tabPanel.removeAll(true);
-                            if(grid.initialConfig['widgets'].contains('usermanagement_personalinfopanel')){
+
+                            var hasAccess = ErpApp.Authentication.RoleManager.hasAccessToWidget(grid.initialConfig['widget_roles'], "usermanagement_personalinfopanel");
+                            if(hasAccess)
+                            {
                                 tabPanel.add(
                                 {
                                     xtype:'usermanagement_personalinfopanel',
@@ -136,7 +139,9 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
                                     entityType:response.entityType
                                 });
                             }
-                            if(grid.initialConfig['widgets'].contains('usermanagement_rolemanagementpanel')){
+
+                            if(ErpApp.Authentication.RoleManager.hasAccessToWidget(grid.initialConfig['widget_roles'], "usermanagement_rolemanagementpanel"))
+                            {
                                 tabPanel.add(
                                 {
                                     xtype:'usermanagement_rolemanagementpanel',
@@ -148,7 +153,9 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
                                     }
                                 });
                             }
-                            if(grid.initialConfig['widgets'].contains('controlpanel_userapplicationmgtpanel')){
+
+                            if(ErpApp.Authentication.RoleManager.hasAccessToWidget(grid.initialConfig['widget_roles'], "controlpanel_userapplicationmgtpanel"))
+                            {
                                 tabPanel.add(
                                 {
                                     xtype:'controlpanel_userapplicationmgtpanel',

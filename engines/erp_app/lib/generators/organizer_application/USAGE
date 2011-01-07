@@ -1,5 +1,22 @@
 ###########################################
-##### Organizer Application Generator #####
+##### Organizer Application Generator   ###
 ###########################################
 
-Used to generate files for Organizer Application
+script/generate organizer_application [application_name] [description] (optional fields) [plugin to create in]
+
+Used to generate
+
+Will create
+
+1. folder structure for organizer application
+
+vendor/plugins/erp_app/public/javascripts/erp_app/organizer/applications/[YOUR APP NAME]
+vendor/plugins/erp_app/public/stylesheets/erp_app/organizer/applications/[YOUR APP NAME]
+vendor/plugins/erp_app/public/images/erp_app/organizer/applications/[YOUR APP NAME]
+
+2. template for javascript class needed for organizer application
+
+3. route file for new application routes
+
+
+
