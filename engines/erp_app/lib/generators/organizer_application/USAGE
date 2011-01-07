@@ -4,8 +4,6 @@
 
 script/generate organizer_application [application_name] [description] (optional fields) [plugin to create in]
 
-Used to generate
-
 Will create
 
 1. folder structure for organizer application
