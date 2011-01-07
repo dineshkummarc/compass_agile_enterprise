@@ -1,6 +1,15 @@
 Ext.ns("Compass.ErpApp.Organizer.Applications.<%= class_name %>");
 
-Compass.ErpApp.Organizer.Applications.<%= class_name %>.Base = function(organizerLayout){
+/*
+*Template for organizer layout.
+*/
+
+
+ /**
+ * Method to setup organizer application
+ * @param {config} object containing (organizerLayout : reference to main layout container, widgetRoles : roles for widgets contained in this application)
+ */
+Compass.ErpApp.Organizer.Applications.<%= class_name %>.Base = function(config){
 
    var menuTreePanel = {
         xtype:'defaultmenutree',
@@ -15,7 +24,7 @@ Compass.ErpApp.Organizer.Applications.<%= class_name %>.Base = function(organize
     var examplePanel = new Ext.Panel({id:'<%= file_name %>_example_panel', html:'Put your content here', layout:'fit'})
 
     this.setup = function(){
-        organizerLayout.addApplication(menuTreePanel, [examplePanel]);
+        config['organizerLayout'].addApplication(menuTreePanel, [examplePanel]);
     };
 
 };

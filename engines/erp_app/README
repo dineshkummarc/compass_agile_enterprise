@@ -1,14 +1,13 @@
 ErpApp
 ======
 
-ErpApp code name Iris is a framework for rapid application development with the use of Rails and ExtJs.  Generators allow you to quickly create applications that can go in one of two application containers (Desktop and Organizer).
+Introduction goes here.
 
 
 Example
 =======
 
-script/generate desktop_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
+Example goes here.
 
 
-script/generate organizer_application [application_name] [description] (optional fields) [plugin to create in]
-
+Copyright (c) 2010 [name of plugin creator], released under the MIT license

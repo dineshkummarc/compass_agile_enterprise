@@ -1,4 +1,5 @@
 Ext.ns("Compass.ErpApp.Organizer");
+Ext.ns("Compass.ErpApp.Organizer.Applications");
 
 Compass.ErpApp.Organizer.Layout = function(config){
    

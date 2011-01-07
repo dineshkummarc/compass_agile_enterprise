@@ -71,7 +71,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Layout = Ext.extend(Ext.Panel, (functi
 Ext.reg('contactslayout', Compass.ErpApp.Organizer.Applications.Crm.Layout);
 
 
-Compass.ErpApp.Organizer.Applications.Crm.Base = function(organizerLayout){
+Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     
     var addIndividualWindow = new Ext.Window({
         layout:'fit',
@@ -644,7 +644,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(organizerLayout){
     contactPurposeStore.load();
 
     this.setup = function(){
-        organizerLayout.addApplication(menuTreePanel, [individualsPanel, organizationsPanel]);
+        config['organizerLayout'].addApplication(menuTreePanel, [individualsPanel, organizationsPanel]);
     };
     
 };

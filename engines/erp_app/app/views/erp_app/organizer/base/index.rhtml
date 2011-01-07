@@ -3,26 +3,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Organizer</title>
-
     <%= include_extjs('ext_3_3_0', 'xtheme-slate.css') %>
-
     <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css') %>
-
     <%= javascript_include_tag("ext_3_3_0/RowEditor.js","erp_app/utility.js","erp_app/organizer/layout.js","erp_app/organizer/default_menu_tree_panel.js") %>
-
-    <%
-    @organizer.applications.each do |application|
-      %>
-        <script type="text/javascript" src="/javascripts/erp_app/organizer/applications/<%=application.internal_identifier%>/<%=application.javascript_src%>" ></script>
-      <%
-        application.widgets.each do |widget|
-      %>
-        <script type="text/javascript" src="/javascripts/erp_app/organizer/applications/<%=application.internal_identifier%>/<%=widget.javascript_src%>" ></script>
-      <%
-        end
-      end
-  %>
-
+    <%@organizer.applications.each do |application|%><%=application.load_resources%><%end%>
   </head>
   <body scroll="no">
 
@@ -33,7 +17,11 @@
 <%
 @organizer.applications.each do |application|
   %>
-        var app = new Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base(organizerLayout);
+        var app = new Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base(
+        {
+          organizerLayout:organizerLayout,
+          <%=application.build_widget_roles_js%>
+        });
         app.setup();
   <%
 end

@@ -8,17 +8,27 @@ class ErpApp::ApplicationResourceLoader::FileSystemLoader
 
   def load_resources
     app_name = @application.internal_identifier
+    app_type = nil
+    if @application.type == 'DesktopApplication'
+      app_type = 'desktop'
+      @javascripts_folder = '/vendor/plugins/erp_app/public/javascripts/erp_app/desktop/applications'
+      @stylesheets_folder = '/vendor/plugins/erp_app/public/stylesheets/erp_app/desktop/applications'
+    else
+      app_type = 'organizer'
+      @javascripts_folder = '/vendor/plugins/erp_app/public/javascripts/erp_app/organizer/applications'
+      @stylesheets_folder = '/vendor/plugins/erp_app/public/stylesheets/erp_app/organizer/applications'
+    end
 
     resource_string = ''
-    resource_string = locate_resources(app_name, 'js', resource_string)
-    resource_string = locate_resources(app_name, 'css', resource_string)
+    resource_string = locate_resources(app_name, app_type, 'js', resource_string)
+    resource_string = locate_resources(app_name, app_type, 'css', resource_string)
 
     resource_string
   end
 
   private
 
-  def locate_resources(app_name, resource_type, resource_string)
+  def locate_resources(app_name, app_type, resource_type, resource_string)
     #get all files based on resource type we are loading
     case resource_type
     when 'js'
@@ -33,9 +43,9 @@ class ErpApp::ApplicationResourceLoader::FileSystemLoader
     files.each do |file|
       case resource_type
       when 'js'
-        resource_string << "<script type='text/javascript' src='/javascripts/erp_app/desktop/applications/#{app_name}/#{file}'></script>"
+        resource_string << "<script type='text/javascript' src='/javascripts/erp_app/#{app_type}/applications/#{app_name}/#{file}'></script>"
       when 'css'
-        resource_string << "<link href='/stylesheets/erp_app/desktop/applications/#{app_name}/#{file}' media='screen' rel='stylesheet' type='text/css' />"
+        resource_string << "<link href='/stylesheets/erp_app/#{app_type}/applications/#{app_name}/#{file}' media='screen' rel='stylesheet' type='text/css' />"
       end
     end
 
