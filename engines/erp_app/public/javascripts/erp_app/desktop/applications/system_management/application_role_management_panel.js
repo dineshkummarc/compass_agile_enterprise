@@ -1,6 +1,4 @@
-Ext.ns("Compass.ErpApp.Desktop.Applications.SystemManagement");
-
-Compass.ErpApp.Desktop.Applications.SystemManagement.ApplcationRoleManagementPanel = Ext.extend(Ext.Panel, {
+Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel = Ext.extend(Ext.Panel, {
 
     selectWidget :function(id){
         this.widgetId = id;
@@ -71,7 +69,7 @@ Compass.ErpApp.Desktop.Applications.SystemManagement.ApplcationRoleManagementPan
     },
 
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.SystemManagement.ApplcationRoleManagementPanel.superclass.initComponent.call(this, arguments);
+        Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel.superclass.initComponent.call(this, arguments);
     },
 
     constructor : function(config) {
@@ -198,11 +196,11 @@ Compass.ErpApp.Desktop.Applications.SystemManagement.ApplcationRoleManagementPan
             items:[applications_tree,rolesPanel]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.SystemManagement.ApplcationRoleManagementPanel.superclass.constructor.call(this, config);
+        Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel.superclass.constructor.call(this, config);
     }
 });
 
-Ext.reg('systemmanagement_applicationrolemanagment', Compass.ErpApp.Desktop.Applications.SystemManagement.ApplcationRoleManagementPanel);
+Ext.reg('systemmanagement_applicationrolemanagement', Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel);
 
 
 

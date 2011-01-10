@@ -100,7 +100,7 @@ class BaseAppFramework < ActiveRecord::Migration
         t.column :javascript_class_name, :string
         t.column :shortcut_id,           :string
         t.column :type,                  :string
-        t.column :resource_loader,       :string, :default => 'ErpApp::ApplicationResourceLoader::DesktopApplicationLoader'
+        t.column :resource_loader,       :string, :default => 'ErpApp::ApplicationResourceLoader::FileSystemLoader'
 
         t.timestamps
       end

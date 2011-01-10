@@ -1,9 +1,15 @@
 class OrganizerApplicationGenerator < Rails::Generator::NamedBase
+  @icon = nil
+  @description = nil
+  @erp_application = nil
+
   def initialize(runtime_args, runtime_options = {})
     super
     raise "Must Include A Description For This Application Arg[1]" if runtime_args[1].blank?
+    raise "Must Include An Image Icon CSS Class For This Application Arg[2]" if runtime_args[2].blank?
     @description     = runtime_args[1]
-    @erp_application = runtime_args[2].blank? ? 'erp_app' : runtime_args[2]
+    @icon            = runtime_args[2]
+    @erp_application = runtime_args[3].blank? ? 'erp_app' : runtime_args[2]
   end
 
   def manifest
@@ -37,5 +43,9 @@ class OrganizerApplicationGenerator < Rails::Generator::NamedBase
 
   def description
     @description
+  end
+
+  def icon
+    @icon
   end
 end

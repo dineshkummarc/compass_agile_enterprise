@@ -1,5 +1,3 @@
-Ext.ns("Compass.ErpApp.Desktop.Applications");
-
 Compass.ErpApp.Desktop.Applications.SystemManagement  = Ext.extend(Ext.app.Module, {
     id:'system_management-win',
     init : function(){
@@ -28,7 +26,7 @@ Compass.ErpApp.Desktop.Applications.SystemManagement  = Ext.extend(Ext.app.Modul
                         emptyMsg:'Empty'
                 },
                 {
-                    xtype:'systemmanagement_applicationrolemanagment'
+                    xtype:'systemmanagement_applicationrolemanagement'
                 }
                 ]
             })

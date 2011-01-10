@@ -1,5 +1,3 @@
-Ext.ns("Compass.ErpApp.Desktop.Applications");
-
 Compass.ErpApp.Desktop.Applications.ControlPanel = Ext.extend(Ext.app.Module, {
     id:'control-panel-win',
     init : function(){

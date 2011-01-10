@@ -2,7 +2,7 @@
 ##### Organizer Application Generator   ###
 ###########################################
 
-script/generate organizer_application [application_name] [description] (optional fields) [plugin to create in]
+script/generate organizer_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
 
 Will create
 

@@ -1,5 +1,3 @@
-Ext.ns("Compass.ErpApp.Desktop.Applications");
-
 Compass.ErpApp.Desktop.Applications.UserManagement = Ext.extend(Ext.app.Module, {
     id:'user-management-win',
     init : function(){

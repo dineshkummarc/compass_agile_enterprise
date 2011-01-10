@@ -39,6 +39,20 @@ class ErpApp::ApplicationResourceLoader::FileSystemLoader
 
     files = files.collect{|file| File.basename(file)}
 
+    #make sure the base js file is loaded before all others
+    if resource_type == 'js'
+      if app_type == 'desktop'
+        index = files.index{|x| x =~ /module.js/}
+      else
+        index = files.index{|x| x =~ /base.js/}
+      end
+      
+      first_load_js = files[index]
+      files.delete_at(index)
+      files.push(first_load_js)
+      files.reverse!
+    end
+
     #append the resource to our resource string
     files.each do |file|
       case resource_type

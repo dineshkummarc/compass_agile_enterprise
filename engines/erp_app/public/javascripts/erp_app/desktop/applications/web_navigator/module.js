@@ -1,5 +1,3 @@
-Ext.ns("Compass.ErpApp.Desktop.Applications");
-
 Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
     id:'web-navigator-win',
     
