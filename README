@@ -44,4 +44,4 @@ compass:bootstrap:data -This rake task orchestrates the several additional tasks
  
      rake compass:bootstrap:data
      
- At this point the application created will be ready to run. Simply 
+ At this point the application created will be ready to run. Simply do
