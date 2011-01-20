@@ -61,13 +61,13 @@ patch_file 'config/environment.rb',
   #init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets",
  :patch_mode => :insert_after
 
-git :clone => 'git://github.com/portablemind-developers/compass.git "vendor/compass" # this may take a bit grab a LARGE coffee...'
+git :clone => 'git://github.com/portablemind/compass.git "vendor/compass" # this may take a bit grab a LARGE coffee...'
  
 inside('vendor/compass/engines') do
   run 'git checkout'
 end    
 
-git :clone => 'git://github.com/portablemind-developers/data_migrator.git "vendor/compass/plugins/data_migrator" # this may take a bit grab a LARGE coffee...'
+git :clone => 'git://github.com/portablemind/data_migrator.git "vendor/compass/plugins/data_migrator" # this may take a bit grab a LARGE coffee...'
 
 inside('vendor/compass/plugins/data_migrator') do
   run 'git checkout'
