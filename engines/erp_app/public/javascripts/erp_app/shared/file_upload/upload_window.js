@@ -51,7 +51,10 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
     },
 
     constructor : function(config) {
-        var self = this;
+        if(Compass.ErpApp.Utility.isBlank(config)){
+			var config = {};
+		}
+		var self = this;
         var awsomeUploader = {
             xtype:'awesomeuploader',
             ref:'awesomeUploader',
