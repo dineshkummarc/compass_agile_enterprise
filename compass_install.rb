@@ -11,6 +11,10 @@ def patch_file(path, current, insert, options = {})
   File.open(path, 'w') { |f| f.write(content) }
 end
 
+def append_file(path, content)
+  File.open(path, 'a') { |f| f.write(content) }
+end
+
 def patch_string(current, insert, mode = :insert_after)
   case mode
   when :change
@@ -29,23 +33,24 @@ File.unlink 'public/index.html' rescue Errno::ENOENT
 
 patch_file 'config/environment.rb',
 "require File.join(File.dirname(__FILE__), 'boot')",
-"require File.join(File.dirname(__FILE__), '../vendor/plugins/erp_base_erp_svcs/boot')"
-  
+"require File.join(File.dirname(__FILE__), '../vendor/compass/engines/erp_base_erp_svcs/boot')"
+
 patch_file 'config/environment.rb',
 "config.time_zone = 'UTC'",
 "
- #add plugins
- #dependencies for plugins are defined in thier enviroment.rb
- config.add_plugin(:erp_base_erp_svcs)
- config.add_plugin(:erp_tech_services)
- config.add_plugin(:erp_dev_svcs)
- config.add_plugin(:erp_app)
+  #add plugins
+  #dependencies for plugins are defined in thier enviroment.rb
+  config.add_plugin(:erp_base_erp_svcs)
+  config.add_plugin(:erp_tech_services)
+  config.add_plugin(:erp_dev_svcs)
+  config.add_plugin(:erp_app)
+  config.add_plugin(:knitkit)
 
- #load the rest of the plugins
- config.add_plugin(:all)
+  #load the rest of the plugins
+  config.add_plugin(:all)
 
- #disable plugin
- #config.disable_plugin(:engines)",
+  #disable plugin
+  #config.disable_plugin(:engines)",
 :patch_mode => :insert_after
 
 patch_file 'config/environment.rb',
@@ -53,19 +58,20 @@ patch_file 'config/environment.rb',
  "init = Rails::Initializer.run do |config|",
  :patch_mode => :change
 
-patch_file 'config/environment.rb',
- "  # config.i18n.default_locale = :de
- end",
- "#uncomment after installation of compass_erp base copies all plublic assests of plugins to public root
-  #plugin_assets = init.loaded_plugins.map { |plugin| File.join(plugin.directory, 'public') }.reject { |dir| not (File.directory?(dir) and File.exist?(dir)) }
-  #init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets",
- :patch_mode => :insert_after
+append_file 'config/environment.rb',
+"\n\n#forces rails to look in plugins if assets are not found
+plugin_assets = init.loaded_plugins.map { |plugin| File.join(plugin.directory, 'public') }.reject { |dir| not (File.directory?(dir) and File.exist?(dir)) }
+init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets"
+
+puts "getting latest compass framwork engines, this may take a bit grab a LARGE coffee..."
 
 git :clone => 'git://github.com/portablemind/compass.git "vendor/compass" # this may take a bit grab a LARGE coffee...'
  
 inside('vendor/compass/engines') do
   run 'git checkout'
 end    
+
+puts "getting latest compass framwork plugins..."
 
 git :clone => 'git://github.com/portablemind/data_migrator.git "vendor/compass/plugins/data_migrator" # this may take a bit grab a LARGE coffee...'
 
