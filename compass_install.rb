@@ -65,7 +65,7 @@ init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roo
 
 puts "getting latest compass framwork engines, this may take a bit grab a LARGE coffee..."
 
-git :clone => 'git://github.com/portablemind/compass.git "vendor/compass" # this may take a bit grab a LARGE coffee...'
+git :clone => 'git://github.com/portablemind/compass.git "vendor/compass"'
  
 inside('vendor/compass/engines') do
   run 'git checkout'
@@ -73,7 +73,7 @@ end
 
 puts "getting latest compass framwork plugins..."
 
-git :clone => 'git://github.com/portablemind/data_migrator.git "vendor/compass/plugins/data_migrator" # this may take a bit grab a LARGE coffee...'
+git :clone => 'git://github.com/portablemind/data_migrator.git "vendor/compass/plugins/data_migrator"'
 
 inside('vendor/compass/plugins/data_migrator') do
   run 'git checkout'
