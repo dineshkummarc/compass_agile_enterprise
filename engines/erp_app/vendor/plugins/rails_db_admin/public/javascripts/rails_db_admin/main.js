@@ -14,53 +14,26 @@ Compass.RailsDbAdmin.Main = function(organizerLayout, tablestreePanel, queriesTr
     });
 
     this.getTableData = function(table){
-        messageBox = Ext.Msg.wait('Status', 'Setting up table grid...');
         var database = this.getDatabase();
 		
-        var conn = new Ext.data.Connection();
-        conn.request({
-            url: './base/setup_table_grid/' + table,
-            timeout:60000,
+        var grid = new Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel({
+            title:table,
+            setupUrl:'./base/setup_table_grid/' + table,
+            dataUrl:'./base/table_data/' + table,
+            editable:true,
+            page:true,
+            pageSize:25,
+            displayMsg:'Displaying {0} - {1} of {2}',
+            emptyMsg:'Empty',
+            loadErrorMessage:'Tables Without Ids Can Not Be Edited',
+            closable:true,
             params:{
                 database:database
-            },
-            success: function(responseObject) {
-                
-                messageBox.hide();
-
-                var response =  Ext.util.JSON.decode(responseObject.responseText);
-                if(response.success)
-                {
-                    var columns = response.columns;
-                    var fields = response.fields;
-                    var data = response.data;
-
-                    var grid = new Compass.RailsDbAdmin.EditableTableDataGrid({
-                        table:table,
-                        columns:columns,
-                        fields:fields,
-                        data:data,
-                        title:table
-                    });
-
-                    container.add(grid);
-                    container.setActiveTab(container.items.length - 1);
-
-				    
-                    grid.getStore().load();
-					
-                }
-                else
-                {
-                    Ext.Msg.alert('Error', "Table does not contain an ID column.  Table is not editable");
-                }
-				
-            },
-            failure: function() {
-                messageBox.hide();
-                Ext.Msg.alert('Status', 'Error loading grid');
             }
         });
+
+        container.add(grid);
+        container.setActiveTab(container.items.length - 1);
     };
 
     this.selectTopFifty = function(table){

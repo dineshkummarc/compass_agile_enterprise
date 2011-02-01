@@ -22,7 +22,7 @@ class ErpApp::Desktop::ControlPanel::ApplicationManagementController < ErpApp::D
     application = Application.find(application_id)
 
     preference_types = application.preference_types
-    ext_json << preference_types.to_json(:include => :preference_options)
+    ext_json << preference_types.to_json(:methods => [:default_value], :include => :preference_options)
     ext_json << "}"
     render :inline => ext_json
   end
@@ -33,7 +33,7 @@ class ErpApp::Desktop::ControlPanel::ApplicationManagementController < ErpApp::D
 
     application = Application.find(application_id)
     preferences = application.preferences(user)
-    
+
     ext_json = "{success:true, preferences:#{preferences.to_json(:include => [:preference_type, :preference_option])}}"
 
     render :inline => ext_json

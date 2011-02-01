@@ -11,18 +11,27 @@ Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel = Ext.extend(Ext.Panel, {
             params:config['params'],
             success: function(responseObject) {
                 var response =  Ext.util.JSON.decode(responseObject.responseText);
-                self.add({
-                    editable:config['editable'],
-                    url:config['dataUrl'],
-                    page:config['page'],
-                    pageSize:config['pageSize'],
-                    displayMsg:config['displayMsg'],
-                    emptyMsg:config['emptyMsg'],
-                    xtype:'shared_dynamiceditablegrid',
-                    columns:response.columns,
-                    fields:response.fields
-                });
-                self.getLayout().setActiveItem(0);
+                if(response.success){
+                    self.add({
+                        editable:config['editable'],
+                        url:config['dataUrl'],
+                        page:config['page'],
+                        pageSize:config['pageSize'],
+                        displayMsg:config['displayMsg'],
+                        emptyMsg:config['emptyMsg'],
+                        xtype:'shared_dynamiceditablegrid',
+                        columns:response.columns,
+                        fields:response.fields
+                    });
+                    self.getLayout().setActiveItem(0);
+                }
+                else{
+                    var message = response.message
+                    if(Compass.ErpApp.Utility.isBlank(message)){
+                        message = config['loadErrorMessage']
+                    }
+                    Ext.Msg.alert('Error', message);
+                }
             },
             failure: function() {
                 Ext.Msg.alert('Error', 'Could not load grid.');

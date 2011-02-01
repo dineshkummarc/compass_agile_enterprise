@@ -1,6 +1,6 @@
 Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
     id:'web-navigator-win',
-    
+
     updateUrl : function(button){
         var url = Ext.getCmp('web_navigator_textfield').getValue();
         var re = new RegExp('http://');
@@ -20,10 +20,52 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
             scope: this
         }
     },
+
     createWindow : function(){
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('web_navigator');
         if(!win){
+            var tbarItems = [
+            {
+                xtype:'textfield',
+                id:'web_navigator_textfield',
+                width:500,
+                value:'http://www.portablemind.com',
+                listeners: {
+                    specialkey:function(el, e){
+                        if(e.getKey() == e.ENTER) {
+                            self.updateUrl();
+                        }
+                    }
+                }
+            },
+            {
+                iconCls:'icon-next',
+                text:'Go',
+                handler:function(button){
+                    self.updateUrl();
+                }
+            }];
+
+            tbarItems.push({
+                iconCls:'icon-monitor',
+                text:'Organizer',
+                handler:function(button){
+                    Ext.get('web_navigator_iframe').dom.src = '../organizer/';
+                }
+            });
+            tbarItems.push({
+                iconCls:'icon-data',
+                text:'RailsDbAdmin',
+                handler:function(button){
+                    Ext.get('web_navigator_iframe').dom.src = '../../rails_db_admin/base';
+                }
+            });
+
+            if(!Compass.ErpApp.Utility.isBlank(this.initialConfig.toolBarButtons)){
+                tbarItems = tbarItems.concat(this.initialConfig.toolBarButtons);
+            }
+            
             var self = this;
             win = desktop.createWindow({
                 id: 'web_navigator',
@@ -39,45 +81,7 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                 {
                     xtype:'panel',
                     layout:'fit',
-                    tbar:{
-                        items:[
-                        {
-                            xtype:'textfield',
-                            id:'web_navigator_textfield',
-                            width:500,
-                            value:'http://www.portablemind.com',
-                            listeners: {
-                                specialkey:function(el, e){
-                                    if(e.getKey() == e.ENTER) {
-                                        self.updateUrl();
-                                    } 
-                                }
-                            }
-
-                        },
-                        {
-                            iconCls:'icon-next',
-                            text:'Go',
-                            handler:function(button){
-                                self.updateUrl();
-                            }
-                        },
-                        {
-                            iconCls:'icon-monitor',
-                            text:'Organizer',
-                            handler:function(button){
-                                Ext.get('web_navigator_iframe').dom.src = '../organizer/';
-                            }
-                        },
-                        {
-                            iconCls:'icon-data',
-                            text:'RailsDbAdmin',
-                            handler:function(button){
-                                Ext.get('web_navigator_iframe').dom.src = '../../rails_db_admin/base';
-                            }
-                        }
-                        ]
-                    },
+                    tbar:{items:tbarItems,autoScroll:true},
                     html:'<iframe id="web_navigator_iframe" height="100%" width="100%" src="http://www.portablemind.com"></iframe>'
                 }
                 ]

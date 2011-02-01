@@ -11,8 +11,8 @@ namespace :compass do
     
   	desc 'install compass core engines'
     task :core do
-      puts ("\nInstall Compass Core")
-      ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app).join(',')
+      puts("\nInstall Compass Core")
+      ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app knitkit).join(',')
       ENV['plugins'] = 'data_migrator'
       Rake::Task['compass:install'].invoke
       #copy the compass index page
@@ -40,7 +40,7 @@ namespace :compass do
 	task :default_no_core  do |t, args|
       puts "\nInstall Compass Default (eCommerce Base) Installation\n\n"
       
-      ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app after_commit data_orchestrator erp_agreements erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts ext_scaffold master_data_management).join(',')
+      ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app after_commit data_orchestrator erp_agreements erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts ext_scaffold master_data_management).join(',')
       ENV['plugins'] = ''
       Rake::Task['db:migrate'].reenable
       # re-enable the compass install task if it has been run previously
@@ -79,7 +79,7 @@ namespace :compass do
   namespace :uninstall do
     desc 'uninstall compass core engines'
     task :core do
-      ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app data_migrator).join(',')
+      ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app data_migrator).join(',')
       Rake::Task['compass:uninstall'].invoke
     end #task uninstall:core
 
@@ -123,7 +123,6 @@ namespace :compass do
         raise 'unknown system platform'
       end
     end
-
 
     # creates a symbolic link to the plugin rather than forcing a local copy
 
@@ -266,7 +265,7 @@ namespace :compass do
        
       		if(args[:arg1]==":default")
       			# TODO- Consider creating array of plugins dynamically
-        		plugins=["erp_app","erp_base_erp_svcs","erp_tech_services"]
+        		plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
         		 
         		puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
         		 
@@ -347,7 +346,7 @@ namespace :compass do
        
       		if(args[:arg1]==":default")
       			# TODO- Consider creating array of plugins dynamically
-        		plugins=["erp_app","erp_base_erp_svcs","erp_tech_services"]
+        		plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
         		 
         		puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
         		 
@@ -433,6 +432,14 @@ namespace :db do
 
   namespace :migrate do
     
+    desc "list pending migrations"
+    task :list_pending => :environment do
+      pending_migrations = ActiveRecord::Migrator.new('up', 'db/migrate/').pending_migrations.collect{|item| File.basename(item.filename)}
+      puts "================Pending Migrations=========="
+      puts pending_migrations
+      puts "================================================="
+    end
+
     desc "Copy migrations from plugins to db/migrate"
     task :prepare_migrations do
       

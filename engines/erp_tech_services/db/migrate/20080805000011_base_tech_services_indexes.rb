@@ -26,9 +26,8 @@ class BaseTechServicesIndexes < ActiveRecord::Migration
     
     add_index :simple_captcha_data, [:key, :value], :name => "btsi_3"
     
-    add_index :audit_logs, :application_id
     add_index :audit_logs, :party_id
-    add_index :audit_logs, :event_id
+    add_index :audit_logs, [:event_record_id, :event_record_type], :name => 'event_record_index'
     
     add_index :invitations, :sender_id
     

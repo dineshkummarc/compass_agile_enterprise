@@ -26,7 +26,7 @@ module ErpServices
         # the class method will return a populated instance of the correct type
         valid_values.each do | vv |
           proc = Proc.new{ vv }
-          self.class.send(:define_method, vv.internal_identifier, proc )
+          self.class.send(:define_method, vv.internal_identifier, proc ) unless vv.internal_identifier.nil?
         end
 				     
       end

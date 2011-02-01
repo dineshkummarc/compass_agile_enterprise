@@ -35,7 +35,7 @@ Ext.extend(Ext.ux.TaskBar, Ext.util.Observable, {
                 '<table cellspacing="0" class="x-btn"><tbody class="{1}"><tr>',
                 '<td class="ux-startbutton-left"><i>&#160;</i></td>',
                 '<td class="ux-startbutton-center"><em class="{2} unselectable="on">',
-                    '<button class="x-btn-text" type="{0}" style="height:30px;"></button>',
+                '<button class="x-btn-text" type="{0}" style="height:30px;"></button>',
                 '</em></td>',
                 '<td class="ux-startbutton-right"><i>&#160;</i></td>',
                 '</tr></tbody></table>')
@@ -52,6 +52,14 @@ Ext.extend(Ext.ux.TaskBar, Ext.util.Observable, {
             width: width
         });
 
+        this.cklPanel = new Ext.ux.ClockPanel({
+            el: 'ux-taskclock-panel',
+            id: 'TaskBarClock',
+            minWidth: 30,
+            region:'east',
+            width: 85
+        });
+
         this.tbPanel = new Ext.ux.TaskButtonsPanel({
             el: 'ux-taskbuttons-panel',
             id: 'TaskBarButtons',
@@ -61,7 +69,7 @@ Ext.extend(Ext.ux.TaskBar, Ext.util.Observable, {
         var container = new Ext.ux.TaskBarContainer({
             el: 'ux-taskbar',
             layout: 'border',
-            items: [sbBox,this.tbPanel]
+            items: [sbBox,this.cklPanel, this.tbPanel]
         });
 
         return this;
@@ -80,12 +88,81 @@ Ext.extend(Ext.ux.TaskBar, Ext.util.Observable, {
     }
 });
 
+/**
+ * @class Ext.ux.ClockPanel
+ * @extends Ext.BoxComponent
+ */
+
+
+Ext.ux.ClockPanel = Ext.extend(Ext.BoxComponent, {
+
+
+    initComponent : function(){
+
+        var time = getstartTime();
+        this.clockBtn = new Ext.Button({
+            text : time,
+            menuAlign: 'bl-tl',
+            id: 'ux-clockbutton',
+            renderTo: 'ux-taskclock-panel',
+            template: new Ext.Template(
+                '<table border="0" cellpadding="0" cellspacing="0" class="x-btn-wrap"><tbody><tr>',
+                '<td class="ux-startbutton-left"><i> </i></td><td class="ux-startbutton-center"><em unselectable="on"><button style="color:black;" class="x-btn-text" type="{1}" style="height:30px;" id="ux-clockbutton-text">{0}</button></em></td><td class="ux-startbutton-right"><i> </i></td>',
+                '</tr></tbody></table>')
+        });
+        var width = this.clockBtn.getEl().getWidth()+10;
+        this.setWidth(width);
+
+        var updateClockTask = new Ext.util.DelayedTask(startTime);
+        updateClockTask.delay(500);
+
+        this.clockBtn.getEl().on('contextmenu', function(e){
+            e.stopEvent();
+        }, this);
+
+        this.clockBtn.getEl().on('click', function(e){
+            e.stopEvent();
+        }, this);
+
+        function startTime()
+        {
+            Ext.getDom('ux-clockbutton-text').innerHTML = getstartTime();
+            updateClockTask.delay(500);
+        }
+
+        function getstartTime()
+        {
+            var currentDate = new Date();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var year = currentDate.getYear();
+            var month = currentDate.getMonth() + 1;
+            var daym = currentDate.getDate();
+
+            var dn = "AM";
+            year = year + 1900;
+            if (month < 10) month = "0" + month;
+            if (daym < 10) daym = "0" + daym;
+            if (hours == 12) dn = "PM";
+            if (minutes < 10) minutes = "0" + minutes;
+            if (hours > 12){
+                dn = "PM";
+                hours = hours - 12;
+            }
+            if (hours == 0) hours = 12;
+
+            return hours + ":" + minutes + " " + dn + " " + month + "/" + daym + "/" + year;
+        }
+
+    }
+});
 
 
 /**
- * @class Ext.ux.TaskBarContainer
- * @extends Ext.Container
- */
+     * @class Ext.ux.TaskBarContainer
+     * @extends Ext.Container
+     */
+
 Ext.ux.TaskBarContainer = Ext.extend(Ext.Container, {
     initComponent : function() {
         Ext.ux.TaskBarContainer.superclass.initComponent.call(this);
@@ -116,9 +193,9 @@ Ext.ux.TaskBarContainer = Ext.extend(Ext.Container, {
 
 
 /**
- * @class Ext.ux.TaskButtonsPanel
- * @extends Ext.BoxComponent
- */
+     * @class Ext.ux.TaskButtonsPanel
+     * @extends Ext.BoxComponent
+     */
 Ext.ux.TaskButtonsPanel = Ext.extend(Ext.BoxComponent, {
     activeButton: null,
     enableScroll: true,
@@ -140,7 +217,8 @@ Ext.ux.TaskButtonsPanel = Ext.extend(Ext.BoxComponent, {
         this.stripWrap = Ext.get(this.el).createChild({
             cls: 'ux-taskbuttons-strip-wrap',
             cn: {
-                tag:'ul', cls:'ux-taskbuttons-strip'
+                tag:'ul',
+                cls:'ux-taskbuttons-strip'
             }
         });
         this.stripSpacer = Ext.get(this.el).createChild({
@@ -152,13 +230,16 @@ Ext.ux.TaskButtonsPanel = Ext.extend(Ext.BoxComponent, {
             tag:'li',
             cls:'ux-taskbuttons-edge'
         });
+
         this.strip.createChild({
             cls:'x-clear'
         });
     },
 
     addButton : function(win){
-        var li = this.strip.createChild({tag:'li'}, this.edge); // insert before the edge
+        var li = this.strip.createChild({
+            tag:'li'
+        }, this.edge); // insert before the edge
         var btn = new Ext.ux.TaskBar.TaskButton(win, li);
 
         this.items.push(btn);
@@ -337,7 +418,9 @@ Ext.ux.TaskButtonsPanel = Ext.extend(Ext.BoxComponent, {
 
     scrollToButton : function(item, animate){
         item = item.el.dom.parentNode; // li
-        if(!item){ return; }
+        if(!item){
+            return;
+        }
         var el = item; //this.getBtnEl(item);
         var pos = this.getScrollPos(), area = this.getScrollArea();
         var left = Ext.fly(el).getOffsetsTo(this.stripWrap)[0] + pos;
@@ -383,9 +466,9 @@ Ext.ux.TaskButtonsPanel = Ext.extend(Ext.BoxComponent, {
 
 
 /**
- * @class Ext.ux.TaskBar.TaskButton
- * @extends Ext.Button
- */
+     * @class Ext.ux.TaskBar.TaskButton
+     * @extends Ext.Button
+     */
 Ext.ux.TaskBar.TaskButton = function(win, el){
     this.win = win;
     Ext.ux.TaskBar.TaskButton.superclass.constructor.call(this, {
@@ -406,7 +489,7 @@ Ext.ux.TaskBar.TaskButton = function(win, el){
             '<table cellspacing="0" class="x-btn {3}"><tbody><tr>',
             '<td class="ux-taskbutton-left"><i>&#160;</i></td>',
             '<td class="ux-taskbutton-center"><em class="{5} unselectable="on">',
-                '<button class="x-btn-text {2}" type="{1}" style="height:28px;">{0}</button>',
+            '<button class="x-btn-text {2}" type="{1}" style="height:28px;">{0}</button>',
             '</em></td>',
             '<td class="ux-taskbutton-right"><i>&#160;</i></td>',
             "</tr></tbody></table>")

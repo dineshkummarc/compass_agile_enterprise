@@ -11,8 +11,7 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
 
         proxy.addListener('exception', function(proxy, type, action, options, res) {
             var message = 'Error in processing request';
-            if(!Compass.ErpApp.Utility.isBlank(res.message))
-                message = res.message;
+            if(!Compass.ErpApp.Utility.isBlank(res.message)) message = res.message;
             Ext.Msg.alert('Error', message);
         });
 
@@ -20,19 +19,17 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
             if(messageBox != null)
                 messageBox.hide();
 
-            var messageBox = Ext.Msg.wait('Status', 'Sending request...');
+            messageBox = Ext.Msg.wait('Status', 'Sending request...');
         });
 
         proxy.addListener('write', function(dataProxy, action, data, response, rs, options) {
-            var message = "Request processed"
-
             if(messageBox != null)
                 messageBox.hide();
 
-            if(!Compass.ErpApp.Utility.isBlank(response.message))
-                message = response.message;
-
-            Ext.Msg.alert('Status', message);
+            if(!Compass.ErpApp.Utility.isBlank(response.message)){
+                var message = response.message;
+                Ext.Msg.alert('Status', message);
+            }
         });
 
         var reader = new Ext.data.JsonReader({
@@ -43,7 +40,9 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
             messageProperty: 'message'
         },this.initialConfig['fields']);
 
-        var writer = new Ext.data.JsonWriter({ encode: false });
+        var writer = new Ext.data.JsonWriter({
+            encode: false
+        });
 
         var store = new Ext.data.Store({
             autoLoad:true,
@@ -70,17 +69,17 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
 
         if(config['page'] == true){
             this.bbar = new Ext.PagingToolbar({
-            pageSize: config['pageSize'],
-            store: store,
-            displayInfo: true,
-            displayMsg: config['displayMsg'],
-            emptyMsg: config['emptyMsg']
+                pageSize: config['pageSize'],
+                store: store,
+                displayInfo: true,
+                displayMsg: config['displayMsg'],
+                emptyMsg: config['emptyMsg']
             });
         }
 
         Compass.ErpApp.Shared.DynamicEditableGrid.superclass.initComponent.apply(this, arguments);
     },
-    
+
     constructor : function(config) {
         var editor = new Ext.ux.grid.RowEditor({
             saveText: 'Update',
@@ -89,9 +88,12 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
             errorSummary:true,
             listeners:{
                 'afteredit':function(editor, changes, record){
-                    record.set('id', 0);
-                    record.commit();
-                    editor.grid.getStore().save();
+                    if(Compass.ErpApp.Utility.isBlank(record.get('id'))){
+                        record.set('id', 0);
+                    }
+                    else{
+                        record.commit();
+                    }
                 }
             }
         });
@@ -102,14 +104,13 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
         var tbar = {}
         if(config['editable']){
             plugins.push(editor);
-
             tbar = {
                 items:[{
                     text: 'Add',
                     iconCls: 'icon-add',
                     handler: function(button) {
                         var grid = button.findParentByType('shared_dynamiceditablegrid');
-                        var r = new Record({});
+                        var r = new Record();
                         editor.stopEditing();
                         grid.store.insert(0, r);
                         editor.startEditing(0);
@@ -144,10 +145,3 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
 });
 
 Ext.reg('shared_dynamiceditablegrid', Compass.ErpApp.Shared.DynamicEditableGrid);
-
-
-
-
-
-
-

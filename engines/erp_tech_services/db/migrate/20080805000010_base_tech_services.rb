@@ -131,12 +131,34 @@ class BaseTechServices < ActiveRecord::Migration
 
     unless table_exists?(:audit_logs)
       # Create audit_logs
-      create_table :audit_logs do |t|
-        t.column :application_id, :string
-        t.column :user_id,        :integer
-        t.column :event_id,       :integer
-        t.column :description,    :string
-        t.column :party_id,       :integer
+      create_table   :audit_logs do |t|
+        t.string     :application
+        t.string     :descriptio
+        t.integer    :party_id
+        t.text       :additional_info
+        t.references :audit_log_type
+
+        #polymorphic columns
+        t.references :event_record, :polymorphic => true
+
+        t.timestamps
+      end
+    end
+
+    unless table_exists?(:audit_log_types)
+      # Create audit_logs
+      create_table :audit_log_types do |t|
+        t.string :description
+        t.string :comments
+        t.string :internal_identifier
+        t.string :external_identifier
+        t.string :external_id_source
+
+        #better nested set columns
+        t.integer :parent_id
+        t.integer :lft
+        t.integer :rgt
+
         t.timestamps
       end
     end

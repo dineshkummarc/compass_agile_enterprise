@@ -4,6 +4,7 @@
  * licensing@extjs.com
  * http://www.extjs.com/license
  */
+
 Ext.Desktop = function(app) {
     this.taskbar = new Ext.ux.TaskBar(app);
     this.xTickSize = this.yTickSize = 1;
@@ -52,14 +53,14 @@ Ext.Desktop = function(app) {
 
     this.createWindow = function(config, cls) {
         var win = new(cls || Ext.Window)(
-        Ext.applyIf(config || {},
-        {
-            renderTo: desktopEl,
-            manager: windows,
-            minimizable: true,
-            maximizable: true
-        })
-        );
+            Ext.applyIf(config || {},
+            {
+                renderTo: desktopEl,
+                manager: windows,
+                minimizable: true,
+                maximizable: true
+            })
+            );
         win.dd.xTickSize = this.xTickSize;
         win.dd.yTickSize = this.yTickSize;
         if (win.resizer) {
@@ -72,7 +73,7 @@ Ext.Desktop = function(app) {
         win.cmenu = new Ext.menu.Menu({
             items: [
 
-            ]
+        ]
         });
 
         win.animateTarget = win.taskButton.el;
@@ -200,15 +201,15 @@ Ext.Desktop = function(app) {
 
     if (shortcuts) {
         shortcuts.on('click',
-        function(e, t) {
-            t = e.getTarget('dt', shortcuts);
-            if (t) {
-                e.stopEvent();
-                var module = app.getModule(t.id.replace('-shortcut', ''));
-                if (module) {
-                    module.createWindow();
+            function(e, t) {
+                t = e.getTarget('dt', shortcuts);
+                if (t) {
+                    e.stopEvent();
+                    var module = app.getModule(t.id.replace('-shortcut', ''));
+                    if (module) {
+                        module.createWindow();
+                    }
                 }
-            }
-        });
+            });
     }
 };

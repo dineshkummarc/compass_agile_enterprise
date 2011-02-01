@@ -207,4 +207,17 @@
   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document/document_16x16.png', sizingMethod='crop');
 }
 
+.icon-folders {
+  background-image:url( /images/icons/folders/folders_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/folders/folders_16x16.png', sizingMethod='crop');
+}
+
+.icon-upload {
+  background-image:url( /images/erp_app/desktop/image_add.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/erp_app/desktop/image_add.png', sizingMethod='crop');
+
+}
+
+
+
 

@@ -127,11 +127,17 @@ Array.prototype.contains = function (element) {
 };
 
 Array.prototype.find = function (find_statement) {
-    for (var i = 0; i < this.length; i++) {
-        var statement = "this[i]." + find_statement;
-        if(eval(statement)){
-            return this[i];
+    try
+    {
+        for (var i = 0; i < this.length; i++) {
+            var statement = "this[i]." + find_statement;
+            if(eval(statement)){
+                return this[i];
+            }
         }
+    }
+    catch(ex){
+        return null;
     }
     return null;
 };

@@ -1,6 +1,6 @@
 Party.class_eval do
    #for authentication credentials
-  has_one :user
+  has_one :user, :dependent => :destroy
 
   #Return username
   def username

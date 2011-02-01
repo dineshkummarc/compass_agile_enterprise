@@ -15,7 +15,7 @@ class ExtExtensionGenerator < Rails::Generator::NamedBase
     record do |m|
 
       #Route
-      m.template "public/extension_template.js.erb", "#{@file_dir}#{file_name}"
+      m.template "public/extension_template.js.erb", "#{@file_dir}#{file_name}.js"
 
       #Readme
       m.readme "INSTALL"

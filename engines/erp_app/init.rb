@@ -1,4 +1,4 @@
-require 'ext_scaffold/ext_scaffold'
+require 'active_ext/active_ext'
 require 'acts_as_app_container'
 require 'has_user_preferences'
 require 'rails_ext/railties/action_view'

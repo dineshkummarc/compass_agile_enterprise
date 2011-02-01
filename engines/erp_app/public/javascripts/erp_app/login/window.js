@@ -17,6 +17,11 @@ Compass.ErpApp.Login.Window = Ext.extend(Ext.Window, {
         });
     },
 
+	onShow: function (){
+		Compass.ErpApp.Login.Window.superclass.onShow.call(this, arguments);
+		this.findByType('form')[0].getForm().findField('login').focus(false, true);
+	},
+
     constructor : function(config) {
         var self = this;
         var appName = config['applicationName'] || ''

@@ -17,5 +17,9 @@ class PreferenceType < ActiveRecord::Base
   def self.iid( internal_identifier )
     find( :first, :conditions => [ 'internal_identifier = ?', internal_identifier.to_s ])
   end
+
+  def default_value
+    default_preference_option.value
+  end
   
 end

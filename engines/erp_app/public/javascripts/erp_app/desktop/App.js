@@ -81,3 +81,5 @@ Ext.extend(Ext.app.App, Ext.util.Observable, {
         }
     }
 });
+
+Ext.ns("Compass.ErpApp.Desktop.Applications");

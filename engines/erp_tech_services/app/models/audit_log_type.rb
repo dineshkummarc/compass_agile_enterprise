@@ -3,6 +3,7 @@ class AuditLogType < ActiveRecord::Base
 	acts_as_nested_set
 	include TechServices::Utils::DefaultNestedSetMethods
 	acts_as_erp_type
+  has_many :audit_logs
 
   belongs_to_erp_type :parent, :class_name => "AuditLogType"
 	

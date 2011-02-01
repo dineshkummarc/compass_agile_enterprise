@@ -1,0 +1,12 @@
+#images .thumb img {
+    border: 1px solid white;
+    height: 60px;
+    width: 80px;
+}
+
+#images .thumb-wrap {
+    float: left;
+    margin: 4px 0 4px 4px;
+    padding: 5px;
+}
+

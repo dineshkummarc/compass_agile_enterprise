@@ -5,6 +5,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel = Ext.ex
 
     buildPreferenceForm: function(form, preferenceTypes){
         var self = this;
+        form.removeAll(true);
 
         Ext.each(preferenceTypes, function(preferenceType){
             var store = []

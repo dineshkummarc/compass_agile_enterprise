@@ -38,6 +38,7 @@ Compass.ErpApp.Shared.PreferenceForm = Ext.extend(Ext.FormPanel, {
                     fieldLabel:preferenceType.description,
                     hiddenName:preferenceType.internal_identifier,
                     width:150,
+                    value:preferenceType.default_value,
                     triggerAction: 'all',
                     store:store
                 });

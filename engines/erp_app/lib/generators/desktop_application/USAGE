@@ -1,20 +1,25 @@
 ###########################################
-##### Desktop Application Generator   #####
+##### Desktop Application Generator #######
+##### Version 1.0                   #######
 ###########################################
 
 script/generate desktop_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
 
-Will create
+What will be created
 
-1. folder structure for desktop application
+1. A controller for your application
+2. Folder structures in the public folder directories
 
-vendor/plugins/erp_app/public/javascripts/erp_app/desktop/applications/[YOUR APP NAME]
-vendor/plugins/erp_app/public/stylesheets/erp_app/desktop/applications/[YOUR APP NAME]
-vendor/plugins/erp_app/public/images/erp_app/desktop/applications/[YOUR APP NAME]
+   vendor/plugins/[erp_app | plugin]/public/javascripts/erp_app/desktop/applications/[YOUR APP NAME]
+   vendor/plugins/[erp_app | plugin]/public/stylesheets/erp_app/desktop/applications/[YOUR APP NAME]
+   vendor/plugins/[erp_app | plugin]/public/images/erp_app/desktop/applications/[YOUR APP NAME]
 
-2. template for javascript class needed for desktop application module
+3. A javscript file
+4. A data migration
+5. Append the routes file
 
-3. route file for new application routes
+Run the migration with
 
+rake db:migrate_data
 
-
+and start adding functionality

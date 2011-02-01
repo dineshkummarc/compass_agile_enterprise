@@ -24,13 +24,24 @@ end
         height:48px;
         width:48px;
       }
+
+      .taskbar_clock {
+        float:right;
+        padding-right:5px;
+        color:white;
+        font-weight:bold;
+      }
+}
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Compass Desktop</title>
     <%= include_extjs('ext_3_3_0', 'xtheme-slate.css') %>
-    <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css','GanttPlugin.css','treegrid.css') %>
+    <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css'
+      #'GanttPlugin.css','treegrid.css'
+    ) %>
     <%=
     javascript_include_tag("ext_3_3_0/RowEditor.js",
+      "ext_3_3_0/DataView-more.js",
       "erp_app/authentication/role_manager.js",
       "erp_app/utility.js",
       "erp_app/shared/dynamic_editable_grid.js",
@@ -45,12 +56,18 @@ end
       "erp_app/desktop/applications/control_panel/desktop_management_panel.js",
       "erp_app/desktop/applications/control_panel/application_management_panel.js",
       "erp_app/desktop/applications/web_navigator/module.js",
+      "erp_app/ckeditor/ckeditor.js",
+      "erp_app/shared/compass_ckeditor.js",
+      "erp_app/shared/file_manager_tree.js"
+
+      #upload resources
 
       #timeshare dev
-      "timeshare/TreeGrid.js",
-      "timeshare/GanttGrid.js"
+      #"timeshare/TreeGrid.js",
+      #"timeshare/GanttGrid.js"
     )
   %>
+  <%=include_file_upload%>
   <%=setup_role_manager(@user)%>
   <%@desktop.applications.each do |application|%><%=application.load_resources%><%end%>
   </head>
@@ -90,9 +107,11 @@ end
     <div id="ux-taskbar">
       <div id="ux-taskbar-start"></div>
       <div id="ux-taskbuttons-panel"></div>
+      <div id="ux-taskclock-panel"></div>
       <div class="x-clear"></div>
     </div>
     <div style="position : absolute; left: 0; top: 0; z-index: -1;">
+      <div></div>
       <img id="x-wallpaper" src="../../images/wallpaper/<%=@desktop.get_preference(:desktop_background) %> " style="width : 0px; height : 0px;"/>
 
       <img id="x-watermark-logo" src="../../images/art/tn-logo-watermark-2.png" style="position: absolute; left: 50%; top: 50%; margin-left: -300px; margin-top: -300px; width : 600px; height : 600px; opacity: 0.5;"/>
@@ -107,7 +126,6 @@ end
       }
       Ext.EventManager.onWindowResize(fireResize, document.getElementById('x-wallpaper'));
       fireResize(Ext.lib.Dom.getViewWidth(), Ext.lib.Dom.getViewHeight());
-
       var applications = [
 <%
 @desktop.applications.each do |application|
@@ -117,7 +135,7 @@ end
 end
 %>
     new Compass.ErpApp.Desktop.Applications.ControlPanel(),
-    new Compass.ErpApp.Desktop.Applications.WebNavigator()
+    new Compass.ErpApp.Desktop.Applications.WebNavigator({toolBarButtons:[]})
   ];
 
   CompassDesktop = new Ext.app.App({
@@ -159,5 +177,6 @@ end
 %>
   });
     </script>
+    <iframe id="download_frame"></iframe>
   </body>
 </html>

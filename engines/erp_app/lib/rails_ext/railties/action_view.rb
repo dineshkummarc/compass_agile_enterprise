@@ -1,4 +1,17 @@
 ActionView::Base.class_eval do
+  def include_file_upload()
+    resources = ''
+
+    resources << javascript_include_tag("/javascripts/erp_app/shared/file_upload/Ext.ux.AwesomeUploader.js",
+      "/javascripts/erp_app/shared/file_upload/Ext.ux.AwesomeUploaderLocalization.js",
+      "/javascripts/erp_app/shared/file_upload/Ext.ux.XHRUpload.js",
+      "/javascripts/erp_app/shared/file_upload/Ext.ux.form.FileUploadField.js",
+      "/javascripts/erp_app/shared/file_upload/upload_window.js"
+    )
+
+    resources
+  end
+
   def include_extjs(version='ext', theme=nil)
     resources = ''
 

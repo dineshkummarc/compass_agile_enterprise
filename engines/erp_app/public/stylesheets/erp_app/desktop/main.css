@@ -642,3 +642,11 @@ td.ux-taskButtons-edge {
 }
 /* shortcuts */
 
+#ux-taskclock-panel {
+    background:transparent url(/images/erp_app/desktop/taskbar/black/taskbar-start-panel-bg.gif) repeat-x left top;
+    left:0px;
+    padding:0;
+    position:absolute;
+    color:black;
+}
+
