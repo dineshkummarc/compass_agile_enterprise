@@ -1,4 +1,6 @@
 class Section < ActiveRecord::Base
+  unloadable  
+
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
 
   @@types = ['Page']
