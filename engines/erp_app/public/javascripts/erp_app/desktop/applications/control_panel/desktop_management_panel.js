@@ -1,4 +1,12 @@
 Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel = Ext.extend(Ext.Panel, {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
     setup:function(){
         this.form.setup();
     },

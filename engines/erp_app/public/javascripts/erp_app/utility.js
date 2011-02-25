@@ -6,6 +6,11 @@ Compass.ErpApp.Utility.getRootUrl = function(){
     return root_url;
 };
 
+Compass.ErpApp.Utility.roundNumber = function(num, dec) {
+    var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+    return result;
+};
+
 Compass.ErpApp.Utility.numbersOnly = function(e, decimal) {
     var key;
     var keychar;

@@ -149,10 +149,41 @@ class BaseTechServices < ActiveRecord::Migration
       # Create audit_logs
       create_table :audit_log_types do |t|
         t.string :description
+        t.string :error_code
         t.string :comments
         t.string :internal_identifier
         t.string :external_identifier
         t.string :external_id_source
+
+        #better nested set columns
+        t.integer :parent_id
+        t.integer :lft
+        t.integer :rgt
+
+        t.timestamps
+      end
+    end
+
+    unless table_exists?(:audit_log_items)
+      # Create audit_log_items
+      create_table   :audit_log_items do |t|
+        t.references :audit_log
+        t.references :audit_log_item_type
+        t.string     :audit_log_item_value
+        t.string     :description
+
+        t.timestamps
+      end
+    end
+
+    unless table_exists?(:audit_log_item_types)
+      # Create audit_log_item_types
+      create_table   :audit_log_item_types do |t|
+        t.string :internal_identifier
+        t.string :external_identifier
+        t.string :external_id_source
+        t.string :description
+        t.string :comments
 
         #better nested set columns
         t.integer :parent_id
@@ -236,7 +267,7 @@ class BaseTechServices < ActiveRecord::Migration
       :geo_zones, :geo_countries, :invitations,
       :audit_logs, :security_questions, :sessions, 
       :simple_captcha_data, :four_oh_fours, :user_failures, 
-      :logged_exceptions, :roles_users, :roles, 
+      :logged_exceptions, :roles_users, :roles, :audit_log_items, :audit_log_item_types,
       :users
     ].each do |tbl|
       if table_exists?(tbl)

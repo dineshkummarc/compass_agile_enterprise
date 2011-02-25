@@ -37,6 +37,14 @@ Compass.ErpApp.Desktop.Applications.UserManagement = Ext.extend(Ext.app.Module, 
 });
 
 Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.grid.GridPanel, {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
     initComponent: function() {
         this.store.load();
 
@@ -68,6 +76,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
             width:375,
             region:'west',
             store:users_store,
+            loadMask:true,
             columns:[
             {
                 header:'Login',
@@ -100,10 +109,6 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
                         users_store.setBaseParam('login',login);
                         users_store.load();
                     }
-                },
-                '->',
-                {
-                    html:'<span id="user_managment_saving_label" style="visibility:hidden;color:white;font-weight:bold;padding-right:5px;">Saving...</span>'
                 }
                 ]
             },
@@ -116,10 +121,11 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
             }),
             listeners:{
                 'rowclick':function(grid, rowIndex){
-                    var messageBox = Ext.Msg.wait('Loading..', 'Loading User...')
+                    this.setWindowStatus('Loading User...');
                     var record = grid.getStore().getAt(rowIndex);
                     var userId = record.get('id');
                     var conn = new Ext.data.Connection();
+                    var self = this;
                     conn.request({
                         url: 'user_management/users/get_details/' + userId,
                         params:{},
@@ -180,10 +186,10 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
                                 });
                             }
                             tabPanel.setActiveTab(0);
-                            messageBox.hide();
+                            self.clearWindowStatus('Loading User...');
                         },
                         failure: function() {
-                            messageBox.hide();
+                            self.clearWindowStatus('Loading User...');
                             Ext.Msg.alert('Status', 'Error loading User');
                         }
                     });

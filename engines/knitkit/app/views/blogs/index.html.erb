@@ -1,0 +1,12 @@
+<h2><%=h @section.title %></h2>
+
+<% @contents.each do |content| %>
+<div class="blog_post" id="blog_<%=h content.id %>">
+  <h4><%=h content.title %></h4>
+  <p>Created on: <%= content.created_at.to_s(:long) %></p>
+  <div class="blog_body">
+    <%= content.excerpt_html %>
+  </div>
+  <div><%= link_to 'Read More...', blog_article_path(@section.id, content.permalink) %></div>
+</div>
+<% end %>

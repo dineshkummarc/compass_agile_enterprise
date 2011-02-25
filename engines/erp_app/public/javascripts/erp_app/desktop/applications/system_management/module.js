@@ -14,16 +14,15 @@ Compass.ErpApp.Desktop.Applications.SystemManagement = Ext.extend(Ext.app.Module
         if(!win){
             var tabPanel = new Ext.TabPanel({
                 items:[
-                    {
-                        title:'Roles',
-                        xtype:'shared_dynamiceditablegridloaderpanel',
-                        editable:ErpApp.Authentication.RoleManager.hasRole('admin'),
-                        setupUrl:'./system_management/roles/setup',
-                        dataUrl:'./system_management/roles/data',
-                        page:true,
-                        pageSize:30,
-                        displayMsg:'Displaying {0} - {1} of {2}',
-                        emptyMsg:'Empty'
+                {
+                    title:'Roles',
+                    xtype:'activeextgridpanel',
+                    modelUrl:'./system_management/roles',
+                    editable:true,
+                    page:true,
+                    pageSize:30,
+                    displayMsg:'Displaying {0} - {1} of {2}',
+                    emptyMsg:'Empty'
                 },
                 {
                     xtype:'systemmanagement_applicationrolemanagement'

@@ -2,7 +2,72 @@ Ext.ns("Compass.ErpApp.Ecommerce");
 
 Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
 
-    initComponent: function() {
+    visaPattern : '^4[0-9]{12}(?:[0-9]{3})?$',
+    mastercardPattern : '^5[1-5][0-9]{14}$',
+    amexPattern : '^3[47][0-9]{13}$',
+    dinersClubPattern : '^3(?:0[0-5]|[68][0-9])[0-9]{11}$',
+    discoverPattern : '^6(?:011|5[0-9]{2})[0-9]{12}$',
+
+    validateCardNumber : function(cardType, cardNumber, pattern){
+        var regex = new RegExp(pattern);
+        if (regex.test(cardNumber)){
+            return true;
+        }else{
+            Ext.Msg.alert('Error', 'Invalid credit card number for '+cardType+'.');
+            return false;          
+        }
+    },
+
+    validateCreditCardInfo : function(form){
+        var total = parseFloat(form.findField('amount').getValue());
+        // if nothing to charge return true
+        if (total == 0){
+            Ext.Msg.alert('Error', 'You must specify a dollar amount');
+            return false;
+        }
+        var date = new Date();
+        var currentYear = parseInt(date.getFullYear().toString().substr(2));
+        var currentMonth = date.getMonth() + 1;
+        var expYear = parseInt(form.findField('credit_card_exp_year_hidden').getValue(),10);
+        var expMonth = parseInt(form.findField('credit_card_exp_month_hidden').getValue(),10);
+
+
+        // make sure currentYear >= this_month if exp_year == this_year
+        if (expYear == currentYear)
+        {
+            if (expMonth < currentMonth)
+            {
+                Ext.Msg.alert('Error', 'Please enter a valid expiration date.');
+                return false;
+            }
+        }
+        else
+        if(expYear < currentYear){
+            Ext.Msg.alert('Error', 'Please enter a valid expiration date.');
+            return false;
+        }
+
+        var cardType = form.findField('card_type').getValue();
+        var cardNumber = form.findField('credit_card_number_hidden').getValue();
+
+        switch (cardType) {
+            case 'visa':
+                return this.validateCardNumber('Visa', cardNumber, this.visaPattern);
+            case 'mastercard':
+                return this.validateCardNumber('Master Card', cardNumber, this.mastercardPattern);
+            case 'amex':
+                return this.validateCardNumber('American Express', cardNumber, this.amexPattern);
+            case 'discover':
+                return this.validateCardNumber('Discover', cardNumber, this.discoverPattern);
+            case 'dc':
+                return this.validateCardNumber('Diners Club', cardNumber, this.dinersClubPattern);
+            default:
+                return false;
+        }
+        
+    },
+
+    initComponent : function() {
         this.addEvents(
             /**
          * @event charge_response
@@ -23,7 +88,7 @@ Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
         Compass.ErpApp.Ecommerce.CreditCardWindow.superclass.initComponent.call(this, arguments);
     },
 
-    constructor: function(config) {
+    constructor : function(config) {
         var formFields = [];
 
         var encryptField = function(field, hiddenFieldId){
@@ -101,6 +166,14 @@ Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
             xtype: 'textfield',
             id:'credit_card_exp_month',
             fieldLabel: 'Exp Month',
+            maxLength:2,
+            autoCreate: {
+                tag: 'input',
+                type: 'text',
+                size: '2',
+                autocomplete: 'off',
+                maxlength: '2'
+            },
             name: 'exp_month_encrypt',
             allowBlank: false,
             width:100,
@@ -122,6 +195,14 @@ Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
             xtype: 'textfield',
             fieldLabel: 'Exp Year',
             name: 'exp_year_encrypt',
+            maxLength:2,
+            autoCreate: {
+                tag: 'input',
+                type: 'text',
+                size: '2',
+                autocomplete: 'off',
+                maxlength: '2'
+            },
             allowBlank: false,
             width: 100,
             listeners:{
@@ -184,7 +265,9 @@ Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
                 labelWidth: config['labelWidth'] || 110,
                 frame:false,
                 url:config['url'],
-                defaults: {width: 225},
+                defaults: {
+                    width: 225
+                },
                 items: [formFields]
             }),
             buttons: [{
@@ -194,24 +277,26 @@ Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
                         var win = button.findParentByType('creditcardwindow');
                         var formPanel = win.findByType('form')[0];
                         //formPanel.findById('credit_card_amount_hidden').setValue(formPanel.findById('credit_card_amount').getValue().replace("$","").replace(",",""));
-                        formPanel.getForm().submit({
-                            method:config['method'] || 'POST',
-                            waitMsg:'Processing Credit Card...',
-                            success:function(form, action){
-                                var response =  Ext.util.JSON.decode(action.response.responseText);
-                                win.fireEvent('charge_response', win, response);
-                            },
-                            failure:function(form, action){
-                                if(action.response != null){
+                        if(win.validateCreditCardInfo(formPanel.getForm())){
+                            formPanel.getForm().submit({
+                                method:config['method'] || 'POST',
+                                waitMsg:'Processing Credit Card...',
+                                success:function(form, action){
                                     var response =  Ext.util.JSON.decode(action.response.responseText);
-                                    win.fireEvent('charge_failure', win, response);
+                                    win.fireEvent('charge_response', win, response);
+                                },
+                                failure:function(form, action){
+                                    if(action.response != null){
+                                        var response =  Ext.util.JSON.decode(action.response.responseText);
+                                        win.fireEvent('charge_failure', win, response);
+                                    }
+                                    else
+                                    {
+                                        Ext.Msg.alert("Error", 'Error Processing Credit Card');
+                                    }
                                 }
-                                else
-                                {
-                                    Ext.Msg.alert("Error", 'Error Processing Credit Card');
-                                }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
             },

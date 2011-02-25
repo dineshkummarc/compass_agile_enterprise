@@ -12,6 +12,7 @@ class ErpApp::Desktop::Knitkit::ImageAssetsController < ErpApp::Desktop::FileMan
 
   def get_images
     directory = params[:directory]
+    directory = @base_path if directory == ROOT_NODE
     data = {:images => []}
 
     Dir.entries(directory).each do |entry|
@@ -19,23 +20,15 @@ class ErpApp::Desktop::Knitkit::ImageAssetsController < ErpApp::Desktop::FileMan
         path = directory + '/' + entry
         url_path = path.gsub(@base_path.to_s, '/images/')
         #url_path = url_path.gsub('/', '\/')
-        data[:images] << {:name => entry, :size => 2555, :lastmod => 1291155496000, :url => url_path}
+        short_name = entry
+        if short_name.length > 16
+          short_name = short_name[0..13] + '...'
+        end
+        data[:images] << {:name => entry, :shortName => short_name, :url => url_path}
       end
     end unless directory.blank?
 
     render :inline => data.to_json
-  end
-
-  def upload_file
-    if request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank?
-      upload_path = params[:directory]
-    else
-      upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
-    end
-
-    result = upload_file_to_path(upload_path)
-
-    render :inline => result
   end
   
 end

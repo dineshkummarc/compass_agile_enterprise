@@ -1,4 +1,12 @@
 Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel = Ext.extend(Ext.Panel, {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
     selectApplication: function(applicationId){
         this.settingsCard.removeAll(true);
         var form = new Compass.ErpApp.Shared.PreferenceForm({
@@ -26,7 +34,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel = Ex
                         }
                         else
                         {
-                            Ext.get(responseObj.shortcutId + '-shortcut').applyStyles('diplay:none');
+                            Ext.get(responseObj.shortcutId + '-shortcut').applyStyles('display:none');
                         }
                     }
                     else{

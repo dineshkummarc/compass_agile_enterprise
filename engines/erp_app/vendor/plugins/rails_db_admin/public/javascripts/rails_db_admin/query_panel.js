@@ -36,8 +36,8 @@ Compass.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Panel, {
         });
 
         this.gridContainer = tableGridContainer;
-
-        var textAreaPanel = new Ext.Panel({
+        
+        var codeMirrorPanel = new Ext.Panel({
             height:300,
             region:'north',
             margins : '0 0 0 0',
@@ -45,10 +45,12 @@ Compass.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Panel, {
             layout:'fit',
             items:[
             {
-                xtype : 'textarea',
-                value : '' || this.initialConfig['query']
+                xtype:'codemirror',
+                parser:'sql',
+                sourceCode:this.initialConfig['query']
             }
             ]
+			
         });
 		
         this.tbar = {
@@ -56,7 +58,7 @@ Compass.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Panel, {
                 text: 'Execute',
                 iconCls: 'icon-settings',
                 handler: function(button) {
-                    var textarea = self.findByType('textarea')[0];
+                    var textarea = self.findByType('codemirror')[0];
                     var sql = textarea.getValue();
                     var database = window.RailsDbAdmin.getDatabase();
 					
@@ -175,10 +177,11 @@ Compass.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Panel, {
             }]
         };
 
-        this.items = [textAreaPanel, tableGridContainer]
+        this.items = [codeMirrorPanel, tableGridContainer]
 		
         Compass.RailsDbAdmin.QueryPanel.superclass.initComponent.call(this, arguments);
     },
+
     constructor : function(config) {
         config = Ext.apply({
             title:'Query',

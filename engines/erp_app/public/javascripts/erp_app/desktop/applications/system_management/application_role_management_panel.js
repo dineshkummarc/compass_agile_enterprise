@@ -1,5 +1,13 @@
 Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel = Ext.extend(Ext.Panel, {
 
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
     selectWidget :function(id){
         this.widgetId = id;
         this.available_roles_tree.getLoader().baseParams.id = id;
@@ -41,8 +49,7 @@ Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPa
             var roleIds = []
             var treePanel = this.current_roles_tree;
             var treeRoot = treePanel.getRootNode();
-            var savingLabel = Ext.get('app_role_mgt_saving_label');
-            savingLabel.applyStyles('visibility:visible');
+            this.setWindowStatus('Saving...');
 
             treeRoot.eachChild(function(node) {
                 roleIds.push(node.id);
@@ -54,12 +61,14 @@ Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPa
             };
 
             var conn = new Ext.data.Connection();
+            var self = this;
             conn.request({
                 url: './system_management/application_role_management/save_roles',
                 method: 'PUT',
                 jsonData:rolesJson,
                 success: function(responseObject) {
-                    savingLabel.applyStyles('visibility:hidden');
+                    //savingLabel.applyStyles('visibility:hidden');
+                    self.clearWindowStatus();
                 },
                 failure: function() {
                     Ext.Msg.alert('Status', 'Unable To Save Roles. Please Try Agian Later.');
@@ -170,9 +179,6 @@ Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPa
                     handler:function(){
                         this.saveRoles();
                     }
-                },
-                {
-                    html:'<span id="app_role_mgt_saving_label" style="visibility:hidden;color:white;font-weight:bold;padding-left:5px;">Saving...</span>'
                 }
                 ]
             },

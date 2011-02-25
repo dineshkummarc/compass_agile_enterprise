@@ -91,6 +91,16 @@ class RailsDbAdmin::Extjs::JsonColumnBuilder
      }"
   end
 
+  def self.build_text_column(column_name)
+    "{
+      header:\"#{column_name}\",
+      type:\"string\",
+      dataIndex:\"#{column_name}\",
+      width:150,
+      editor:{xtype:\"textfield\"}
+     }"
+  end
+
   def self.build_integer_column(column_name)
     json = "{
       header:\"#{column_name}\",

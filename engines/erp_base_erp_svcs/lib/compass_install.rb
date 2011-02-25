@@ -34,7 +34,7 @@ File.unlink 'public/index.html' rescue Errno::ENOENT
 patch_file 'config/environment.rb',
 "require File.join(File.dirname(__FILE__), 'boot')",
 "require File.join(File.dirname(__FILE__), '../vendor/compass/engines/erp_base_erp_svcs/boot')"
-
+  
 patch_file 'config/environment.rb',
 "config.time_zone = 'UTC'",
 "
@@ -64,14 +64,14 @@ plugin_assets = init.loaded_plugins.map { |plugin| File.join(plugin.directory, '
 init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets"
 
 puts "getting latest compass framwork engines, this may take a bit grab a LARGE coffee..."
-
+ 
 inside('vendor/compass/engines') do
   run 'svn checkout http://www.portablemind.com/svn_compass_erp/branches/look_and_book_2/vendor/plugins/erp_base_erp_svcs'
   run 'svn checkout http://www.portablemind.com/svn_compass_erp/branches/look_and_book_2/vendor/plugins/erp_tech_services'
   run 'svn checkout http://www.portablemind.com/svn_compass_erp/branches/look_and_book_2/vendor/plugins/erp_app'
   run 'svn checkout http://www.portablemind.com/svn_compass_erp/branches/look_and_book_2/vendor/plugins/erp_dev_svcs'
   run 'svn checkout http://www.portablemind.com/svn_compass_erp/branches/look_and_book_2/vendor/plugins/knitkit'
-end
+end    
 
 puts "getting latest compass framwork plugins..."
 

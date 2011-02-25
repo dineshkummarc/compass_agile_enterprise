@@ -54,7 +54,7 @@ module ActiveExt
       module_eval do
         def setup
           columns, fields = ActiveExt::ExtHelpers::TableBuilder.generate_columns_and_fields(active_ext_core)
-          render :inline => "{\"success\":true,\"columns\":#{columns},\"fields\":#{fields}}"
+          render :inline => "{\"success\":true,inline_edit:#{active_ext_core.options[:inline_edit]},\"columns\":#{columns},\"fields\":#{fields}}"
         end
 
         def data
@@ -72,6 +72,14 @@ module ActiveExt
 
           render :inline => json_text
         end
+
+        def edit
+          id = params[:id]
+          @model = active_ext_core.model.find(id)
+          @attributes = @model.attributes
+          @singular_name = active_ext_core.model_id
+        end
+
       end
     end
 

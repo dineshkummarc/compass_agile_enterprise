@@ -190,14 +190,6 @@ class Party < ActiveRecord::Base
   #** Contact Methods
   #************************************************************************************************
 
-  def find_contact_with_purpose(contact_mechanism_class, contact_purpose)
-    contact = nil
-    
-    contact = self.find_contact(contact_mechanism_class, nil, [contact_purpose])
-    
-    contact
-  end
-
   def find_contact_mechanism_with_purpose(contact_mechanism_class, contact_purpose)
     contact_mechanism = nil
 
@@ -205,6 +197,19 @@ class Party < ActiveRecord::Base
     contact_mechanism = contact.contact_mechanism unless contact.nil?
 
     contact_mechanism
+  end
+
+  def find_contact_with_purpose(contact_mechanism_class, contact_purpose)
+    contact = nil
+
+    #if a symbol or string was passed get the model
+    unless contact_purpose.is_a? ContactPurpose
+      contact_purpose = ContactPurpose.find_by_internal_identifier(contact_purpose.to_s)
+    end
+
+    contact = self.find_contact(contact_mechanism_class, nil, [contact_purpose])
+    
+    contact
   end
 
   def find_all_contacts_by_contact_mechanism(contact_mechanism_class)
@@ -233,7 +238,7 @@ class Party < ActiveRecord::Base
 
     contact = self.contacts.find(:first,
       :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.class_name}'
-                 inner join contact_purposes_contacts on contact_purposes_contacts.contact_id = contacts.id and contact_purposes_contacts.contact_purpose_id in (#{contact_purposes.collect(&:id).join(',')})",
+                 inner join contact_purposes_contacts on contact_purposes_contacts.contact_id = contacts.id and contact_purposes_contacts.contact_purpose_id in (#{contact_purposes.collect{|item| item.attributes["id"]}.join(',')})",
       :conditions => conditions)
 
     contact
@@ -248,6 +253,7 @@ class Party < ActiveRecord::Base
       contact_mechanism = contact_mechanism_class.new(contact_mechanism_args)
       contact_mechanism.contact.party = self
       contact_mechanism.contact.contact_purposes = contact_purposes
+      contact_mechanism.contact.save
       contact_mechanism.save
 
       self.contacts << contact_mechanism.contact

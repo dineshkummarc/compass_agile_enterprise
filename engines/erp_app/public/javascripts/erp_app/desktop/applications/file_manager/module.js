@@ -16,34 +16,44 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('file_manager');
         if(!win){
 
-            var ckEditorPanel = new Ext.Panel({
-                region:'center',
-                items:[{
-                    xtype:'ckeditor',
-                    autoHeight:true,
-                    ckEditorConfig:{
-                        toolbar:[['Source', '-', 'Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink','-','About'],'/',['CompassUploadFile']],
-                        base_path:'../../javascripts/ckeditor/'
-                    }
-                }
-                ]
-            });
-
+            var contentCardPanel = new Ext.Panel({
+                layout:'card',
+                autoDestroy:true,
+                frame:false,
+                border:false,
+                region:'center'
+            })
+			
             var fileTreePanel = new Compass.ErpApp.Shared.FileManagerTree({
                 xtype:'compassshared_filemanager',
                 allowDownload:true,
                 addViewContentsToContextMenu:true,
-                elementToRenderContents:ckEditorPanel.findByType('ckeditor')[0],
                 region:'west',
                 rootVisible:true,
                 loader: new Ext.tree.TreeLoader({
                     dataUrl:'./file_manager/base/expand_directory'
                 }),
                 containerScroll: true,
+                standardUploadUrl:'./file_manager/base/upload_file',
+                xhrUploadUrl:'./file_manager/base/upload_file',
                 border: false,
                 width: 250,
                 height: 300,
-                frame:true
+                frame:true,
+                listeners:{
+                    'contentLoaded':function(fileManager, node, content){
+                        var path = node.id;
+                        var fileType = path.split('.').pop();
+                        contentCardPanel.removeAll(true);
+                        contentCardPanel.add({
+                            disableToolbar:true,
+                            xtype:'codemirror',
+                            parser:fileType,
+                            sourceCode:content
+                        });
+                        contentCardPanel.getLayout().setActiveItem(0);
+                    }
+                }
             }
             );
 
@@ -58,25 +68,13 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
                 animCollapse:false,
                 constrainHeader:true,
                 layout: 'border',
-                items:[fileTreePanel,ckEditorPanel],
+                items:[fileTreePanel,contentCardPanel],
                 listeners:{
                     'destroy':function(){
                         fileTreePanel.destroy();
-                        ckEditorPanel.destroy();
+                        contentCardPanel.destroy();
                     }
                 }
-            //                tbar:{
-            //                    items:[
-            //                    {
-            //                        iconCls: 'icon-upload',
-            //                        text:'Upload Files',
-            //                        handler:function(){
-            //                            var uploadWindow = new Compass.ErpApp.Shared.UploadWindow();
-            //                            uploadWindow.show();
-            //                        }
-            //                    }
-            //                    ]
-            //                }
             });
         }
         win.show();

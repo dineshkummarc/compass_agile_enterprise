@@ -1,4 +1,12 @@
 Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.extend(Ext.Panel, {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel.superclass.initComponent.call(this, arguments);
     },
@@ -42,8 +50,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
         var roleIds = []
         var treePanel = this.findById('role_mgt_current_roles');
         var treeRoot = treePanel.getRootNode();
-        var savingLabel = Ext.get('user_managment_saving_label');
-        savingLabel.applyStyles('visibility:visible');
+        this.setWindowStatus('Saving...');
 
         treeRoot.eachChild(function(node) {
             roleIds.push(node.id);
@@ -55,15 +62,16 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
         };
 
         var conn = new Ext.data.Connection();
+        var self = this;
         conn.request({
             url: './user_management/role_management/save_roles',
             method: 'PUT',
             jsonData:rolesJson,
             success: function(responseObject) {
-                savingLabel.applyStyles('visibility:hidden');
+                self.clearWindowStatus();
             },
             failure: function() {
-                savingLabel.applyStyles('visibility:hidden');
+                self.clearWindowStatus();
                 Ext.Msg.alert('Status', 'Unable To Save Roles. Please Try Agian Later.');
             }
         });
@@ -79,7 +87,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
                 dataUrl:'./user_management/role_management/available_roles',
                 baseParams:{
                     user_id:config['userId']
-                    }
+                }
             }),
             enableDD:true,
             containerScroll: true,
@@ -90,14 +98,14 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
             enableDrop:false,
             tbar:{
                 items:[
-                    {
-                        text:'Add All',
-                        iconCls:'icon-add',
-                        scope:this,
-                        handler:function(){
-                            this.addAllAvailableRoles();
-                        }
+                {
+                    text:'Add All',
+                    iconCls:'icon-add',
+                    scope:this,
+                    handler:function(){
+                        this.addAllAvailableRoles();
                     }
+                }
                 ]
             },
             root:new Ext.tree.AsyncTreeNode({
@@ -115,22 +123,22 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
                 dataUrl:'./user_management/role_management/current_roles',
                 baseParams:{
                     user_id:config['userId']
-                    }
+                }
             }),
             root:new Ext.tree.AsyncTreeNode({
                 text: 'Current Roles',
                 draggable:false
             }),
-             tbar:{
+            tbar:{
                 items:[
-                    {
-                        text:'Remove All',
-                        iconCls:'icon-delete',
-                        scope:this,
-                        handler:function(){
-                            this.removeAllCurrentRoles();
-                        }
+                {
+                    text:'Remove All',
+                    iconCls:'icon-delete',
+                    scope:this,
+                    handler:function(){
+                        this.removeAllCurrentRoles();
                     }
+                }
                 ]
             },
             enableDD:true,

@@ -52,7 +52,7 @@ Ext.Desktop = function(app) {
     this.layout = layout;
 
     this.createWindow = function(config, cls) {
-        var win = new(cls || Ext.Window)(
+        var win = new(cls || Compass.ErpApp.Shared.StatusWindow)(
             Ext.applyIf(config || {},
             {
                 renderTo: desktopEl,

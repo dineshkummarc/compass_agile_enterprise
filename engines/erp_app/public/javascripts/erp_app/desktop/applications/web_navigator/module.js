@@ -21,16 +21,20 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
         }
     },
 
-    createWindow : function(){
+    createWindow : function(url){
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('web_navigator');
         if(!win){
+            if(Compass.ErpApp.Utility.isBlank(url)){
+                url = 'http://www.portablemind.com';
+            }
+
             var tbarItems = [
             {
                 xtype:'textfield',
                 id:'web_navigator_textfield',
                 width:500,
-                value:'http://www.portablemind.com',
+                value:url,
                 listeners: {
                     specialkey:function(el, e){
                         if(e.getKey() == e.ENTER) {
@@ -82,7 +86,7 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                     xtype:'panel',
                     layout:'fit',
                     tbar:{items:tbarItems,autoScroll:true},
-                    html:'<iframe id="web_navigator_iframe" height="100%" width="100%" src="http://www.portablemind.com"></iframe>'
+                    html:'<iframe id="web_navigator_iframe" height="100%" width="100%" src="'+url+'"></iframe>'
                 }
                 ]
             });

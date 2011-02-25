@@ -1,5 +1,6 @@
 class ErpApp::Desktop::SystemManagement::RolesController < ErpApp::Desktop::SystemManagement::BaseController
   active_ext :role do |options|
+    options[:inline_edit] = true
     options[:show_id] = true
     options[:ignore_associations] = false
     options[:show_timestamps] = true

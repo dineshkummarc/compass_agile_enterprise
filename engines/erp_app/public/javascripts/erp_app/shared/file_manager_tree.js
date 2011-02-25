@@ -2,26 +2,48 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
     /*
 	addtional config options
 	
-	elementToRenderContents    : ext element to render file contents to
 	additionalContextMenuItems : any additional context menus you want to add
 	allowDownload		   : if the user can download the file
 
 
         window.file_manager_context_menu_node
         the above variable will be set when the context menu is shown.
-	*/
+     */
 
     initComponent: function() {
         Compass.ErpApp.Shared.FileManagerTree.superclass.initComponent.call(this, arguments);
 
         this.addEvents(
             /**
-             * @event fileuploaded
-             * Fired after file is deleted.
-             * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
-             * @param (Ext.Tree.Node) node Node that was deleted
-             */
-            'fileDeleted'
+         * @event fileDeleted
+         * Fired after file is deleted.
+         * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
+         * @param (Ext.Tree.Node) node Node that was deleted
+         */
+            'fileDeleted',
+            /**
+         * @event fileuploaded
+         * Fired after file is uploaded.
+         * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
+         * @param (Ext.Tree.Node) node Node that was file was uploaded to
+         */
+            'fileUploaded',
+            /**
+         * @event contentLoaded
+         * Fired after cotent is loaded from server
+         * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
+	 * @param {Ext.Tree.Node} node Node that content was loaded for
+         * @param (String) content returned from server
+         */
+            'contentLoaded',
+             /**
+         * @event contextMenu
+         * Fired after cotent is loaded from server
+         * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
+         * @param {Ext.Tree.Node} node Node that content was loaded for
+         * @param (Event) event for this click
+         */
+            'handleContextMenu'
             );
 
         this.setRootNode({
@@ -32,10 +54,12 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
             allowDrop:false
         });
     },
-	
+
+    selectedNode:null,
+
     constructor: function(config){
         var self = this;
-        defaultListeners = {
+        var defaultListeners = {
             scope:this,
             'movenode':function(tree, node, oldParent, newParent, index){
                 Ext.MessageBox.confirm('Confirm', 'Are you sure you want to move this file?', function(btn){
@@ -74,6 +98,12 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
             },
             'contextmenu':function(node, e){
                 e.stopEvent();
+                if(node.attributes['contextMenuDisabled']) return false;
+                if(node.attributes['handleContextMenu']){
+                    self.fireEvent('handleContextMenu', this, node, e);
+                    return false;
+                }
+                self.selectedNode = node;
                 var menuItems = [
                 {
                     text:'Rename',
@@ -217,6 +247,7 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
 				
                 //if this is not a leaf allow reload
                 if(!node.attributes['leaf']){
+                    /*reload folder menu item*/
                     menuItems.push({
                         text:'Reload',
                         iconCls:'icon-recycle',
@@ -224,6 +255,98 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
                             scope:this,
                             'click':function(){
                                 node.reload();
+                            }
+                        }
+                    });
+
+                    /*upload menu item*/
+                    menuItems.push({
+                        text:'Upload',
+                        iconCls:'icon-upload',
+                        listeners:{
+                            scope:self,
+                            'click':function(){
+                                var uploadWindow = new Compass.ErpApp.Shared.UploadWindow({
+                                    standardUploadUrl:this.initialConfig['standardUploadUrl'],
+                                    flashUploadUrl:this.initialConfig['flashUploadUrl'],
+                                    xhrUploadUrl:this.initialConfig['xhrUploadUrl'],
+                                    extraPostData:{
+                                        directory:node.id
+                                    },
+                                    listeners:{
+                                        'fileuploaded':function(){
+                                            node.reload();
+                                            self.fireEvent('fileUploaded', this, node);
+                                        }
+                                    }
+                                });
+                                uploadWindow.show();
+                            }
+                        }
+                    });
+
+                    /*new file*/
+                    menuItems.push({
+                        text:'New File',
+                        iconCls:'icon-document',
+                        listeners:{
+                            scope:self,
+                            'click':function(){
+                                Ext.MessageBox.prompt('New File', 'Please enter new file name:', function(btn, text){
+                                    if(btn == 'ok'){
+                                        var msg = Ext.Msg.wait("Processing", "Creating new file...");
+                                        var conn = new Ext.data.Connection();
+                                        conn.request({
+                                            url: './file_manager/base/create_file',
+                                            method: 'POST',
+                                            params:{
+                                                path:node.id,
+                                                name:text
+                                            },
+                                            success: function(response) {
+                                                msg.hide();
+                                                node.reload();
+                                            },
+                                            failure: function() {
+                                                Ext.Msg.alert('Status', 'Error creating file.');
+                                                msg.hide();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    /*new folder menu item*/
+                    menuItems.push({
+                        text:'New Folder',
+                        iconCls:'icon-content',
+                        listeners:{
+                            scope:this,
+                            'click':function(){
+                                Ext.MessageBox.prompt('New Folder', 'Please enter new folder name:', function(btn, text){
+                                    if(btn == 'ok'){
+                                        var msg = Ext.Msg.wait("Processing", "Creating new folder...");
+                                        var conn = new Ext.data.Connection();
+                                        conn.request({
+                                            url: './file_manager/base/create_folder',
+                                            method: 'POST',
+                                            params:{
+                                                path:node.id,
+                                                name:text
+                                            },
+                                            success: function(response) {
+                                                msg.hide();
+                                                node.reload();
+                                            },
+                                            failure: function() {
+                                                Ext.Msg.alert('Status', 'Error creating folder.');
+                                                msg.hide();
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         }
                     });
@@ -246,8 +369,8 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
                                             node:node.id
                                         },
                                         success: function(response) {
-                                            elementToRenderContents.setValue(response.responseText);
                                             msg.hide();
+                                            self.fireEvent('contentLoaded', this, node, response.responseText);
                                         },
                                         failure: function() {
                                             Ext.Msg.alert('Status', 'Error loading contents');
@@ -265,7 +388,7 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
                             iconCls:'icon-document',
                             listeners:{
                                 'click':function(){
-                                    Ext.get('download_frame').dom.src = "./file_manager/base/download_file/?path=" + node.id
+                                    window.open("./file_manager/base/download_file/?path=" + node.id,'mywindow','width=400,height=200');
                                 }
                             }
                         });

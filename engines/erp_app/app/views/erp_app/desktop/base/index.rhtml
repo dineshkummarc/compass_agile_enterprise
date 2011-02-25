@@ -7,6 +7,7 @@
 %>
         #<%=application.shortcut_id%>-shortcut img{
           background-image:url("../../images/icons/<%=application.icon.split('-')[1]%>/<%=application.icon.split('-')[1]%>_48x48.png");
+          background-repeat:no-repeat;
           height:48px;
           width:48px;
         }
@@ -15,6 +16,7 @@ end
 %>
       #control-panel-win-shortcut img{
         background-image:url("../../images/icons/gear/gear_48x48.png");
+        background-repeat:no-repeat;
         height:48px;
         width:48px;
       }
@@ -22,12 +24,14 @@ end
       #web-navigator-win-shortcut img{
         background-image:url("../../images/icons/globe/globe_48x48.png");
         height:48px;
+        background-repeat:no-repeat;
         width:48px;
       }
 
       .taskbar_clock {
         float:right;
         padding-right:5px;
+        background-repeat:no-repeat;
         color:white;
         font-weight:bold;
       }
@@ -44,6 +48,10 @@ end
       "ext_3_3_0/DataView-more.js",
       "erp_app/authentication/role_manager.js",
       "erp_app/utility.js",
+      "erp_app/shared/active_ext/active_ext_grid.js",
+      "erp_app/shared/status_window.js",
+      "erp_app/shared/active_ext/active_ext_grid_panel.js",
+      "erp_app/shared/dynamic_editable_grid_loader_panel.js",
       "erp_app/shared/dynamic_editable_grid.js",
       "erp_app/shared/dynamic_editable_grid_loader_panel.js",
       "erp_app/shared/preference_form.js",
@@ -67,6 +75,7 @@ end
       #"timeshare/GanttGrid.js"
     )
   %>
+  <%=include_code_mirror%>
   <%=include_file_upload%>
   <%=setup_role_manager(@user)%>
   <%@desktop.applications.each do |application|%><%=application.load_resources%><%end%>
@@ -177,6 +186,6 @@ end
 %>
   });
     </script>
-    <iframe id="download_frame"></iframe>
+    <!--<iframe id="download_frame"></iframe>-->
   </body>
 </html>

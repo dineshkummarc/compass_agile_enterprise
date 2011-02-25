@@ -11,7 +11,7 @@ module ActiveExt::ExtHelpers::TableBuilder
 
   def self.build_columns(core)
     columns = []
-    
+
     #add id column if showing it
     if core.options[:show_id]
       columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:id], {:readonly => true})

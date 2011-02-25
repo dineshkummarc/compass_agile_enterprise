@@ -204,10 +204,14 @@ namespace :compass do
 
   def install(type, plugins)
     FileUtils.mkdir_p(target) unless File.exists?(target)
-    sources = plugins.map { |engine| source(type, engine) }
+    sources = 
     
     if Rake.application.unix?
-      FileUtils.ln_s sources, target, :force => true
+      plugins.each do  |engine|
+        source_path = source(type, engine)
+        relative_source = Pathname.new(source_path).relative_path_from(Pathname.new("#{target}/")).to_s
+        test = FileUtils.ln_s relative_source, "#{target}/#{engine}", :force => true # :verbose => true
+      end 
     elsif Rake.application.windows?
       FileUtils.cp_r sources, target
     else
@@ -427,7 +431,7 @@ namespace :db do
     
     Rake::Task["db:migrate:cleanup_migrations"].reenable
     Rake::Task["db:migrate:cleanup_migrations"].invoke
-    puts "completed db:migrate\n\n"
+    #puts "completed db:migrate\n\n"
   end
 
   namespace :migrate do
@@ -444,13 +448,13 @@ namespace :db do
     task :prepare_migrations do
       
       target = "#{Rails.root}/db/migrate/"
-      puts "\n\npreparing migrations in: #{target}}\n"
+      #puts "\n\npreparing migrations in: #{target}}\n"
       # first copy all app migrations away
       files = Dir["#{target}*.rb"]
 
       unless files.empty?
         FileUtils.mkdir_p "#{target}app/"
-        FileUtils.cp files, "#{target}app/", { :verbose => true}
+        FileUtils.cp files, "#{target}app/"
         puts "copied #{files.size} migrations to db/migrate/app"
       end
 
@@ -459,7 +463,7 @@ namespace :db do
 
       unless files.empty?
         FileUtils.mkdir_p target
-        FileUtils.cp files, target #, { :verbose => true}
+        FileUtils.cp files, target
         puts "copied #{files.size} migrations to db/migrate"
       end
     end#end task

@@ -117,11 +117,6 @@
   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/delete/delete_16x16.png', sizingMethod='crop');
 }
 
-.icon-add {
-  background-image:url( /images/icons/add/add_16x16.png ) !important;
-  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/add/add_16x16.png', sizingMethod='crop');
-}
-
 .icon-search {
   background-image:url( /images/icons/search/search_16x16.png ) !important;
   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/search/search_16x16.png', sizingMethod='crop');
@@ -216,6 +211,11 @@
   background-image:url( /images/erp_app/desktop/image_add.png ) !important;
   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/erp_app/desktop/image_add.png', sizingMethod='crop');
 
+}
+
+.icon-blog {
+  background-image:url( /images/icons/blog/blog_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/blog/blog_16x16.png', sizingMethod='crop');
 }
 
 

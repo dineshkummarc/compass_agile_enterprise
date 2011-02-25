@@ -13,6 +13,12 @@ ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_
 #if model exists in app/model this plugins model needs reloaded every request
 #this runs only once when in production mode
 config.to_prepare do
+  #check if this is windows.  PermalinkFu has issues in windows with iconv
+  if RUBY_PLATFORM =~ /(:?mswin|mingw)/
+    PermalinkFu.translation_to = nil
+    PermalinkFu.translation_from = nil
+  end
+  
   RAILS_DEFAULT_LOGGER.debug("** reloading #{self.name} plugin") if RAILS_DEFAULT_LOGGER
   self.reload
 end

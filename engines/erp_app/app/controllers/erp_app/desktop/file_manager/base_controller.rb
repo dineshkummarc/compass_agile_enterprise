@@ -2,9 +2,37 @@ require 'fileutils'
 
 class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseController
   REMOVE_FILES_REGEX = /^\./
+  ROOT_NODE = 'root_node'
 
   def initialize
     @base_path = Rails.root.to_s
+  end
+
+  def update_file
+    path     = params[:node]
+    content = params[:content]
+
+    File.open(path, 'w+') {|f| f.write(content) }
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def create_file
+    path = params[:path]
+    name = params[:name]
+
+    File.open(File.join(path,name), 'w+') {|f| f.write('') }
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def create_folder
+    path = params[:path]
+    name = params[:name]
+
+    FileUtils.mkdir_p File.join(path,name)
+
+    render :inline => {:success => true}.to_json
   end
 
   def download_file
@@ -62,7 +90,14 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
   end
 
   def upload_file
-    upload_path = @base_path + "vendor/plugins/erp_app/uploads"
+    if request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank?
+      upload_path = params[:directory]
+    else
+      upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
+    end
+
+    upload_path = @base_path if upload_path == ROOT_NODE
+
     result = upload_file_to_path(upload_path)
 
     render :inline => result
@@ -73,19 +108,15 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
   end
   
   def get_contents
-    path = params[:node]
     contents = ''
-    
-    File.open(path).each_line do |l|
-      contents << l
-    end
-
-    render :inline => contents
+    path = params[:node]
+    contents = IO.read(path) unless path == ROOT_NODE
+    render :text => contents
   end
   
   protected
 
-  def upload_file_to_path(upload_path)
+  def upload_file_to_path(upload_path, valid_file_type_regex=nil)
     result = {}
 
     unless File.directory? upload_path
@@ -105,7 +136,10 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
       end
     end
 
-    if File.exists? "#{upload_path}/#{name}"
+    if !valid_file_type_regex.nil? && name !=~ valid_file_type_regex
+      result[:success] = false
+      result[:error]   = "Invalid file type"
+    elsif File.exists? "#{upload_path}/#{name}"
       result[:success] = false
       result[:error]   = "file #{name} already exists"
     else
@@ -118,7 +152,7 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
 
   def expand_file_directory(path, options={})
     #if path is root use root path else append it
-    if path == 'root_node'
+    if path == ROOT_NODE
       path = @base_path
     end
 
@@ -131,8 +165,6 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
     Dir.entries(directory).each do |entry|
       #ignore .svn folders and any other folders starting with .
       next if entry =~ REMOVE_FILES_REGEX
-      #only include files with the extension we are looking for
-      next if entry !=~ options[:included_file_extensions_regex] unless options[:included_file_extensions_regex].nil?
 
       #check if we want folders only
       if options[:folders_only]
@@ -147,8 +179,14 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
           leaf = true
         end
       end
-       tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
-    end
+      if File.directory?(directory + '/' + entry)
+        tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
+      elsif !options[:included_file_extensions_regex].nil? && entry =~ options[:included_file_extensions_regex]
+        tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
+      elsif options[:included_file_extensions_regex].nil?
+        tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
+      end 
+    end if File.directory?(directory)
     
     tree_data.to_json
   end

@@ -6,7 +6,7 @@ class ErpApp::Desktop::ControlPanel::ApplicationManagementController < ErpApp::D
     node_hashes = []
     desktop = user.desktop
     desktop.applications.each do |application|
-      node_hashes << {:text => application.description, :icon_cls => application.icon, :id => application.id}
+      node_hashes << {:text => application.description, :icon_cls => application.icon, :is_leaf => true, :id => application.id}
     end
     
     render :inline => build_ext_tree(node_hashes)

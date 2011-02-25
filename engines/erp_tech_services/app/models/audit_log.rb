@@ -5,6 +5,7 @@ class AuditLog < ActiveRecord::Base
   validates_presence_of :audit_log_type
 
   belongs_to :audit_log_type
+  has_many   :audit_log_items
   belongs_to :event_record, :polymorphic => true
 
   def user_id_name

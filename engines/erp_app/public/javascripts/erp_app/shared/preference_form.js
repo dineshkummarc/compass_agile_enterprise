@@ -1,11 +1,19 @@
 Ext.ns("Compass.ErpApp.Shared");
 
 Compass.ErpApp.Shared.PreferenceForm = Ext.extend(Ext.FormPanel, {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
 
     setup: function(){
-        var self = this;
-        self.wait = Ext.Msg.wait('Loading Preferences...');
+        this.disable();
+        this.setWindowStatus('Loading Preferences...');
         var conn = new Ext.data.Connection();
+        var self = this;
         conn.request({
             url: self.initialConfig.setupPreferencesUrl,
             success: function(responseObject) {
@@ -20,9 +28,7 @@ Compass.ErpApp.Shared.PreferenceForm = Ext.extend(Ext.FormPanel, {
 
     buildPreferenceForm: function(preferenceTypes){
         var self = this;
-
         var result = this.fireEvent('beforeAddItemsToForm', self, preferenceTypes);
-
         if(result != false)
         {
             Ext.each(preferenceTypes, function(preferenceType){
@@ -54,7 +60,7 @@ Compass.ErpApp.Shared.PreferenceForm = Ext.extend(Ext.FormPanel, {
         conn.request({
             url: self.initialConfig.loadPreferencesUrl,
             success: function(responseObject) {
-                var response =  Ext.util.JSON.decode(responseObject.responseText);
+                var response = Ext.util.JSON.decode(responseObject.responseText);
                 self.setPreferences(response.preferences);
             },
             failure: function() {
@@ -73,7 +79,8 @@ Compass.ErpApp.Shared.PreferenceForm = Ext.extend(Ext.FormPanel, {
             });
         }
         this.fireEvent('afterSetPreferences', self, preferences);
-        self.wait.hide();
+        this.clearWindowStatus();
+        this.enable();
     },
 
     initComponent: function() {
@@ -122,17 +129,22 @@ Compass.ErpApp.Shared.PreferenceForm = Ext.extend(Ext.FormPanel, {
             {
                 text:'Update',
                 handler:function(button){
+                    //self.disable();
+                    self.setWindowStatus('Updating Preferences...');
                     self.getForm().submit({
                         reset:false,
-                        waitMsg:'Updating Preferences...',
                         success:function(form, action){
-                            var response =  Ext.util.JSON.decode(action.response.responseText);
+                            var response = Ext.util.JSON.decode(action.response.responseText);
                             self.setPreferences(response.preferences);
                             self.fireEvent('afterUpdate', self, response.preferences, action.response);
+                            //self.enable();
+                            self.clearWindowStatus();
                         },
                         failure:function(form, action){
                             var message = 'Error Saving Preferences'
                             Ext.Msg.alert("Status", message);
+                            //self.enable();
+                            self.clearWindowStatus();
                         }
                     });
                 }

@@ -10,21 +10,31 @@ Compass.ErpApp.Desktop.Applications.Knitkit  = Ext.extend(Ext.app.Module, {
             scope: this
         }
     },
+
     createWindow : function(){
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('knitkit');
+        this.centerRegion = new Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion();
         if(!win){
             win = desktop.createWindow({
                 id: 'knitkit',
                 title:'KnitKit',
-                width:1000,
-                height:500,
+                autoDestroy:true,
+                width:1200,
+                height:800,
                 iconCls: 'icon-globe',
                 shim:false,
                 animCollapse:false,
                 constrainHeader:true,
                 layout: 'border',
-                items:[{ xtype:'knitkit_centerregion'},{xtype:'knitkit_eastregion'},{xtype:'knitkit_westregion'}]
+                items:[this.centerRegion,{
+                    xtype:'knitkit_eastregion',
+                    module:this
+                },{
+                    xtype:'knitkit_westregion',
+                    centerRegion:this.centerRegion,
+                    module:this
+                }]
             });
         }
         win.show();

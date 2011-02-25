@@ -3,6 +3,7 @@ ActionController::Routing::Routes.draw do |map|
   #ErpApp general routes
   ##########################
   map.desktop_logout '/erp_app/logout', :controller => 'erp_app/application', :action => 'destroy'
+  map.connect '/erp_app/public/:action', :controller => 'erp_app/public'
 
   #############################
   #Organizer Application Routes
@@ -11,6 +12,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/organizer', :controller => 'erp_app/organizer/base', :action => 'index'
   
   #Organizer Applications
+
+  #admin_center
+  map.connect '/erp_app/organizer/admin_center/:action', :controller => 'erp_app/organizer/admin_center/base'
   
   #crm
   map.connect '/erp_app/organizer/crm/:action/:id', :controller => 'erp_app/organizer/crm/base'
@@ -36,7 +40,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/system_management/role_type/:action', :controller => 'erp_app/desktop/system_management/role_type'
 
   map.connect '/erp_app/desktop/system_management/:action', :controller => 'erp_app/desktop/system_management/base'
-  map.connect '/erp_app/desktop/system_management/roles/:action', :controller => 'erp_app/desktop/system_management/roles'
+  map.connect '/erp_app/desktop/system_management/roles/:action/:id', :controller => 'erp_app/desktop/system_management/roles'
   map.connect '/erp_app/desktop/system_management/application_role_management/:action', :controller => 'erp_app/desktop/system_management/application_role_management'
 
   #control_panel

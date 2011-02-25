@@ -35,7 +35,7 @@ class ErpApp::Desktop::BaseController < ErpApp::ApplicationController
       ext_json << "iconCls: \"#{node_hash[:icon_cls]}\","
     end
 
-    if node_hash[:children].blank?
+    if node_hash[:is_leaf]
       ext_json << "leaf:true},"
     else
       ext_json << "children:["

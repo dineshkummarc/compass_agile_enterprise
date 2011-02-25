@@ -1,12 +1,23 @@
-#images .thumb img {
+#image-assets .thumb img {
     border: 1px solid white;
     height: 60px;
-    width: 80px;
+    width: 90px;
 }
 
-#images .thumb-wrap {
+#image-assets .thumb-wrap {
     float: left;
     margin: 4px 0 4px 4px;
     padding: 5px;
 }
 
+#image-assets .thumb {
+    background: none repeat scroll 0 0 #DDDDDD;
+    padding: 3px;
+}
+
+#images-assets .thumb-wrap span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+	width: 80px;
+}

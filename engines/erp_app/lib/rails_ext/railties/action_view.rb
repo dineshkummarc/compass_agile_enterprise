@@ -34,4 +34,13 @@ ActionView::Base.class_eval do
     roles = user.roles
     "<script type='text/javascript'>ErpApp.Authentication.RoleManager.roles = [#{roles.collect{|role| "'#{role.internal_identifier}'"}.join(',')}];</script>"
   end
+
+  def include_code_mirror
+    resources = ''
+
+    resources << javascript_include_tag("/javascripts/erp_app/codemirror/codemirror.js", "/javascripts/erp_app/shared/compass_codemirror.js")
+    
+
+    resources
+  end
 end
