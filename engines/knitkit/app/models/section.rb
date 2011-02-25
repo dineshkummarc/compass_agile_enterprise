@@ -4,7 +4,7 @@ class Section < ActiveRecord::Base
   @@types = ['Page']
   cattr_reader :types
   
-  acts_as_nested_set :scope => :site_id if tables.include?('sections') #better nested set tries to use this before the table is there...
+  acts_as_nested_set :scope => :site_id if ActiveRecord::Base.connection.tables.include?('sections') #better nested set tries to use this before the table is there...
   
   belongs_to :site
   has_many :section_contents
