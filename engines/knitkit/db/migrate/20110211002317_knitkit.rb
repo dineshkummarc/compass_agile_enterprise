@@ -54,7 +54,7 @@ class Knitkit < ActiveRecord::Migration
       add_index :contents, :type
     end
     
-    unless table_exists?(:section_contents, :id => false)
+    unless table_exists?(:section_contents)
       create_table :section_contents do |t|
         t.integer :section_id
         t.integer :content_id
