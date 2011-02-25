@@ -1,3 +1,5 @@
+require 'fileutils'
+
 Paperclip.interpolates(:theme_file_url) { |data, style| data.instance.url  }
 Paperclip.interpolates(:theme_file_path) { |data, style| data.instance.path }
 
@@ -17,8 +19,8 @@ class Theme < ActiveRecord::Base
                       :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
 
     # NOTE before_save order is important here
-    before_save :force_directory
-    before_save :ensure_unique_filename
+    #before_save :force_directory
+    #before_save :ensure_unique_filename
     after_save :move_data_file
 
     validates_presence_of :name
@@ -154,17 +156,17 @@ class Theme < ActiveRecord::Base
         # stop deleting directories
       end
       
-      def ensure_unique_filename
-        if new_record? || changes['data_file_name']
-          basename, extname = self.basename, self.extname
-          i = extname =~ /^\d+\./ ? $1 : 1
-          while ::File.exists?(path)
-            self.name = [basename, i, extname].to_path('.')
-            self.data_file_name = [basename, i, extname].to_path('.')
-            i += 1
-          end
-        end
-      end    
+#      def ensure_unique_filename
+#        if new_record? || changes['data_file_name']
+#          basename, extname = self.basename, self.extname
+#          i = extname =~ /^\d+\./ ? $1 : 1
+#          while ::File.exists?(path)
+#            self.name = [basename, i, extname].to_path('.')
+#            self.data_file_name = [basename, i, extname].to_path('.')
+#            i += 1
+#          end
+#        end
+#      end
     
   end
   

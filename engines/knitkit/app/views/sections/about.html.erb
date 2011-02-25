@@ -1,0 +1,3 @@
+<h2><%=h @section.title %></h2>
+<p>Created at: <%= @contents.first.created_at.to_s(:long) %></p>
+<%= @contents.first.body_html %>

@@ -79,11 +79,11 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
     path = params[:node]
     
     unless File.exists? path
-      json_str = "{success:false, msg:'File does not exists'}"
+      json_str = "{success:false, error:'File does not exists'}"
     else
       name = File.basename(path)
       File.delete(path)
-      json_str = "{success:true, msg:'#{name} was deleted successfully'}"
+      json_str = "{success:true, error:'#{name} was deleted successfully'}"
     end
 
     render :inline => json_str

@@ -218,6 +218,11 @@
   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/blog/blog_16x16.png', sizingMethod='crop');
 }
 
+.icon-document_out {
+  background-image:url( /images/icons/document_out/document_out_16x16.png ) !important;
+  filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_out/document_out_16x16.png', sizingMethod='crop');
+}
+
 
 
 

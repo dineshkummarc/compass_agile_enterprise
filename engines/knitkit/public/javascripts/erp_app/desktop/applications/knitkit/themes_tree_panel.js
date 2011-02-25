@@ -32,6 +32,41 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
             }
         });
     },
+
+    deleteTheme : function(themeId){
+        var self = this;
+        self.initialConfig['centerRegion'].setWindowStatus('Deleting theme...');
+        var conn = new Ext.data.Connection();
+        conn.request({
+            url: './knitkit/theme/delete',
+            method: 'POST',
+            params:{
+                id:themeId
+            },
+            success: function(response) {
+                var obj =  Ext.util.JSON.decode(response.responseText);
+                if(obj.success){
+                    self.initialConfig['centerRegion'].clearWindowStatus();
+                    self.getRootNode().reload();
+                }
+                else{
+                    Ext.Msg.alert('Error', 'Error deleting theme');
+                    self.initialConfig['centerRegion'].clearWindowStatus();
+                }
+            },
+            failure: function(response) {
+                self.initialConfig['centerRegion'].clearWindowStatus();
+                Ext.Msg.alert('Error', 'Error deleting theme');
+            }
+        });
+    },
+
+    exportTheme : function(themeId){
+        var self = this;
+        self.initialConfig['centerRegion'].setWindowStatus('Exporting theme...');
+        window.open('/erp_app/desktop/knitkit/theme/export?id='+themeId,'mywindow','width=400,height=200');
+        self.initialConfig['centerRegion'].clearWindowStatus();
+    },
   
     constructor : function(config) {
         var sitesJsonStore = new Ext.data.JsonStore({
@@ -47,15 +82,32 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
             ]
         });
 
+        var themesJsonStore = new Ext.data.JsonStore({
+            url:'./knitkit/theme/available_themes',
+            root: 'themes',
+            fields: [
+            {
+                name:'name'
+            },
+            {
+                name:'id'
+            }
+            ],
+            baseParams:{
+                site_id:null
+            }
+        });
+
         var self = this;
         config = Ext.apply({
             title:'Themes',
+            controllerPath:'./knitkit/theme',
             autoDestroy:true,
             allowDownload:true,
             addViewContentsToContextMenu:true,
             rootVisible:false,
-            standardUploadUrl:'./knitkit/file_assets/upload_file',
-            xhrUploadUrl:'./knitkit/file_assets/upload_file',
+            standardUploadUrl:'./knitkit/theme/upload_file',
+            xhrUploadUrl:'./knitkit/theme/upload_file',
             loader: new Ext.tree.TreeLoader({
                 dataUrl:'./knitkit/theme/index'
             }),
@@ -89,6 +141,24 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                 }
                             });
                         }
+                        items.push({
+                            text:'Delete Theme',
+                            iconCls:'icon-delete',
+                            listeners:{
+                                'click':function(){
+                                    self.deleteTheme(node.id);
+                                }
+                            }
+                        });
+                        items.push({
+                            text:'Export',
+                            iconCls:'icon-document_out',
+                            listeners:{
+                                'click':function(){
+                                    self.exportTheme(node.id);
+                                }
+                            }
+                        });
                         var contextMenu = new Ext.menu.Menu({
                             items:items
                         });
@@ -107,13 +177,14 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                             layout:'fit',
                             width:375,
                             title:'New Theme',
-                            height:300,
+                            height:325,
                             plain: true,
                             buttonAlign:'center',
                             items: new Ext.FormPanel({
                                 labelWidth: 110,
                                 frame:false,
                                 bodyStyle:'padding:5px 5px 0',
+                                fileUpload: true,
                                 url:'./knitkit/theme/new',
                                 defaults: {
                                     width: 225
@@ -150,26 +221,34 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                 {
                                     xtype:'textfield',
                                     fieldLabel:'Version',
-                                    allowBlank:false,
+                                    allowBlank:true,
                                     name:'version'
                                 },
                                 {
                                     xtype:'textfield',
                                     fieldLabel:'Author',
-                                    allowBlank:false,
+                                    allowBlank:true,
                                     name:'author'
                                 },
                                 {
                                     xtype:'textfield',
                                     fieldLabel:'HomePage',
-                                    allowBlank:false,
+                                    allowBlank:true,
                                     name:'homepage'
                                 },
                                 {
                                     xtype:'textarea',
                                     fieldLabel:'Summary',
-                                    allowBlank:false,
+                                    allowBlank:true,
                                     name:'summary'
+                                },
+                                {
+                                    xtype:'fileuploadfield',
+                                    fieldLabel:'Upload Theme',
+                                    buttonText:'Upload',
+                                    buttonOnly:false,
+                                    allowBlank:true,
+                                    name:'theme_data'
                                 }
                                 ]
                             }),
@@ -204,6 +283,117 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                             }]
                         });
                         addThemeWindow.show();
+                    }
+                },
+                {
+                    text:'Copy Theme',
+                    iconCls:'icon-copy',
+                    handler:function(btn){
+                        var copyThemeWindow = new Ext.Window({
+                            layout:'fit',
+                            width:375,
+                            title:'Copy Theme',
+                            height:175,
+                            plain: true,
+                            buttonAlign:'center',
+                            items: new Ext.FormPanel({
+                                labelWidth: 110,
+                                frame:false,
+                                bodyStyle:'padding:5px 5px 0',
+                                fileUpload: true,
+                                url:'./knitkit/theme/copy',
+                                defaults: {
+                                    width: 225
+                                },
+                                items: [
+                                {
+                                    xtype:'combo',
+                                    hiddenName:'site_id',
+                                    store:sitesJsonStore,
+                                    forceSelection:true,
+                                    editable:false,
+                                    fieldLabel:'Website',
+                                    emptyText:'Select Site...',
+                                    typeAhead: false,
+                                    mode: 'remote',
+                                    displayField:'name',
+                                    valueField:'id',
+                                    triggerAction: 'all',
+                                    allowBlank:false,
+                                    listeners:{
+                                        'select':function(combo, record, index){
+                                            themesJsonStore.setBaseParam('site_id', record.get('id'));
+                                            themesJsonStore.load();
+                                            Ext.getCmp('knitkit_themes_tree_panel_copy_theme_themes_combo').enable();
+                                        }
+
+                                    }
+                                },
+                                {
+                                    xtype:'combo',
+                                    hiddenName:'id',
+                                    id:'knitkit_themes_tree_panel_copy_theme_themes_combo',
+                                    store:themesJsonStore,
+                                    forceSelection:true,
+                                    editable:false,
+                                    disabled:true,
+                                    fieldLabel:'Theme',
+                                    emptyText:'Select Theme...',
+                                    typeAhead: false,
+                                    mode: 'remote',
+                                    displayField:'name',
+                                    valueField:'id',
+                                    triggerAction: 'all',
+                                    allowBlank:false
+                                },
+                                {
+                                    xtype:'textfield',
+                                    fieldLabel:'Name',
+                                    allowBlank:false,
+                                    name:'name'
+                                },
+                                {
+                                    xtype:'textfield',
+                                    fieldLabel:'Theme ID',
+                                    allowBlank:false,
+                                    name:'theme_id'
+                                }
+                                ]
+                            }),
+                            buttons: [{
+                                text:'Submit',
+                                listeners:{
+                                    'click':function(button){
+                                        var window = button.findParentByType('window');
+                                        var formPanel = window.findByType('form')[0];
+                                        self.initialConfig['centerRegion'].setWindowStatus('Copying theme...');
+                                        formPanel.getForm().submit({
+                                            reset:true,
+                                            success:function(form, action){
+                                                self.initialConfig['centerRegion'].clearWindowStatus();
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                if(obj.success){
+                                                    self.getRootNode().reload();
+                                                }
+                                                else{
+                                                    Ext.Msg.alert("Error", "Error copying theme");
+                                                }
+                                            },
+                                            failure:function(form, action){
+                                                self.initialConfig['centerRegion'].clearWindowStatus();
+                                                Ext.Msg.alert("Error", "Error copying theme");
+                                            }
+                                        });
+                                    }
+                                }
+                            },{
+                                text: 'Close',
+                                handler: function(){
+                                    copyThemeWindow.close();
+                                }
+                            }]
+                        });
+                        copyThemeWindow.show();
                     }
                 }
                 ]

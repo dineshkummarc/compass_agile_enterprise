@@ -31,6 +31,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     this.fileTreePanel = new Compass.ErpApp.Shared.FileManagerTree({
         autoDestroy:true,
         xtype:'compassshared_filemanager',
+        collapsible:true,
         allowDownload:false,
         standardUploadUrl:'./knitkit/image_assets/upload_file',
         xhrUploadUrl:'./knitkit/image_assets/upload_file',

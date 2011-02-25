@@ -65,7 +65,7 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
             awesomeUploaderRoot:'/awsome_uploader/',
             height:40,
             allowDragAndDropAnywhere:true,
-            autoStartUpload:false,
+            autoStartUpload:config['autoStartUpload'] || true,
             maxFileSizeBytes: 15 * 1024 * 1024, // 15 MiB,
             listeners:{
                 scope:this,
