@@ -204,7 +204,6 @@ namespace :compass do
 
   def install(type, plugins)
     FileUtils.mkdir_p(target) unless File.exists?(target)
-    sources = 
     
     if Rake.application.unix?
       plugins.each do  |engine|
@@ -213,7 +212,8 @@ namespace :compass do
         test = FileUtils.ln_s relative_source, "#{target}/#{engine}", :force => true # :verbose => true
       end 
     elsif Rake.application.windows?
-      FileUtils.cp_r sources, target
+      sources = plugins.map { |engine| source(type, engine) }
+	  FileUtils.cp_r sources, target
     else
       raise 'unknown system platform'
     end
