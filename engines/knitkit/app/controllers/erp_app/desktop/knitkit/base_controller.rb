@@ -19,6 +19,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :title => site.title,
         :subtitle => site.subtitle,
         :email => site.email,
+        :siteName => site.title,
         :children => []
       }
       
@@ -27,11 +28,12 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         section_hash = {
           :text => section.title,
           :siteName => site.title,
+          :siteId => site.id,
           :type => section.type,
           :isSection => true,
+          :hasLayout => !section.layout.blank?,
           :id => "section_#{section.id}",
-          :url => "http://#{site.host}/#{section.permalink}",
-          :templatePath => section.template_path.blank? ? nil : section.template_path
+          :url => "http://#{site.host}/#{section.permalink}"
         }
 
         if section.is_a?(Blog)

@@ -35,35 +35,65 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         });
     },
 
-    editSectionLayout : function(sectionId, path){
+    publish : function(node){
+        var self = this;
+        var publishWindow = new Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow({
+            baseParams:{
+                site_id:node.id.split('_')[1]
+            },
+            url:'./knitkit/site/publish',
+            listeners:{
+                'publish_success':function(window, response){
+                    if(response.success){
+                        self.clearWindowStatus();
+                        self.getPublications(node);
+                    }
+                    else{
+                        Ext.Msg.alert('Error', 'Error publishing site');
+                        self.clearWindowStatus();
+                    }
+                },
+                'publish_failure':function(window, response){
+                    self.clearWindowStatus();
+                    Ext.Msg.alert('Error', 'Error publishing site');
+                }
+            }
+        });
+
+        publishWindow.show();
+    },
+
+    editSectionLayout : function(sectionName, sectionId){
         var self = this;
         self.setWindowStatus('Loading section template...');
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './knitkit/section/get_template',
+            url: './knitkit/section/get_layout',
             method: 'POST',
             params:{
                 section_id:sectionId
             },
             success: function(response) {
-                self.initialConfig['centerRegion'].editTemplateFile({
-                    id : path
-                }, response.responseText, [{
-                    text: 'Insert Content Area',
-                    handler: function(btn){
-                        var codeMirror = btn.findParentByType('codemirror');
-                        Ext.MessageBox.prompt('New File', 'Please enter content area name:', function(btn, text){
-                            if(btn == 'ok'){
-                                codeMirror.setValue(codeMirror.getValue() + '<%=render_content(:'+text+')%>');
-                            }
-                        });
-                    }
-                }]);
+                self.initialConfig['centerRegion'].editSectionLayout(
+                    sectionName,
+                    sectionId,
+                    response.responseText,
+                    [{
+                        text: 'Insert Content Area',
+                        handler: function(btn){
+                            var codeMirror = btn.findParentByType('codemirror');
+                            Ext.MessageBox.prompt('New File', 'Please enter content area name:', function(btn, text){
+                                if(btn == 'ok'){
+                                    codeMirror.setValue(codeMirror.getValue() + '<%=render_content(:'+text+')%>');
+                                }
+                            });
+                        }
+                    }]);
                 self.clearWindowStatus();
             },
             failure: function(response) {
                 self.clearWindowStatus();
-                Ext.Msg.alert('Error', 'Error loading section template.');
+                Ext.Msg.alert('Error', 'Error loading section layout.');
             }
         });
     },
@@ -189,14 +219,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             }
                         });
 
-                        //no layouts for blogs.  Use templates
-                        if(Compass.ErpApp.Utility.isBlank(node.attributes['isBlog']) && !Compass.ErpApp.Utility.isBlank(node.attributes['templatePath'])){
+                        //no layouts for blogs.
+                        if(Compass.ErpApp.Utility.isBlank(node.attributes['isBlog']) && node.attributes['hasLayout']){
                             items.push({
                                 text:'Edit Layout',
                                 iconCls:'icon-edit',
                                 listeners:{
                                     'click':function(){
-                                        self.editSectionLayout(node.id.split('_')[1], node.attributes['templatePath']);
+                                        self.editSectionLayout(node.text, node.id.split('_')[1]);
                                     }
                                 }
                             });
@@ -209,34 +239,28 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 listeners:{
                                     'click':function(){
                                         var sectionId = node.id.split('_')[1];
-                                        Ext.MessageBox.prompt('Add Template', 'Please enter name for template:', function(btn, text){
-                                            if(btn == 'ok'){
-                                                self.setWindowStatus('Adding template...');
-                                                var conn = new Ext.data.Connection();
-                                                conn.request({
-                                                    url: './knitkit/section/add_template',
-                                                    method: 'POST',
-                                                    params:{
-                                                        section_id:sectionId,
-                                                        name:text
-                                                    },
-                                                    success: function(response) {
-                                                        var obj =  Ext.util.JSON.decode(response.responseText);
-                                                        if(obj.success){
-                                                            self.clearWindowStatus();
-                                                            self.editSectionLayout(sectionId, obj.path);
-                                                        }
-                                                        else
-                                                        {
-                                                            self.clearWindowStatus();
-                                                        Ext.Msg.alert('Status', obj.message);
-                                                        }
-                                                    },
-                                                    failure: function(response) {
-                                                        self.clearWindowStatus();
-                                                        Ext.Msg.alert('Status', 'Error adding template.');
-                                                    }
-                                                });
+                                        var conn = new Ext.data.Connection();
+                                        conn.request({
+                                            url: './knitkit/section/add_layout',
+                                            method: 'POST',
+                                            params:{
+                                                section_id:sectionId
+                                            },
+                                            success: function(response) {
+                                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                                if(obj.success){
+                                                    self.clearWindowStatus();
+                                                    self.editSectionLayout(node.text, sectionId);
+                                                }
+                                                else
+                                                {
+                                                    self.clearWindowStatus();
+                                                    Ext.Msg.alert('Status', obj.message);
+                                                }
+                                            },
+                                            failure: function(response) {
+                                                self.clearWindowStatus();
+                                                Ext.Msg.alert('Status', 'Error adding layout.');
                                             }
                                         });
                                     }
@@ -255,6 +279,26 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
                     }
                     else{
+                        items.push({
+                            text:'Publish',
+                            iconCls:'icon-document_up',
+                            listeners:{
+                                'click':function(){
+                                    self.publish(node);
+                                }
+                            }
+                        });
+
+                        items.push({
+                            text:'Publications',
+                            iconCls:'icon-documents',
+                            listeners:{
+                                'click':function(){
+                                    self.getPublications(node);
+                                }
+                            }
+                        });
+
                         items.push({
                             text:'Edit Site',
                             iconCls:'icon-edit',
@@ -483,11 +527,23 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             xtype:xtype,
             title:node.attributes.siteName + ' - ' + node.attributes.text + ' - Articles',
             sectionId:node.id.split('_')[1],
+            centerRegion:this.initialConfig['module'].centerRegion,
+            siteId:node.attributes.siteId
+        });
+        this.contentsCardPanel.getLayout().setActiveItem(this.contentsCardPanel.items.length - 1);
+    },
+
+    getPublications : function(node){
+        this.contentsCardPanel.removeAll(true);
+        this.contentsCardPanel.add({
+            xtype:'knitkit_siteversionsgridpanel',
+            title:node.attributes.siteName + ' Publications',
+            siteId:node.id.split('_')[1],
             centerRegion:this.initialConfig['module'].centerRegion
         });
         this.contentsCardPanel.getLayout().setActiveItem(this.contentsCardPanel.items.length - 1);
     },
-  
+
     constructor : function(config) {
         config = Ext.apply({
             region:'west',

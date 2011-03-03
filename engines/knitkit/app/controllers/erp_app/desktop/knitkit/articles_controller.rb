@@ -59,12 +59,23 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
 
   def get
     Article.include_root_in_json = false
+
+    sort  = params[:sort] || 'title'
+    dir   = params[:dir] || 'DESC'
+    limit = params[:limit] || 10
+    start = params[:start] || 0
+
     section_id = params[:section_id]
     articles = Article.find(:all,
       :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
       :conditions => "section_id = #{section_id} ",
-      :limit => params[:limit],
-      :offset => params[:start])
+      :order => "#{sort} #{dir}",
+      :limit => limit,
+      :offset => start)
+
+    total_count = Article.find(:all,
+      :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
+      :conditions => "section_id = #{section_id} ").count
 
     Article.class_exec(section_id) do
       @@section_id = section_id
@@ -73,6 +84,6 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
       end
     end
 
-    render :inline => "{data:#{articles.to_json(:only => [:content_area, :id, :title, :body_html, :excerpt_html], :methods => [:section_position])}}"
+    render :inline => "{totalCount:#{total_count},data:#{articles.to_json(:only => [:content_area, :id, :title, :body_html, :excerpt_html], :methods => [:section_position])}}"
   end
 end

@@ -39,4 +39,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/knitkit/section/:action', :controller => 'erp_app/desktop/knitkit/section'
   #theme
   map.connect '/erp_app/desktop/knitkit/theme/:action', :controller => 'erp_app/desktop/knitkit/theme'
+  #versions
+  map.connect '/erp_app/desktop/knitkit/versions/:action', :controller => 'erp_app/desktop/knitkit/versions'
 end

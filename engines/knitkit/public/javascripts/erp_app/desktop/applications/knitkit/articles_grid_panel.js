@@ -126,10 +126,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 tooltip:'Edit',
                 handler :function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
-                    var id = rec.get('id');
-                    var title  = rec.get('title');
-                    var html   = rec.get('body_html');
-                    self.initialConfig['centerRegion'].editContent(title, id, html);
+                    self.initialConfig['centerRegion'].editContent(rec.get('title'), rec.get('id'), rec.get('body_html'), grid.initialConfig.siteId, grid.initialConfig.contentType);
                 }
             }]
         },
@@ -241,7 +238,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 }
             }],
             bbar: new Ext.PagingToolbar({
-                pageSize: 15,
+                pageSize: 10,
                 store: store,
                 displayInfo: true,
                 displayMsg: '{0} - {1} of {2}',
@@ -259,10 +256,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
     },
 
     constructor : function(config) {
+        config['contentType'] = 'article';
         var fm = Ext.form;
         config = Ext.apply({
             columns:[{
-                menuDisabled:true,
+                sortable:true,
                 resizable:false,
                 header:'Content Area',
                 dataIndex:'content_area',
@@ -305,8 +303,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel = Ext.extend(C
     },
 
     constructor : function(config) {
-        var self = this;
-
+        config['contentType'] = 'blog';
         config = Ext.apply({
             addFormHeight:100,
             columns:[{
@@ -321,10 +318,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel = Ext.extend(C
                     tooltip:'Edit',
                     handler :function(grid, rowIndex, colIndex){
                         var rec = grid.getStore().getAt(rowIndex);
-                        var id = rec.get('id');
-                        var title  = rec.get('title') + ' - Excerpt';
-                        var html   = rec.get('excerpt_html');
-                        self.initialConfig['centerRegion'].editExcerpt(title, id, html);
+                        grid.initialConfig['centerRegion'].editExcerpt(rec.get('title') + ' - Excerpt', rec.get('id'), rec.get('excerpt_html'), grid.initialConfig.siteId);
                     }
                 }]
             }]

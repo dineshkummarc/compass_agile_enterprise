@@ -1,6 +1,8 @@
 class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::BaseController
   IGNORED_PARAMS = %w{action controller node_id}
 
+  before_filter :set_section, :only => [:add_layout, :get_layout, :save_layout]
+
   def new
     section = Section.new
     params.each do |k,v|
@@ -25,30 +27,29 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
     render :inline => {:success => true}.to_json
   end
 
-  def add_template
-    section_id    = params[:section_id]
-    template_name = params[:name]
-    
-    section = Section.find(section_id)
-    section.template = template_name
-    section.save
-
-    result = section.create_template(template_name)
-
-    unless result.is_a?(TrueClass)
-      render :inline => {:success => false, :message => result}.to_json
-    else
-      render :inline => {:success => true, :path => File.join(KNIT_KIT_ROOT,"app/views/sections/#{template_name}.html.erb").to_s}.to_json
-    end
+  def add_layout
+    @section.create_layout
+    render :inline => {:success => true}.to_json
   end
 
-  def get_template
-    section_id = params[:section_id]
-    section = Section.find(section_id)
-
-    contents = ''
-    contents = IO.read(section.template_path)
-    render :text => contents
+  def get_layout
+    render :text => @section.layout
+  end
+  
+  def save_layout
+    @section.layout = params[:content]
+    
+    if @section.save
+      render :inline => {:success => true}.to_json
+    else
+      render :inline => {:success => false}.to_json
+    end
+  end
+  
+  protected
+  
+  def set_section
+    @section = Section.find(params[:section_id])
   end
   
 end

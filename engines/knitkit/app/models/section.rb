@@ -1,6 +1,9 @@
 class Section < ActiveRecord::Base
+  acts_as_versioned
+  
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
-
+  SECTIONS_TEMP_LAYOUT_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views/sections/"
+  
   @@types = ['Page']
   cattr_reader :types
   
@@ -28,22 +31,16 @@ class Section < ActiveRecord::Base
     read_attribute(:type) || 'Page'
   end
 
-  def template_path
-    path = nil
-    path = File.join(KNIT_KIT_ROOT,"app/views/sections/#{self.template}.html.erb") unless self.template.nil?
-    path
+  def create_layout
+    self.layout = IO.read(File.join(KNIT_KIT_ROOT,"app/views/sections/index.html.erb"))
+    self.save
   end
 
-  def create_template(template_name)
-    result = true
-
-    if File.exists?(File.join(KNIT_KIT_ROOT,"app/views/sections/#{template_name}.html.erb"))
-      result = "Name already used for layout"
-    else
-      FileUtils.cp File.join(KNIT_KIT_ROOT,"app/views/sections/index.html.erb"), File.join(KNIT_KIT_ROOT,"app/views/sections/#{template_name}.html.erb")
+  #callbacks
+  def after_save
+    unless self.layout.blank?
+      File.open(File.join(SECTIONS_TEMP_LAYOUT_PATH,"#{self.title.underscore}_#{self.id}.html.erb"), 'w+') {|f| f.write(self.layout) }
     end
-
-    result
   end
 end
 
