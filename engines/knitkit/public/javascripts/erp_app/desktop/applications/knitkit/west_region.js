@@ -35,6 +35,34 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         });
     },
 
+    deleteSite : function(id){
+        var self = this;
+        self.setWindowStatus('Deleting site...');
+        var conn = new Ext.data.Connection();
+        conn.request({
+            url: './knitkit/site/delete',
+            method: 'POST',
+            params:{
+                site_id:id
+            },
+            success: function(response) {
+                var obj =  Ext.util.JSON.decode(response.responseText);
+                if(obj.success){
+                    self.clearWindowStatus();
+                    self.sitesTree.getRootNode().reload();
+                }
+                else{
+                    Ext.Msg.alert('Error', 'Error deleting site');
+                    self.clearWindowStatus();
+                }
+            },
+            failure: function(response) {
+                self.clearWindowStatus();
+                Ext.Msg.alert('Error', 'Error deleting site');
+            }
+        });
+    },
+
     publish : function(node){
         var self = this;
         var publishWindow = new Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow({
@@ -392,6 +420,16 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         }]
                                     });
                                     editWebsiteWindow.show();
+                                }
+                            }
+                        });
+
+                        items.push({
+                            text:'Delete',
+                            iconCls:'icon-delete',
+                            listeners:{
+                                'click':function(){
+                                    self.deleteSite(node.id.split('_')[1]);
                                 }
                             }
                         });

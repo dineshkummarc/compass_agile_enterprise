@@ -28,7 +28,7 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     version = params[:version]
     comment = params[:comment]
 
-    site.publish_element(comment, content, version)
+    content.publish(site, comment, version)
 
     render :inline => {:success => true}.to_json
   end

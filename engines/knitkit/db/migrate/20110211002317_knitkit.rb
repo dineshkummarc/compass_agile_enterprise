@@ -37,7 +37,7 @@ class Knitkit < ActiveRecord::Migration
       add_index :sections, :lft
       add_index :sections, :rgt
 
-      Section.create_versioned_table
+      #Section.create_versioned_table
     end
 
     unless table_exists?(:contents)
@@ -139,7 +139,7 @@ class Knitkit < ActiveRecord::Migration
   end
 
   def self.down
-    Section.drop_versioned_table
+    #Section.drop_versioned_table
     Content.drop_versioned_table
 
     # check that each table exists before trying to delete it.

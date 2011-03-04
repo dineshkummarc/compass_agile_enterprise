@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::BaseController
   IGNORED_PARAMS = %w{action controller node_id}
 
-  before_filter :set_section, :only => [:add_layout, :get_layout, :save_layout]
+  before_filter :set_section, :only => [:add_layout, :get_layout, :save_layout, :delete]
 
   def new
     section = Section.new
@@ -9,21 +9,28 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
       next if k == 'type' && v == 'Page'
       section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
     end
-    section.save
+    result = section.save
 
-    node_id = params[:node_id]
-    type = node_id.split('_')[0]
-    id   = node_id.split('_')[1]
+    if result
+      node_id = params[:node_id]
+      type = node_id.split('_')[0]
+      id   = node_id.split('_')[1]
 
-    if type == 'section'
-      parent = Section.find(id)
-      section.move_to_child_of(parent)
-    else
-      website = Site.find(id)
-      website.sections << section
-      website.save
+      if type == 'section'
+        parent = Section.find(id)
+        section.move_to_child_of(parent)
+      else
+        website = Site.find(id)
+        website.sections << section
+        website.save
+      end
     end
 
+    render :inline => {:success => result}.to_json
+  end
+
+  def delete
+    @section.destroy
     render :inline => {:success => true}.to_json
   end
 

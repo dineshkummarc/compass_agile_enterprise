@@ -1,5 +1,6 @@
 class Section < ActiveRecord::Base
-  acts_as_versioned
+  #acts_as_versioned
+  can_be_published
   
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
   SECTIONS_TEMP_LAYOUT_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views/sections/"
@@ -10,9 +11,10 @@ class Section < ActiveRecord::Base
   acts_as_nested_set :scope => :site_id if ActiveRecord::Base.connection.tables.include?('sections') #better nested set tries to use this before the table is there...
   
   belongs_to :site
-  has_many :section_contents
+  has_many :section_contents, :dependent => :destroy
   has_many :contents, :through => :section_contents
-  
+
+  validates_uniqueness_of :title
   has_permalink :title
   
   def articles 

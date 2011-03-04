@@ -1,10 +1,12 @@
 class Content < ActiveRecord::Base
   acts_as_versioned
-  
-  has_many :section_contents
+  can_be_published
+
+  has_many :section_contents, :dependent => :destroy
   has_many :sections, :through => :section_contents
     
   validates_presence_of :type
+  validates_uniqueness_of :title
     
   def self.find_by_section_id( section_id )
     Content.find(:all, 
@@ -23,10 +25,6 @@ class Content < ActiveRecord::Base
     published_content
   end
 
-  def publish(site, comment)
-    site.publish(comment)
-  end
-  
   def find_sections_by_site_id( site_id )
     self.sections.find(:all, :conditions => "site_id = #{site_id}")
   end
@@ -45,7 +43,7 @@ class Content < ActiveRecord::Base
       :include => [:published_site],
       :conditions => ['published_sites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_site_id, content.id, 'Content'])
     unless published_element.nil?
-      content_version = Content::Version.find_by_version(published_element.version)
+      content_version = Content::Version.find(:first, :conditions => ['version = ? and content_id = ?',published_element.version, published_element.published_element_record_id])
     end
     content_version
   end

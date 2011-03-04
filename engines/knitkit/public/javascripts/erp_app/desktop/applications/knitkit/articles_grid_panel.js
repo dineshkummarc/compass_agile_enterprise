@@ -183,7 +183,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
             store:store,
             clicksToEdit: 1,
             tbar: [{
-                text: 'Add Article',
+                text: 'Add New Article',
                 iconCls: 'icon-add',
                 handler : function(){
                     var addArticleWindow = new Ext.Window({
@@ -235,6 +235,93 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                         }]
                     });
                     addArticleWindow.show();
+                }
+            },
+            {
+                text: 'Add Existing Article',
+                iconCls: 'icon-copy',
+                handler : function(){
+                    var addExistingArticleWindow = new Ext.Window({
+                        layout:'fit',
+                        width:375,
+                        title:'Add Existing Article',
+                        height:100,
+                        plain: true,
+                        buttonAlign:'center',
+                        items: new Ext.FormPanel({
+                            labelWidth: 110,
+                            frame:false,
+                            bodyStyle:'padding:5px 5px 0',
+                            width: 425,
+                            url:'./knitkit/articles/add_existing/' + self.initialConfig['sectionId'],
+                            items:[
+                            {
+                                xtype:'combo',
+                                hiddenName:'article_id',
+                                name:'article_id',
+                                loadingText:'Retrieving Articles...',
+                                store:{
+                                    xtype:'jsonstore',
+                                    baseParams:{
+                                      section_id:self.initialConfig['sectionId']
+                                    },
+                                    url:'./knitkit/articles/existing_articles',
+                                    fields:[
+                                    {
+                                        name:'id'
+                                    },
+                                    {
+                                        name:'title'
+
+                                    }
+                                    ]
+                                },
+                                forceSelection:true,
+                                editable:true,
+                                fieldLabel:'Article',
+                                autoSelect:true,
+                                typeAhead: true,
+                                mode: 'remote',
+                                displayField:'title',
+                                valueField:'id',
+                                triggerAction: 'all',
+                                allowBlank:false
+                            }
+                            ]
+                        }),
+                        buttons: [{
+                            text:'Submit',
+                            listeners:{
+                                'click':function(button){
+                                    var window = button.findParentByType('window');
+                                    var formPanel = window.findByType('form')[0];
+                                    self.initialConfig['centerRegion'].setWindowStatus('Adding article...');
+                                    formPanel.getForm().submit({
+                                        reset:true,
+                                        success:function(form, action){
+                                            self.initialConfig['centerRegion'].clearWindowStatus();
+                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                            if(obj.success){
+                                                self.getStore().reload();
+                                            }else{
+                                                Ext.Msg.alert("Error", "Error Adding article");
+                                            }
+                                        },
+                                        failure:function(form, action){
+                                            self.initialConfig['centerRegion'].clearWindowStatus();
+                                            Ext.Msg.alert("Error", "Error Adding article");
+                                        }
+                                    });
+                                }
+                            }
+                        },{
+                            text: 'Close',
+                            handler: function(){
+                                addExistingArticleWindow.close();
+                            }
+                        }]
+                    });
+                    addExistingArticleWindow.show();
                 }
             }],
             bbar: new Ext.PagingToolbar({

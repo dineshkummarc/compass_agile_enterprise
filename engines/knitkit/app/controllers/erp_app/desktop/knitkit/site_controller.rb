@@ -60,6 +60,9 @@ class ErpApp::Desktop::Knitkit::SiteController < ErpApp::Desktop::Knitkit::BaseC
   
  
   def delete
+    Site.find(params[:site_id]).destroy
+
+    render :inline => {:success => true}.to_json
   end
   
 end

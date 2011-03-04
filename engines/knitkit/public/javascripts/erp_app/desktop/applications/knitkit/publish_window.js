@@ -56,6 +56,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow = Ext.extend(Ext.Windo
                         var formPanel = win.findByType('form')[0];
                         formPanel.getForm().submit({
                             method:'POST',
+                            waitMsg:'Publishing...',
                             success:function(form, action){
                                 var response =  Ext.util.JSON.decode(action.response.responseText);
                                 win.fireEvent('publish_success', win, response);

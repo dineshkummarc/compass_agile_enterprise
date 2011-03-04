@@ -1,4 +1,6 @@
 class Site < ActiveRecord::Base
+  validates_uniqueness_of :name, :host
+
   has_many :published_sites, :dependent => :destroy
 
   has_many :sections, :dependent => :destroy, :order => :lft do

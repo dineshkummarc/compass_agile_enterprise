@@ -10,10 +10,9 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
       article.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
     end
 
-    section = Section.find(section_id)
-    section.contents << article
-
     if article.save
+      section = Section.find(section_id)
+      section.contents << article
       result[:success] = true
     else
       result[:success] = false
@@ -48,13 +47,30 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
   def delete
     result = {}
 
-    if Article.delete(params[:id])
+    if Article.destroy(params[:id])
       result[:success] = true
     else
       result[:success] = false
     end
 
     render :inline => result.to_json
+  end
+
+  def add_existing
+    section = Section.find(params[:section_id])
+    section.contents << Article.find(params[:article_id])
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def existing_articles
+    current_articles = Article.find(:all,
+      :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
+      :conditions => "section_id = #{params[:section_id]}")
+
+    available_articles = Article.all - current_articles
+
+    render :inline => available_articles.to_json(:only => [:title, :id])
   end
 
   def get
@@ -68,14 +84,14 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     section_id = params[:section_id]
     articles = Article.find(:all,
       :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
-      :conditions => "section_id = #{section_id} ",
+      :conditions => "section_id = #{section_id}",
       :order => "#{sort} #{dir}",
       :limit => limit,
       :offset => start)
 
     total_count = Article.find(:all,
       :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
-      :conditions => "section_id = #{section_id} ").count
+      :conditions => "section_id = #{section_id}").count
 
     Article.class_exec(section_id) do
       @@section_id = section_id

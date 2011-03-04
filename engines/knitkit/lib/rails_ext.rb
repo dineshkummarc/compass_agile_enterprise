@@ -1,3 +1,3 @@
-require 'kitkit/active_record/sti_instantiation'
-require 'kitkit/active_record/sticky_changes'
-require 'kitkit/railties/action_view'
+require 'knitkit/active_record/sti_instantiation'
+require 'knitkit/active_record/sticky_changes'
+require 'knitkit/railties/action_view'

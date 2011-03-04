@@ -1,2 +1,2 @@
 # Knitkit
-require 'theme_support'
+require 'knitkit/can_be_published'

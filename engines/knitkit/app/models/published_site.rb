@@ -31,7 +31,7 @@ class PublishedSite < ActiveRecord::Base
         published_element = PublishedElement.new
         published_element.published_site = new_publication
         published_element.published_element_record = element
-        published_element.version = version
+        published_element.version = element.version
         published_element.save
       end
     end

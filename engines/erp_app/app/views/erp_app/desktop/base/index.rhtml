@@ -6,7 +6,7 @@
 @desktop.applications.each do |application|
 %>
         #<%=application.shortcut_id%>-shortcut img{
-          background-image:url("../../images/icons/<%=application.icon.split('-')[1]%>/<%=application.icon.split('-')[1]%>_48x48.png");
+          background-image:url("/images/icons/<%=application.icon.split('-')[1]%>/<%=application.icon.split('-')[1]%>_48x48.png");
           background-repeat:no-repeat;
           height:48px;
           width:48px;
@@ -15,14 +15,14 @@
 end
 %>
       #control-panel-win-shortcut img{
-        background-image:url("../../images/icons/gear/gear_48x48.png");
+        background-image:url("/images/icons/gear/gear_48x48.png");
         background-repeat:no-repeat;
         height:48px;
         width:48px;
       }
 
       #web-navigator-win-shortcut img{
-        background-image:url("../../images/icons/globe/globe_48x48.png");
+        background-image:url("/images/icons/globe/globe_48x48.png");
         height:48px;
         background-repeat:no-repeat;
         width:48px;
@@ -35,10 +35,88 @@ end
         color:white;
         font-weight:bold;
       }
-}
+
+      #loading-mask {
+        position: absolute;
+        left:     0;
+        top:      0;
+        width:    100%;
+        height:   100%;
+        z-index:  20000;
+        background-color: white;
+      }
+
+      #loading {
+        position: absolute;
+        left:     50%;
+        top:      50%;
+        padding:  2px;
+        z-index:  20001;
+        height:   auto;
+        margin:   -35px 0 0 -30px;
+      }
+
+      #loading .loading-indicator {
+        background: url(/images/erp_app/ext_loading_image.gif) no-repeat;
+        color:      #555;
+        font:       bold 13px tahoma,arial,helvetica;
+        padding:    8px 42px;
+        margin:     0;
+        text-align: center;
+        height:     auto;
+      }
+
+
+      }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Compass Desktop</title>
+  </head>
+  <body scroll="no">
+    <div id="x-desktop">
+      <dl id="x-shortcuts">
+        <dt id="control-panel-win-shortcut" style="visibility:visible">
+          <a href="#"><img src="/images/erp_app/desktop/s.gif" />
+            <div>Control Panel</div></a>
+        </dt>
+        <dt id="web-navigator-win-shortcut" style="visibility:visible">
+          <a href="#"><img src="/images/erp_app/desktop/s.gif" />
+            <div>Web Navigator</div></a>
+        </dt>
+        <%
+        @desktop.applications.each do |application|
+          visiblity = 'none'
+          if application.get_user_preference(@user, :desktop_shortcut) == 'yes'
+            visiblity = 'block'
+          end
+        %>
+          <dt id="<%=application.shortcut_id%>-shortcut" style="display:<%=visiblity%>">
+            <a href="#"><img src="/images/erp_app/desktop/s.gif" />
+              <div><%=application.description%></div></a>
+          </dt>
+        <%
+        end
+      %>
+      </dl>
+    </div>
+    <div id="ux-taskbar">
+      <div id="ux-taskbar-start"></div>
+      <div id="ux-taskbuttons-panel"></div>
+      <div id="ux-taskclock-panel"></div>
+      <div class="x-clear"></div>
+    </div>
+    <div style="position : absolute; left: 0; top: 0; z-index: -1;">
+      <div></div>
+      <img id="x-wallpaper" src="/images/wallpaper/<%=@desktop.get_preference(:desktop_background) %> " style="width : 0px; height : 0px;"/>
+      <img id="x-watermark-logo" src="/images/art/tn-logo-watermark-2.png" style="position: absolute; left: 50%; top: 50%; margin-left: -300px; margin-top: -300px; width : 600px; height : 600px; opacity: 0.5;"/>
+      <img id="x-watermark-logo" src="/images/art/compass-logo-1-medium.png" style="position: absolute; left: 100%; top: 100%; margin-left: -260px; margin-top: -120px; width : 250; height : 89; opacity: 1.0;"/>
+    </div>
+    <div id="loading-mask"></div>
+    <div id="loading">
+      <div class="loading-indicator">
+        Loading Compass Desktop...
+      </div>
+    </div>
     <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
     <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css'
       #'GanttPlugin.css','treegrid.css'
@@ -76,59 +154,10 @@ end
       #"timeshare/GanttGrid.js"
     )
   %>
-  <%=include_code_mirror%>
-  <%=include_file_upload%>
-  <%=setup_role_manager(@user)%>
-  <%@desktop.applications.each do |application|%><%=application.load_resources%><%end%>
-  </head>
-  <body scroll="no">
-
-    <div id="x-desktop">
-      <dl id="x-shortcuts">
-        <dt id="control-panel-win-shortcut" style="visibility:visible">
-          <a href="#"><img src="../../images/erp_app/desktop/s.gif" />
-            <div>Control Panel</div></a>
-        </dt>
-
-        <dt id="web-navigator-win-shortcut" style="visibility:visible">
-          <a href="#"><img src="../../images/erp_app/desktop/s.gif" />
-            <div>Web Navigator</div></a>
-        </dt>
-
-        <%
-        @desktop.applications.each do |application|
-          visiblity = 'none'
-          if application.get_user_preference(@user, :desktop_shortcut) == 'yes'
-            visiblity = 'block'
-          end
-        %>
-          <dt id="<%=application.shortcut_id%>-shortcut" style="display:<%=visiblity%>">
-            <a href="#"><img src="../../images/erp_app/desktop/s.gif" />
-              <div><%=application.description%></div></a>
-          </dt>
-        <%
-        end
-      %>
-
-
-      </dl>
-    </div>
-
-    <div id="ux-taskbar">
-      <div id="ux-taskbar-start"></div>
-      <div id="ux-taskbuttons-panel"></div>
-      <div id="ux-taskclock-panel"></div>
-      <div class="x-clear"></div>
-    </div>
-    <div style="position : absolute; left: 0; top: 0; z-index: -1;">
-      <div></div>
-      <img id="x-wallpaper" src="../../images/wallpaper/<%=@desktop.get_preference(:desktop_background) %> " style="width : 0px; height : 0px;"/>
-
-      <img id="x-watermark-logo" src="../../images/art/tn-logo-watermark-2.png" style="position: absolute; left: 50%; top: 50%; margin-left: -300px; margin-top: -300px; width : 600px; height : 600px; opacity: 0.5;"/>
-
-      <img id="x-watermark-logo" src="../../images/art/compass-logo-1-medium.png" style="position: absolute; left: 100%; top: 100%; margin-left: -260px; margin-top: -120px; width : 250; height : 89; opacity: 1.0;"/>
-
-    </div>
+    <%=include_code_mirror%>
+    <%=include_file_upload%>
+    <%=setup_role_manager(@user)%>
+    <%@desktop.applications.each do |application|%><%=application.load_resources%><%end%>
     <script>
       function fireResize(width, height) {
         document.getElementById('x-wallpaper').style.width = width + "px";
@@ -175,6 +204,11 @@ end
     }
   });
   Ext.onReady(function() {
+    setTimeout(function(){
+      Ext.get('loading').remove();
+      Ext.get('loading-mask').fadeOut({remove:true});
+    }, 250);
+
 <%
 
 @desktop.applications.each do |application|
@@ -187,6 +221,5 @@ end
 %>
   });
     </script>
-    <!--<iframe id="download_frame"></iframe>-->
   </body>
 </html>

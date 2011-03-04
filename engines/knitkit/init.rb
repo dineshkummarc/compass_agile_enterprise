@@ -4,6 +4,7 @@ ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_
 require 'core_ext'
 require 'rails_ext'
 require 'theme_support'
+require 'knitkit'
 
 #if model exists in app/model this plugins model needs reloaded every request
 #this runs only once when in production mode
