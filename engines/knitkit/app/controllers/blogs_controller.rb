@@ -1,7 +1,7 @@
 class BlogsController < ArticlesController
   def index
     @blog = Blog.find(params[:section_id])
-    @contents = @blog.find_blog_posts
+    @contents = @blog.find_published_blog_posts(@site)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -11,7 +11,7 @@ class BlogsController < ArticlesController
 
   def show
     @blog = Blog.find(params[:section_id])
-    @content = @blog.find_blog_post(params[:id])
+    @content = @blog.find_published_blog_post(@site, params[:id])
 
     respond_to do |format|
       format.html # index.html.erb

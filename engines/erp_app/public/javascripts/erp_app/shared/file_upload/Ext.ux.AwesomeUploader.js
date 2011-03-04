@@ -358,7 +358,7 @@ Ext.ux.AwesomeUploader = Ext.extend(Ext.Container, {
         if(false !== this.fireEvent('fileselected', this, Ext.apply({},fileInfo) ) ){
 
             if(this.autoStartUpload){
-                this.standardUploadStart();
+                this.standardUploadStart(fileInfo);
             }
             this.fileQueue[fileInfo.id] = fileInfo;
         }

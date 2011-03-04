@@ -4,29 +4,39 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
   before_filter :set_section, :only => [:add_layout, :get_layout, :save_layout, :delete]
 
   def new
-    section = Section.new
-    params.each do |k,v|
-      next if k == 'type' && v == 'Page'
-      section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
-    end
-    result = section.save
-
-    if result
-      node_id = params[:node_id]
-      type = node_id.split('_')[0]
-      id   = node_id.split('_')[1]
-
-      if type == 'section'
-        parent = Section.find(id)
-        section.move_to_child_of(parent)
-      else
-        website = Site.find(id)
-        website.sections << section
-        website.save
+    result = {}
+    if (params[:title] == 'Blog' || params[:title] == 'blog') && params[:type] == 'Blog'
+      result[:sucess] = false
+      result[:msg] = 'Blog can not be the title of a Blog'
+    else
+      section = Section.new
+      params.each do |k,v|
+        next if k == 'type' && v == 'Page'
+        section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
       end
+      result = section.save
+
+      if result
+        node_id = params[:node_id]
+        type = node_id.split('_')[0]
+        id   = node_id.split('_')[1]
+
+        if type == 'section'
+          parent = Section.find(id)
+          section.move_to_child_of(parent)
+        else
+          website = Site.find(id)
+          website.sections << section
+          website.save
+        end
+
+        result[:success] = true
+      end
+
     end
 
-    render :inline => {:success => result}.to_json
+    render :inline => result.to_json
+
   end
 
   def delete

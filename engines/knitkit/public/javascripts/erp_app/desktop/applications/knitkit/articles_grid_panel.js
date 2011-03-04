@@ -219,6 +219,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                                             if(obj.success){
                                                 self.getStore().reload();
                                             }
+                                            else{
+                                                Ext.Msg.alert("Error", obj.msg);
+                                            }
                                         },
                                         failure:function(form, action){
                                             self.initialConfig['centerRegion'].clearWindowStatus();

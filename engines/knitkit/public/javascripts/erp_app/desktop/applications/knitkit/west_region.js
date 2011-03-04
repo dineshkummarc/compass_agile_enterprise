@@ -215,10 +215,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                             if(obj.success){
                                                                 self.sitesTree.getRootNode().reload();
                                                             }
+                                                            else{
+                                                                Ext.Msg.alert("Error", obj.msg);
+                                                            }
                                                         },
                                                         failure:function(form, action){
                                                             self.clearWindowStatus();
-                                                            Ext.Msg.alert("Error", "Error creating section");
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            Ext.Msg.alert("Error", obj.msg);
                                                         }
                                                     });
                                                 }
@@ -278,6 +282,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 var obj =  Ext.util.JSON.decode(response.responseText);
                                                 if(obj.success){
                                                     self.clearWindowStatus();
+                                                    self.sitesTree.getRootNode().reload();
                                                     self.editSectionLayout(node.text, sectionId);
                                                 }
                                                 else
