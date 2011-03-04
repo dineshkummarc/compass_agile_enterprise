@@ -2,7 +2,6 @@
 ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_once_paths.select{|path| path =~ %r(^#{File.dirname(__FILE__)}) }
 
 require 'core_ext'
-require 'rails_ext'
 require 'theme_support'
 require 'knitkit'
 

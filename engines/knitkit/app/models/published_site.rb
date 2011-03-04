@@ -22,7 +22,6 @@ class PublishedSite < ActiveRecord::Base
     sections.each do |section|
       elements = elements | section.contents
     end
-    elements = elements | sections
 
     #make sure all elements have published_element objects
     elements.each do |element|
