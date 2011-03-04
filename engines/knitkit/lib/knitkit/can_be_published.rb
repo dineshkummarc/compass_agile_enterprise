@@ -1,5 +1,4 @@
-module Knitkit
-  module CanBePublished
+module CanBePublished
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -7,8 +6,8 @@ module Knitkit
 		module ClassMethods
 
   		def can_be_published
-        extend Knitkit::CanBePublished::SingletonMethods
-			  include Knitkit::CanBePublished::InstanceMethods
+        extend CanBePublished::SingletonMethods
+		include CanBePublished::InstanceMethods
 		  end
 
 		end
@@ -30,6 +29,5 @@ module Knitkit
       end
     end
   end
-end
 
-ActiveRecord::Base.send(:include, Knitkit::CanBePublished)
+ActiveRecord::Base.send(:include, CanBePublished)
