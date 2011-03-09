@@ -1,6 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(Ext.grid.GridPanel, {
+Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel = Ext.extend(Ext.grid.GridPanel, {
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel.superclass.initComponent.call(this, arguments);
+        Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel.superclass.initComponent.call(this, arguments);
         this.getStore().load();
     },
 
@@ -11,7 +11,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(E
             url: './knitkit/site/activate_publication',
             method: 'POST',
             params:{
-                site_id:self.initialConfig.siteId,
+                id:self.initialConfig.siteId,
                 version:rec.get('version')
             },
             success: function(response) {
@@ -25,6 +25,31 @@ Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(E
             },
             failure: function(response) {
                 Ext.Msg.alert('Error', 'Error activating publication');
+            }
+        });
+    },
+
+    setViewingVersion : function(rec){
+        var self = this;
+        var conn = new Ext.data.Connection();
+        conn.request({
+            url: './knitkit/site/set_viewing_version',
+            method: 'POST',
+            params:{
+                id:self.initialConfig.siteId,
+                version:rec.get('version')
+            },
+            success: function(response) {
+                var obj =  Ext.util.JSON.decode(response.responseText);
+                if(obj.success){
+                    self.getStore().reload();
+                }
+                else{
+                    Ext.Msg.alert('Error', 'Error setting viewing version');
+                }
+            },
+            failure: function(response) {
+                Ext.Msg.alert('Error', 'Error setting viewing version');
             }
         });
     },
@@ -60,6 +85,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(E
             {
                 name:'active',
                 type:'boolean'
+            },
+            {
+                name:'viewing',
+                type:'boolean'
             }
             ],
             url:'./knitkit/site/site_publications',
@@ -78,7 +107,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(E
             {
                 header: "Version",
                 sortable:true,
-                width: 120,
+                width: 60,
                 dataIndex: 'version'
             },
             {
@@ -87,6 +116,34 @@ Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(E
                 sortable:true,
                 renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
                 dataIndex: 'created_at'
+            },
+            {
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
+                header:'Viewing',
+                align:'center',
+                width:50,
+                items:[{
+                    getClass: function(v, meta, rec) {  // Or return a class from a function
+                        if (rec.get('viewing')) {
+                            this.items[0].tooltip = 'Viewing';
+                            return 'viewing-col';
+                        } else {
+                            this.items[0].tooltip = 'View';
+                            return 'view-col';
+                        }
+                    },
+                    handler: function(grid, rowIndex, colIndex) {
+                        var rec = grid.getStore().getAt(rowIndex);
+                        if(rec.get('viewing')){
+                            return false;
+                        }
+                        else{
+                            grid.setViewingVersion(rec)
+                        }
+                    }
+                }]
             },
             {
                 menuDisabled:true,
@@ -126,9 +183,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel = Ext.extend(E
             })
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel.superclass.constructor.call(this, config);
+        Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel.superclass.constructor.call(this, config);
     }
 });
 
-Ext.reg('knitkit_siteversionsgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.SiteVersionsGridPanel);
+Ext.reg('knitkit_publishedgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel);
 

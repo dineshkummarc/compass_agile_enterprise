@@ -30,6 +30,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
           :siteName => site.title,
           :siteId => site.id,
           :type => section.type,
+          :isSecured => !section.roles.empty?,
           :isSection => true,
           :hasLayout => !section.layout.blank?,
           :id => "section_#{section.id}",
@@ -48,7 +49,11 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
             section_hash[:children] = []
           else
             section_hash[:leaf] = true
-            section_hash[:iconCls] = 'icon-document'
+            if section_hash[:isSecured]
+              section_hash[:iconCls] = 'icon-document_lock'
+            else
+              section_hash[:iconCls] = 'icon-document'
+            end
           end
         end
 

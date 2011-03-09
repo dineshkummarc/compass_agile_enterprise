@@ -1,4 +1,5 @@
 class Content < ActiveRecord::Base
+  acts_as_commentable
   acts_as_versioned
   can_be_published
 
@@ -14,11 +15,11 @@ class Content < ActiveRecord::Base
       :conditions => "section_id = #{section_id} ")
   end
 
-  def self.find_published_by_site_section(site, section)
+  def self.find_published_by_section(active_publication, section)
     published_content = []
     contents = self.find_by_section_id( section.id )
     contents.each do |content|
-      content = get_published_verison(site, content)
+      content = get_published_verison(active_publication, content)
       published_content << content unless content.nil?
     end
 
@@ -34,11 +35,19 @@ class Content < ActiveRecord::Base
     position
   end
 
+  def add_comment(options={})
+    self.comments.create(options)
+  end
+
+  def get_comments(limit)
+     self.commentable.comments.recent.limit(limit).all
+  end
+
   private
 
-  def self.get_published_verison(site, content)
+  def self.get_published_verison(active_publication, content)
     content_version = nil
-    published_site_id = site.active_publication.id
+    published_site_id = active_publication.id
     published_element = PublishedElement.find(:first,
       :include => [:published_site],
       :conditions => ['published_sites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_site_id, content.id, 'Content'])

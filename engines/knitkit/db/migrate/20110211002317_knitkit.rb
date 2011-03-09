@@ -3,7 +3,6 @@ class Knitkit < ActiveRecord::Migration
 
     unless table_exists?(:sites)
       create_table :sites do |t|
-        t.integer :id
         t.string :name
         t.string :host
         t.string :title
@@ -16,7 +15,6 @@ class Knitkit < ActiveRecord::Migration
 
     unless table_exists?(:sections)
       create_table :sections do |t|
-        t.integer :id
         t.string :title
         t.string :type
         t.references :site
@@ -42,7 +40,6 @@ class Knitkit < ActiveRecord::Migration
 
     unless table_exists?(:contents)
       create_table :contents do |t|
-        t.integer :id
         t.string :type
         t.string :title
         t.string :permalink
@@ -136,6 +133,24 @@ class Knitkit < ActiveRecord::Migration
       add_index :published_elements, :version
     end
 
+    unless table_exists?(:comments)
+      create_table :comments do |t|
+        t.string   :commentor_name
+        t.string   :email
+        t.text     :comment
+        t.integer  :approved
+        t.datetime :approved_at
+        t.references :user
+        t.references :commented_record, :polymorphic => true
+
+        t.timestamps
+      end
+
+      add_index :comments, [:commented_record_id, :commented_record_type]
+      add_index :comments, [:approved]
+      add_index :comments, [:user_id]
+    end
+
   end
 
   def self.down
@@ -143,7 +158,7 @@ class Knitkit < ActiveRecord::Migration
     Content.drop_versioned_table
 
     # check that each table exists before trying to delete it.
-    [:sites, :sections, :contents, :section_contents, :themes, :theme_files, :published_sites, :published_elements].each do |tbl|
+    [:sites, :sections, :contents, :section_contents, :themes, :theme_files, :published_sites, :published_elements, :comments].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
       end

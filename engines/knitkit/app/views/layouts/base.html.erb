@@ -4,14 +4,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="generator" content="adva-cms - Open source content management platform" />
     <title><%= @site.title %></title>
-    <%= javascript_include_tag "ext_3_3_0/adapter/ext/ext-base.js" %>
-    <%= javascript_include_tag "ext_3_3_0/ext-all.js" %>
+    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
+    <%= stylesheet_link_tag(
+      'erp_app/desktop/applications/knitkit/blog.css',
+      'erp_app/desktop/applications/knitkit/signup.css',
+      'erp_app/desktop/applications/knitkit/login.css'
+    ) %>
 
     <%= yield :head %>
   </head>
   <body>
     <div id="page">
       <div id="header" class="clearing">
+        <%=render_version_viewing%>
         <h1><%= @site.title %></h1>
         <p><%= @site.subtitle %></p>
         <%= yield :header %>

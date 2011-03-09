@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   include Authentication
   include Authentication::ByPassword
   include Authentication::ByCookieToken
-	include TechServices::Authentication::UserAbstraction
+	#include TechServices::Authentication::UserAbstraction
 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
@@ -17,7 +17,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
   
   validates_presence_of     :login
-  validates_length_of       :login,    :within => 3..40
+  validates_length_of       :login,    :in => 3..40, :too_long => "too login", :too_short => "too short"
+
   validates_uniqueness_of   :login
   validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
 
@@ -25,10 +26,10 @@ class User < ActiveRecord::Base
   validates_length_of       :name,     :maximum => 100
 
   validates_presence_of     :email
-  validates_length_of       :email,    :within => 6..100 #r@a.wk
+  validates_length_of       :email,    :in => 6..100, :too_long => "too long", :too_short => "too short"
   validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message
 
-  before_create :make_activation_code
+  #before_create :make_activation_code
   before_save :format_name  
   
   #Restful Auth

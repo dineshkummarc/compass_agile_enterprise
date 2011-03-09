@@ -1,21 +1,22 @@
-module CanBePublished
+module Knitkit
+  module ActsAsPublishable
     def self.included(base)
       base.extend(ClassMethods)
     end
 
-		module ClassMethods
+    module ClassMethods
 
-  		def can_be_published
-        extend CanBePublished::SingletonMethods
-		include CanBePublished::InstanceMethods
-		  end
+      def can_be_published
+        extend ActsAsPublishable::SingletonMethods
+        include ActsAsPublishable::InstanceMethods
+      end
 
-		end
+    end
 
-		module SingletonMethods
-		end
+    module SingletonMethods
+    end
 
-		module InstanceMethods
+    module InstanceMethods
       def publish(site, comment, version)
         site.publish_element(comment, self, version)
       end
@@ -29,5 +30,6 @@ module CanBePublished
       end
     end
   end
+end
 
-ActiveRecord::Base.send(:include, CanBePublished)
+ActiveRecord::Base.send(:include, Knitkit::ActsAsPublishable)

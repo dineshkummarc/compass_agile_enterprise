@@ -1,21 +1,11 @@
 class BlogsController < ArticlesController
   def index
     @blog = Blog.find(params[:section_id])
-    @contents = @blog.find_published_blog_posts(@site)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @contents }
-    end
+    @contents = @blog.find_published_blog_posts(@active_publication)
   end
 
   def show
     @blog = Blog.find(params[:section_id])
-    @content = @blog.find_published_blog_post(@site, params[:id])
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @content }
-    end
+    @published_content = @blog.find_published_blog_post(@active_publication, params[:id])
   end
 end

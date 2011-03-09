@@ -20,10 +20,19 @@ class ErpApp::ApplicationController < ActionController::Base
 
     result = password_authentication(params[:login], params[:password])
 
-    if result
-      render :inline => '{success:true}'
+    if params[:redirect_to].blank?
+      if result
+        render :inline => '{success:true}'
+      else
+        render :inline => '{success:false}'
+      end
     else
-      render :inline => '{success:false}'
+      if result
+        redirect_to params[:redirect_to]
+      else
+        flash[:notice] = "Invalid Login. Please try again"
+        redirect_to session[:logout_to]
+      end
     end
   end
 

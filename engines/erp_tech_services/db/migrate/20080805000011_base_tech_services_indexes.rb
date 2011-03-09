@@ -17,9 +17,7 @@ class BaseTechServicesIndexes < ActiveRecord::Migration
     add_index :users, :name
     add_index :users, :email
     add_index :users, :enabled
-    
-    #add_index :roles, :internal_identifier
-    
+
     add_index :logged_exceptions, :created_at
         
     add_index :user_failures, :username

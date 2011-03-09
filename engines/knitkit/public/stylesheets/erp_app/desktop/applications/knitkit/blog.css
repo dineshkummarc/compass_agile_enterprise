@@ -1,0 +1,31 @@
+#addCommentDiv label{
+    clear: both;
+    display: block;
+    float: left;
+    width: 100px;
+}
+
+#addCommentDiv p{
+    margin-bottom: 15px;
+}
+
+#addCommentDiv .button{
+    cursor:pointer;
+    width:100px;
+}
+
+#addCommentDiv{
+    -moz-box-shadow: 10px 10px 5px #888888;
+    background-color: #EEEEEE;
+    margin-right: 20px;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+#commentDiv{
+    -moz-box-shadow: 10px 10px 5px #888888;
+    background-color: #EEEEEE;
+    margin-right: 20px;
+    margin-top: 10px;
+    padding: 20px;
+}

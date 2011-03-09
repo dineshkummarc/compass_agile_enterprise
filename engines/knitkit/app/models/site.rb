@@ -28,7 +28,7 @@ class Site < ActiveRecord::Base
     end
   end
   
-  has_many :themes, :dependent => :delete_all do
+  has_many :themes, :dependent => :destroy do
     def active
       find(:all,:conditions => 'active = 1')
     end
@@ -56,8 +56,20 @@ class Site < ActiveRecord::Base
     self.published_sites.all.find{|item| item.active}
   end
 
+  def site_role
+    Role.iid(site_role_iid)
+  end
+
   def after_create
     PublishedSite.create(:site => self, :version => 0, :active => true, :comment => 'New Site Created')
+    role = Role.create(:description => "#{self.title}", :internal_identifier => site_role_iid)
+    role.move_to_child_of(Role.iid('knitkit_website'))
+  end
+
+  private
+  
+  def site_role_iid
+    "#{self.title.gsub!(' ', '').underscore}"
   end
 
 end

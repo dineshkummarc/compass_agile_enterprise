@@ -1,0 +1,44 @@
+<div id="signupDiv">
+  <% form_for @user, :url => { :controller => "signup", :action => "new" } do |f| %>
+    <%
+    display = 'none'
+    unless @user.errors.empty?
+      display = 'block'
+    end
+  %>
+    <div id="requiredErrorDiv" style="display:<%=display%>;padding:5px;color:red;border:solid 1px #CCC;background-color:#CCFFCC;">Please correct following errors
+      <ul>
+        <% @user.errors.collect do |e, m| %>
+          <li><%="#{e.humanize unless e == "base"} #{m}"%></li>
+        <% end %>
+      </ul>
+    </div>
+    <br/>
+    <p>
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %>
+    </p>
+    <p>
+      <%= f.label :last_name, 'Last Name' %>
+      <%= f.text_field :last_name %>
+    </p>
+    <p>
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+    </p>
+    <p>
+      <%= f.label :login, 'Username' %>
+      <%= f.text_field :login %>
+    </p>
+    <p>
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+    </p>
+    <p>
+      <%= f.label :password_confirmation, "Confirm Password" %>
+      <%= f.password_field :password_confirmation %>
+    </p>
+    <br/><br/>
+    <%=  submit_tag "Signup", :class => "button" %>
+  <% end %>
+</div>

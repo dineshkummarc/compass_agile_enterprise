@@ -24,6 +24,13 @@ ActionController::Routing::Routes.draw do |map|
                     :action => 'show',
                     :conditions => { :method => :get }
 
+  map.comments '/comments/add/:section_id/:content_id', :controller => 'comments', :action => 'add'
+  map.login '/login', :controller => 'login', :action => 'index'
+  map.signup '/signup/:action', :controller => 'signup'
+  map.unauthorized '/unauthorized', :controller => 'unauthorized', :action => 'index'
+  map.connect '/view_current_publication', :controller => 'base', :action => 'view_current_publication'
+  
+
   #Desktop Applications
   #knitkit
   map.connect '/erp_app/desktop/knitkit/:action', :controller => 'erp_app/desktop/knitkit/base'
@@ -41,4 +48,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/knitkit/theme/:action', :controller => 'erp_app/desktop/knitkit/theme'
   #versions
   map.connect '/erp_app/desktop/knitkit/versions/:action', :controller => 'erp_app/desktop/knitkit/versions'
+  #comments
+  map.connect '/erp_app/desktop/knitkit/comments/:action/:content_id', :controller => 'erp_app/desktop/knitkit/comments'
 end

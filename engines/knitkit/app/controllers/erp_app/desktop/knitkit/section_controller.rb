@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::BaseController
   IGNORED_PARAMS = %w{action controller node_id}
 
-  before_filter :set_section, :only => [:add_layout, :get_layout, :save_layout, :delete]
+  before_filter :set_section, :only => [:update_security, :add_layout, :get_layout, :save_layout, :delete]
 
   def new
     result = {}
@@ -14,9 +14,9 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
         next if k == 'type' && v == 'Page'
         section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
       end
-      result = section.save
+      save_result = section.save
 
-      if result
+      if save_result
         node_id = params[:node_id]
         type = node_id.split('_')[0]
         id   = node_id.split('_')[1]
@@ -41,6 +41,17 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
 
   def delete
     @section.destroy
+    render :inline => {:success => true}.to_json
+  end
+
+  def update_security
+    site = Site.find(params[:site_id])
+    if(params[:secure] == "true")
+      @section.add_role(site.site_role)
+    else
+      @section.remove_role(site.site_role)
+    end
+
     render :inline => {:success => true}.to_json
   end
 

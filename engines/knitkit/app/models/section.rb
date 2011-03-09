@@ -1,6 +1,7 @@
 class Section < ActiveRecord::Base
   #acts_as_versioned
   can_be_published
+  has_security
   
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
   SECTIONS_TEMP_LAYOUT_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views/sections/"

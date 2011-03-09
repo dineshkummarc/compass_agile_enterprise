@@ -43,7 +43,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             url: './knitkit/site/delete',
             method: 'POST',
             params:{
-                site_id:id
+                id:id
             },
             success: function(response) {
                 var obj =  Ext.util.JSON.decode(response.responseText);
@@ -67,7 +67,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         var self = this;
         var publishWindow = new Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow({
             baseParams:{
-                site_id:node.id.split('_')[1]
+                id:node.id.split('_')[1]
             },
             url:'./knitkit/site/publish',
             listeners:{
@@ -122,6 +122,35 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             failure: function(response) {
                 self.clearWindowStatus();
                 Ext.Msg.alert('Error', 'Error loading section layout.');
+            }
+        });
+    },
+
+    changeSecurityOnSection : function(node, secure){
+        var self = this;
+        self.setWindowStatus('Loading securing section...');
+        var conn = new Ext.data.Connection();
+        conn.request({
+            url: './knitkit/section/update_security',
+            method: 'POST',
+            params:{
+                section_id:node.id.split('_')[1],
+                site_id:node.attributes.siteId,
+                secure:secure
+            },
+            success: function(response) {
+                var obj = Ext.util.JSON.decode(response.responseText);
+                if(obj.success){
+                    self.clearWindowStatus();
+                    self.sitesTree.getRootNode().reload();
+                }
+                else{
+                    Ext.Msg.alert('Error', 'Error securing section');
+                }
+            },
+            failure: function(response) {
+                self.clearWindowStatus();
+                Ext.Msg.alert('Error', 'Error securing section.');
             }
         });
     },
@@ -250,6 +279,30 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 }
                             }
                         });
+
+                        if(node.attributes.isSecured){
+                            items.push({
+                                text:'Unsecure',
+                                iconCls:'icon-document',
+                                listeners:{
+                                    'click':function(){
+                                        self.changeSecurityOnSection(node, false);
+                                    }
+                                }
+                            });
+                        }
+                        else{
+                            items.push({
+                                text:'Secure',
+                                iconCls:'icon-document_lock',
+                                listeners:{
+                                    'click':function(){
+                                        self.changeSecurityOnSection(node, true);
+                                    }
+                                }
+                            });
+                        }
+
 
                         //no layouts for blogs.
                         if(Compass.ErpApp.Utility.isBlank(node.attributes['isBlog']) && node.attributes['hasLayout']){
@@ -579,7 +632,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
     getPublications : function(node){
         this.contentsCardPanel.removeAll(true);
         this.contentsCardPanel.add({
-            xtype:'knitkit_siteversionsgridpanel',
+            xtype:'knitkit_publishedgridpanel',
             title:node.attributes.siteName + ' Publications',
             siteId:node.id.split('_')[1],
             centerRegion:this.initialConfig['module'].centerRegion

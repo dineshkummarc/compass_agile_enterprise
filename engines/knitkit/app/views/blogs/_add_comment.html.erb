@@ -1,0 +1,47 @@
+<div>
+  <a id="addCommentLink" href="#" onclick="AddComment.show();">[+] Add comment</a>
+</div>
+<div id="addCommentDiv" style="display:none;">
+  <form method="POST" action="/comments/add/<%=@section.id%>/<%=@published_content.content.id%>" onsubmit="return AddComment.validateForm(this);">
+    <div id="requiredErrorDiv" style="display:none;padding:5px;color:red;border:solid 1px #CCC;background-color:#CCFFCC;">Please complete Form. Name and Comment are required.</div>
+    <br/>
+    <div>
+      <p>
+        <label for="comment">Comment</label>
+        <textarea cols="50" rows="10" name="comment"></textarea>
+      </p>
+    </div>
+    <input class="button" type="submit" value="Post"/> | <input class="button" onclick="AddComment.hide();" type="button" value="Cancel" />
+  </form>
+</div>
+
+<script>
+  AddComment = {
+    addCommentLink:document.getElementById('addCommentLink'),
+    addCommentDiv:document.getElementById('addCommentDiv'),
+    requiredErrorDiv:document.getElementById('requiredErrorDiv'),
+
+    show:function(){
+      this.addCommentLink.style.display = "none";
+      this.addCommentDiv.style.display = "block";
+    },
+
+    hide:function(){
+      this.addCommentLink.style.display = "block";
+      this.addCommentDiv.style.display = "none";
+    },
+
+    validateForm:function(form){
+      for( var i = 0; i < form.elements.length; i++ )
+      {
+        if(form.elements[i].name == 'comment' || form.elements[i].name == 'commentor_name'){
+          if(form.elements[i].value == '' || form.elements[i].value == ' '){
+            this.requiredErrorDiv.style.display = 'block';
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+  }
+</script>

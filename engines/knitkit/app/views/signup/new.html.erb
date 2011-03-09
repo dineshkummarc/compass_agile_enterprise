@@ -1,0 +1,6 @@
+<% if @user.errors.empty? %>
+  <h1>Signup successful.</h1>
+  <p>Go ahead and login.</p>
+<% else %>
+  <%= render :partial => 'signup_form', :local => {:user => @user} %>
+<% end  %>

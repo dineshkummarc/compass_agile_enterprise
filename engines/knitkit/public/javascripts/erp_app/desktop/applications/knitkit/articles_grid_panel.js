@@ -266,7 +266,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                                 store:{
                                     xtype:'jsonstore',
                                     baseParams:{
-                                      section_id:self.initialConfig['sectionId']
+                                        section_id:self.initialConfig['sectionId']
                                     },
                                     url:'./knitkit/articles/existing_articles',
                                     fields:[
@@ -397,6 +397,21 @@ Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel = Ext.extend(C
         config = Ext.apply({
             addFormHeight:100,
             columns:[{
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
+                header:'Comments',
+                align:'center',
+                width:60,
+                items:[{
+                    icon:'/images/icons/document_text/document_text_16x16.png',
+                    tooltip:'Comments',
+                    handler :function(grid, rowIndex, colIndex){
+                        var rec = grid.getStore().getAt(rowIndex);
+                        grid.initialConfig['centerRegion'].viewContentComments(rec.get('id'), rec.get('title') + ' - Comments');
+                    }
+                }]
+            },{
                 menuDisabled:true,
                 resizable:false,
                 xtype:'actioncolumn',

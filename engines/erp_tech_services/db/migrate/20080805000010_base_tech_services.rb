@@ -58,7 +58,12 @@ class BaseTechServices < ActiveRecord::Migration
         t.column :internal_identifier, :string
         t.column :external_identifier, :string
         t.column :external_id_source, :string
-        
+
+        #better nested set columns
+        t.integer  	:parent_id
+        t.integer  	:lft
+        t.integer  	:rgt
+
         t.timestamps
       end
     end
@@ -258,6 +263,26 @@ class BaseTechServices < ActiveRecord::Migration
       end
     end
 
+    unless table_exists?(:secured_models)
+      create_table :secured_models do |t|
+        t.references :secured_record, :polymorphic => true
+        
+        t.timestamps
+      end
+      add_index :secured_models, [:secured_record_id, :secured_record_type]
+    end
+
+    unless table_exists?(:roles_secured_models)
+      create_table :secured_models_roles, :id => false do |t|
+        t.references :secured_model
+        t.references :role
+
+        t.timestamps
+      end
+      add_index :roles_secured_models, :secured_model_id
+      add_index :roles_secured_models, :role_id
+    end
+
   end
 
   def self.down
@@ -268,7 +293,7 @@ class BaseTechServices < ActiveRecord::Migration
       :audit_logs, :security_questions, :sessions, 
       :simple_captcha_data, :four_oh_fours, :user_failures, 
       :logged_exceptions, :roles_users, :roles, :audit_log_items, :audit_log_item_types,
-      :users
+      :users, :secured_models, :roles_secured_models
     ].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl

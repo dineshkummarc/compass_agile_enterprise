@@ -62,6 +62,10 @@ module ErpApp
         end
       end
 
+      def setup_default_preferences
+        #this should be overidden by the app container itself IE Desktop
+      end
+
 	  end
 
   end

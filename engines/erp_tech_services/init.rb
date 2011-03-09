@@ -1,5 +1,7 @@
 ActiveRecord::Base.send(:include, TechServices::ContentMgt::ActsAsContentMgtAsset)
 
+require 'tech_services'
+
 #add the observers path to load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)}/app/observers"
 
