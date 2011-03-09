@@ -17,6 +17,7 @@
     <div id="page">
       <div id="header" class="clearing">
         <%=render_version_viewing%>
+        <%= render :partial => 'layouts/login' %>
         <h1><%= @site.title %></h1>
         <p><%= @site.subtitle %></p>
         <%= yield :header %>
