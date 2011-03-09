@@ -273,7 +273,7 @@ class BaseTechServices < ActiveRecord::Migration
     end
 
     unless table_exists?(:roles_secured_models)
-      create_table :secured_models_roles, :id => false do |t|
+      create_table :roles_secured_models, :id => false do |t|
         t.references :secured_model
         t.references :role
 
