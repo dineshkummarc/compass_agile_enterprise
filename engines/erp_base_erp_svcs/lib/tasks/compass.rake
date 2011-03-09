@@ -11,84 +11,51 @@ namespace :compass do
     
   	desc 'install compass core engines'
     task :core do
-      puts("\nInstall Compass Core")
+      puts("\nInstalling Compass Core")
       ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app knitkit).join(',')
       ENV['plugins'] = 'data_migrator'
       Rake::Task['compass:install'].invoke
       #copy the compass index page
       FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
+      
       puts "\n\nInstallation Complete."
-    end #task :core
-
-   # desc 'install all compass engines and plugins'
-   # task :all do
-   #   ENV['engines'] = 'all'
-   #   ENV['plugins'] = 'all'
-   #   Rake::Task['compass:install'].invoke
-   # end #task :all
+    end
     
-    desc "install the Compass Framework and all eCommerce related engines and plugins"
-	#task :default => ["compass:install:core"]  do |t, args|
-    task :default   do |t, args|              
-      Rake::Task['compass:install:default_no_core'].invoke
+    desc "install all of the Compass Framework"
+    task :all do |t, args|
+      puts("\nInstalling All Compass Engines")
+      ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app erp_agreements erp_financial_accounting erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts erp_work_effort).join(',')
+      ENV['plugins'] = 'data_migrator'
+      Rake::Task['compass:install'].invoke
       #copy the compass index page
       FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
+
       puts "\n\nInstallation Complete."
-    end #task :default
-     
-    desc "install only the eCommerce related engines and plugins"
-	task :default_no_core  do |t, args|
-      puts "\nInstall Compass Default (eCommerce Base) Installation\n\n"
-      
-      ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app after_commit data_orchestrator erp_agreements erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts ext_scaffold master_data_management).join(',')
-      ENV['plugins'] = ''
-      Rake::Task['db:migrate'].reenable
-      # re-enable the compass install task if it has been run previously
-      Rake::Task["compass:install"].reenable
-      Rake::Task['compass:install'].invoke
-    end #task :default_no_core	
-     
-    desc "install the Compass Framework and all Timeshare related engines and plugins"
-	# task :timeshare => ["compass:install:core"]  do |t, args|
+    end
+
+    desc "install Timeshare related engines and plugins"
+    # task :timeshare => ["compass:install:core"]  do |t, args|
     task :timeshare   do |t, args|
-       puts "\nCompass Framework and the Timeshare base Installation\n\n"
+      puts "\nnInstalling Compass Timeshare Engine\n\n"
+      ENV['engines'] = %w(timeshare)
+      Rake::Task['compass:install'].invoke
        
-       Rake::Task['compass:install:timeshare_no_core'].invoke	
-       
-       #copy the compass index page
-       FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"	
-       
-       puts "\n\n Installation Complete"
-	end #task :timeshare
-     
-    desc "install the Compass Framework and all Timeshare related engines and plugins"
-	task :timeshare_no_core  do |t, args|
-       puts "\nCompass Framework and the Timeshare base Installation\n\n"
-       # install the common core
-       puts "Install only the Timeshare related engines and plugins"
-       ENV['engines'] = 'erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app timeshare'
-       ENV['plugins'] = ''
-       Rake::Task['db:migrate'].reenable
-       Rake::Task["compass:install"].reenable
-       Rake::Task['compass:install'].invoke		
-       
-    end #task :timeshare_no_core
-    
+      puts "\n\n Installation Complete"
+    end #task :timeshare
   end
 
   namespace :uninstall do
     desc 'uninstall compass core engines'
     task :core do
-      ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app data_migrator).join(',')
+      ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app knitkit data_migrator).join(',')
       Rake::Task['compass:uninstall'].invoke
     end #task uninstall:core
 
     desc 'uninstall all compass engines and plugins'
     task :all do
-      ENV['engines'] = 'all'
-      ENV['plugins'] = 'all'
+      ENV['engines'] = %w(data_migrator knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app erp_agreements erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts).join(',')
       Rake::Task['compass:uninstall'].invoke
-	end #task uninstall:all
+    end #task uninstall:all
   end
 
   desc 'install selected compass engines (pick some with engines=all plugins=all or engines=name1,name2 plugins=name3)'
@@ -182,8 +149,8 @@ namespace :compass do
     end
   end
 
- # the perform method is the workhorse of the installer it retrieves engines and plugins from
- # the environment through ENV
+  # the perform method is the workhorse of the installer it retrieves engines and plugins from
+  # the environment through ENV
 
   def perform(method)
     except = ENV['except'] ? ENV['except'].split(',') : []
@@ -213,7 +180,7 @@ namespace :compass do
       end 
     elsif Rake.application.windows?
       sources = plugins.map { |engine| source(type, engine) }
-	  FileUtils.cp_r sources, target
+      FileUtils.cp_r sources, target
     else
       raise 'unknown system platform'
     end
@@ -249,169 +216,169 @@ namespace :compass do
   
   namespace :bootstrap do
  
-   		desc "execute the bootstrap data migrations"
-			task :data  do |t, args|
-      			puts "Create Bootstrap Data\n\n"
-      			puts "Copy ignored data migrations..."
-        		Rake::Task["compass:bootstrap:copy_ignored_data_migrations"].invoke (":default")
-        		puts "Run Data Migrations..."
-        		Rake::Task["db:migrate_data"].invoke
-        		puts "Delete Data Migrations..."
-        		Rake::Task["compass:bootstrap:delete_data_migrations"].invoke (":default")
-     		end #task :data
+    desc "execute the bootstrap data migrations"
+    task :data  do |t, args|
+      puts "Create Bootstrap Data\n\n"
+      puts "Copy ignored data migrations..."
+      Rake::Task["compass:bootstrap:copy_ignored_data_migrations"].invoke (":default")
+      puts "Run Data Migrations..."
+      Rake::Task["db:migrate_data"].invoke
+      puts "Delete Data Migrations..."
+      Rake::Task["compass:bootstrap:delete_data_migrations"].invoke (":default")
+    end #task :data
  
-    	desc "move data migrations from ignore directory to its parent"
-    		# This task will allow you to move up to five plugin data_migration ignore files
-    		task :copy_ignored_data_migrations, :arg1, :arg2, :arg3 ,:arg4, :arg5  do |t, args|
+    desc "move data migrations from ignore directory to its parent"
+    # This task will allow you to move up to five plugin data_migration ignore files
+    task :copy_ignored_data_migrations, :arg1, :arg2, :arg3 ,:arg4, :arg5  do |t, args|
      		
-    		#TODO- Can Rake take variable argument list without pre-defining argument symbols
+      #TODO- Can Rake take variable argument list without pre-defining argument symbols
       
        
-      		if(args[:arg1]==":default")
-      			# TODO- Consider creating array of plugins dynamically
-        		plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
+      if(args[:arg1]==":default")
+        # TODO- Consider creating array of plugins dynamically
+        plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
         		 
-        		puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
+        puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
         		 
-      		else
-        		plugins =Array.new
-        		if (args[:arg1]!=nil) 
-         			plugins<<args[:arg1] 
-        		end
-        		if (args[:arg2]!=nil) 
-          			plugins<<args[:arg2] 
-		        end
-		        if (args[:arg3]!=nil) 
-		          plugins<<args[:arg3]
-		        end
-		        if (args[:arg4]!=nil) 
-		         plugins<<args[:arg4] 
-		        end
-		        if (args[:arg5]!=nil) 
-		         plugins<<args[:arg5] 
-		        end
-      		end  
+      else
+        plugins =Array.new
+        if (args[:arg1]!=nil)
+          plugins<<args[:arg1]
+        end
+        if (args[:arg2]!=nil)
+          plugins<<args[:arg2]
+        end
+        if (args[:arg3]!=nil)
+          plugins<<args[:arg3]
+        end
+        if (args[:arg4]!=nil)
+          plugins<<args[:arg4]
+        end
+        if (args[:arg5]!=nil)
+          plugins<<args[:arg5]
+        end
+      end
       		
-      		# if no plugins were supplied use the defaults  
-		    if(plugins.length==0)
-		    	puts "\nNo plugins arguments supplied.\n\nYou can supply up to five plugins\n\nRAKE TASK ARGUMENT FORM:\n\n"
-		        puts "rake db:move_ignored_data_migrations[:default]- moves DEFAULT plugin data migrations"
-		        puts "rake db:move_ignored_data_migrations[erp_app,erp_tech_services]- moves plugin for erp_app and erp_tech_services"
-		        puts "\n\n EXITING RAKE TASK."
-		        exit 1
-		    end # plugin.length=0    
+      # if no plugins were supplied use the defaults
+      if(plugins.length==0)
+        puts "\nNo plugins arguments supplied.\n\nYou can supply up to five plugins\n\nRAKE TASK ARGUMENT FORM:\n\n"
+        puts "rake db:move_ignored_data_migrations[:default]- moves DEFAULT plugin data migrations"
+        puts "rake db:move_ignored_data_migrations[erp_app,erp_tech_services]- moves plugin for erp_app and erp_tech_services"
+        puts "\n\n EXITING RAKE TASK."
+        exit 1
+      end # plugin.length=0
      
-       		puts "Moving data migrations from 'ignore' directory to parent\n\n"
+      puts "Moving data migrations from 'ignore' directory to parent\n\n"
        
       
-      		# loop over the plugins and check if the plugin exists
-      		for idx in 0...plugins.length
+      # loop over the plugins and check if the plugin exists
+      for idx in 0...plugins.length
       
-      			if(plugins[idx]!=nil)
-      				puts "Processing [#{plugins[idx]}] plugin\n"
-        			if(File.exists?("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore"))
+        if(plugins[idx]!=nil)
+          puts "Processing [#{plugins[idx]}] plugin\n"
+          if(File.exists?("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore"))
         
-          				data_migrations=Dir.entries("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore")
-      	  				moved_file_counter=0;  
+            data_migrations=Dir.entries("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore")
+            moved_file_counter=0;
           
-      	  				for idx2 in 0...data_migrations.length
-      	    				data_migration_filename= data_migrations[idx2]
-      	    				if(data_migration_filename.starts_with?("."))
-      	     					## skip
-  	    					else
-  	      						#copy the data migration from the ignore file to it's parent
-  	     						puts "\n\nMoving #{data_migration_filename} TO ./vendor/plugins/#{plugins[idx]}/db/data_migrations"
-  	     						FileUtils.copy("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}",
-  	                         		"./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}")
-					      	    moved_file_counter=moved_file_counter+1                   
-					      	    # delete the original
-					      	    ## puts "Deleting ./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}"
-					      	    ## File.delete("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}")
+            for idx2 in 0...data_migrations.length
+              data_migration_filename= data_migrations[idx2]
+              if(data_migration_filename.starts_with?("."))
+                ## skip
+              else
+                #copy the data migration from the ignore file to it's parent
+                puts "\n\nMoving #{data_migration_filename} TO ./vendor/plugins/#{plugins[idx]}/db/data_migrations"
+                FileUtils.copy("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}",
+                  "./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}")
+                moved_file_counter=moved_file_counter+1
+                # delete the original
+                ## puts "Deleting ./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}"
+                ## File.delete("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}")
 					      	                         
-				      	    end
+              end
       	    
-          				end
-          				puts "Copied (#{moved_file_counter}) data migrations\n\n"
+            end
+            puts "Copied (#{moved_file_counter}) data migrations\n\n"
       	  
-			      	else
-			      	  puts "./vendor/plugins/"+plugins[idx]+"/db/data_migrations/ignore DIRECTORY IS EMPTY"
-			      	end
-       			end	
-  		    end # plugin loop
+          else
+            puts "./vendor/plugins/"+plugins[idx]+"/db/data_migrations/ignore DIRECTORY IS EMPTY"
+          end
+        end
+      end # plugin loop
       
 		end# task :copy_ignored_data_migrations
 		
 		desc "delete data migrations from directory to its parent"
-    		# This task deletes the data migrations in the specified plugins
-    		task :delete_data_migrations, :arg1, :arg2, :arg3 ,:arg4, :arg5  do |t, args|
+    # This task deletes the data migrations in the specified plugins
+    task :delete_data_migrations, :arg1, :arg2, :arg3 ,:arg4, :arg5  do |t, args|
      		
-    		#TODO- Can Rake take variable argument list without pre-defining argument symbols
+      #TODO- Can Rake take variable argument list without pre-defining argument symbols
       
        
-      		if(args[:arg1]==":default")
-      			# TODO- Consider creating array of plugins dynamically
-        		plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
+      if(args[:arg1]==":default")
+        # TODO- Consider creating array of plugins dynamically
+        plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
         		 
-        		puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
+        puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
         		 
-      		else
-        		plugins =Array.new
-        		if (args[:arg1]!=nil) 
-         			plugins<<args[:arg1] 
-        		end
-        		if (args[:arg2]!=nil) 
-          			plugins<<args[:arg2] 
-		        end
-		        if (args[:arg3]!=nil) 
-		          plugins<<args[:arg3]
-		        end
-		        if (args[:arg4]!=nil) 
-		         plugins<<args[:arg4] 
-		        end
-		        if (args[:arg5]!=nil) 
-		         plugins<<args[:arg5] 
-		        end
-      		end  
+      else
+        plugins =Array.new
+        if (args[:arg1]!=nil)
+          plugins<<args[:arg1]
+        end
+        if (args[:arg2]!=nil)
+          plugins<<args[:arg2]
+        end
+        if (args[:arg3]!=nil)
+          plugins<<args[:arg3]
+        end
+        if (args[:arg4]!=nil)
+          plugins<<args[:arg4]
+        end
+        if (args[:arg5]!=nil)
+          plugins<<args[:arg5]
+        end
+      end
       		
-      		# if no plugins were supplied use the defaults  
-		    if(plugins.length==0)
-		    	puts "\nNo plugins arguments supplied.\n\nYou can supply up to five plugins\n\nRAKE TASK ARGUMENT FORM:\n\n"
-		        puts "rake db:move_ignored_data_migrations[:default]- moves DEFAULT plugin data migrations"
-		        puts "rake db:move_ignored_data_migrations[erp_app,erp_tech_services]- moves plugin for erp_app and erp_tech_services"
-		        puts "\n\n EXITING RAKE TASK."
-		        exit 1
-		    end # plugin.length=0    
+      # if no plugins were supplied use the defaults
+      if(plugins.length==0)
+        puts "\nNo plugins arguments supplied.\n\nYou can supply up to five plugins\n\nRAKE TASK ARGUMENT FORM:\n\n"
+        puts "rake db:move_ignored_data_migrations[:default]- moves DEFAULT plugin data migrations"
+        puts "rake db:move_ignored_data_migrations[erp_app,erp_tech_services]- moves plugin for erp_app and erp_tech_services"
+        puts "\n\n EXITING RAKE TASK."
+        exit 1
+      end # plugin.length=0
      
-       		puts "Deleting data migrations \n\n"
+      puts "Deleting data migrations \n\n"
        
       
-      		# loop over the plugins and check if the plugin exists
-      		for idx in 0...plugins.length
+      # loop over the plugins and check if the plugin exists
+      for idx in 0...plugins.length
       
-      			if(plugins[idx]!=nil)
-      				puts "Processing [#{plugins[idx]}] plugin\n"
+        if(plugins[idx]!=nil)
+          puts "Processing [#{plugins[idx]}] plugin\n"
         			 
-          				data_migrations=Dir.entries("./vendor/plugins/#{plugins[idx]}/db/data_migrations")
-      	  				deleted_file_counter=0;  
+          data_migrations=Dir.entries("./vendor/plugins/#{plugins[idx]}/db/data_migrations")
+          deleted_file_counter=0;
           
-      	  				for idx2 in 0...data_migrations.length
-      	    				data_migration_filename= data_migrations[idx2]
-      	    				if(data_migration_filename.ends_with?(".rb"))
+          for idx2 in 0...data_migrations.length
+            data_migration_filename= data_migrations[idx2]
+            if(data_migration_filename.ends_with?(".rb"))
       	     				 
   	      						
-					      	    deleted_file_counter=deleted_file_counter+1                   
-					      	    # delete the original
-					      	    puts "Deleting ./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}"
-					      	    File.delete("./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}")
+              deleted_file_counter=deleted_file_counter+1
+              # delete the original
+              puts "Deleting ./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}"
+              File.delete("./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}")
 					      	                         
-				      	    end
+            end
       	    
-          				end
-          				puts "deleted (#{deleted_file_counter}) data migrations\n\n"
+          end
+          puts "deleted (#{deleted_file_counter}) data migrations\n\n"
       	  
 			      	 
-       			end	
-  		    end # plugin loop
+        end
+      end # plugin loop
       
 		end# task :delete_ignored_data_migrations
 	end # bootstrap namespace
