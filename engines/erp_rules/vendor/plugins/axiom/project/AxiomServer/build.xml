@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project name="axiom" basedir="." default="jar">
+    <property name="src" value="./src/main/java"/>
+	<property name="user.nam" value="cwoodward"/>
+	<property name="dist" value="./dist"/>
+    <property name="output" value="bin"/>
+
+    <target name="compile" depends="create">
+        <javac destdir="bin">            
+            <src path="${src}"/>            
+            <classpath refid="java"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+    	<mkdir dir="${dist}"/>
+        <jar destfile="${dist}/axiom_server.jar">
+        	<manifest>
+        	      <!-- Who is building this jar? -->
+        	      <attribute name="Built-By" value="${user.name}"/>
+        	      <!-- Information about the program itself -->
+        	      <attribute name="Implementation-Vendor" value="TrueNorthSolutions Inc."/>
+        	      <attribute name="Implementation-Title" value="Compass-Axiom"/>
+        	      <attribute name="Implementation-Version" value="0.1beta"/>
+        	       
+        	    </manifest>
+            <fileset dir="bin"/>
+        	<fileset dir="${src}" excludes="**/*.java"/>
+        </jar>
+    </target>
+
+
+    <target name="clean">
+        <delete dir="${output}"/>
+    </target>
+
+    <target name="create" depends="clean">
+        <mkdir dir="${output}"/>
+    </target>
+
+    <path id="java">
+        <fileset dir="./lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+</project>

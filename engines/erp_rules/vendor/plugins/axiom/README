@@ -1,0 +1,353 @@
+Axiom
+=====
+
+This plugin provides an instance of the lightweight Axiom Rule Engine Server.
+The AxiomServer provides an execution container for Drools rule files (*.drl).
+This plugin requires the acts_as_java_value_object plugin be installed
+
+Configuration
+=============
+
+If no configuration file is present in the:
+
+/vendor/plugins/axiom/config/configuration.properties
+
+directory a default config file is created. It is recommended that the file paths
+defined in this configuration be used. The rmi.port can be changed if desired.
+
+rmi.port- the port the RMI server will listen on (default=1099)
+rule.path- the location of the drools(*.drl) rule files (default=rules)
+#currently disabled
+support.lib.path- libs that support rule execution are placed here (default=support_lib)
+#currently disabled
+model.path- libs containing the models used operated on by the rules are placed
+here (default=models)
+
+All paths are relative to the root defined by the command line param -Dalt.dir
+
+Starting the Server
+===================
+to run the server:
+
+rake axiom:start
+
+
+The axiom:start rake task requires the exec call to the java VM to include the
+command line param -Dalt.dir=vendor/plugins/axiom to provide the server with the
+correct root directory (otherwise it will try to use the RAILS root)
+
+Logging
+=======
+
+The server generates a Daily rolling log in the Rails  /log directory named
+axiom_server.log.
+
+TODO:
+
+(1) Support separation of core-server, model, and rule-support libs.
+
+ The server is provisioned to separate the core server libs from the model and rule
+support libs. This is currently disabled. All libs should be placed in the
+
+/vendor/plugins/axiom/jlib
+
+directory and the rake task classpath must be manually updated.
+
+(2) Provide remote server restart:
+
+(3) Provide rule caching , remote cache management, general performance profiling
+
+
+Theory of Operation
+===================
+
+The AxiomServer exposes its RuleExecutor through an RMIRegistry. When the Axiom
+Server starts it will create an RMI registry instance on the configure port
+and register the AxiomServer and RuleExecutor to the Registry. Included with the
+server is a java client (com.tnsolutionsinc.axiom.client.AxiomClient) which
+provides remote access to the server. This plugin provides a wrapper class named
+AxiomClient which allows the rails developer to work entirely in ruby without
+the need to drop down into java.
+
+When an AxiomClient is created it can include the remote host and port or
+default to localhost and use the standard IANA RMI port 1099. The constructor
+does not create a connection but it does configure the underlying java class.
+To the Rails developer the primary method used is
+
+invoke(ruleset, execution_context)
+
+This method will invoke the servers remote RuleExecutor with the supplied
+ruleset and execution context. The RuleExecutor will attempt to load the rule
+file named by the ruleset (<ruleset>.drl) and load the execution_context into
+the rule engine's working memory.
+
+When a ruleset fires the rule has access to the original execution_context as
+well as its enclosing ResultMap. The ResultMap extends the java.util.Hashmap
+to allow any class that is serializable (implements java.io.Serializable) to be
+returned through the ResultMap. Rules can inspect and update elements of the
+execution context as well as add objects to the ResultMap.
+
+The ruby AxiomClient provides the conversion of the active record models into
+the corresponding java value object defined in the model's
+acts_as_java_value_object configuration options. This conversion occurs during
+the invoke(...) operation on all active record models included in the 
+execution_context. All active record models that participate in an AxiomServer
+invoke call MUST implement the acts_as_java_value_object (This plugin is
+required to use the AxiomClient). The rule engine's invocation ResultMap also
+uses the acts_as_java_value_object plugin to reconstitue active record models
+from java value objects.
+
+AxiomClient performance
+=======================
+
+The use of the AxiomClient will incur three types of performance penalties:
+
+(1) Initial startup penalty- When the client is created a corresponding java
+    client will also be created. Since the java client must be created via
+    the RubyJavaBridge there is a performance penalty loading the corresponding
+    class. This is true for every java class loaded. However once the class has
+    been loaded the performance penalty does not occur until the rails server
+    restarts.
+
+(2) Serialization penalty- ActiveRecord classes as well as regular classes added
+    to the execution context must be converted to the corresponding java type.
+    This requires that the source object be traversed and the corresponding
+    target java object be populated. In large object graphs this will increase
+    the execution time of an invocation. To address this the
+    acts_as_java_value_object plugin requires the serialization graph be explicitly
+    declared. Developers are strongly cautioned to only include subgraph elements
+    that will participate in the target rules. Additionally when the rule
+    invocation returns the java object must be deserialized to the corresponding
+    ActiveRecord/Ruby instance. The returned ResultMap contains values set by the
+    rule engine as well as the original execution context incurring a corresponding
+    execution cost. The AxiomServer can be instructed not to return the
+    execution context if it is not need in the ResultMap. This can significantly
+    improve the round-trip performance since the execution context does not
+    need to be deserialized. To take advantage of this feature please refer to
+    the section on ExecutionContext Directives.
+
+(3) Network penalty- The AxiomServer executes as a standalone server. This means
+    that all calls to will incur a network penalty even if the AxiomServer is
+    co-located with the rails server. To minimize this the AxiomClient(java side)
+    communicates with the server via Java RMI (JRMP) and hides the complexity of
+    the communication from the developer and leverages an industry standard wire
+    protocol.
+
+ExecutionContext Directives
+===========================
+
+The AxiomServer provides the ExecutionContext Directives mechanism to enable the
+AxiomClient to instruct the server on how to configure the RuleExecutor prior to
+rule execution. Each ExecutionContext passed to the AxiomClient may contain a
+Hash of directive key-value pairs that are used by the AxiomServer. To set a
+directive do the following:
+
+      #get the directives
+      directivesMap=context[:directives]
+
+      # here we add in any global directives
+      if(directivesMap==nil)
+        directivesMap=Hash.new;
+      end
+
+      # suppress execution context return
+      #(we do this for performance reasons since the execution ctx isnt altered
+      directivesMap[:suppress_execution_context_return]=true
+
+      # add the directives map to the context
+      context[:directives]=directivesMap;
+
+Currently the AxiomClient only supports the
+
+      :suppress_execution_context_return
+
+directive. This instructs the AxiomServer not to include the execution context
+in returned ResultMap.
+
+Nested Collection Types in Subordinate Contexts (Search,Customer & Environment)
+===============================================================================
+
+In addition to supporting ActiveRecord model conversions the occasion may arise
+when a ruleset may need additional information not contained in a particular
+AR model. In simple cases this can be addressed by leveraging the context's
+Hash nature. The additional information can be added directly to the particular
+subordinate context root the using simple key-value pair mechanism.
+
+Additionally, Axiom supports adding three different ruby collection types to each
+of the subordinate contexts as key-value pairs where the value is the collection
+type. The supported collection types are:
+
+ -Array                     (maps to java.util.ArrayList)
+ -Hash                      (maps to java.util.HashMap)
+ -HashWithIndifferentAccess (maps to java.util.HashMap)
+
+These three types can be nested n-levels deep in any combination (e.g. Hash
+contains Array contains a HashWithIndifferentAccess etc). Each of these collections
+can contain other collections or primitive types.
+
+Rule Files
+==========
+
+AxiomServer rule files contain the rules requested during the RuleExecutor
+invocation. All rule files MUST end in .drl and conform to DROOLS java rule
+syntax. Multiple rules can be declared within a single file but must be
+declared with unique rule names.
+
+Since the rule files execute as java code they can invoke any valid java code
+that is in the classpath. To include java classes in the the rule classpath
+they must be packaged in .JAR file and placed in the server's jlib directory.
+
+The underlying logging mechanism can be exposed to any rule by including the
+
+Logger logger = Logger.getLogger("com.tnsolutionsinc.rule.<rule_name>");
+
+line prior to invoking the logger. The "com.tnsolutionsinc.rule" category has
+been preconfigured in the server to allow DEBUG and higher to be logged to the
+server daily log. To differentiate the rules it is strongly recommended that
+the logger category naming convention be observed. Since multiple rules can
+exist in a single rule file, it is recommended that each rule declare its own
+logger. It is acceptable to have multiple logger declarations in a single
+rule file.
+
+ResultMap supported types
+=========================
+Currently the ResultMap can contain ActiveRecord models in the ExecutionContext
+as well as primitive java types. Support is provided for java.util.ArrayList and
+java.util.HashMap as collection types that can be converted from java to ruby
+
+'Named' Collections
+===================
+Axiom supports two types of named collections- NamedHash (java NamedMap) and
+NamedArray (java NamedArray). Both types allow the collection type to carry
+an identifying name which can be used during rule evaluation. Each Named collection
+wraps an object rather than extending it to provide a unique type hierarch and
+to avoid inheritance collisions with Context subclasses that inherit from
+java.util.Map
+
+External Support Libraries
+==========================
+
+As mentioned before any valid java libary can be called from within a rule
+provided that the libary class and any supporting classes are also in the
+rule classpath. To use an external library class it must first be imported
+into the rule in the same manner as in a standard java source file (just after
+the package decaration)
+
+package com.tnsolutionsinc.compass
+
+import java.util.Date;
+import org.apache.log4j.Logger;
+import com.tnsolutionsinc.axiom.context.ExecutionContext;
+import com.tnsolutionsinc.compass.model.ResultMap;
+import com.tnsolutionsinc.compass.erp.models.TimesharePtsOwnership;
+import com.mdimension.jchronic.Chronic;
+
+
+
+Rule File Example
+=================
+
+package com.tnsolutionsinc.compass
+
+import org.apache.log4j.Logger;
+import com.tnsolutionsinc.axiom.context.ExecutionContext;
+import com.tnsolutionsinc.axiom.context.EnvironmentContext;
+import com.tnsolutionsinc.axiom.context.CustomerContext;
+import com.tnsolutionsinc.axiom.context.SearchContext;
+import com.tnsolutionsinc.compass.model.ResultMap;
+import com.tnsolutionsinc.compass.erp.models.TimesharePtsOwnership;
+import com.tnsolutionsinc.compass.erp.models.Agreement;
+import java.util.Date;
+import com.mdimension.jchronic.Chronic;
+import com.mdimension.jchronic.Options;
+import com.mdimension.jchronic.utils.Span;
+
+// declare a rule named home access
+
+rule "HomeAccess"
+
+    // activate rule when the search context is in working memory
+    // search context contains a search tyep == "HOME_ACCESS"
+    // the customer context is in working memory and its ownership is not null
+    // also make sure the resultMap is in working memory and assign it to resultMap
+
+    // this rule will only fire WHEN everything in the 'when' clause evaluates
+    // to true
+	when
+	    searchContext : SearchContext()
+	    eval(searchContext.get("SEARCH_TYPE").toString().equals("HOME_ACCESS"))
+	    customerContext : CustomerContext();
+            eval(customerContext.get("OWNERSHIP") != null)
+	    resultMap : ResultMap()
+	then
+            // When the rule evaluates to true do the following
+
+            // declare the HomeAccess Rule logger
+	    Logger logger = Logger.getLogger("com.tnsolutionsinc.rule.HomeAccess");
+	    logger.debug("FIRED Home Access");
+	    // get the ownership object from the context
+	    TimesharePtsOwnership ownership = (TimesharePtsOwnership)customerContext.get("OWNERSHIP");
+	    logger.debug( "Search type ="+searchContext.get("SEARCH_TYPE") );
+
+	    String reservation_intervals ="NOT IMPLEMENTED YET";
+
+            // as a convention add the rule fired to the result map
+	    resultMap.put("rule fired",searchContext.get("SEARCH_TYPE").toString());
+
+            // now put anything you want to return in the result map
+	    resultMap.put("resort_id",ownership.accommodationInvItem.resort.id);
+	    resultMap.put("accommodation_unit_type_id",ownership.accommodationInvItem.accommodationUnit.accommodationUnitType.id);
+	    resultMap.put("accomodation_unit_id",ownership.accommodationInvItem.accommodationUnit.id);
+	    resultMap.put("accomodation_inv_item_id",ownership.accommodationInvItem.id);
+	    resultMap.put("reservation_intervals", reservation_intervals);
+	    resultMap.put("agreement_id",ownership.agreement.id);
+
+            // here we demonstrate calling an external library
+	    Span span = Chronic.parse("tomorrow");
+	    resultMap.put("span",span.toString());
+
+
+	    #test we can invoke rule 'functions'
+	    resultMap.put("check-in.date",getCheckInDate(0,0,0));
+
+end
+
+// demonstrate having multiple rules in a single file
+
+rule "ResortAccess"
+
+	when
+	    searchContext : SearchContext()
+	    eval(searchContext.get("SEARCH_TYPE").toString().equals("RESORT_ACCESS"))
+	    customerContext : CustomerContext();
+            eval(customerContext.get("OWNERSHIP") != null)
+            resultMap : ResultMap()
+	then
+	    Logger logger = Logger.getLogger("com.tnsolutionsinc.rule.ResortAccess");
+	    logger.debug("FIRED Home Access");
+	    TimesharePtsOwnership ownership = (TimesharePtsOwnership)customerContext.get("OWNERSHIP");
+
+
+	    String reservation_intervals ="NOT IMPLEMENTED YET coming soon";
+	    resultMap.put("rule fired",searchContext.get("SEARCH_TYPE"));
+	    resultMap.put("check-in.date",getCheckInDate(0,0,0));
+
+	    resultMap.put("resort_id",ownership.accommodationInvItem.resort.id);
+	    resultMap.put("accommodation_unit_type_id",ownership.accommodationInvItem.accommodationUnit.accommodationUnitType.id);
+	    resultMap.put("accomodation_unit_id",ownership.accommodationInvItem.accommodationUnit.id);
+	    resultMap.put("accomodation_inv_item_id",ownership.accommodationInvItem.id);
+	    resultMap.put("reservation_intervals", reservation_intervals);
+	    resultMap.put("agreement_id",ownership.agreement.id);
+	    resultMap.put("agreement_eid",ownership.agreement.externalIdentifier);
+
+end
+
+// here we demonstrate the declaration of a rule 'function'
+// these are similar to java methods except that they are prefixed with the word
+// 'function' and cant define scope access. They are intended to provide local
+// reusable functions that can be shared across rules WITHIN a rule file
+function Date getCheckInDate(int year, int week_number, int checkin_in_day_of_week){
+	return new Date();
+}
+
+Copyright (c) 2010 [TrueNorthSolutions inc], released under the MIT license

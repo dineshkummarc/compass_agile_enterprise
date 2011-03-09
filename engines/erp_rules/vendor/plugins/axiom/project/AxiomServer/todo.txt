@@ -1,0 +1,3 @@
+add execution context pool-perf
+add cache of rules-perf
+add support for drools-repository access

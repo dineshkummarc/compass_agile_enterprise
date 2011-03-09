@@ -1,0 +1,29 @@
+class Payment < ActiveRecord::Base
+  include AASM
+
+  belongs_to :financial_txn
+  has_many   :payment_gateways
+
+  aasm_column :current_state
+
+  aasm_initial_state :pending
+
+  aasm_state :pending
+  aasm_state :authorized
+  aasm_state :captured
+  aasm_state :authorization_reversed
+
+  aasm_event :authorize do
+      transitions :to => :authorized, :from => [:pending]
+  end
+
+  aasm_event :capture do
+      transitions :to => :captured, :from => [:authorized]
+  end
+
+  aasm_event :reverse_authorization do
+      transitions :to => :authorization_reversed, :from => [:authorized]
+  end
+
+  
+end

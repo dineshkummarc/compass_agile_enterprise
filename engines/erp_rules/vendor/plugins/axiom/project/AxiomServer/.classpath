@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/rules"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="DROOLS/Drools"/>
+	<classpathentry kind="lib" path="C:/Users/cwoodward/workspace/AxiomServer/lib/jyaml-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cwoodward/workspace/AxiomServer/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cwoodward/workspace/AxiomServer/lib/org.drools.eclipse_4.0.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cwoodward/workspace/AxiomServer/lib/org.eclipse.jdt.core_3.4.4.v_894_R34x.jar"/>
+	<classpathentry kind="lib" path="C:/Users/cwoodward/workspace/AxiomServer/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/jchronic-0.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/compassERP_models.jar"/>
+	<classpathentry kind="lib" path="lib/datedFileAppender-1.0.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

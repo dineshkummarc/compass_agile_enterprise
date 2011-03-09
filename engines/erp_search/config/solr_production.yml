@@ -1,0 +1,11 @@
+production:
+  url: http://solr.olcc.lan:8983/solrprd
+  base: solr.olcc.lan
+  port: 8983
+  path: solrprd
+
+etl:
+  url: http://solr.olcc.lan:8983/solrprd
+  base: solr.olcc.lan
+  port: 8983
+  path: solrprd
