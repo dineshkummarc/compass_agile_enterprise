@@ -13,7 +13,7 @@ namespace :compass do
     task :core do
       puts("\nInstalling Compass Core")
       ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app knitkit).join(',')
-      ENV['plugins'] = 'data_migrator'
+      ENV['plugins'] = %w(data_migrator after_commit).join(',')
       Rake::Task['compass:install'].invoke
       #copy the compass index page
       FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
@@ -25,7 +25,7 @@ namespace :compass do
     task :all do |t, args|
       puts("\nInstalling All Compass Engines")
       ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app erp_agreements erp_financial_accounting erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts erp_work_effort).join(',')
-      ENV['plugins'] = 'data_migrator'
+      ENV['plugins'] = %w(data_migrator after_commit).join(',')
       Rake::Task['compass:install'].invoke
       #copy the compass index page
       FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
