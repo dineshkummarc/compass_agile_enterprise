@@ -12,8 +12,6 @@ class CreateDesktopAppKnitkit
     PreferenceType.iid('autoload_application').preferenced_records << app
 
     app.save
-
-    Role.create(:description => 'Knitkit Website', :internal_identifier => 'knitkit_website')
   end
 
   def self.down

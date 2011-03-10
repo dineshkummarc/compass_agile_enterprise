@@ -62,14 +62,13 @@ class Site < ActiveRecord::Base
 
   def after_create
     PublishedSite.create(:site => self, :version => 0, :active => true, :comment => 'New Site Created')
-    role = Role.create(:description => "#{self.title}", :internal_identifier => site_role_iid)
-    role.move_to_child_of(Role.iid('knitkit_website'))
+    Role.create(:description => "WebSite #{self.title} Access", :internal_identifier => site_role_iid)
   end
 
   private
   
   def site_role_iid
-    "#{self.title.gsub!(' ', '').underscore}"
+    "website_#{self.name.underscore}_access"
   end
 
 end

@@ -10,8 +10,8 @@ class SignupController < BaseController
     options.delete_if{|k,v| ignored_params.include?(k.to_s)}
     options = options[:user]
 
-    @user = User.new(options)
-    if @user.save
+    @user = User.create(options)
+    if @user.valid?
       @user.activated_at = Time.now
       @user.roles << @site.site_role
       @user.save

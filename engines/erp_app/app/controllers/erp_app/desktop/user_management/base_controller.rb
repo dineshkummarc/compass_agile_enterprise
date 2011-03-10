@@ -38,15 +38,13 @@ class ErpApp::Desktop::UserManagement::BaseController < ErpApp::Desktop::BaseCon
     options = params
     gender = options[:gender]
     options.delete_if{|k,v| ignored_params.include?(k.to_s)}
-    user = User.new(options)
+    user = User.create(options)
     
-    if user.save
+    if user.valid?
       user.activated_at = Time.now
       user.save
-      individual = Individual.create(:current_first_name => user.first_name, :current_last_name => user.last_name, :gender => gender)
-      individual.party.user = user
-      individual.party.save
-      setup_app_containers(user)
+      user.party.business_party.gender = gender
+      user.party.business_party.save
       response = {:success => true}
     else
       message = "<ul>"
@@ -74,18 +72,6 @@ class ErpApp::Desktop::UserManagement::BaseController < ErpApp::Desktop::BaseCon
 
   def get_user
     @user = User.find(params[:id])
-  end
-
-  def setup_app_containers(user)
-    desktop = ::Desktop.create
-    desktop.user = user
-    #make sure to setup default preferences
-    desktop.setup_default_preferences
-
-    organizer = Organizer.create
-    organizer.user = user
-    #make sure to setup default preferences
-    organizer.setup_default_preferences
   end
 
 end

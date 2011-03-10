@@ -58,12 +58,7 @@ class BaseTechServices < ActiveRecord::Migration
         t.column :internal_identifier, :string
         t.column :external_identifier, :string
         t.column :external_id_source, :string
-
-        #better nested set columns
-        t.integer  	:parent_id
-        t.integer  	:lft
-        t.integer  	:rgt
-
+        
         t.timestamps
       end
     end
