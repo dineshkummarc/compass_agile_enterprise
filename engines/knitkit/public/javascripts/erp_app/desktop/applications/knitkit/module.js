@@ -5,7 +5,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit  = Ext.extend(Ext.app.Module, {
     init : function(){
         this.launcher = {
             text: 'KnitKit',
-            iconCls:'icon-globe',
+            iconCls:'icon-prodconfig',
             handler : this.createWindow,
             scope: this
         }
@@ -22,7 +22,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit  = Ext.extend(Ext.app.Module, {
                 autoDestroy:true,
                 width:1200,
                 height:800,
-                iconCls: 'icon-globe',
+                iconCls: 'icon-prodconfig',
                 shim:false,
                 animCollapse:false,
                 constrainHeader:true,
