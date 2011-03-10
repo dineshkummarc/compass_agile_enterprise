@@ -258,6 +258,11 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/picture/picture_16x16.png', sizingMethod='crop');
 }
 
+.icon-prodconfig {
+    background-image:url( /images/icons/prodconfig/Prodconfig_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/prodconfig/Prodconfig_16x16.png', sizingMethod='crop');
+}
+
 
 
 

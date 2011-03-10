@@ -22,4 +22,4 @@ Run the migration with
 
 rake db:migrate_data
 
-and start adding functionalitydd
+and start adding functionality

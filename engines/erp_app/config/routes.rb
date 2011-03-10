@@ -27,6 +27,10 @@ ActionController::Routing::Routes.draw do |map|
 
   #Desktop Applications
 
+  #scaffold
+  map.connect '/erp_app/desktop/scaffold/role/:action', :controller => 'erp_app/desktop/scaffold/role'
+  map.connect '/erp_app/desktop/scaffold/:action', :controller => 'erp_app/desktop/scaffold/base'
+
   #knitkit
   map.connect '/erp_app/desktop/knitkit/:action', :controller => 'erp_app/desktop/knitkit/base'
 
@@ -37,7 +41,6 @@ ActionController::Routing::Routes.draw do |map|
 
   #system_management
   map.connect '/erp_app/desktop/system_management/:action', :controller => 'erp_app/desktop/system_management/base'
-  map.connect '/erp_app/desktop/system_management/roles/:action/:id', :controller => 'erp_app/desktop/system_management/roles'
   map.connect '/erp_app/desktop/system_management/application_role_management/:action', :controller => 'erp_app/desktop/system_management/application_role_management'
 
   #control_panel

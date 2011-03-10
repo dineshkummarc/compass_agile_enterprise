@@ -24,7 +24,7 @@ class ActiveExtGenerator < Rails::Generator::NamedBase
 
       #public
       #make javascript source and app folder
-      m.template "public/module.js.erb", "vendor/plugins/#{@plugin}/public/javascripts/erp_app/#{container_file_name}/applications/#{application_file_name}/#{file_name}_editable_grid.js"
+      m.template "public/module.js.erb", "vendor/plugins/#{@plugin}/public/javascripts/erp_app/#{container_file_name}/applications/#{application_file_name}/#{file_name}_active_ext.js"
 
       logger.info "creating route ~ map.connect '/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}/:action', :controller => 'erp_app/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}'"
       sentinel = "##{application_file_name}"
