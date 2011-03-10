@@ -1,11 +1,40 @@
 Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
     id:'web-navigator-win',
+    iframeId:'web_navigator_iframe',
+    urlHistory:[],
+    historyPosition:0,
+
+    goBack : function(){
+        if (this.historyPosition > 0)
+        {
+            this.historyPosition--;
+            Ext.get(this.iframeId).dom.src = this.urlHistory[this.historyPosition];
+        }
+        else
+            Ext.Msg.alert('Error','You reached the first page of history');
+    },
+
+    goForward : function(){
+        if (this.historyPosition < (this.urlHistory.length-1))
+        {
+            this.historyPosition++;
+            Ext.get(this.iframeId).dom.src = this.urlHistory[this.historyPosition];
+        }
+        else
+             Ext.Msg.alert('Error','You reached the last page of history');
+    },
+
+    gotToPage : function(url){
+        this.urlHistory[this.urlHistory.length] = url;
+        this.historyPosition = this.urlHistory.length - 1;
+        Ext.get(this.iframeId).dom.src = url;
+    },
 
     updateUrl : function(button){
         var url = Ext.getCmp('web_navigator_textfield').getValue();
         var re = new RegExp('http://');
         if(url.match(re)){
-            Ext.get('web_navigator_iframe').dom.src = url;
+            this.gotToPage(url);
         }
         else{
             Ext.Msg.alert("Error", "Invaild web address must start with 'http://'")
@@ -25,44 +54,47 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('web_navigator');
         if(!win){
-            if(Compass.ErpApp.Utility.isBlank(url)){
-                url = 'http://www.portablemind.com';
+            if(Compass.ErpApp.Utility.isBlank(url) || typeof(url) != "string"){
+                url = '/';
             }
 
-            var tbarItems = [
-            {
-                xtype:'textfield',
-                id:'web_navigator_textfield',
-                width:500,
-                value:url,
-                listeners: {
-                    specialkey:function(el, e){
-                        if(e.getKey() == e.ENTER) {
-                            self.updateUrl();
-                        }
-                    }
-                }
-            },
-            {
-                iconCls:'icon-next',
-                text:'Go',
+            var tbarItems = [];
+            tbarItems.push({
+                iconCls:'icon-refresh',
+                scope:this,
                 handler:function(button){
-                    self.updateUrl();
+                    Ext.get(this.iframeId).dom.contentDocument.location.reload(true);
                 }
-            }];
-
+            });
+//            tbarItems.push({
+//                iconCls:'icon-previous',
+//                scope:this,
+//                handler:function(button){
+//                    this.goBack();
+//                }
+//            });
+//            tbarItems.push({
+//                iconCls:'icon-next',
+//                scope:this,
+//                handler:function(button){
+//                    this.goForward();
+//                }
+//            });
+            tbarItems.push("|");
             tbarItems.push({
                 iconCls:'icon-monitor',
                 text:'Organizer',
+                scope:this,
                 handler:function(button){
-                    Ext.get('web_navigator_iframe').dom.src = '../organizer/';
+                    this.gotToPage('/erp_app/organizer/');
                 }
             });
             tbarItems.push({
                 iconCls:'icon-data',
                 text:'RailsDbAdmin',
+                scope:this,
                 handler:function(button){
-                    Ext.get('web_navigator_iframe').dom.src = '../../rails_db_admin/base';
+                    this.gotToPage('/rails_db_admin/base');
                 }
             });
 
@@ -70,7 +102,6 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                 tbarItems = tbarItems.concat(this.initialConfig.toolBarButtons);
             }
             
-            var self = this;
             win = desktop.createWindow({
                 id: 'web_navigator',
                 title:'Web Navigator',
@@ -85,13 +116,17 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                 {
                     xtype:'panel',
                     layout:'fit',
-                    tbar:{items:tbarItems,autoScroll:true},
-                    html:'<iframe id="web_navigator_iframe" height="100%" width="100%" src="'+url+'"></iframe>'
+                    tbar:{
+                        items:tbarItems,
+                        autoScroll:true
+                    },
+                    html:'<iframe id="'+this.iframeId+'" height="100%" width="100%"></iframe>'
                 }
                 ]
             });
         }
         win.show();
+        this.gotToPage(url);
     }
 });
 

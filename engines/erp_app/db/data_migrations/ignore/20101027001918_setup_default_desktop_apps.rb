@@ -10,11 +10,10 @@ class SetupDefaultDesktopApps
     #create preference options
     yes_po = PreferenceOption.create(:description => 'Yes', :internal_identifier => 'yes', :value => 'yes')
     no_po = PreferenceOption.create(:description => 'No', :internal_identifier => 'no', :value => 'no')
-    default_background_po = PreferenceOption.create(:description => 'Default Background', :internal_identifier => 'default_desktop_background', :value => 'desktop.gif')
-    gradient_background_po = PreferenceOption.create(:description => 'Gradient Background', :internal_identifier => 'gradient_desktop_background', :value => 'gradient.png')
-    purple_background_po = PreferenceOption.create(:description => 'Purple Background', :internal_identifier => 'purple_desktop_background', :value => 'purple_background.jpg')
-
-
+    default_background_po = PreferenceOption.create(:description => 'Default', :internal_identifier => 'default_desktop_background', :value => 'desktop.gif')
+    gradient_background_po = PreferenceOption.create(:description => 'Grey Gradient', :internal_identifier => 'grey_gradient_desktop_background', :value => 'gradient.png')
+    purple_background_po = PreferenceOption.create(:description => 'Purple', :internal_identifier => 'purple_desktop_background', :value => 'purple.jpg')
+    planet_background_po = PreferenceOption.create(:description => 'Planet', :internal_identifier => 'purple_desktop_background', :value => 'planet.jpg')
 
     #associate options
     desktop_shortcut_pt.preference_options << yes_po
@@ -30,6 +29,7 @@ class SetupDefaultDesktopApps
     desktop_backgroud_pt.preference_options << default_background_po
     desktop_backgroud_pt.preference_options << gradient_background_po
     desktop_backgroud_pt.preference_options << purple_background_po
+    desktop_backgroud_pt.preference_options << planet_background_po
     desktop_backgroud_pt.default_preference_option = default_background_po
     desktop_backgroud_pt.save
 

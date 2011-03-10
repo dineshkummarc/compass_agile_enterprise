@@ -238,6 +238,26 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_up/document_up_16x16.png', sizingMethod='crop');
 }
 
+.icon-refresh {
+    background-image:url( /images/icons/refresh/refresh_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/refresh/refresh_16x16.png', sizingMethod='crop');
+}
+
+.icon-next {
+    background-image:url( /images/icons/next/next_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/next/next_16x16.png', sizingMethod='crop');
+}
+
+.icon-previous {
+    background-image:url( /images/icons/previous/previous_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/previous/previous_16x16.png', sizingMethod='crop');
+}
+
+.icon-picture {
+    background-image:url( /images/icons/picture/picture_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/picture/picture_16x16.png', sizingMethod='crop');
+}
+
 
 
 

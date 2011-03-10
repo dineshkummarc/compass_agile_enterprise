@@ -107,7 +107,7 @@ Ext.ux.ClockPanel = Ext.extend(Ext.BoxComponent, {
             renderTo: 'ux-taskclock-panel',
             template: new Ext.Template(
                 '<table border="0" cellpadding="0" cellspacing="0" class="x-btn-wrap"><tbody><tr>',
-                '<td class="ux-startbutton-left"><i> </i></td><td class="ux-startbutton-center"><em unselectable="on"><button style="color:black;" class="x-btn-text" type="{1}" style="height:30px;" id="ux-clockbutton-text">{0}</button></em></td><td class="ux-startbutton-right"><i> </i></td>',
+                '<td class="ux-startbutton-left"><i> </i></td><td class="ux-startbutton-center"><em unselectable="on"><button style="color: black; background-color: transparent; border: medium none; font: bold 11px arial,tahoma,verdana,helvetica;" class="x-btn-text" type="{1}" style="height:30px;" id="ux-clockbutton-text">{0}</button></em></td><td class="ux-startbutton-right"><i> </i></td>',
                 '</tr></tbody></table>')
         });
         var width = this.clockBtn.getEl().getWidth()+10;

@@ -62,7 +62,7 @@ class Site < ActiveRecord::Base
 
   def after_create
     PublishedSite.create(:site => self, :version => 0, :active => true, :comment => 'New Site Created')
-    Role.create(:description => "WebSite #{self.title} Access", :internal_identifier => site_role_iid)
+    Role.create(:description => "Website #{self.title}", :internal_identifier => site_role_iid)
   end
 
   private

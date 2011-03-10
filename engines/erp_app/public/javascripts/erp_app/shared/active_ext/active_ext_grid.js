@@ -110,7 +110,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         text: 'Add',
                         iconCls: 'icon-add',
                         handler: function(button) {
-                            var grid = button.findParentByType('shared_dynamiceditablegrid');
+                            var grid = button.findParentByType('activeextgrid');
                             var r = new Record();
                             editor.stopEditing();
                             grid.store.insert(0, r);
@@ -122,7 +122,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         text: 'Delete',
                         iconCls: 'icon-delete',
                         handler: function(button) {
-                            var grid = button.findParentByType('shared_dynamiceditablegrid');
+                            var grid = button.findParentByType('activeextgrid');
                             var rec = grid.getSelectionModel().getSelected();
                             if (!rec) {
                                 return false;

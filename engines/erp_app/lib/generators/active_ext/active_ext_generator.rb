@@ -1,16 +1,5 @@
 require 'ActiveSupport'
 
-Rails::Generator::Commands::Create.class_eval do
-  def route_resources_with_route_file(route_file_path='config/routes.rb', *resources)
-    resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
-    sentinel = '#generated_routes'
-    logger.route "map.resources #{resource_list}"
-    gsub_file route_file_path, /(#{Regexp.escape(sentinel)})/mi do |match|
-      "#{match}\n  map.resources #{resource_list}\n"
-    end
-  end
-end
-
 class ActiveExtGenerator < Rails::Generator::NamedBase
   @icon = nil
   @description = nil

@@ -25,9 +25,6 @@ Compass.ErpApp.Desktop.Applications.SystemManagement = Ext.extend(Ext.app.Module
                     emptyMsg:'Empty'
                 },
                 {
-                    xtype:'party_editablegrid'
-                },
-                {
                     xtype:'systemmanagement_applicationrolemanagement'
                 }
                 ]

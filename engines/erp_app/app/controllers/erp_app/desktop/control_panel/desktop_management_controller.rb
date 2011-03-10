@@ -43,4 +43,10 @@ class ErpApp::Desktop::ControlPanel::DesktopManagementController < ErpApp::Appli
     render :inline => ext_json
   end
 
+  def add_background
+    result = ::Desktop.add_background(params[:description], params[:image_data])
+
+    render :inline => result.to_json
+  end
+
 end

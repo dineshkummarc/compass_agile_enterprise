@@ -36,11 +36,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/user_management/application_management/:action/' , :controller => 'erp_app/desktop/user_management/application_management'
 
   #system_management
-  map.connect '/erp_app/desktop/system_management/party/:action', :controller => 'erp_app/desktop/system_management/party'
-  map.connect '/erp_app/desktop/system_management/role_type/:action', :controller => 'erp_app/desktop/system_management/role_type'
-  map.connect '/erp_app/desktop/system_management/biz_txn_type/:action', :controller => 'erp_app/desktop/system_management/biz_txn_type'
-  map.connect '/erp_app/desktop/system_management/role_type/:action', :controller => 'erp_app/desktop/system_management/role_type'
-
   map.connect '/erp_app/desktop/system_management/:action', :controller => 'erp_app/desktop/system_management/base'
   map.connect '/erp_app/desktop/system_management/roles/:action/:id', :controller => 'erp_app/desktop/system_management/roles'
   map.connect '/erp_app/desktop/system_management/application_role_management/:action', :controller => 'erp_app/desktop/system_management/application_role_management'

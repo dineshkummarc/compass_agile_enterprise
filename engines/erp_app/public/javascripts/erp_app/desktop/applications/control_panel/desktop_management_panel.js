@@ -113,7 +113,87 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel = Ext.ex
         config = Ext.apply({
             title:'Desktop',
             items:[this.form,backgroundImagePanel],
-            layout:'border'
+            layout:'border',
+            tbar:{
+                items:{
+                    iconCls:'icon-picture',
+                    text:'Add Background',
+                    handler:function(btn){
+                        var addBackgroundWindow = new Ext.Window({
+                            layout:'fit',
+                            width:340,
+                            title:'Add Background',
+                            height:130,
+                            plain: true,
+                            buttonAlign:'center',
+                            items: new Ext.FormPanel({
+                                labelWidth: 110,
+                                frame:false,
+                                fileUpload: true,
+                                bodyStyle:'padding:5px 5px 0',
+                                width: 425,
+                                url:'./control_panel/desktop_management/add_background',
+                                items:[
+                                {
+
+                                    xtype:'textfield',
+                                    fieldLabel:'Description',
+                                    allowBlank:true,
+                                    name:'description'
+                                },
+                                {
+                                    xtype:'fileuploadfield',
+                                    fieldLabel:'Background Image',
+                                    buttonText:'Upload',
+                                    buttonOnly:false,
+                                    allowBlank:true,
+                                    name:'image_data'
+                                }
+                                ]
+                            }),
+                            buttons: [{
+                                text:'Submit',
+                                listeners:{
+                                    'click':function(button){
+                                        var window = button.findParentByType('window');
+                                        var formPanel = window.findByType('form')[0];
+                                        self.setWindowStatus('Adding background...');
+                                        formPanel.getForm().submit({
+                                            reset:true,
+                                            success:function(form, action){
+                                                self.clearWindowStatus();
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                if(obj.success){
+                                                    
+                                                }
+                                                else{
+                                                    Ext.Msg.alert("Error", obj.msg);
+                                                }
+                                            },
+                                            failure:function(form, action){
+                                                self.clearWindowStatus();
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                if(!Compass.ErpApp.Utility.isBlank(obj) && !Compass.ErpApp.Utility.isBlank(obj.msg)){
+                                                    Ext.Msg.alert("Error", obj.msg);
+                                                }
+                                                else{
+                                                    Ext.Msg.alert("Error", "Error creating theme");
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            },{
+                                text: 'Close',
+                                handler: function(){
+                                    addBackgroundWindow.close();
+                                }
+                            }]
+                        });
+                        addBackgroundWindow.show();
+                    }
+                }
+            }
         }, config);
 
         Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel.superclass.constructor.call(this, config);
