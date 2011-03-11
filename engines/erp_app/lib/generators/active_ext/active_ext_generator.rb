@@ -6,6 +6,9 @@ class ActiveExtGenerator < Rails::Generator::NamedBase
   @plugin = nil
 
   def initialize(runtime_args, runtime_options = {})
+    self.spec = runtime_options[:spec] unless runtime_options[:spec].nil?
+    self.logger = runtime_options[:logger] unless runtime_options[:logger].nil?
+
     super
     raise "Must Include Container Arg[1]" if runtime_args[1].blank?
     raise "Must Include Application Arg[2]" if runtime_args[2].blank?

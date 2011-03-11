@@ -1,4 +1,23 @@
+require 'rails_generator/spec'
+require 'rails_generator/base'
+require 'rails_generator/commands'
+require 'rails_generator/simple_logger'
+require 'generators/active_ext/active_ext_generator'
+
 class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseController
+
+  def create_model
+    name = params[:name].underscore
+
+    result = create_scaffold_check(name)
+    if result[:success]
+      spec = Rails::Generator::Spec.new('active_ext', "#{RAILS_ROOT}/vendor/plugins/erp_app/lib/generators/active_ext", 'controller')
+      generator = ActiveExtGenerator.new [name, 'desktop','scaffold'], {:spec => spec, :logger => Rails::Generator::SimpleLogger.new}
+      Rails::Generator::Commands.instance('create', generator).invoke!
+    end
+
+    render :inline => result.to_json
+  end
 
   def get_active_ext_models
     models = find_active_ext_models
@@ -13,6 +32,24 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
   end
 
   private
+
+  def create_scaffold_check(name)
+    result = {:success => true}
+
+    klass_name = name.classify
+    model_names = find_active_ext_models
+    unless model_names.include?(klass_name)
+      unless model_exists?(klass_name)
+        result[:success] = false
+        result[:msg] = "Model does not exists"
+      end
+    else
+      result[:success] = false
+      result[:msg] = "Scaffold already exists"
+    end
+
+    return result
+  end
 
   #get all file in root app/controllers and first level plugins app/controllers
   def find_active_ext_models

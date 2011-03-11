@@ -1,4 +1,56 @@
 Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree = Ext.extend(Ext.tree.TreePanel, {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
+    addModel : function(){
+        var self = this;
+        Ext.MessageBox.prompt('Add Model', 'Model name:', function(btn, text){
+            if(btn == 'ok'){
+                self.setWindowStatus('Adding model to scaffold');
+                var conn = new Ext.data.Connection();
+                conn.request({
+                    url:'./scaffold/create_model',
+                    method: 'POST',
+                    params:{
+                        name:text
+                    },
+                    success: function(response) {
+                        self.clearWindowStatus();
+                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        if(obj.success){
+                            Ext.MessageBox.confirm('Confirm', 'Page must reload for changes to take affect. Reload now?', function(btn){
+                                if(btn == 'no'){
+                                    return false;
+                                }
+                                else{
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                        else{
+                            Ext.Msg.alert("Error", obj.msg);
+                        }
+                    },
+                    failure: function(response) {
+                        self.clearWindowStatus();
+                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        if(!Compass.ErpApp.Utility.isBlank(obj) && !Compass.ErpApp.Utility.isBlank(obj.msg)){
+                            Ext.Msg.alert("Error", obj.msg);
+                        }
+                        else{
+                            Ext.Msg.alert("Error", "Error adding model");
+                        }
+                    }
+                });
+            }
+        });
+    },
+
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree.superclass.initComponent.call(this, arguments);
     },
@@ -23,6 +75,7 @@ Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree = Ext.extend(Ext.tree.Tr
                     iconCls:'icon-add',
                     scope:this,
                     handler:function(){
+                        this.addModel();
                     }
                 }
                 ]
@@ -38,13 +91,13 @@ Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree = Ext.extend(Ext.tree.Tr
                     e.stopEvent();
                     var contextMenu = new Ext.menu.Menu({
                         items:[
-                            {
-                                text:'View',
-                                iconCls:'icon-search',
-                                handler:function(btn){
-                                    self.initialConfig.scaffold.loadModel(node.id);
-                                }
+                        {
+                            text:'View',
+                            iconCls:'icon-search',
+                            handler:function(btn){
+                                self.initialConfig.scaffold.loadModel(node.id);
                             }
+                        }
                         ]
                     });
                     contextMenu.showAt(e.xy);

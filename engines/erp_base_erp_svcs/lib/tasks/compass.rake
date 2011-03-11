@@ -15,8 +15,6 @@ namespace :compass do
       ENV['engines'] = %w(erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app knitkit).join(',')
       ENV['plugins'] = %w(data_migrator).join(',')
       Rake::Task['compass:install'].invoke
-      #copy the compass index page
-      FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
       
       puts "\n\nInstallation Complete."
     end
@@ -27,8 +25,6 @@ namespace :compass do
       ENV['engines'] = %w(knitkit erp_base_erp_svcs erp_tech_services erp_dev_svcs erp_app erp_agreements erp_financial_accounting erp_commerce erp_communication_events erp_inventory erp_orders erp_products erp_rules erp_search erp_txns_and_accts erp_work_effort).join(',')
       ENV['plugins'] = %w(data_migrator).join(',')
       Rake::Task['compass:install'].invoke
-      #copy the compass index page
-      FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
 
       puts "\n\nInstallation Complete."
     end
@@ -110,6 +106,8 @@ namespace :compass do
         test = FileUtils.ln_s relative_source, target, :force => true # :verbose => true
         print "."
       end
+      #make sure to copy the splash screen
+      FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
       print "Done\n"
     end
 
@@ -122,6 +120,8 @@ namespace :compass do
 
       FileUtils.mkdir_p(target) unless File.directory?(target)
       FileUtils.cp_r sources, target
+      #make sure to copy the splash screen
+      FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
     end
 
     if not Rake.application.unix?
