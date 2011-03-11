@@ -3,8 +3,11 @@ require 'rails_generator/base'
 require 'rails_generator/commands'
 require 'rails_generator/simple_logger'
 require 'generators/active_ext/active_ext_generator'
+require 'fileutils'
 
 class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseController
+
+  ERP_APP_PATH = "#{RAILS_ROOT}/vendor/plugins/erp_app/"
 
   def create_model
     name = params[:name].underscore
@@ -14,6 +17,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
       spec = Rails::Generator::Spec.new('active_ext', "#{RAILS_ROOT}/vendor/plugins/erp_app/lib/generators/active_ext", 'controller')
       generator = ActiveExtGenerator.new [name, 'desktop','scaffold'], {:spec => spec, :logger => Rails::Generator::SimpleLogger.new}
       Rails::Generator::Commands.instance('create', generator).invoke!
+      load_files(name)
     end
 
     render :inline => result.to_json
@@ -39,7 +43,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
     klass_name = name.classify
     model_names = find_active_ext_models
     unless model_names.include?(klass_name)
-      unless model_exists?(klass_name)
+      unless class_exists?(klass_name)
         result[:success] = false
         result[:msg] = "Model does not exists"
       end
@@ -60,7 +64,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
       open(filename) do |file|
         if file.grep(/active_ext/).any?
           model = File.basename(filename).gsub("_controller.rb", "").classify
-          if model_exists?(model)
+          if class_exists?(model)
             model_names << model
           end
         end
@@ -70,7 +74,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
     model_names
   end
 
-  def model_exists?(class_name)
+  def class_exists?(class_name)
     klass = Module.const_get(class_name)
     if klass.is_a?(Class)
       return klass.superclass == ActiveRecord::Base
@@ -79,5 +83,15 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
     end
   rescue NameError
     return false
+  end
+
+  def load_files(name)
+    require_dependency "#{ERP_APP_PATH}/config/routes.rb"
+    controller = "ErpApp::Desktop::Scaffold::#{name.classify}Controller"
+    unless class_exists?(controller)
+      controller.constantize
+    end
+    FileUtils.mkdir_p "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/"
+    FileUtils.cp_r "#{ERP_APP_PATH}/public/javascripts/erp_app/desktop/applications/scaffold/#{name.underscore}_active_ext.js", "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/"
   end
 end
