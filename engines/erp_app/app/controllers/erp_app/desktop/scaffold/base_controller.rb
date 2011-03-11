@@ -25,7 +25,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
     result = []
 
     models.each do |model|
-      result << {:text => model, :id => model.downcase, :iconCls => 'icon-grid', :leaf => true}
+      result << {:text => model, :id => model.underscore, :iconCls => 'icon-grid', :leaf => true}
     end
 
     render :inline => result.to_json
@@ -59,7 +59,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
       next if filename =~ /#{['svn', 'CVS', 'bzr'].join("|")}/
       open(filename) do |file|
         if file.grep(/active_ext/).any?
-          model = File.basename(filename).split("_").first.classify
+          model = File.basename(filename).gsub("_controller.rb", "").classify
           if model_exists?(model)
             model_names << model
           end
