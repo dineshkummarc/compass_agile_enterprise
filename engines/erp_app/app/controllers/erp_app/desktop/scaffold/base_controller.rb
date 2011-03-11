@@ -1,3 +1,4 @@
+require 'ActiveSupport'
 require 'rails_generator/spec'
 require 'rails_generator/base'
 require 'rails_generator/commands'
