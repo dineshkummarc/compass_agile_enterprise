@@ -187,7 +187,7 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
         tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
       end 
     end if File.directory?(directory)
-    
-    tree_data.to_json
+
+    tree_data.sort_by{|item| [item[:id]]}.to_json
   end
 end
