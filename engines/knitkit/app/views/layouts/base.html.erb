@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="generator" content="adva-cms - Open source content management platform" />
-    <title><%= @site.title %></title>
+    <title><%= @website.title %></title>
     <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
     <%= stylesheet_link_tag(
       'erp_app/desktop/applications/knitkit/blog.css',
@@ -18,12 +18,12 @@
       <div id="header" class="clearing">
         <%=render_version_viewing%>
         <%= render :partial => 'layouts/login' %>
-        <h1><%= @site.title %></h1>
-        <p><%= @site.subtitle %></p>
+        <h1><%= @website.title %></h1>
+        <p><%= @website.subtitle %></p>
         <%= yield :header %>
       </div>
       <div id="navigation">
-        <%= render_menu(@sections) %>
+        <%= render_menu(@website_sections) %>
       </div>
       <div id="main">
         <%= yield %>

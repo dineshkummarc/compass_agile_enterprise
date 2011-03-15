@@ -11,14 +11,14 @@ class Theme < ActiveRecord::Base
   THEME_STRUCTURE = ['stylesheets', 'javascripts', 'images', 'templates']
   
   class << self
-    def base_dir(site)
-      "#{root_dir}/sites/site-#{site.id}/themes"
+    def base_dir(website)
+      "#{root_dir}/sites/site-#{website.id}/themes"
     end
 
-    def import(file, site)
+    def import(file, website)
       name = file.original_filename.to_s.gsub(/(^.*(\\|\/))|(\.zip$)/, '').gsub(/[^\w\.\-]/, '_')
       return false unless valid_theme?(file)
-      returning Theme.create(:name => name, :site => site) do |theme|
+      returning Theme.create(:name => name, :website => website) do |theme|
         theme.import(file)
       end
     end
@@ -43,7 +43,7 @@ class Theme < ActiveRecord::Base
     end
   end
   
-  belongs_to :site
+  belongs_to :website
   has_many :files, :order => "directory ASC, name ASC", :class_name => 'Theme::File', :dependent => :delete_all
   has_many :templates, :order => "directory ASC, name ASC"
   has_many :images, :order => "directory ASC, name ASC"
@@ -51,21 +51,21 @@ class Theme < ActiveRecord::Base
   has_many :stylesheets, :order => "directory ASC, name ASC"
   has_one  :preview
 
-  has_permalink :name, :theme_id, :scope => :site_id,
+  has_permalink :name, :theme_id, :scope => :website_id,
     :only_when_blank => false, :sync_url => true
 
   validates_presence_of :name
-  validates_uniqueness_of :theme_id, :scope => :site_id
+  validates_uniqueness_of :theme_id, :scope => :website_id
   
   after_create  :create_theme_dir
   after_destroy :delete_theme_dir
   
   def path
-    "#{self.class.base_dir(site)}/#{theme_id}"
+    "#{self.class.base_dir(website)}/#{theme_id}"
   end
 
   def url
-    "sites/site-#{site.id}/themes/#{theme_id}"
+    "sites/site-#{website.id}/themes/#{theme_id}"
   end
   
   def activate!

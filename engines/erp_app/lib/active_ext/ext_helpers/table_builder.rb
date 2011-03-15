@@ -44,8 +44,8 @@ module ActiveExt::ExtHelpers::TableBuilder
     end
 
     if core.options[:show_timestamps]
-      fields << {:name => 'created_at'}
-      fields << {:name => 'updated_at'}
+      fields << {:name => 'created_at', :type => 'date'}
+      fields << {:name => 'updated_at', :type => 'date'}
     end
 
     fields

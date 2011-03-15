@@ -1,10 +1,10 @@
 class BaseController < ErpApp::ApplicationController
-  before_filter :set_site
+  before_filter :set_website
   before_filter :set_active_publication, :load_sections, :set_section, :except => [:view_current_publication]
-  acts_as_themed_controller :current_themes => lambda {|c| c.site.themes.active if c.site }
+  acts_as_themed_controller :current_themes => lambda {|c| c.website.themes.active if c.website }
 
-  def site
-    @site
+  def website
+    @website
   end
 
   def view_current_publication
@@ -13,28 +13,28 @@ class BaseController < ErpApp::ApplicationController
   end
   
   protected
-  def set_site
-    @site = Site.find_by_host!(request.host_with_port) # or raise "can not set site from host #{request.host_with_port}"
+  def set_website
+    @website = Website.find_by_host!(request.host_with_port) # or raise "can not set website from host #{request.host_with_port}"
   end
     
   def load_sections
-    @sections = @site.sections
+    @website_sections = @website.website_sections
   end
     
   def set_section
     unless params[:section_id].nil?
-      @section = Section.find(params[:section_id])
+      @website_section = WebsiteSection.find(params[:section_id])
     else
       raise "No Id set"
     end
   end
 
   def set_active_publication
-    @active_publication = @site.active_publication
-    if !session[:site_version].blank? && !session[:site_version].empty?
-      site_version_hash = session[:site_version].find{|item| item[:site_id] == @site.id}
+    @active_publication = @website.active_publication
+    if !session[:website_version].blank? && !session[:website_version].empty?
+      site_version_hash = session[:website_version].find{|item| item[:website_id] == @website.id}
       unless site_version_hash.nil?
-        @active_publication = @site.published_sites.find(:first, :conditions => ['version = ?', site_version_hash[:version].to_f])
+        @active_publication = @website.published_websites.find(:first, :conditions => ['version = ?', site_version_hash[:version].to_f])
       end
     end
   end

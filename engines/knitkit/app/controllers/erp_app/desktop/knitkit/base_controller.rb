@@ -2,65 +2,65 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
 
   def websites
-    @sites = Site.find(:all)
+    websites = Website.find(:all)
 
     tree = []
 
-    @sites.each do |site|
-      site_hash = {
-        :text => site.title,
+    websites.each do |website|
+      website_hash = {
+        :text => website.title,
         :canAddSections => true,
         :iconCls => 'icon-globe',
-        :id => "site_#{site.id}",
+        :id => "website_#{website.id}",
         :leaf => false,
-        :url => "http://#{site.host}",
-        :name => site.name,
-        :host => site.host,
-        :title => site.title,
-        :subtitle => site.subtitle,
-        :email => site.email,
-        :siteName => site.title,
+        :url => "http://#{website.host}",
+        :name => website.name,
+        :host => website.host,
+        :title => website.title,
+        :subtitle => website.subtitle,
+        :email => website.email,
+        :siteName => website.title,
         :children => []
       }
       
       #handle sections
-      site.sections.each do |section|
-        section_hash = {
-          :text => section.title,
-          :siteName => site.title,
-          :siteId => site.id,
-          :type => section.type,
-          :isSecured => !section.roles.empty?,
+      website.website_sections.each do |website_section|
+        website_section_hash = {
+          :text => website_section.title,
+          :siteName => website.title,
+          :siteId => website.id,
+          :type => website_section.type,
+          :isSecured => !website_section.roles.empty?,
           :isSection => true,
-          :hasLayout => !section.layout.blank?,
-          :id => "section_#{section.id}",
-          :url => "http://#{site.host}/#{section.permalink}"
+          :hasLayout => !website_section.layout.blank?,
+          :id => "section_#{website_section.id}",
+          :url => "http://#{website.host}/#{website_section.permalink}"
         }
 
-        if section.is_a?(Blog)
-          section_hash[:isBlog] = true
-          section_hash[:iconCls] = 'icon-blog'
-          section_hash[:leaf] = true
-          section_hash[:canAddSections] = false
+        if website_section.is_a?(Blog)
+          website_section_hash[:isBlog] = true
+          website_section_hash[:iconCls] = 'icon-blog'
+          website_section_hash[:leaf] = true
+          website_section_hash[:canAddSections] = false
         else
-          section_hash[:canAddSections] = true
-          unless section.children.empty?
-            section_hash[:leaf] = false
-            section_hash[:children] = []
+          website_section_hash[:canAddSections] = false
+          unless website_section.children.empty?
+            website_section_hash[:leaf] = false
+            website_section_hash[:children] = []
           else
-            section_hash[:leaf] = true
-            if section_hash[:isSecured]
-              section_hash[:iconCls] = 'icon-document_lock'
+            website_section_hash[:leaf] = true
+            if website_section_hash[:isSecured]
+              website_section_hash[:iconCls] = 'icon-document_lock'
             else
-              section_hash[:iconCls] = 'icon-document'
+              website_section_hash[:iconCls] = 'icon-document'
             end
           end
         end
 
         
-        site_hash[:children] << section_hash
+        website_hash[:children] << website_section_hash
       end
-      tree << site_hash
+      tree << website_hash
     end
 
     render :json => tree.to_json

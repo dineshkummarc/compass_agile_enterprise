@@ -1,16 +1,16 @@
-class PublishedSite < ActiveRecord::Base
-  belongs_to :site
+class PublishedWebsite < ActiveRecord::Base
+  belongs_to :website
   has_many   :published_elements, :dependent => :destroy
 
-  def self.activate(site, version)
-    published_sites = self.find(:all, :conditions => ['site_id = ?', site.id])
-    published_sites.each do |published_site|
-      if published_site.version == version
-        published_site.active = true
+  def self.activate(website, version)
+    published_websites = self.find(:all, :conditions => ['website_id = ?', website.id])
+    published_websites.each do |published_website|
+      if published_website.version == version
+        published_website.active = true
       else
-        published_site.active = false
+        published_website.active = false
       end
-      published_site.save
+      published_website.save
     end
   end
 
@@ -18,9 +18,9 @@ class PublishedSite < ActiveRecord::Base
     new_publication = clone_publication(1, comment)
     elements = []
 
-    sections = new_publication.site.sections
-    sections.each do |section|
-      elements = elements | section.contents
+    website_sections = new_publication.website.website_sections
+    website_sections.each do |website_section|
+      elements = elements | website_section.contents
     end
 
     #make sure all elements have published_element objects
@@ -28,7 +28,7 @@ class PublishedSite < ActiveRecord::Base
       if new_publication.published_elements.find(:first,
           :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', element.id, element.class.to_s, element.class.superclass.to_s]).nil?
         published_element = PublishedElement.new
-        published_element.published_site = new_publication
+        published_element.published_website = new_publication
         published_element.published_element_record = element
         published_element.version = element.version
         published_element.save
@@ -41,7 +41,7 @@ class PublishedSite < ActiveRecord::Base
       published_element.save
     end
 
-    PublishedSite.activate(new_publication.site, new_publication.version)
+    PublishedWebsite.activate(new_publication.website, new_publication.version)
   end
 
   def publish_element(comment, element, version)
@@ -55,39 +55,39 @@ class PublishedSite < ActiveRecord::Base
       published_element.save
     else
       new_published_element = PublishedElement.new
-      new_published_element.published_site = new_publication
+      new_published_element.published_website = new_publication
       new_published_element.published_element_record = element
       new_published_element.version = version
       new_published_element.save
     end
 
-    PublishedSite.activate(new_publication.site, new_publication.version)
+    PublishedWebsite.activate(new_publication.website, new_publication.version)
   end
 
   private
   
   def clone_publication(version_increment, comment)
-    #create new PublishedSite with comment
-    published_site = PublishedSite.new
-    published_site.site = self.site
+    #create new PublishedWebsite with comment
+    published_website = PublishedWebsite.new
+    published_website.website = self.website
     if version_increment == 1
-      published_site.version = (self.version = self.version.to_i + version_increment)
+      published_website.version = (self.version = self.version.to_i + version_increment)
     else
-      published_site.version = (self.version += version_increment)
+      published_website.version = (self.version += version_increment)
     end
 
-    published_site.comment = comment
-    published_site.save
+    published_website.comment = comment
+    published_website.save
     
-    #create new PublishedSiteElements
+    #create new PublishedWebsiteElements
     published_elements.each do |published_element|
       new_published_element = PublishedElement.new
-      new_published_element.published_site = published_site
+      new_published_element.published_website = published_website
       new_published_element.published_element_record = published_element.published_element_record
       new_published_element.version = published_element.version
       new_published_element.save
     end
 
-    published_site
+    published_website
   end
 end

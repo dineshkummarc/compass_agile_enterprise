@@ -99,7 +99,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             url: './knitkit/section/get_layout',
             method: 'POST',
             params:{
-                section_id:sectionId
+                id:sectionId
             },
             success: function(response) {
                 self.initialConfig['centerRegion'].editSectionLayout(
@@ -134,7 +134,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             url: './knitkit/section/update_security',
             method: 'POST',
             params:{
-                section_id:node.id.split('_')[1],
+                id:node.id.split('_')[1],
                 site_id:node.attributes.siteId,
                 secure:secure
             },
@@ -329,7 +329,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             url: './knitkit/section/add_layout',
                                             method: 'POST',
                                             params:{
-                                                section_id:sectionId
+                                                id:sectionId
                                             },
                                             success: function(response) {
                                                 var obj =  Ext.util.JSON.decode(response.responseText);

@@ -8,7 +8,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel = Ext.extend(Ext.
         var self = this;
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './knitkit/site/activate_publication',
+            url: './knitkit/website/activate_publication',
             method: 'POST',
             params:{
                 id:self.initialConfig.siteId,
@@ -33,7 +33,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel = Ext.extend(Ext.
         var self = this;
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './knitkit/site/set_viewing_version',
+            url: './knitkit/website/set_viewing_version',
             method: 'POST',
             params:{
                 id:self.initialConfig.siteId,
@@ -63,7 +63,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel = Ext.extend(Ext.
             root: 'data',
             totalProperty: 'totalCount',
             baseParams:{
-                site_id:config['siteId']
+                id:config['siteId']
             },
             idProperty: 'id',
             remoteSort: true,
@@ -91,7 +91,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel = Ext.extend(Ext.
                 type:'boolean'
             }
             ],
-            url:'./knitkit/site/site_publications',
+            url:'./knitkit/website/website_publications',
             listeners:{
                 'exception':function(proxy, type, action, options, response, arg){
                     Ext.Msg.alert('Error',arg);

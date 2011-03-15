@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Scaffold::RoleController < ErpApp::Desktop::Scaffold::BaseController
   active_ext Role do |options|
     options[:inline_edit] = false
-    options[:ignore_associations] = true,
+    options[:ignore_associations] = true
     options[:use_ext_forms] = true
     options[:show_id] = true
     options[:show_timestamps] = true

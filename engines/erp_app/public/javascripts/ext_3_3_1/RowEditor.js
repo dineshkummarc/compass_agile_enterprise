@@ -77,7 +77,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
              * @param {Number} rowIndex The rowIndex of the row just edited
              */
             'afteredit'
-        );
+            );
     },
 
     init: function(grid){
@@ -110,7 +110,9 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
                 fn: this.positionButtons
             }
         });
-        grid.getColumnModel().on('hiddenchange', this.verifyLayout, this, {delay:1});
+        grid.getColumnModel().on('hiddenchange', this.verifyLayout, this, {
+            delay:1
+        });
         grid.getView().on('refresh', this.stopEditing.createDelegate(this, []));
     },
 
@@ -148,8 +150,8 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
         if(this.fireEvent('beforeedit', this, rowIndex) !== false){
             this.editing = true;
             var g = this.grid, view = g.getView(),
-                row = view.getRow(rowIndex),
-                record = g.store.getAt(rowIndex);
+            row = view.getRow(rowIndex),
+            record = g.store.getAt(rowIndex);
 
             this.record = record;
             this.rowIndex = rowIndex;
@@ -173,7 +175,9 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
             if(!this.isVisible()){
                 this.setPagePosition(Ext.fly(row).getXY());
             } else{
-                this.el.setXY(Ext.fly(row).getXY(), {duration:0.15});
+                this.el.setXY(Ext.fly(row).getXY(), {
+                    duration:0.15
+                });
             }
             if(!this.isVisible()){
                 this.show().doLayout();
@@ -195,16 +199,16 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
             return;
         }
         var changes = {},
-            r = this.record,
-            hasChange = false,
-            cm = this.grid.colModel,
-            fields = this.items.items;
+        r = this.record,
+        hasChange = false,
+        cm = this.grid.colModel,
+        fields = this.items.items;
         for(var i = 0, len = cm.getColumnCount(); i < len; i++){
             if(!cm.isHidden(i)){
                 var dindex = cm.getDataIndex(i);
                 if(!Ext.isEmpty(dindex)){
                     var oldValue = r.data[dindex],
-                        value = this.postEditValue(fields[i].getValue(), oldValue, r, dindex);
+                    value = this.postEditValue(fields[i].getValue(), oldValue, r, dindex);
                     if(String(oldValue) !== String(value)){
                         changes[dindex] = value;
                         hasChange = true;
@@ -256,7 +260,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
         this.removeAll(false);
         for(var i = 0, len = cm.getColumnCount(); i < len; i++){
             var c = cm.getColumnAt(i),
-                ed = c.getEditor();
+            ed = c.getEditor();
             if(!ed){
                 ed = c.displayEditor || new Ext.form.DisplayField();
             }
@@ -303,7 +307,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 
     ensureVisible: function(editor){
         if(this.isVisible()){
-             this.grid.getView().ensureVisible(this.rowIndex, this.grid.colModel.getIndexById(editor.column.id), true);
+            this.grid.getView().ensureVisible(this.rowIndex, this.grid.colModel.getIndexById(editor.column.id), true);
         }
     },
 
@@ -374,13 +378,18 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
     positionButtons: function(){
         if(this.btns){
             var g = this.grid,
-                h = this.el.dom.clientHeight,
-                view = g.getView(),
-                scroll = view.scroller.dom.scrollLeft,
-                bw = this.btns.getWidth(),
-                width = Math.min(g.getWidth(), g.getColumnModel().getTotalWidth());
+            h = this.el.dom.clientHeight,
+            view = g.getView(),
+            scroll = view.scroller.dom.scrollLeft,
+            bw = this.btns.getWidth(),
+            width = Math.min(g.getWidth(), g.getColumnModel().getTotalWidth());
 
-            this.btns.el.shift({left: (width/2)-(bw/2)+scroll, top: h - 2, stopFx: true, duration:0.2});
+            this.btns.el.shift({
+                left: (width/2)-(bw/2)+scroll,
+                top: h - 2,
+                stopFx: true,
+                duration:0.2
+            });
         }
     },
 
@@ -398,8 +407,8 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
     doFocus: function(pt){
         if(this.isVisible()){
             var index = 0,
-                cm = this.grid.getColumnModel(),
-                c;
+            cm = this.grid.getColumnModel(),
+            c;
             if(pt){
                 index = this.getTargetColumnIndex(pt);
             }
@@ -415,11 +424,11 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 
     getTargetColumnIndex: function(pt){
         var grid = this.grid,
-            v = grid.view,
-            x = pt.left,
-            cms = grid.colModel.config,
-            i = 0,
-            match = false;
+        v = grid.view,
+        x = pt.left,
+        cms = grid.colModel.config,
+        i = 0,
+        match = false;
         for(var len = cms.length, c; c = cms[i]; i++){
             if(!c.hidden){
                 if(Ext.fly(v.getHeaderCell(i)).getRegion().right >= x){
@@ -475,7 +484,7 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
 
     lastVisibleColumn : function() {
         var i = this.items.getCount() - 1,
-            c;
+        c;
         for(; i >= 0; i--) {
             c = this.items.items[i];
             if (!c.hidden) {
@@ -499,9 +508,9 @@ Ext.ux.grid.RowEditor = Ext.extend(Ext.Panel, {
             });
         }
         var v = this.grid.getView(),
-            top = parseInt(this.el.dom.style.top, 10),
-            scroll = v.scroller.dom.scrollTop,
-            h = this.el.getHeight();
+        top = parseInt(this.el.dom.style.top, 10),
+        scroll = v.scroller.dom.scrollTop,
+        h = this.el.getHeight();
 
         if(top + h >= scroll){
             t.initTarget(this.lastVisibleColumn().getEl());

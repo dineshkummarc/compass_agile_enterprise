@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::BaseController
   def content_versions
     content = Content.find(params[:content_id])
-    site = Site.find(params[:site_id])
+    website = Website.find(params[:site_id])
     sort  = params[:sort] || 'version'
     dir   = params[:dir] || 'DESC'
     limit = params[:limit] || 15
@@ -9,13 +9,13 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
     versions = content.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
 
-    Content::Version.class_exec(site) do
-      @@site = site
+    Content::Version.class_exec(website) do
+      @@website = website
       def published
-        published_site_id = @@site.active_publication.id
+        published_site_id = @@website.active_publication.id
         !PublishedElement.find(:first,
-          :include => [:published_site],
-          :conditions => ['published_sites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version]).nil?
+          :include => [:published_website],
+          :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version]).nil?
       end
     end
 
@@ -24,11 +24,11 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
   def publish_content
     content = Content.find(Content::Version.find(params[:id]).content_id)
-    site    = Site.find(params[:site_id])
+    website = Website.find(params[:site_id])
     version = params[:version]
     comment = params[:comment]
 
-    content.publish(site, comment, version)
+    content.publish(website, comment, version)
 
     render :inline => {:success => true}.to_json
   end

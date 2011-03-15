@@ -1,15 +1,15 @@
-class Site < ActiveRecord::Base
+class Website < ActiveRecord::Base
   validates_uniqueness_of :name, :host
 
-  has_many :published_sites, :dependent => :destroy
+  has_many :published_websites, :dependent => :destroy
 
-  has_many :sections, :dependent => :destroy, :order => :lft do
+  has_many :website_sections, :dependent => :destroy, :order => :lft do
     def root
-      Section.root(:site_id => proxy_owner.id)
+      WebsiteSection.root(:website_id => proxy_owner.id)
     end
 
     def roots
-      Section.roots(:site_id => proxy_owner.id)
+      WebsiteSection.roots(:website_id => proxy_owner.id)
     end
 
     def paths
@@ -41,33 +41,33 @@ class Site < ActiveRecord::Base
   end
 
   def publish_element(comment, element, version)
-    self.published_sites.last.publish_element(comment, element, version)
+    self.published_websites.last.publish_element(comment, element, version)
   end
 
   def publish(comment)
-    self.published_sites.last.publish(comment)
+    self.published_websites.last.publish(comment)
   end
 
   def set_publication_version(version)
-    PublishedSite.activate(self, version)
+    PublishedWebsite.activate(self, version)
   end
 
   def active_publication
-    self.published_sites.all.find{|item| item.active}
+    self.published_websites.all.find{|item| item.active}
   end
 
-  def site_role
-    Role.iid(site_role_iid)
+  def role
+    Role.iid(website_role_iid)
   end
 
   def after_create
-    PublishedSite.create(:site => self, :version => 0, :active => true, :comment => 'New Site Created')
-    Role.create(:description => "Website #{self.title}", :internal_identifier => site_role_iid)
+    PublishedWebsite.create(:website => self, :version => 0, :active => true, :comment => 'New Site Created')
+    Role.create(:description => "Website #{self.title}", :internal_identifier => website_role_iid)
   end
 
   private
   
-  def site_role_iid
+  def website_role_iid
     "website_#{self.name.underscore}_access"
   end
 

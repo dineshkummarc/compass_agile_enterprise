@@ -1,8 +1,8 @@
 class SetupKnitkit < ActiveRecord::Migration
   def self.up
 
-    unless table_exists?(:sites)
-      create_table :sites do |t|
+    unless table_exists?(:websites)
+      create_table :websites do |t|
         t.string :name
         t.string :host
         t.string :title
@@ -13,11 +13,11 @@ class SetupKnitkit < ActiveRecord::Migration
       end
     end
 
-    unless table_exists?(:sections)
-      create_table :sections do |t|
+    unless table_exists?(:website_sections)
+      create_table :website_sections do |t|
         t.string :title
         t.string :type
-        t.references :site
+        t.references :website
         t.string :path
         t.string :permalink
         t.text :layout
@@ -30,10 +30,10 @@ class SetupKnitkit < ActiveRecord::Migration
         t.timestamps
       end
       #indexes
-      add_index :sections, :site_id
-      add_index :sections, :parent_id
-      add_index :sections, :lft
-      add_index :sections, :rgt
+      add_index :website_sections, :website_id
+      add_index :website_sections, :parent_id
+      add_index :website_sections, :lft
+      add_index :website_sections, :rgt
 
       #Section.create_versioned_table
     end
@@ -55,23 +55,23 @@ class SetupKnitkit < ActiveRecord::Migration
       Content.create_versioned_table
     end
 
-    unless table_exists?(:section_contents)
-      create_table :section_contents do |t|
-        t.integer :section_id
+    unless table_exists?(:website_section_contents)
+      create_table :website_section_contents do |t|
+        t.integer :website_section_id
         t.integer :content_id
         t.integer :position
 
         t.timestamps
       end
       #indexes
-      add_index :section_contents, :section_id
-      add_index :section_contents, :content_id
-      add_index :section_contents, :position
+      add_index :website_section_contents, :website_section_id
+      add_index :website_section_contents, :content_id
+      add_index :website_section_contents, :position
     end
 
     unless table_exists?(:themes)
       create_table :themes do |t|
-        t.references :site
+        t.references :website
         t.string :name
         t.string :theme_id
         t.string :author
@@ -83,7 +83,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.timestamps
       end
       #indexes
-      add_index :themes, :site_id
+      add_index :themes, :website_id
       add_index :themes, :active
     end
 
@@ -102,9 +102,9 @@ class SetupKnitkit < ActiveRecord::Migration
       end
     end
 
-    unless table_exists?(:published_sites)
-      create_table :published_sites do |t|
-        t.references :site
+    unless table_exists?(:published_websites)
+      create_table :published_websites do |t|
+        t.references :website
         t.text :comment
         t.decimal :version
         t.boolean :active
@@ -113,14 +113,14 @@ class SetupKnitkit < ActiveRecord::Migration
       end
 
       #indexes
-      add_index :published_sites, :site_id
-      add_index :published_sites, :version
-      add_index :published_sites, :active
+      add_index :published_websites, :website_id
+      add_index :published_websites, :version
+      add_index :published_websites, :active
     end
 
     unless table_exists?(:published_elements)
       create_table :published_elements do |t|
-        t.references :published_site
+        t.references :published_website
         t.references :published_element_record, :polymorphic => true
         t.integer :version
 
@@ -129,7 +129,7 @@ class SetupKnitkit < ActiveRecord::Migration
 
       #indexes
       add_index :published_elements, [:published_element_record_id, :published_element_record_type]
-      add_index :published_elements, :published_site_id
+      add_index :published_elements, :published_website_id
       add_index :published_elements, :version
     end
 
@@ -158,7 +158,7 @@ class SetupKnitkit < ActiveRecord::Migration
     Content.drop_versioned_table
 
     # check that each table exists before trying to delete it.
-    [:sites, :sections, :contents, :section_contents, :themes, :theme_files, :published_sites, :published_elements, :comments].each do |tbl|
+    [:websites, :sections, :contents, :website_section_contents, :themes, :theme_files, :published_websites, :published_elements, :comments].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
       end

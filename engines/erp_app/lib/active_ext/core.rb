@@ -32,9 +32,7 @@ class ActiveExt::Core
     @columns.exclude(*@columns.find_all { |c| c.column and (c.column.primary or c.column.name =~ /(_id|_count)$/) }.collect {|c| c.name})
     @columns.exclude(*self.model.reflect_on_all_associations.collect{|a| :"#{a.name}_type" if a.options[:polymorphic]}.compact)
 
-    if options[:only]
-      set_column_options
-    end
+    set_column_options
   end
   
   def model_id
@@ -57,9 +55,11 @@ class ActiveExt::Core
       if RAILS_COLUMNS.include?(column.name)
         column.options = {:readonly => true, :required => false}
       else
-        column_options = all_column_options.find{|item| item.has_key?(column.name)}
-        unless column_options.nil?
-          column.options = column_options[column.name]
+        unless all_column_options.nil?
+          column_options = all_column_options.find{|item| item.has_key?(column.name)}
+          unless column_options.nil?
+            column.options = column_options[column.name]
+          end
         end
       end
     end

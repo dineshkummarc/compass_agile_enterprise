@@ -31,7 +31,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
       if column.sql_type.to_s == 'date'
         value = value.strfdate('%m/%d/%Y')
       elsif column.sql_type.to_s == 'datetime'
-        value = value.strftime('%m/%d/%Y %I:%M%p')
+        value = value.strftime('%m/%d/%Y')
       end
 
       value

@@ -3,7 +3,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
 
   def new
     result = {}
-    section_id = params[:section_id]
+    website_section_id = params[:section_id]
     article = Article.new
 
     params.each do |k,v|
@@ -11,7 +11,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     end
 
     if article.save
-      section = Section.find(section_id)
+      section = WebsiteSection.find(website_section_id)
       section.contents << article
       result[:success] = true
     else
@@ -23,7 +23,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
 
   def update
     result = {}
-    section_id = params[:section_id]
+    website_section_id = params[:section_id]
     article = Article.find(params[:id])
     
     params.each do |k,v|
@@ -31,7 +31,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     end
 
     #handle position
-    section_content = SectionContent.find(:first, :conditions => ['section_id = ? and content_id = ?',section_id,article.id])
+    section_content = WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?',website_section_id,article.id])
     section_content.position = params['position']
     section_content.save
     
@@ -57,16 +57,16 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
   end
 
   def add_existing
-    section = Section.find(params[:section_id])
-    section.contents << Article.find(params[:article_id])
+    website_section = WebsiteSection.find(params[:section_id])
+    website_section.contents << Article.find(params[:article_id])
 
     render :inline => {:success => true}.to_json
   end
 
   def existing_articles
     current_articles = Article.find(:all,
-      :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
-      :conditions => "section_id = #{params[:section_id]}")
+        :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
+      :conditions => "website_section_id = #{params[:section_id]}")
 
     available_articles = Article.all - current_articles
 
@@ -81,25 +81,25 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     limit = params[:limit] || 10
     start = params[:start] || 0
 
-    section_id = params[:section_id]
+    website_section_id = params[:section_id]
     articles = Article.find(:all,
-      :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
-      :conditions => "section_id = #{section_id}",
+      :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
+      :conditions => "website_section_id = #{website_section_id}",
       :order => "#{sort} #{dir}",
       :limit => limit,
       :offset => start)
 
     total_count = Article.find(:all,
-      :joins => "INNER JOIN section_contents ON section_contents.content_id = contents.id",
-      :conditions => "section_id = #{section_id}").count
+      :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
+      :conditions => "website_section_id = #{website_section_id}").count
 
-    Article.class_exec(section_id) do
-      @@section_id = section_id
-      def section_position
-        self.section_contents.find_by_section_id(@@section_id).position
+    Article.class_exec(website_section_id) do
+      @@website_section_id = website_section_id
+      def website_section_position
+        self.website_section_contents.find_by_website_section_id(@@website_section_id).position
       end
     end
 
-    render :inline => "{totalCount:#{total_count},data:#{articles.to_json(:only => [:content_area, :id, :title, :body_html, :excerpt_html], :methods => [:section_position])}}"
+    render :inline => "{totalCount:#{total_count},data:#{articles.to_json(:only => [:content_area, :id, :title, :body_html, :excerpt_html], :methods => [:website_section_position])}}"
   end
 end

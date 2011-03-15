@@ -10,13 +10,13 @@ module ActionView
   module Helpers
     module AssetTagHelper
       def theme_javascript_path(theme, source)
-        theme = @controller.site.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
+        theme = @controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
         theme_compute_public_path(theme, source, theme.url + '/javascripts', 'js')
       end
       alias_method :theme_path_to_javascript, :theme_javascript_path
 
       def theme_javascript_include_tag(theme_id, *sources)
-        theme = @controller.site.themes.find_by_theme_id(theme_id)
+        theme = @controller.website.themes.find_by_theme_id(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
 
         options = sources.extract_options!.stringify_keys
@@ -38,13 +38,13 @@ module ActionView
       end
 
       def theme_stylesheet_path(theme, source)
-        theme = @controller.site.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
+        theme = @controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
         theme_compute_public_path(theme, source, theme.url + '/stylesheets', 'css')
       end
       alias_method :theme_path_to_stylesheet, :theme_stylesheet_path
 
       def theme_stylesheet_link_tag(theme_id, *sources)
-        theme = @controller.site.themes.find_by_theme_id(theme_id)
+        theme = @controller.website.themes.find_by_theme_id(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
 
         options = sources.extract_options!.stringify_keys
@@ -66,13 +66,13 @@ module ActionView
       end
 
       def theme_image_path(theme, source)
-        theme = @controller.site.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
+        theme = @controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
         theme_compute_public_path(theme, source, theme.url + '/images')
       end
       alias_method :theme_path_to_image, :theme_image_path # aliased to avoid conflicts with an image_path named route
 
       def theme_image_tag(theme_id, source, options = {})
-        theme = @controller.site.themes.find_by_theme_id(theme_id)
+        theme = @controller.website.themes.find_by_theme_id(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
 
         options.symbolize_keys!

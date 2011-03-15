@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
   map.filter 'section_router'
 
   map.page 'pages/:section_id',
-    :controller   => 'sections',
+    :controller   => 'website_sections',
     :action       => "index",
     :conditions => { :method => :get }
 
@@ -41,9 +41,9 @@ ActionController::Routing::Routes.draw do |map|
   #content
   map.connect '/erp_app/desktop/knitkit/content/:action', :controller => 'erp_app/desktop/knitkit/content'
   #website
-  map.connect '/erp_app/desktop/knitkit/site/:action', :controller => 'erp_app/desktop/knitkit/site'
+  map.connect '/erp_app/desktop/knitkit/site/:action', :controller => 'erp_app/desktop/knitkit/website'
   #section
-  map.connect '/erp_app/desktop/knitkit/section/:action', :controller => 'erp_app/desktop/knitkit/section'
+  map.connect '/erp_app/desktop/knitkit/section/:action', :controller => 'erp_app/desktop/knitkit/website_section'
   #theme
   map.connect '/erp_app/desktop/knitkit/theme/:action', :controller => 'erp_app/desktop/knitkit/theme'
   #versions

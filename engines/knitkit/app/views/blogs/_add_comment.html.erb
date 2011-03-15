@@ -2,7 +2,7 @@
   <a id="addCommentLink" href="#" onclick="AddComment.show();">[+] Add comment</a>
 </div>
 <div id="addCommentDiv" style="display:none;">
-  <form method="POST" action="/comments/add/<%=@section.id%>/<%=@published_content.content.id%>" onsubmit="return AddComment.validateForm(this);">
+  <form method="POST" action="/comments/add/<%=@website_section.id%>/<%=@published_content.content.id%>" onsubmit="return AddComment.validateForm(this);">
     <div id="requiredErrorDiv" style="display:none;padding:5px;color:red;border:solid 1px #CCC;background-color:#CCFFCC;">Please complete Form. Name and Comment are required.</div>
     <br/>
     <div>

@@ -1,7 +1,7 @@
-class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::BaseController
+class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knitkit::BaseController
   IGNORED_PARAMS = %w{action controller node_id}
 
-  before_filter :set_section, :only => [:update_security, :add_layout, :get_layout, :save_layout, :delete]
+  before_filter :set_website_section, :only => [:update_security, :add_layout, :get_layout, :save_layout]
 
   def new
     result = {}
@@ -9,12 +9,12 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
       result[:sucess] = false
       result[:msg] = 'Blog can not be the title of a Blog'
     else
-      section = Section.new
+      website_section = WebsiteSection.new
       params.each do |k,v|
         next if k == 'type' && v == 'Page'
-        section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
+        website_section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
       end
-      save_result = section.save
+      save_result = website_section.save
 
       if save_result
         node_id = params[:node_id]
@@ -23,10 +23,10 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
 
         if type == 'section'
           parent = Section.find(id)
-          section.move_to_child_of(parent)
+          website_section.move_to_child_of(parent)
         else
-          website = Site.find(id)
-          website.sections << section
+          website = Website.find(id)
+          website.website_sections << website_section
           website.save
         end
 
@@ -40,34 +40,34 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def delete
-    @section.destroy
+    WebsiteSection.destroy(params[:id])
     render :inline => {:success => true}.to_json
   end
 
   def update_security
-    site = Site.find(params[:site_id])
+    website = Website.find(params[:site_id])
     if(params[:secure] == "true")
-      @section.add_role(site.site_role)
+      @website_section.add_role(website.role)
     else
-      @section.remove_role(site.site_role)
+      @website_section.remove_role(website.role)
     end
 
     render :inline => {:success => true}.to_json
   end
 
   def add_layout
-    @section.create_layout
+    @website_section.create_layout
     render :inline => {:success => true}.to_json
   end
 
   def get_layout
-    render :text => @section.layout
+    render :text => @website_section.layout
   end
   
   def save_layout
-    @section.layout = params[:content]
+    @website_section.layout = params[:content]
     
-    if @section.save
+    if @website_section.save
       render :inline => {:success => true}.to_json
     else
       render :inline => {:success => false}.to_json
@@ -76,8 +76,8 @@ class ErpApp::Desktop::Knitkit::SectionController < ErpApp::Desktop::Knitkit::Ba
   
   protected
   
-  def set_section
-    @section = Section.find(params[:section_id])
+  def set_website_section
+    @website_section = WebsiteSection.find(params[:id])
   end
   
 end

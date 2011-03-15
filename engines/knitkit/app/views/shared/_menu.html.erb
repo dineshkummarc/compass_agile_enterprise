@@ -1,6 +1,6 @@
-<% unless @sections.nil? %>
+<% unless @website_sections.nil? %>
   <ul>
-    <% @sections.each do |section| %>
+    <% @website_sections.each do |section| %>
       <%if section.has_access?(current_user)%>
         <li>
           <a href="/<%= section.permalink %>"><%= section.title %></a>

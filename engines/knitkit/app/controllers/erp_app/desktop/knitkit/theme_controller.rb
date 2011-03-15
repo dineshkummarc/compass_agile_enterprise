@@ -1,5 +1,5 @@
 class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::BaseController
-  before_filter :set_site, :only => [:new, :change_status, :available_themes]
+  before_filter :set_website, :only => [:new, :change_status, :available_themes]
   before_filter :set_theme, :only => [:delete, :change_status, :copy]
   IGNORED_PARAMS = %w{action controller node_id theme_data}
 
@@ -13,7 +13,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   def available_themes
     result = {:success => true, :themes => []}
-    @site.themes.each do |theme|
+    @website.themes.each do |theme|
       result[:themes].push << {:id => theme.id, :name => theme.name}
     end
     render :inline => result.to_json
@@ -21,9 +21,9 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   def new
     unless params[:theme_data].blank?
-      @site.themes.import(params[:theme_data], @site)
+      @website.themes.import(params[:theme_data], @website)
     else
-      theme = Theme.create(:site => site, :name => params[:name])
+      theme = Theme.create(:site => @website, :name => params[:name])
       params.each do |k,v|
         next if k.to_s == 'name' || k.to_s == 'site_id'
         theme.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
@@ -59,7 +59,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
   def change_status
     #clear active themes
     if (params[:active] == 'true')
-      @site.deactivate_themes!
+      @website.deactivate_themes!
     end
 
     if (params[:active] == 'true')
@@ -170,7 +170,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     sites_index = path.index('sites')
     sites_path  = path[sites_index..path.length]
     site_name   = sites_path.split('/')[1]
-    site        = Site.find(site_name.split('-')[1])
+    site        = Website.find(site_name.split('-')[1])
 
     themes_index = path.index('themes')
     path = path[themes_index..path.length]
@@ -192,7 +192,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   def setup_tree
     tree = []
-    sites = Site.all
+    sites = Website.all
     sites.each do |site|
       site_hash = {
         :text => site.title,
@@ -228,8 +228,8 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   protected
 
-  def set_site
-    @site = Site.find(params[:site_id])
+  def set_website
+    @website = Website.find(params[:site_id])
   end
 
   def set_theme

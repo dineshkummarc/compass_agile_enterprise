@@ -31,9 +31,7 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       }'
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "booleancolumneditor"}
-    end
+    column[:editor] = {:xtype => "booleancolumneditor", :disabled => options[:readonly].blank? ? false : options[:readonly]}
 
     column
   end
@@ -47,9 +45,7 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :renderer => "Ext.util.Format.dateRenderer('m/d/Y')"
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "datefield"}
-    end
+    column[:editor] = {:xtype => "datefield", :disabled => options[:readonly].blank? ? false : options[:readonly]}
 
     column
   end
@@ -60,12 +56,10 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :type => 'date',
       :dataIndex => column_name,
       :width => options[:width].nil? ? 200 : options[:width],
-      :renderer => "Ext.util.Format.dateRenderer('m/d/Y H:iA')"
+      :renderer => "Ext.util.Format.dateRenderer('m/d/Y')"
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "datefield"}
-    end
+    column[:editor] = {:xtype => "datefield", :disabled => options[:readonly].blank? ? false : options[:readonly]}
 
     column
   end
@@ -78,9 +72,7 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :width => options[:width].nil? ? 150 : options[:width],
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "textfield"}
-    end
+    column[:editor] = {:xtype => "textfield", :disabled => options[:readonly].blank? ? false : options[:readonly]}
     
     column
   end
@@ -93,9 +85,7 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :width => options[:width].nil? ? 150 : options[:width],
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "numberfield"}
-    end
+    column[:editor] = {:xtype => "numberfield", :disabled => options[:readonly].blank? ? false : options[:readonly]}
     
     column
   end
@@ -108,9 +98,7 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :width => options[:width].nil? ? 150 : options[:width],
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "numberfield"}
-    end
+    column[:editor] = {:xtype => "numberfield", :disabled => options[:readonly].blank? ? false : options[:readonly]}
     
     column
   end
@@ -123,9 +111,7 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :width => options[:width].nil? ? 150 : options[:width],
     }
 
-    if options[:readonly].blank? || !options[:readonly]
-      column[:editor] = {:xtype => "numberfield"}
-    end
+    column[:editor] = {:xtype => "numberfield", :disabled => options[:readonly].blank? ? false : options[:readonly]}
     
     column
   end
