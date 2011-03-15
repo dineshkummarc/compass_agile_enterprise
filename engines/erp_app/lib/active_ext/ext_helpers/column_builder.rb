@@ -1,13 +1,13 @@
 module ActiveExt::ExtHelpers::ColumnBuilder
 
-  def self.build_column(column, options={})
+  def self.build_column(column)
     column_hash = nil
     
     #if this is an association sql_type will be blank, use string column
     if column.sql_type.blank? || column.sql_type == NilClass
-      column_hash = self.send("build_string_column", column.name, options)
+      column_hash = self.send("build_string_column", column.name, column.options)
     else
-      column_hash = self.send("build_#{column.sql_type.to_s}_column", column.name, options)
+      column_hash = self.send("build_#{column.sql_type.to_s}_column", column.name, column.options)
     end
 
     column_hash
@@ -43,8 +43,8 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :header => column_name,
       :type => 'date',
       :dataIndex => column_name,
-      :width => options[:width].nil? ? 150 : options[:width],
-      :renderer => 'function(v) {return v.format("Y-M-D");}'
+      :width => options[:width].nil? ? 200 : options[:width],
+      :renderer => "Ext.util.Format.dateRenderer('m/d/Y')"
     }
 
     if options[:readonly].blank? || !options[:readonly]
@@ -59,8 +59,8 @@ module ActiveExt::ExtHelpers::ColumnBuilder
       :header => column_name,
       :type => 'date',
       :dataIndex => column_name,
-      :width => options[:width].nil? ? 150 : options[:width],
-      :renderer => 'function(v) {return v.format("Y-m-d h:i:s");}'
+      :width => options[:width].nil? ? 200 : options[:width],
+      :renderer => "Ext.util.Format.dateRenderer('m/d/Y H:iA')"
     }
 
     if options[:readonly].blank? || !options[:readonly]

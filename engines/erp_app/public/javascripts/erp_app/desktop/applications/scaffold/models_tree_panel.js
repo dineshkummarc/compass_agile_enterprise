@@ -87,20 +87,14 @@ Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree = Ext.extend(Ext.tree.Tr
             width: 250,
             height: 300,
             listeners:{
+                'click':function(node, e){
+                    e.stopEvent();
+                    if(node.attributes.leaf){
+                        self.initialConfig.scaffold.loadModel(node.id);
+                    }
+                },
                 'contextmenu':function(node, e){
                     e.stopEvent();
-                    var contextMenu = new Ext.menu.Menu({
-                        items:[
-                        {
-                            text:'View',
-                            iconCls:'icon-search',
-                            handler:function(btn){
-                                self.initialConfig.scaffold.loadModel(node.id);
-                            }
-                        }
-                        ]
-                    });
-                    contextMenu.showAt(e.xy);
                 }
             }
         }, config);

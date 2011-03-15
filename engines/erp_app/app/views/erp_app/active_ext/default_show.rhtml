@@ -1,0 +1,76 @@
+<p align='right'>
+    default scaffold
+</p>
+<h1>Viewing <%= @singular_name.capitalize %></h1>
+ 
+<div id='show'>
+    <table>
+    	 <% if @options[:show_id]==true %>
+        <tr>
+            <td align=RIGHT>
+                <b>Id:</b>
+            </td>
+            <td>
+                <%= @model.id %>
+            </td>
+        </tr>
+      
+        <% end %>
+        <% attribute_keys= @fields %>
+        <% attribute_keys.length.times do |attribute_key_id| %>
+        <% value= attribute_keys[attribute_key_id] %>
+        
+        <tr>
+            <td align=RIGHT>
+                <b><% Rails.logger.debug("@labels:#{@labels}")
+                    override_label_value= @labels[value.to_sym]
+                    if(override_label_value!=nil)
+                    label_value=override_label_value
+                    else
+                    label_value= value.to_s.humanize
+                    end %>
+                    <%= label_value %>:</b>
+            </td>
+            <td>
+                <%= @model[attribute_keys[attribute_key_id] ] %>
+            </td>
+			<td>
+                <%= @model[attribute_keys[attribute_key_id] ].class %>
+            </td>
+        </tr>
+          
+        <% end %>
+        <% if @options[:show_timestamps]==true %>
+        <tr>
+            <td align=RIGHT>
+                <b>Created At:</b>
+            </td>
+            <td>
+                <%= @model.created_at %>
+            </td>
+        </tr>
+        <tr>
+            <td align=RIGHT>
+                <b>Updated At:</b>
+            </td>
+            <td>
+                <%= @model.updated_at %>
+            </td>
+        </tr>
+        <% end %>
+    </table>
+	<% @model.class.reflect_on_all_associations.each_with_index { |association, i| %>
+	<%= "#{i} #{association.name}   #{association.type}"%><br> 
+	
+	 <%} %>
+	  <%= render "party/show", { :id => "1"} %>
+</div>
+<script type="text/javascript">
+    function close_window(){
+        parent.close_window("show_detail_window");
+        
+    }
+</script>
+<div align=RIGHT>
+    <input type="button" value="Close" onclick=close_window()>
+</div>

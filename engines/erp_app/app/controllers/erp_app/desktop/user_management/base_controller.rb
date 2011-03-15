@@ -43,8 +43,9 @@ class ErpApp::Desktop::UserManagement::BaseController < ErpApp::Desktop::BaseCon
     if user.valid?
       user.activated_at = Time.now
       user.save
-      user.party.business_party.gender = gender
-      user.party.business_party.save
+      individual = Individual.create(:gender => gender, :current_first_name => user.first_name, :current_last_name => user.last_name)
+      user.party = individual.party
+      user.save
       response = {:success => true}
     else
       message = "<ul>"

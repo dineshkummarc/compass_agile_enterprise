@@ -1,0 +1,61 @@
+
+<p align='right'>default scaffold</p>
+<h1>New <%= @singular_name.capitalize %></h1>
+ <%= @disabled_fields%>
+<% form_for :party, @model , :html => { :id => 'create_form'}, :url => { :action => 'create' }  do |form| %>
+
+   <div id='container'>
+     <table  >
+        
+         <% attribute_keys= @fields %>
+        <% attribute_keys.length.times do |attribute_key_id| 
+           Rails.logger.debug("attribute_key_id:#{attribute_key_id}")
+         %>
+        <tr>
+            <td align=RIGHT>
+                <b><% value=attribute_keys[attribute_key_id]
+                    Rails.logger.debug("@labels:#{@labels}")
+                    override_label_value= @labels[value.to_sym]
+                    if(override_label_value!=nil)
+                    label_value=override_label_value
+                    else
+                    label_value= value.to_s.humanize
+                    end %>
+                    <%= label_value %>:</b>
+            </td>
+            <td>
+                <% Rails.logger.debug("attributekey:#{attribute_keys[attribute_key_id]}")%>
+				<% if(@disabled_fields.include?(attribute_keys[attribute_key_id]))
+                     disabled_flag=true 
+                   else
+                     disabled_flag=false 
+                   end
+                %>
+                <%= form.text_field attribute_keys[attribute_key_id], :disabled => disabled_flag  %>
+            </td>
+        </tr>
+        <% end %>
+         
+    </table>
+</div>
+     
+    
+    <% end %>
+    <script type="text/javascript">
+        function cancel(){
+            
+            parent.close_window("create_detail_window");
+            
+            
+        }
+            function add(){
+            // (1) should update the record
+            document.forms["create_form"].submit();
+ 
+            
+        }
+        </script>
+    <div align=RIGHT>
+        <input type="button" value="Cancel" onclick=cancel()>
+        <input type="button" value="Add" onclick=add()>
+    </div>

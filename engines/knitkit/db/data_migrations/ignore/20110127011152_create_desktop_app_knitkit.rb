@@ -2,7 +2,7 @@ class CreateDesktopAppKnitkit
   def self.up
     app = DesktopApplication.create(
       :description => 'KnitKit',
-      :icon => 'icon-prodconfig',
+      :icon => 'icon-palette',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.Knitkit',
       :internal_identifier => 'knitkit',
       :shortcut_id => 'knitkit-win'

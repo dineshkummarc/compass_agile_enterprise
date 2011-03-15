@@ -19,8 +19,8 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel = Ext.extend(Ext.Panel, {
                     self.add({
                         windowTitle:config['title'],
                         modelUrl:config['modelUrl'],
-                        inline_edit:response.inline_edit,
-                        url:config['modelUrl'] + '/data',
+                        inlineEdit:response.inline_edit,
+                        useExtForms:response.use_ext_forms,
                         page:config['page'],
                         editable:config['editable'],
                         pageSize:config['pageSize'],

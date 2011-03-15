@@ -128,15 +128,10 @@ class SetupDefaultDesktopApps
     system_management_app.widgets << app_role_management
     system_management_app.save
     
-    rholmes = User.find_by_login('rholmes')
-    setup_default_preferences_for_app(rholmes, system_management_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
-    rholmes.desktop.applications << system_management_app
-    rholmes.desktop.save
-
-    rkoloski = User.find_by_login('rkoloski')
-    setup_default_preferences_for_app(rkoloski, system_management_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
-    rkoloski.desktop.applications << system_management_app
-    rkoloski.desktop.save
+    admin = User.find_by_login('admin')
+    setup_default_preferences_for_app(admin, system_management_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
+    admin.desktop.applications << system_management_app
+    admin.desktop.save
   end
   
   def self.down

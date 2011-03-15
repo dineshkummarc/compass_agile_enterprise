@@ -1,5 +1,3 @@
-require 'ActiveSupport'
-
 class ActiveExtGenerator < Rails::Generator::NamedBase
   @icon = nil
   @description = nil

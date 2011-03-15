@@ -1,0 +1,85 @@
+<p align='right'>
+    default scaffold
+</p>
+<h1>Editing <%= @singular_name.capitalize %></h1>
+<% form_for :party, @model , :html => { :id => 'edit_form'}, :url => { :action => 'update' }  do |form| %>
+<div id='container'>
+    <table>
+    	 <% if @options[:show_id]==true %>
+        <tr>
+            <td align=RIGHT>
+                <b>Id:</b>
+            </td>
+            <td>
+                <%=form.text_field :id, :disabled => true%>
+            </td>
+        </tr>
+      
+        <% end %>
+        <% attribute_keys= @fields %>
+        <% attribute_keys.length.times do |attribute_key_id| 
+           Rails.logger.debug("attribute_key_id:#{attribute_key_id}")
+         %>
+        <tr>
+            <td align=RIGHT>
+                <b><% value=attribute_keys[attribute_key_id]
+                    Rails.logger.debug("@labels:#{@labels}")
+                    override_label_value= @labels[value.to_sym]
+                    if(override_label_value!=nil)
+                    label_value=override_label_value
+                    else
+                    label_value= value.to_s.humanize
+                    end %>
+                    <%= label_value %>:</b>
+            </td>
+            <td>
+            	<% if(@disabled_fields.include?(attribute_keys[attribute_key_id]))
+                     disabled_flag=true 
+                   else
+                     disabled_flag=false 
+                   end
+                %>
+                <%= form.text_field attribute_keys[attribute_key_id], :disabled => disabled_flag  %>
+            </td>
+        </tr>
+        <% end %>
+		 <% if @options[:show_timestamps]==true %>
+        <tr>
+            <td align=RIGHT>
+                <b>Created At:</b>
+            </td>
+            <td>
+                <%= form.text_field :created_at, :disabled =>true %>
+            </td>
+        </tr>
+        <tr>
+            <td align=RIGHT>
+                <b>Updated At:</b>
+            </td>
+            <td>
+                <%= form.text_field :updated_at, :disabled =>true %>
+            </td>
+        </tr>
+        <% end %>
+    </table>
+</div>
+<% end %>
+<script type="text/javascript">
+    function cancel(){
+    
+        parent.close_window("edit_detail_window");
+        
+        
+    }
+    
+    function update(){
+    
+        // (1) should update the record
+        document.forms["edit_form"].submit();
+        
+        
+    }
+</script>
+<div align=RIGHT>
+    <input type="button" value="Cancel" onclick=cancel()><input type="button" value="Update" onclick=update()>
+</div>

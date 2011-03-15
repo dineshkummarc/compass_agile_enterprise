@@ -14,7 +14,7 @@ module ActiveExt::ExtHelpers::TableBuilder
 
     #add id column if showing it
     if core.options[:show_id]
-      columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:id], {:readonly => true})
+      columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:id])
     end
     
     #build ext columns
@@ -25,25 +25,21 @@ module ActiveExt::ExtHelpers::TableBuilder
     
     #add timestamp columns if showing them
     if core.options[:show_timestamps]
-      columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:created_at], {:readonly => true, :width => 200})
-      columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:updated_at], {:readonly => true, :width => 200})
+      columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:created_at])
+      columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(core.columns[:updated_at])
     end
     
-    columns.to_json
+    columns
   end
 
   def self.build_fields(core)
     fields = []
 
-    #always add id, only attribute that is always required
-    fields << {:name => 'id', :allowBlank => false}
-
-
     #build ext fields
     core.columns.each do |column|
-      next if column.name.to_s =~ /(id|created_at|updated_at)$/
+      next if column.name.to_s =~ /(created_at|updated_at)$/
       if column.association.nil?
-        fields << {:name => column.name}
+        fields << {:name => column.name, :allowBlank => !column.options[:required]}
       end
     end
 
@@ -52,7 +48,7 @@ module ActiveExt::ExtHelpers::TableBuilder
       fields << {:name => 'updated_at'}
     end
 
-    fields.to_json
+    fields
   end
 
 end

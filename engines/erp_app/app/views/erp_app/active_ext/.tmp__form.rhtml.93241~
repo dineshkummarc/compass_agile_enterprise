@@ -1,0 +1,18 @@
+<div id='show'>
+	<% form_for @singular_name, @model , :html => { :id => 'edit_form'}, :url => { :action => 'update' }  do |form| %>
+    <table  >
+        
+           <%  attribute_keys= @attributes.keys %>
+           <% attribute_keys.length.times do |attribute_key_id| %>
+           <tr>
+              <td align=RIGHT>
+               <b><%= attribute_keys[attribute_key_id] %></b>
+              </td>
+               <td>
+                 <%= @model[attribute_keys[attribute_key_id]] %>
+              </td>
+            </tr>
+         <% end %>
+         
+    </table>
+</div>

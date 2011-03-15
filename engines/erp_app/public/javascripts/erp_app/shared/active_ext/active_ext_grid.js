@@ -1,12 +1,117 @@
 Ext.ns("Compass.ErpApp.Shared.ActiveExt");
 
 Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
-    initComponent: function() {
+    setWindowStatus : function(status){
+        this.findParentByType('statuswindow').setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.findParentByType('statuswindow').clearStatus();
+    },
+
+    evalColumnRenderer : function(column){
+        if(!Compass.ErpApp.Utility.isBlank(column['renderer'])){
+            column['renderer'] = eval(column['renderer']);
+        }
+    },
+
+    loadForm : function(id, action){
+        var self = this;
+        this.setWindowStatus('Loading form...');
+        var conn = new Ext.data.Connection();
+        var formAction = null;
+
+        switch(action){
+            case 'new':
+                formAction = 'create';
+                break;
+            case 'edit':
+                formAction = 'update';
+                break;
+        }
+
+        conn.request({
+            url: this.initialConfig.modelUrl + '/' + action,
+            method: 'POST',
+            params:{
+                id:id
+            },
+            success: function(response) {
+                self.clearWindowStatus();
+                var formItems =  Ext.util.JSON.decode(response.responseText);
+                var buttons = [];
+                if(action != 'show'){
+                    buttons = [{
+                        text:'Submit',
+                        listeners:{
+                            'click':function(button){
+                                var window = button.findParentByType('window');
+                                var formPanel = window.findByType('form')[0];
+                                self.setWindowStatus('Working');
+                                formPanel.getForm().submit({
+                                    reset:true,
+                                    success:function(form, action){
+                                        self.clearWindowStatus();
+                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                        if(obj.success){
+                                            activeExtFormWindow.close();
+                                            self.getStore().reload();
+                                        }
+                                        else{
+                                            Ext.Msg.alert("Error", "Error");
+                                        }
+                                    },
+                                    failure:function(form, action){
+                                        self.clearWindowStatus();
+                                        Ext.Msg.alert("Error", "Error");
+                                    }
+                                });
+                            }
+                        }
+                    },{
+                        text: 'Close',
+                        handler: function(){
+                            activeExtFormWindow.close();
+                        }
+                    }];
+                }
+
+                var activeExtFormWindow = new Ext.Window({
+                    layout:'fit',
+                    width:320,
+                    title:self.initialConfig.windowTitle,
+                    height:300,
+                    plain: true,
+                    autoScroll:true,
+                    buttonAlign:'center',
+                    items: new Ext.FormPanel({
+                        frame:false,
+                        bodyStyle:'padding:5px 5px 0',
+                        width: 425,
+                        url:self.initialConfig.modelUrl + '/' + formAction,
+                        defaults: {
+                            width: 225
+                        },
+                        items:formItems
+                    }),
+                    buttons: buttons
+                });
+                activeExtFormWindow.show();
+                
+            },
+            failure: function(response) {
+                self.clearWindowStatus();
+                Ext.Msg.alert('Error', 'Error loading form');
+            }
+        });
+    },
+    
+    initComponent : function() {
         var config = this.initialConfig
         var messageBox = null;
 
         var proxy = new Ext.data.HttpProxy({
-            url: config['url']
+            url: this.initialConfig.modelUrl + '/data'
         });
 
         proxy.addListener('exception', function(proxy, type, action, options, res) {
@@ -81,6 +186,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
     },
 
     constructor : function(config) {
+        var self = this;
         var editor = new Ext.ux.grid.RowEditor({
             saveText: 'Update',
             buttonAlign:'center',
@@ -102,8 +208,9 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
 
         var plugins = [];
         var tbar = {};
-        if(config['editable']){
-            if(config['inline_edit']){
+        if(config.editable){
+           
+            if(config.inlineEdit){
                 plugins.push(editor);
                 tbar = {
                     items:[{
@@ -116,12 +223,11 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                             grid.store.insert(0, r);
                             editor.startEditing(0);
                         }
-                    },
-                    '-',
+                    },'-',
                     {
-                        text: 'Delete',
+                        text:'Delete',
                         iconCls: 'icon-delete',
-                        handler: function(button) {
+                        handler: function(button){
                             var grid = button.findParentByType('activeextgrid');
                             var rec = grid.getSelectionModel().getSelected();
                             if (!rec) {
@@ -129,36 +235,117 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                             }
                             grid.store.remove(rec);
                         }
-                    }]
+                    }
+                    ]
                 };
             }
             else{
                 var windowTitle = config['windowTitle'];
                 var modelUrl = config['modelUrl'];
+
+                tbar = {
+                    items:[
+                    {
+                        text: 'Add',
+                        iconCls: 'icon-add',
+                        handler: function(button) {
+                            self.loadForm(null, 'new');
+                        }
+                    }
+                    ]
+                }
+
+                config['columns'].unshift({
+                    xtype: 'actioncolumn',
+                    width: 30,
+                    items: [{
+                        icon: '/images/icons/delete/delete_16x16.png',
+                        tooltip: 'Delete',
+                        handler: function(grid, rowIndex, colIndex){
+                            Ext.MessageBox.confirm('Confirm Delete?', 'Are you sure that you want to delete this record?', function(btn){
+                                if (btn == 'yes') {
+                                    var rec = grid.getStore().getAt(rowIndex);
+                                    grid.store.remove(rec);
+                                    Ext.MessageBox.alert("Delete Record","Record deleted.");
+                                }
+                            });
+                        }
+                    }]
+                });
+
                 config['columns'].unshift({
                     xtype:'actioncolumn',
-                    header:'Edit',
                     width:30,
                     items:[{
                         icon:'/images/icons/edit/edit_16x16.png',
                         tooltip:'Edit',
                         handler :function(grid, rowIndex, colIndex){
                             var rec = grid.getStore().getAt(rowIndex);
-                            var modeId = rec.get('id');
-                            var win = new Ext.Window({
-                                width:500,
-                                height:500,
-                                border:false,
-                                layout:'fit',
-                                title:'Edit - ' + windowTitle,
-                                items:[{xtype:'panel', frame:false, html:"<iframe height='100%' width='100%' src='"+modelUrl+"/edit/"+modeId+"'></iframe>"}]
-                            });
-                            win.show();
+                            
+                            if(self.initialConfig.useExtForms){
+                                self.loadForm(rec.get('id'), 'edit');
+                            }
+                            else{
+                                var win = new Ext.Window({
+                                    width:500,
+                                    height:500,
+                                    border:false,
+                                    layout:'fit',
+                                    title:'Edit - ' + windowTitle,
+                                    items:[{
+                                        xtype:'panel',
+                                        frame:false,
+                                        html:"<iframe height='100%' width='100%' src='"+modelUrl+"/edit/"+rec.get('id')+"'></iframe>"
+                                    }]
+                                });
+                                win.show();
+                            }
+
+
+                            
+                            
                         }
                     }]
                 });
+
+                config['columns'].unshift({
+                    xtype: 'actioncolumn',
+                    width: 30,
+                    items: [{
+                        icon: '/images/icons/view/view_16x16.png',
+                        tooltip: 'Show',
+                        handler: function(grid, rowIndex, colIndex){
+                            var rec = grid.getStore().getAt(rowIndex);
+
+                            if(self.initialConfig.useExtForms){
+                                self.loadForm(rec.get('id'), 'show');
+                            }
+                            else
+                            {
+                                var win = new Ext.Window({
+                                    id: 'show_detail_window',
+                                    width: 500,
+                                    height: 500,
+                                    border: false,
+                                    layout: 'fit',
+                                    title: 'Show - ' + windowTitle,
+                                    items: [{
+                                        xtype: 'panel',
+                                        frame: false,
+                                        html: "<iframe id='detail_iframe' height='100%' width='100%' src='" + modelUrl + "/show/" + rec.get('id') + "' scrolling='yes'></iframe>"
+                                    }]
+                                });
+                                win.show();
+                            }
+                        }
+                    }]
+                });
+
+                
             }
         }
+
+        Ext.each(config['columns'],this.evalColumnRenderer);
         
         config = Ext.apply({
             layout:'fit',

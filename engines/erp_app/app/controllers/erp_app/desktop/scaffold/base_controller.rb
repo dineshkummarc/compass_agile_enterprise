@@ -1,4 +1,3 @@
-require 'ActiveSupport'
 require 'rails_generator/spec'
 require 'rails_generator/base'
 require 'rails_generator/commands'
@@ -60,8 +59,8 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
   def find_active_ext_models
     model_names = []
 
-    (Dir.glob("#{RAILS_ROOT}/vendor/plugins/*/app/controllers/**/*.rb") | Dir.glob("#{RAILS_ROOT}/app/controllers/**/*.rb")).each do |filename|
-      next if filename =~ /#{['svn', 'CVS', 'bzr'].join("|")}/
+    Dir.glob("#{RAILS_ROOT}/vendor/plugins/erp_app/app/controllers/erp_app/desktop/scaffold/*.rb") do |filename|
+      next if filename =~ /#{['svn','git'].join("|")}/
       open(filename) do |file|
         if file.grep(/active_ext/).any?
           model = File.basename(filename).gsub("_controller.rb", "").classify
@@ -87,12 +86,16 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
   end
 
   def load_files(name)
-    require_dependency "#{ERP_APP_PATH}/config/routes.rb"
+    #reload routes file
+    load "#{ERP_APP_PATH}/config/routes.rb"
+
+    #load controller
     controller = "ErpApp::Desktop::Scaffold::#{name.classify}Controller"
-    unless class_exists?(controller)
-      controller.constantize
-    end
-    FileUtils.mkdir_p "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/"
+    controller.constantize unless class_exists?(controller)
+    
+    #make directory if it does not exists
+    FileUtils.mkdir_p "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/" unless File.directory?("#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/")
+    #copy generated fild up to base public directory
     FileUtils.cp_r "#{ERP_APP_PATH}/public/javascripts/erp_app/desktop/applications/scaffold/#{name.underscore}_active_ext.js", "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/"
   end
 end

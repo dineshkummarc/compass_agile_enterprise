@@ -6,8 +6,6 @@ ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)
 #remove this plugin for the load once paths
 ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_once_paths.select{|path| path =~ %r(^#{File.dirname(__FILE__)}) }
 
-ActiveRecord::Base.observers << :user_observer
-
 #if model exists in app/model this plugins model needs reloaded every request
 #this runs only once when in production mode
 config.to_prepare do

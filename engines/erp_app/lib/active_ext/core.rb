@@ -15,11 +15,11 @@ class ActiveExt::Core
 
     #only include attribute columns we care about, do not remove rails generated columns
     if options[:only]
-      valid_columns = RAILS_COLUMNS | options[:only]
+      valid_columns = RAILS_COLUMNS | options[:only].collect{|item| item.keys}.collect{|item| item.first}
       attribute_names.delete_if{|item| !valid_columns.include?(item.to_sym)}
     end
 
-     #if we are including associations get them
+    #if we are including associations get them
     unless options[:ignore_associations]
       @association_names = self.model.reflect_on_all_associations.collect{ |a| a.name.to_sym }
       association_column_names = @association_names.sort_by { |c| c.to_s }
@@ -31,6 +31,10 @@ class ActiveExt::Core
     #exclude id columns and count columns
     @columns.exclude(*@columns.find_all { |c| c.column and (c.column.primary or c.column.name =~ /(_id|_count)$/) }.collect {|c| c.name})
     @columns.exclude(*self.model.reflect_on_all_associations.collect{|a| :"#{a.name}_type" if a.options[:polymorphic]}.compact)
+
+    if options[:only]
+      set_column_options
+    end
   end
   
   def model_id
@@ -44,5 +48,21 @@ class ActiveExt::Core
   def options
     @options
   end
-  
+
+  private
+
+  def set_column_options
+    all_column_options = self.options[:only]
+    self.columns.each do |column|
+      if RAILS_COLUMNS.include?(column.name)
+        column.options = {:readonly => true, :required => false}
+      else
+        column_options = all_column_options.find{|item| item.has_key?(column.name)}
+        unless column_options.nil?
+          column.options = column_options[column.name]
+        end
+      end
+    end
+  end
+
 end

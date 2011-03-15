@@ -4,12 +4,25 @@ Compass.ErpApp.Desktop.Applications.Scaffold = Ext.extend(Ext.app.Module, {
     id:'scaffold-win',
     
     loadModel : function(modelName){
-        this.modelsTabPanel.add({
-           xtype:modelName + '_activeextgrid',
-           closable:true
+        //check if we are already showing this model
+        var tab = null;
+        var items = this.modelsTabPanel.items;
+        Ext.each(items.items, function(item){
+            if(item.xtype == modelName + '_activeextgrid'){
+                tab = item;
+            }
         });
 
-        this.modelsTabPanel.setActiveTab(this.modelsTabPanel.items.length - 1);
+        if(!Compass.ErpApp.Utility.isBlank(tab)){
+            this.modelsTabPanel.setActiveTab(tab);
+        }
+        else{
+            this.modelsTabPanel.add({
+                xtype:modelName + '_activeextgrid',
+                closable:true
+            });
+            this.modelsTabPanel.setActiveTab(this.modelsTabPanel.items.length - 1);
+        }
     },
 
     init : function(){
@@ -25,7 +38,9 @@ Compass.ErpApp.Desktop.Applications.Scaffold = Ext.extend(Ext.app.Module, {
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('scaffold');
         if(!win){
-            this.modelsTabPanel = new Ext.TabPanel({ region:'center'});
+            this.modelsTabPanel = new Ext.TabPanel({
+                region:'center'
+            });
 
             win = desktop.createWindow({
                 id: 'scaffold',
@@ -37,7 +52,10 @@ Compass.ErpApp.Desktop.Applications.Scaffold = Ext.extend(Ext.app.Module, {
                 animCollapse:false,
                 constrainHeader:true,
                 layout: 'border',
-                items:[{xtype:'scaffold_modelstreepanel', scaffold:this},this.modelsTabPanel]
+                items:[{
+                    xtype:'scaffold_modelstreepanel',
+                    scaffold:this
+                },this.modelsTabPanel]
             });
         }
         win.show();
