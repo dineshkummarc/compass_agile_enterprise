@@ -1,8 +1,12 @@
 <% unless @website_sections.nil? %>
-  <ul>
+  <ul id="menu">
     <% @website_sections.each do |section| %>
       <%if section.has_access?(current_user)%>
-        <li>
+        <% if !@website_section.nil? && section.id == @website_section.id %>
+          <li class="selected">
+        <%else%>
+          <li>
+        <%end%>
           <a href="/<%= section.permalink %>"><%= section.title %></a>
         </li>
       <%end%>

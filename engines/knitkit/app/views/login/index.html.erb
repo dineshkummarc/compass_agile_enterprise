@@ -1,4 +1,4 @@
-<div id="loginDiv">
+<div>
   <%
   display = 'none'
   unless flash[:notice].nil?
@@ -10,18 +10,14 @@
   </div>
   <br/>
   <form method="POST" action="/erp_app/application/create">
-    <div>
-      <p>
-        <label for="login">Login</label>
-        <input type="text" name="login" />
-      </p>
-      <p>
-        <label for="password">Password</label>
-        <input type="password" name="password" />
-      </p>
-      <input type="hidden" name="redirect_to" value="<%=@redirect_to%>" />
-      <input type="hidden" name="logout_to" value="/login" />
+    <div class="form_settings">
+      <div>
+        <p><span>login</span><input type="text" name="login" /></p>
+        <p><span>password</span><input type="text" name="password" /></p>
+        <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" value="login" /></p>
+        <input type="hidden" name="redirect_to" value="<%=@redirect_to%>" />
+        <input type="hidden" name="logout_to" value="/login" />
+      </div>
     </div>
-    <input class="button" type="submit" value="Login"/>
   </form>
 </div>

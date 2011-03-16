@@ -4,32 +4,32 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="generator" content="adva-cms - Open source content management platform" />
     <title><%= @website.title %></title>
-    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
-    <%= stylesheet_link_tag(
-      'erp_app/desktop/applications/knitkit/blog.css',
-      'erp_app/desktop/applications/knitkit/signup.css',
-      'erp_app/desktop/applications/knitkit/login.css'
-    ) %>
-
+    <%= stylesheet_link_tag('knitkit/style.css') %>
     <%= yield :head %>
   </head>
   <body>
-    <div id="page">
-      <div id="header" class="clearing">
-        <%=render_version_viewing%>
-        <%= render :partial => 'layouts/login' %>
-        <h1><%= @website.title %></h1>
-        <p><%= @website.subtitle %></p>
-        <%= yield :header %>
+    <div id="main">
+      <div id="header">
+        <div id="logo">
+          <%=  render :partial => 'layouts/login' %>
+          <div id="logo_text">
+            <!-- class="logo_colour", allows you to change the colour of the text -->
+            <h1><a href="/"><%= @website.title %></a></h1>
+            <h2><%= @website.subtitle %></h2>
+          </div>
+        </div>
+        <div id="menubar">
+          <%= render_menu(@website_sections) %>
+        </div>
       </div>
-      <div id="navigation">
-        <%= render_menu(@website_sections) %>
+      <div id="site_content">
+        <div id="content">
+          <%= yield %>
+        </div>
       </div>
-      <div id="main">
-        <%= yield %>
-      </div>
+      <div id="content_footer"></div>
       <%= yield :footer or render :partial => 'shared/footer' %>
+      <%= yield :foot %>
     </div>
-    <%= yield :foot %>
   </body>
 </html>

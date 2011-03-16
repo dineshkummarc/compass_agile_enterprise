@@ -13,7 +13,7 @@ class SignupController < BaseController
     @user = User.create(options)
     if @user.valid?
       @user.activated_at = Time.now
-      @user.roles << @site.site_role
+      @user.roles << @website.role
       individual = Individual.create(:current_first_name => @user.first_name, :current_last_name => @user.last_name)
       @user.party = individual.party
       @user.save

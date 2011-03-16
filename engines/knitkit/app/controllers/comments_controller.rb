@@ -7,6 +7,7 @@ class CommentsController < BaseController
 
     content.add_comment({:commentor_name => user.party.description, :email => user.email, :comment => comment})
 
+    flash[:notice] = "Comment pending approval."
     redirect_to "/#{website_section.permalink}/#{content.permalink}"
   end
 
