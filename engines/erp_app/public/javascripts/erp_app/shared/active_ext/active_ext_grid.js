@@ -249,7 +249,28 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         text: 'Add',
                         iconCls: 'icon-add',
                         handler: function(button) {
-                            self.loadForm(null, 'new');
+                            if(self.initialConfig.useExtForms){
+                                self.loadForm(null, 'new');
+                            }
+                            else
+                            {
+                                var modeId = -1;
+                                var win = new Ext.Window({
+                                    id: windowTitle.downcase() + "_",
+                                    width: 500,
+                                    height: 500,
+                                    border: false,
+                                    layout: 'fit',
+                                    title: 'Add - ' + windowTitle,
+                                    items: [{
+                                        xtype: 'panel',
+                                        frame: false,
+                                        html: "<iframe height='100%' width='100%' src='" + modelUrl + "/new/" + modeId + "' scrolling='yes'></iframe>"
+                                    }]
+                                });
+                                win.show();
+                            }
+
                         }
                     }
                     ]
@@ -281,12 +302,13 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         tooltip:'Edit',
                         handler :function(grid, rowIndex, colIndex){
                             var rec = grid.getStore().getAt(rowIndex);
-                            
+                            var id = rec.get('id');
                             if(self.initialConfig.useExtForms){
-                                self.loadForm(rec.get('id'), 'edit');
+                                self.loadForm(id, 'edit');
                             }
                             else{
                                 var win = new Ext.Window({
+                                    id: windowTitle.downcase().underscore() + "_" + id,
                                     width:500,
                                     height:500,
                                     border:false,
@@ -295,7 +317,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                                     items:[{
                                         xtype:'panel',
                                         frame:false,
-                                        html:"<iframe height='100%' width='100%' src='"+modelUrl+"/edit/"+rec.get('id')+"'></iframe>"
+                                        html:"<iframe height='100%' width='100%' src='"+modelUrl+"/edit/"+id+"'></iframe>"
                                     }]
                                 });
                                 win.show();
@@ -316,14 +338,14 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         tooltip: 'Show',
                         handler: function(grid, rowIndex, colIndex){
                             var rec = grid.getStore().getAt(rowIndex);
-
+                            var id = rec.get('id');
                             if(self.initialConfig.useExtForms){
-                                self.loadForm(rec.get('id'), 'show');
+                                self.loadForm(id, 'show');
                             }
                             else
                             {
                                 var win = new Ext.Window({
-                                    id: 'show_detail_window',
+                                    id: windowTitle.downcase().underscore() + "_" + id,
                                     width: 500,
                                     height: 500,
                                     border: false,
@@ -332,7 +354,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                                     items: [{
                                         xtype: 'panel',
                                         frame: false,
-                                        html: "<iframe id='detail_iframe' height='100%' width='100%' src='" + modelUrl + "/show/" + rec.get('id') + "' scrolling='yes'></iframe>"
+                                        html: "<iframe id='detail_iframe' height='100%' width='100%' src='" + modelUrl + "/show/" + id + "' scrolling='yes'></iframe>"
                                     }]
                                 });
                                 win.show();
@@ -360,3 +382,23 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
 });
 
 Ext.reg('activeextgrid', Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid);
+
+// refresh the active ext grid component
+Compass.ErpApp.Shared.ActiveExt.refreshGrid = function(){
+    // get a handle to the active_ext_grid component
+    var active_ext_grid=Ext.getCmp("active_ext_grid");
+    // reload the grid store
+    active_ext_grid.store.reload();
+
+}
+
+// close the window identified by the supplied id
+Compass.ErpApp.Shared.ActiveExt.closeWindow = function(windowId){
+    //lookup the component by id then close it
+    var window=Ext.getCmp(windowId)
+    if(window!=null){
+        window.close();
+    }else{
+        alert("["+windowId+"] does not exist");
+    }
+}

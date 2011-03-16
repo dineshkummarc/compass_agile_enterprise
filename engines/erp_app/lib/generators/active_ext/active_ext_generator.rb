@@ -21,12 +21,22 @@ class ActiveExtGenerator < Rails::Generator::NamedBase
       m.class_collisions "#{class_name}Controller"
 
       #Controller
-      m.template "controllers/controller_template.rb", "vendor/plugins/#{@plugin}/app/controllers/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}_controller.rb"
+      m.template "controllers/controller_template.rb", File.join("vendor/plugins",@plugin,"app/controllers/erp_app",container_file_name,application_file_name,"#{file_name}_controller.rb")
 
       #public
       #make javascript source and app folder
-      m.template "public/module.js.erb", "vendor/plugins/#{@plugin}/public/javascripts/erp_app/#{container_file_name}/applications/#{application_file_name}/#{file_name}_active_ext.js"
+      m.template "public/module.js.erb", File.join("vendor/plugins",@plugin,"public/javascripts/erp_app",container_file_name,"applications",application_file_name,"#{file_name}_active_ext.js")
 
+      #views
+      m.directory(File.join('vendor/plugins',@plugin,'app/views/erp_app', container_file_name, application_file_name, file_name))
+      for action in scaffold_views
+        m.file(
+          "views/#{action}.html.erb",
+          File.join('vendor/plugins',@plugin,'app/views/erp_app', container_file_name, application_file_name, file_name, "#{action}.html.erb")
+        )
+      end
+
+      #add to routes file
       logger.info "creating route ~ map.connect '/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}/:action', :controller => 'erp_app/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}'"
       sentinel = "##{application_file_name}"
       m.gsub_file 'vendor/plugins/erp_app/config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
@@ -52,5 +62,9 @@ class ActiveExtGenerator < Rails::Generator::NamedBase
 
   def container_class_name
     @container.classify
+  end
+
+  def scaffold_views
+    %w[create edit new show update]
   end
 end

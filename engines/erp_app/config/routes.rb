@@ -28,8 +28,6 @@ ActionController::Routing::Routes.draw do |map|
   #Desktop Applications
 
   #scaffold
-  map.connect '/erp_app/desktop/scaffold/role_type/:action', :controller => 'erp_app/desktop/scaffold/role_type'
-  map.connect '/erp_app/desktop/scaffold/party/:action', :controller => 'erp_app/desktop/scaffold/party'
   map.connect '/erp_app/desktop/scaffold/role/:action', :controller => 'erp_app/desktop/scaffold/role'
   map.connect '/erp_app/desktop/scaffold/:action', :controller => 'erp_app/desktop/scaffold/base'
 

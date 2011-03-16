@@ -91,7 +91,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         publishWindow.show();
     },
 
-    editSectionLayout : function(sectionName, sectionId){
+    editSectionLayout : function(sectionName, sectionId, websiteId){
         var self = this;
         self.setWindowStatus('Loading section template...');
         var conn = new Ext.data.Connection();
@@ -104,6 +104,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             success: function(response) {
                 self.initialConfig['centerRegion'].editSectionLayout(
                     sectionName,
+                    websiteId,
                     sectionId,
                     response.responseText,
                     [{
@@ -311,7 +312,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 iconCls:'icon-edit',
                                 listeners:{
                                     'click':function(){
-                                        self.editSectionLayout(node.text, node.id.split('_')[1]);
+                                        self.editSectionLayout(node.text, node.id.split('_')[1], node.attributes.siteId);
                                     }
                                 }
                             });
@@ -336,7 +337,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 if(obj.success){
                                                     self.clearWindowStatus();
                                                     self.sitesTree.getRootNode().reload();
-                                                    self.editSectionLayout(node.text, sectionId);
+                                                    self.editSectionLayout(node.text, sectionId, node.attributes.siteId);
                                                 }
                                                 else
                                                 {

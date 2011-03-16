@@ -146,3 +146,11 @@ Array.prototype.find = function (find_statement) {
     }
     return null;
 };
+
+String.prototype.underscore = function (){
+  return this.replace(/\s/g, "_");
+};
+
+String.prototype.downcase = function (){
+  return this.toLowerCase();
+}

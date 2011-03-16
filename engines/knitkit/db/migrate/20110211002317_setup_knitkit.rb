@@ -35,7 +35,7 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :website_sections, :lft
       add_index :website_sections, :rgt
 
-      #Section.create_versioned_table
+      WebsiteSection.create_versioned_table
     end
 
     unless table_exists?(:contents)
@@ -154,11 +154,11 @@ class SetupKnitkit < ActiveRecord::Migration
   end
 
   def self.down
-    #Section.drop_versioned_table
+    WebsiteSection.drop_versioned_table
     Content.drop_versioned_table
 
     # check that each table exists before trying to delete it.
-    [:websites, :sections, :contents, :website_section_contents, :themes, :theme_files, :published_websites, :published_elements, :comments].each do |tbl|
+    [:websites, :website_sections, :contents, :website_section_contents, :themes, :theme_files, :published_websites, :published_elements, :comments].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
       end

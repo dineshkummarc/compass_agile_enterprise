@@ -15,7 +15,15 @@ class ActiveExt::Core
 
     #only include attribute columns we care about, do not remove rails generated columns
     if options[:only]
-      valid_columns = RAILS_COLUMNS | options[:only].collect{|item| item.keys}.collect{|item| item.first}
+      valid_columns = []
+      options[:only].each do |option|
+        if option.is_a?(Hash)
+          valid_columns << option.keys.first
+        else
+          valid_columns << option
+        end
+      end
+      valid_columns = valid_columns | RAILS_COLUMNS
       attribute_names.delete_if{|item| !valid_columns.include?(item.to_sym)}
     end
 
@@ -56,7 +64,7 @@ class ActiveExt::Core
         column.options = {:readonly => true, :required => false}
       else
         unless all_column_options.nil?
-          column_options = all_column_options.find{|item| item.has_key?(column.name)}
+          column_options = all_column_options.find{|item| item.is_a?(Hash) && item.has_key?(column.name)}
           unless column_options.nil?
             column.options = column_options[column.name]
           end

@@ -1,6 +1,10 @@
 class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::BaseController
+  #content
+
   def content_versions
-    content = Content.find(params[:content_id])
+    Content::Version.include_root_in_json = false
+
+    content = Content.find(params[:id])
     website = Website.find(params[:site_id])
     sort  = params[:sort] || 'version'
     dir   = params[:dir] || 'DESC'
@@ -42,7 +46,54 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     render :inline => {:success => true}.to_json
   end
 
-  def layout_versions
+  #website section layouts
 
+  def website_section_layout_versions
+    WebsiteSection::Version.include_root_in_json = false
+
+    website_section = WebsiteSection.find(params[:id])
+    website = Website.find(params[:site_id])
+    sort  = params[:sort] || 'version'
+    dir   = params[:dir] || 'DESC'
+    limit = params[:limit] || 15
+    start = params[:start] || 0
+
+    versions = website_section.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+
+    WebsiteSection::Version.class_exec(website) do
+      @@website = website
+      def published
+        published_site_id = @@website.active_publication.id
+        !PublishedElement.find(:first,
+          :include => [:published_website],
+          :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.website_section_id, 'WebsiteSection', self.version]).nil?
+      end
+    end
+
+    render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :created_at], :methods => [:published])}}"
+  end
+
+  def get_website_section_version
+    render :text => WebsiteSection::Version.find(params[:id]).layout
+  end
+
+  def publish_website_section
+    website_section = WebsiteSection.find(WebsiteSection::Version.find(params[:id]).website_section_id)
+    website = Website.find(params[:site_id])
+    version = params[:version]
+    comment = params[:comment]
+
+    website_section.publish(website, comment, version)
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def revert_website_section
+    website_section = WebsiteSection.find(WebsiteSection::Version.find(params[:id]).website_section_id)
+    version = params[:version]
+    website_section.revert_to(version)
+    website_section.save!
+
+    render :inline => {:success => true}.to_json
   end
 end

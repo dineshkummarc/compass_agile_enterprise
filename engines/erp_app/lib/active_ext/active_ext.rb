@@ -96,10 +96,9 @@ module ActiveExt
             # get the fields that should be displayed
             # these fields are rendered in the order
             # they appear in the array
-            @fields=active_ext_core.options[:only]
+            @fields=active_ext_core.columns.collect(&:name)
             if(@fields==nil)
               # if no fields are specified use all from the model
-
               @fields=field_names_from_model(@model)
             end
             @attributes = @model.attributes
@@ -126,7 +125,7 @@ module ActiveExt
             @options = active_ext_core.options
             Rails.logger.debug(">> new:#{@model}")
             @attributes = @model.attributes
-            @fields=active_ext_core.options[:only]
+            @fields= active_ext_core.columns.collect(&:name)
             @disabled_fields=active_ext_core.options[:disabled]
             if(@fields==nil)
               # if no fields are specified use all from the model
@@ -157,7 +156,7 @@ module ActiveExt
               Rails.logger.debug("[#{@singular_name}]update id:#{id}")
               # create new model to receive attributes
 
-              @fields=active_ext_core.options[:only]
+              @fields=active_ext_core.columns.collect(&:name)
               if(@fields==nil)
                 # if no fields are specified use all from the model
                 @fields=field_names_from_model(@model)
@@ -194,7 +193,7 @@ module ActiveExt
             @model = active_ext_core.model.find(id)
             @options = active_ext_core.options
             @attributes = @model.attributes
-            @fields=active_ext_core.options[:only]
+            @fields=active_ext_core.columns.collect(&:name)
             if(@fields==nil)
               # if no fields are specified use all from the model
               @fields=@model.attributes

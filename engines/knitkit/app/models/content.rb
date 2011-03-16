@@ -52,7 +52,7 @@ class Content < ActiveRecord::Base
       :include => [:published_website],
       :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, content.id, 'Content'])
     unless published_element.nil?
-      content_version = Content::Version.find(:first, :conditions => ['version = ? and content_id = ?',published_element.version, published_element.published_element_record_id])
+      content_version = Content::Version.find(:first, :conditions => ['version = ? and content_id = ?', published_element.version, published_element.published_element_record_id])
     end
     content_version
   end
