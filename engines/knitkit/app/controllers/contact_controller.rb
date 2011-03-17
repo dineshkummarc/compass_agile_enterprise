@@ -1,7 +1,15 @@
 class ContactController < BaseController
   def show
-    @user = current_user
-    @website_inquiry = WebsiteInquiry.new
+    if @website.allow_inquiries?
+      @user = current_user
+      @website_inquiry = WebsiteInquiry.new
+    else
+      respond_to do |format|
+        format.html { render :file => "#{Rails.root}/public/404.html", :status => :not_found }
+        format.xml  { head :not_found }
+        format.any  { head :not_found }
+      end
+    end
   end
   
   def new
