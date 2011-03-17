@@ -588,7 +588,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             layout:'fit',
                             width:375,
                             title:'New Website',
-                            height:210,
+                            height:265,
                             plain: true,
                             buttonAlign:'center',
                             items: new Ext.FormPanel({
