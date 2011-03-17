@@ -61,11 +61,15 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def new
+    ignored_params = IGNORED_PARAMS | %w{allow_inquiries email_inquiries}
+
     result = {}
     website = Website.new
     params.each do |k,v|
-      website.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
+      website.send(k + '=', v) unless ignored_params.include?(k.to_s)
     end
+    website.allow_inquiries = params[:allow_inquiries] == 'yes'
+    website.email_inquiries = params[:email_inquiries] == 'yes'
 
     if website.save
       result[:success] = true
@@ -77,9 +81,14 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def update
+    ignored_params = IGNORED_PARAMS | %w{allow_inquiries email_inquiries}
+
     params.each do |k,v|
-      @website.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
+      @website.send(k + '=', v) unless ignored_params.include?(k.to_s)
     end
+    @website.allow_inquiries = params[:allow_inquiries] == 'yes'
+    @website.email_inquiries = params[:email_inquiries] == 'yes'
+
     @website.save
 
     render :inline => {:success => true}.to_json

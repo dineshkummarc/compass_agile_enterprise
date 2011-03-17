@@ -387,6 +387,16 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
 
                         items.push({
+                            text:'View Inquiries',
+                            iconCls:'icon-document',
+                            listeners:{
+                                'click':function(){
+                                    self.initialConfig['centerRegion'].viewWebsiteInquiries(node.attributes.id.split('_')[1], node.attributes.title);
+                                }
+                            }
+                        });
+
+                        items.push({
                             text:'Edit Site',
                             iconCls:'icon-edit',
                             listeners:{
@@ -395,7 +405,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         layout:'fit',
                                         width:375,
                                         title:'Edit Website',
-                                        height:210,
+                                        height:265,
                                         plain: true,
                                         buttonAlign:'center',
                                         items: new Ext.FormPanel({
@@ -444,6 +454,58 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 value:node.attributes['email']
                                             },
                                             {
+                                                xtype:'radiogroup',
+                                                fieldLabel:'Allow Inquiries',
+                                                name:'allow_inquiries',
+                                                width:100,
+                                                columns:2,
+                                                items:[
+                                                {
+                                                    boxLabel:'Yes',
+                                                    name:'allow_inquiries',
+                                                    inputValue: 'yes',
+                                                    checked:node.attributes['allowInquiries']
+                                                },
+
+                                                {
+                                                    boxLabel:'No',
+                                                    name:'allow_inquiries',
+                                                    inputValue: 'no',
+                                                    checked:!node.attributes['allowInquiries']
+                                                }
+                                                ]
+                                            },
+                                            {
+                                                xtype:'radiogroup',
+                                                fieldLabel:'Email Inquiries',
+                                                name:'email_inquiries',
+                                                width:100,
+                                                columns:2,
+                                                items:[
+                                                {
+                                                    boxLabel:'Yes',
+                                                    name:'email_inquiries',
+                                                    inputValue: 'yes',
+                                                    checked:node.attributes['emailInquiries'],
+                                                    listeners:{
+                                                        scope:this,
+                                                        'check':function(checkbox, checked){
+                                                            if(checked)
+                                                            {
+                                                                Ext.Msg.alert("Warning","ActionMailer must be setup to send emails");
+                                                            }
+                                                        }
+                                                    }
+                                                },
+
+                                                {
+                                                    boxLabel:'No',
+                                                    name:'email_inquiries',
+                                                    inputValue: 'no',
+                                                    checked:!node.attributes['emailInquiries']
+                                                }]
+                                            },
+                                            {
                                                 xtype:'hidden',
                                                 name:'id',
                                                 value:node.attributes.id.split('_')[1]
@@ -461,8 +523,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         reset:true,
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            editWebsiteWindow.close();
                                                             self.sitesTree.getRootNode().reload();
+                                                            editWebsiteWindow.close();
                                                         },
                                                         failure:function(form, action){
                                                             self.clearWindowStatus();
@@ -559,7 +621,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 {
                                     xtype:'textfield',
                                     fieldLabel:'Sub Title',
-                                    allowBlank:false,
+                                    allowBlank:true,
                                     name:'subtitle'
                                 },
                                 {
@@ -567,6 +629,58 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                     fieldLabel:'Email',
                                     allowBlank:false,
                                     name:'email'
+                                },
+                                {
+                                    xtype:'radiogroup',
+                                    fieldLabel:'Allow Inquiries',
+                                    name:'allow_inquiries',
+                                    width:100,
+                                    columns:2,
+                                    items:[
+                                    {
+                                        boxLabel:'Yes',
+                                        name:'allow_inquiries',
+                                        inputValue: 'yes',
+                                        checked:true
+                                    },
+
+                                    {
+                                        boxLabel:'No',
+                                        name:'allow_inquiries',
+                                        inputValue: 'no',
+                                        checked:false
+                                    }
+                                    ]
+                                },
+                                {
+                                    xtype:'radiogroup',
+                                    fieldLabel:'Email Inquiries',
+                                    name:'email_inquiries',
+                                    width:100,
+                                    columns:2,
+                                    items:[
+                                    {
+                                        boxLabel:'Yes',
+                                        name:'email_inquiries',
+                                        inputValue: 'yes',
+                                        checked:false,
+                                        listeners:{
+                                            scope:this,
+                                            'check':function(checkbox, checked){
+                                                if(checked)
+                                                {
+                                                    Ext.Msg.alert("Warning","ActionMailer must be setup to send emails");
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        boxLabel:'No',
+                                        name:'email_inquiries',
+                                        inputValue: 'no',
+                                        checked:true
+                                    }
+                                    ]
                                 }
                                 ]
                             }),
@@ -584,6 +698,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 var obj =  Ext.util.JSON.decode(action.response.responseText);
                                                 if(obj.success){
                                                     self.sitesTree.getRootNode().reload();
+                                                    addWebsiteWindow.close();
                                                 }
                                             },
                                             failure:function(form, action){

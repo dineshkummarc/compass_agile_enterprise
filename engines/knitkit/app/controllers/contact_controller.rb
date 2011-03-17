@@ -1,6 +1,7 @@
 class ContactController < BaseController
   def show
-    @user = User.new
+    @user = current_user
+    @website_inquiry = WebsiteInquiry.new
   end
   
   def new
@@ -8,15 +9,17 @@ class ContactController < BaseController
 
     options = params
     options.delete_if{|k,v| ignored_params.include?(k.to_s)}
-    options = options[:user]
+    options = options[:website_inquiry]
 
-    @user = User.create(options)
-    if @user.valid?
-      @user.activated_at = Time.now
-      @user.roles << @site.site_role
-      individual = Individual.create(:current_first_name => @user.first_name, :current_last_name => @user.last_name)
-      @user.party = individual.party
-      @user.save
+    @website_inquiry = WebsiteInquiry.create(options)
+    if @website_inquiry.valid?
+      @website_inquiry.website = @website
+      @website_inquiry.user = current_user unless current_user.nil?
+      @website_inquiry.save
+      if @website.email_inquiries?
+        @website_inquiry.send_email
+      end
+      @success = true
     end
   end
 

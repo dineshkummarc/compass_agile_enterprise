@@ -28,8 +28,8 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'login', :action => 'index'
   map.signup '/signup/:action', :controller => 'signup'
   map.unauthorized '/unauthorized', :controller => 'unauthorized', :action => 'index'
+  map.contact '/contact_us', :controller => 'contact', :action => 'show'
   map.connect '/view_current_publication', :controller => 'base', :action => 'view_current_publication'
-  
 
   #Desktop Applications
   #knitkit
@@ -50,4 +50,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/knitkit/versions/:action', :controller => 'erp_app/desktop/knitkit/versions'
   #comments
   map.connect '/erp_app/desktop/knitkit/comments/:action/:content_id', :controller => 'erp_app/desktop/knitkit/comments'
+  #inquiries
+  map.connect '/erp_app/desktop/knitkit/inquiries/:action/:website_id', :controller => 'erp_app/desktop/knitkit/inquiries'
 end

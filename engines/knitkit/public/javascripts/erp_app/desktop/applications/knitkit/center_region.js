@@ -381,6 +381,36 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         this.workArea.setActiveTab(this.workArea.items.length - 1);
     },
 
+    viewWebsiteInquiries : function(websiteId, title){
+        var self = this;
+        var centerRegionLayout = new Ext.Panel({
+            layout:'border',
+            title:title,
+            closable:true,
+            items:[
+            {
+                xtype:'panel',
+                layout:'card',
+                split:true,
+                region:'center',
+                items:[],
+                autoDestroy:true
+            },
+            {
+                xtype:'knitkit_inquiriesgridpanel',
+                websiteId:websiteId,
+                region:'south',
+                height:300,
+                collapsible:true,
+                centerRegion:self
+            }
+            ]
+        })
+
+        this.workArea.add(centerRegionLayout);
+        this.workArea.setActiveTab(this.workArea.items.length - 1);
+    },
+
     insertHtmlIntoActiveCkEditor : function(html){
         var activeTab = this.workArea.getActiveTab();
         if(Compass.ErpApp.Utility.isBlank(activeTab)){

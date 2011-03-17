@@ -2,6 +2,7 @@ class Website < ActiveRecord::Base
   validates_uniqueness_of :name, :host
 
   has_many :published_websites, :dependent => :destroy
+  has_many :website_inquiries, :dependent => :destroy
 
   has_many :website_sections, :dependent => :destroy, :order => :lft do
     def root

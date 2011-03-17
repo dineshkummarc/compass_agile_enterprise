@@ -20,6 +20,8 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :subtitle => website.subtitle,
         :email => website.email,
         :siteName => website.title,
+        :allowInquiries =>  website.allow_inquiries?,
+        :emailInquiries =>  website.email_inquiries?,
         :children => []
       }
       
