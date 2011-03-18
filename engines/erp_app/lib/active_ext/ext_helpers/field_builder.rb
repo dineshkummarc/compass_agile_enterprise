@@ -29,9 +29,9 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def format_display_value(column, value)
       if column.sql_type.to_s == 'date'
-        value = value.strfdate('%m/%d/%Y')
+        value = value.strfdate('%m/%d/%Y') unless value.nil?
       elsif column.sql_type.to_s == 'datetime'
-        value = value.strftime('%m/%d/%Y')
+        value = value.strftime('%m/%d/%Y') unless value.nil?
       end
 
       value
