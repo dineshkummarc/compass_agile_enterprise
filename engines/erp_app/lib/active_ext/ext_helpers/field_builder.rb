@@ -128,5 +128,15 @@ module ActiveExt::ExtHelpers::FieldBuilder
       field_json
     end
 
+    def build_text_field(options={})
+      field_json = {
+        :width => 150,
+        :xtype => 'textarea',
+        :labelWidth => 140
+      }
+
+      field_json
+    end
+
   end
 end

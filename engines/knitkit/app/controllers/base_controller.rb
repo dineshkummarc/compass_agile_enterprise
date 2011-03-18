@@ -8,7 +8,7 @@ class BaseController < ErpApp::ApplicationController
   end
 
   def view_current_publication
-    session[:site_version].delete_if{|item| item[:site_id] == @site.id}
+    session[:website_version].delete_if{|item| item[:website_id] == @website.id}
     redirect_to request.env["HTTP_REFERER"]
   end
   

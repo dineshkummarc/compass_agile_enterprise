@@ -441,7 +441,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             {
                                                 xtype:'textfield',
                                                 fieldLabel:'Sub Title',
-                                                allowBlank:false,
+                                                allowBlank:true,
                                                 name:'subtitle',
                                                 value:node.attributes['subtitle']
 
@@ -520,7 +520,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     var formPanel = window.findByType('form')[0];
                                                     self.setWindowStatus('Updating website...');
                                                     formPanel.getForm().submit({
-                                                        reset:true,
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
                                                             self.sitesTree.getRootNode().reload();
@@ -692,7 +691,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         var formPanel = window.findByType('form')[0];
                                         self.setWindowStatus('Creating website...');
                                         formPanel.getForm().submit({
-                                            reset:true,
                                             success:function(form, action){
                                                 self.clearWindowStatus();
                                                 var obj =  Ext.util.JSON.decode(action.response.responseText);

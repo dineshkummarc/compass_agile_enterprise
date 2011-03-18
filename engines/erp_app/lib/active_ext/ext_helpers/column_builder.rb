@@ -116,4 +116,17 @@ module ActiveExt::ExtHelpers::ColumnBuilder
     column
   end
 
+  def self.build_text_column(column_name, options={})
+    column = {
+      :header => column_name,
+      :type => 'string',
+      :dataIndex => column_name,
+      :width => options[:width].nil? ? 150 : options[:width],
+    }
+
+    column[:editor] = {:xtype => "textarea", :disabled => options[:readonly].blank? ? false : options[:readonly]}
+
+    column
+  end
+
 end

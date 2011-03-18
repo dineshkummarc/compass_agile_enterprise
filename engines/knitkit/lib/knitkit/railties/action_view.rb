@@ -20,8 +20,8 @@ ActionView::Base.class_eval do
   def render_version_viewing
     html = ''
 
-    if !session[:site_version].blank? && !session[:site_version].empty?
-      site_version_hash = session[:site_version].find{|item| item[:website_id] == @website.id}
+    if !session[:website_version].blank? && !session[:website_version].empty?
+      site_version_hash = session[:website_version].find{|item| item[:website_id] == @website.id}
       unless site_version_hash.nil?
         if site_version_hash[:version].to_f != @website.active_publication.version
           html = "<div style='float:left;'>Viewing version #{site_version_hash[:version].to_f} <a href='/view_current_publication'>View current publication</a></div>"

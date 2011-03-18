@@ -35,6 +35,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
+                    var activeTab = self.workArea.getActiveTab();
+                    activeTab.findByType('knitkit_versionswebsitesectiongridpanel')[0].getStore().reload();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving layout');

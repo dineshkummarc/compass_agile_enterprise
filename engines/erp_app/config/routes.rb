@@ -28,6 +28,7 @@ ActionController::Routing::Routes.draw do |map|
   #Desktop Applications
 
   #scaffold
+  map.connect '/erp_app/desktop/scaffold/website_inquiry/:action', :controller => 'erp_app/desktop/scaffold/website_inquiry'
   map.connect '/erp_app/desktop/scaffold/role_type/:action', :controller => 'erp_app/desktop/scaffold/role_type'
   map.connect '/erp_app/desktop/scaffold/role/:action', :controller => 'erp_app/desktop/scaffold/role'
   map.connect '/erp_app/desktop/scaffold/:action', :controller => 'erp_app/desktop/scaffold/base'
