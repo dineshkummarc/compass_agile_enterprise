@@ -86,6 +86,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                     buttonAlign:'center',
                     items: new Ext.FormPanel({
                         frame:false,
+                        autoScroll:true,
                         bodyStyle:'padding:5px 5px 0',
                         width: 425,
                         url:self.initialConfig.modelUrl + '/' + formAction,
@@ -151,6 +152,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
 
         var store = new Ext.data.Store({
             autoLoad:true,
+            autoSave:false,
             restful: true,
             proxy: proxy,
             reader: reader,
@@ -166,6 +168,10 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         message = arguments[5];
 
                     Ext.Msg.alert("Error", message);
+                },
+                'remove':function(store, record, index ){
+                    record.commit();
+                    store.save();
                 }
             }
         });
@@ -197,9 +203,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                     if(Compass.ErpApp.Utility.isBlank(record.get('id'))){
                         record.set('id', 0);
                     }
-                    else{
-                        record.commit();
-                    }
+                    record.store.save();
                 }
             }
         });

@@ -5,12 +5,13 @@ class ActiveExt::Core
 
   #rails generated columns.  Do not remove these
   RAILS_COLUMNS = [:id, :created_at, :updated_at]
+  BETTER_NESTED_SET_COLUMNS = [:parent_id, :lft, :rgt]
 
   def initialize(model_id, options)
     @model_id = model_id.to_s.pluralize.singularize
     @options  = options
     
-    #get all attribute columns and reflect to get all relationships
+    #get all attribute columns
     attribute_names = self.model.columns.collect{ |c| c.name.to_sym }.sort_by { |c| c.to_s }
 
     #only include attribute columns we care about, do not remove rails generated columns
@@ -36,13 +37,16 @@ class ActiveExt::Core
 
     @columns = ActiveExt::DataStructures::Columns.new(self.model, attribute_names)
     
-    #exclude id columns and count columns
+    #exclude id columns and count columns and better nested set columns
     @columns.exclude(*@columns.find_all { |c| c.column and (c.column.primary or c.column.name =~ /(_id|_count)$/) }.collect {|c| c.name})
+    #exclude nested set columns
+    @columns.exclude(*@columns.find_all { |c| c.column and (BETTER_NESTED_SET_COLUMNS.include?(c.column.name.to_sym)) }.collect {|c| c.name})
+    #exclude associations columns
     @columns.exclude(*self.model.reflect_on_all_associations.collect{|a| :"#{a.name}_type" if a.options[:polymorphic]}.compact)
 
     set_column_options
   end
-  
+
   def model_id
     @model_id
   end

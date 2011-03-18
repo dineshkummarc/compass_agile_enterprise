@@ -13,10 +13,12 @@ module ActiveExt::ExtHelpers::DataHelper
   end
 
   def self.create_record(core, options={})
+    ignored_columns = %w{id created_at updated_at}
+
     klass = get_klass(core.model)
 
-    options[:data].delete_if{|k,v| k.to_sym == :id}
-    obj = klass.new
+    options[:data].delete_if{|k,v| k.blank? || ignored_columns.include?(k)}
+    obj = klass.create
     options[:data].each do |k,v|
       obj.send("#{k.to_s}=", v)
     end

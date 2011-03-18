@@ -19,7 +19,7 @@ module ActiveExt::ExtHelpers::TableBuilder
     
     #build ext columns
     core.columns.each do |column|
-      next if column.name.to_s =~ /(id|created_at|updated_at)$/
+      next if column.name.to_s =~ /(^id|created_at|updated_at)$/ || core.columns.exclude_column?(column.name)
       columns << ActiveExt::ExtHelpers::ColumnBuilder.build_column(column)
     end
     
@@ -35,9 +35,11 @@ module ActiveExt::ExtHelpers::TableBuilder
   def self.build_fields(core)
     fields = []
 
+    fields << {:name => 'id', :type => 'number'}
+
     #build ext fields
     core.columns.each do |column|
-      next if column.name.to_s =~ /(created_at|updated_at)$/
+      next if column.name.to_s =~ /(^created_at|updated_at)$/  || core.columns.exclude_column?(column.name)
       if column.association.nil?
         fields << {:name => column.name, :allowBlank => !column.options[:required]}
       end

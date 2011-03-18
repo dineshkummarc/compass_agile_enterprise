@@ -17,7 +17,7 @@ module ActiveExt::ExtHelpers::FormBuilder
 
       #build ext columns
       core.columns.each do |column|
-        next if column.name.to_s =~ /(id|created_at|updated_at)$/
+        next if column.name.to_s =~ /(^id|created_at|updated_at)$/  || core.columns.exclude_column?(column.name)
         next if column.sql_type.blank? || column.sql_type == NilClass
         fields << ActiveExt::ExtHelpers::FieldBuilder.build_field(column, get_value(core, model_id, column.name), display_only)
       end

@@ -14,6 +14,7 @@ class ActiveExt::DataStructures::Columns
   def initialize(active_record_class, *args)
     @active_record_class = active_record_class
     @_inheritable = []
+    @excluded_columns = []
     @set = []
 
     self.add *args
@@ -35,6 +36,7 @@ class ActiveExt::DataStructures::Columns
   def exclude(*args)
     # only remove columns from _inheritable. we never want to completely forget about a column.
     args.each { |a| @_inheritable.delete a }
+    @excluded_columns.concat(args)
   end
 
   # returns an array of columns with the provided names
@@ -52,5 +54,9 @@ class ActiveExt::DataStructures::Columns
 
   def each
     @set.each {|i| yield i }
+  end
+
+  def exclude_column?(name)
+    @excluded_columns.include?(name)
   end
 end
