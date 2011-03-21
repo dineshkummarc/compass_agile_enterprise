@@ -46,6 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   #control_panel
   map.connect '/erp_app/desktop/control_panel/application_management/:action/:id', :controller => 'erp_app/desktop/control_panel/application_management'
   map.connect '/erp_app/desktop/control_panel/desktop_management/:action', :controller => 'erp_app/desktop/control_panel/desktop_management'
+  map.connect '/erp_app/desktop/control_panel/profile_management/:action/' , :controller => 'erp_app/desktop/control_panel/profile_management'
 
   #file_manager
   map.connect '/erp_app/desktop/file_manager/:action', :controller => 'erp_app/desktop/file_manager/base'

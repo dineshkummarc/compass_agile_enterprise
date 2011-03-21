@@ -24,6 +24,9 @@ Compass.ErpApp.Desktop.Applications.ControlPanel = Ext.extend(Ext.app.Module, {
                 },
                 {
                     xtype:'controlpanel_applicationmanagementpanel'
+                },
+                {
+                    xtype:'controlpanel_profilemanagementpanel'
                 }]
             });
 

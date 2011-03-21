@@ -85,7 +85,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel = Ex
             layout:'card',
             region:'center',
             autoDestroy:true
-        })
+        });
 
         config = Ext.apply({
             title:'Applications',

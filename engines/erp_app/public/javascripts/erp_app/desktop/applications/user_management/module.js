@@ -18,7 +18,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement = Ext.extend(Ext.app.Module, 
             win = desktop.createWindow({
                 id: 'user_management',
                 title:'User Management',
-                width:1000,
+                width:1100,
                 height:550,
                 iconCls: 'icon-user',
                 shim:false,
@@ -70,10 +70,85 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
         });
     },
 
-    viewUser : function(record){
+    updatePassword : function(rec){
+        var self = this;
+        var updatePasswordWindow = new Ext.Window({
+            layout:'fit',
+            width:375,
+            title:'Update Password',
+            height:130,
+            plain: true,
+            buttonAlign:'center',
+            items: new Ext.FormPanel({
+                labelWidth: 110,
+                frame:false,
+                bodyStyle:'padding:5px 5px 0',
+                width: 425,
+                url: './user_management/users/update_user_password/' + rec.get("id"),
+                defaults: {
+                    width: 225
+                },
+                items: [
+                {
+                    xtype:'textfield',
+                    fieldLabel:'New Password',
+                    allowBlank:false,
+                    name:'password',
+                    inputType: 'password'
+                },
+                {
+                    xtype:'textfield',
+                    fieldLabel:'Confirm Password',
+                    allowBlank:false,
+                    name:'password_confirmation',
+                    inputType: 'password'
+                }
+                ]
+            }),
+            buttons: [{
+                text:'Submit',
+                listeners:{
+                    'click':function(button){
+                        var window = button.findParentByType('window');
+                        var formPanel = window.findByType('form')[0];
+                        self.setWindowStatus('Updating password ...');
+                        formPanel.getForm().submit({
+                            reset:true,
+                            success:function(form, action){
+                                self.clearWindowStatus();
+                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                if(!obj.success){
+                                    Ext.Msg.alert("Error", obj.msg);
+                                }
+                                updatePasswordWindow.close();
+                            },
+                            failure:function(form, action){
+                                self.clearWindowStatus();
+                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                if(Compass.ErpApp.Utility.isBlank(obj.message)){
+                                    Ext.Msg.alert("Error", 'Error updating password.');
+                                }
+                                else{
+                                    Ext.Msg.alert("Error", obj.message);
+                                }
+                            }
+                        });
+                    }
+                }
+            },{
+                text: 'Close',
+                handler: function(){
+                    updatePasswordWindow.close();
+                }
+            }]
+        });
+        updatePasswordWindow.show();
+    },
+
+    viewUser : function(rec){
         this.setWindowStatus('Loading User...');
-        var userId = record.get('id');
         var conn = new Ext.data.Connection();
+        var userId = rec.get('id');
         var self = this;
         conn.request({
             url: 'user_management/users/get_details/' + userId,
@@ -183,7 +258,6 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
             menuDisabled:true,
             resizable:false,
             xtype:'actioncolumn',
-            header:'View',
             align:'center',
             width:50,
             items:[{
@@ -201,7 +275,24 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
                 menuDisabled:true,
                 resizable:false,
                 xtype:'actioncolumn',
-                header:'Delete',
+                align:'center',
+                width:50,
+                items:[{
+                    icon:'/images/icons/edit/edit_16x16.png',
+                    tooltip:'Update Password',
+                    handler :function(grid, rowIndex, colIndex){
+                        var rec = grid.getStore().getAt(rowIndex);
+                        self.updatePassword(rec);
+                    }
+                }]
+            });
+        }
+
+        if(ErpApp.Authentication.RoleManager.hasRole('admin')){
+            columns.push({
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
                 align:'center',
                 width:50,
                 items:[{
@@ -349,7 +440,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.gr
         });
 
         config = Ext.apply({
-            width:410,
+            width:460,
             region:'west',
             store:users_store,
             loadMask:true,
