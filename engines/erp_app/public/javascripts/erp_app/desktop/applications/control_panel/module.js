@@ -3,7 +3,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel = Ext.extend(Ext.app.Module, {
     init : function(){
         this.launcher = {
             text: 'Control Panel',
-            iconCls:'icon-gear',
+            iconCls:'icon-control_panel',
             handler : this.createWindow,
             scope: this
         }
@@ -35,7 +35,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel = Ext.extend(Ext.app.Module, {
                 title:'Control Panel',
                 width:550,
                 height:550,
-                iconCls: 'icon-gear',
+                iconCls: 'icon-control_panel',
                 shim:false,
                 animCollapse:false,
                 constrainHeader:true,

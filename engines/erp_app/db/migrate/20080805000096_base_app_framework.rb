@@ -177,30 +177,30 @@ class BaseAppFramework < ActiveRecord::Migration
   end
 
   def self.down
-#    [
-#      :preferences,
-#      :preference_types,
-#      :preference_options,
-#      :preference_options_preference_types,
-#      :valid_preference_types,
-#      :user_preferences,
-#      :app_containers,
-#      :app_containers_applications,
-#      :desktops,
-#      :organizers,
-#      :applications_roles,
-#      :roles_widgets,
-#      :applications_widgets,
-#      :applications,
-#      :applications_desktops,
-#      :desktops,
-#      :widgets,
-#      :tree_menu_node_defs
-#    ].each do |tbl|
-#      if table_exists?(tbl)
-#        drop_table(tbl)
-#      end
-#    end
+    [
+      :preferences,
+      :preference_types,
+      :preference_options,
+      :preference_options_preference_types,
+      :valid_preference_types,
+      :user_preferences,
+      :app_containers,
+      :app_containers_applications,
+      :desktops,
+      :organizers,
+      :applications_roles,
+      :roles_widgets,
+      :applications_widgets,
+      :applications,
+      :applications_desktops,
+      :desktops,
+      :widgets,
+      :tree_menu_node_defs
+    ].each do |tbl|
+      if table_exists?(tbl)
+        drop_table(tbl)
+      end
+    end
   end
   
 end

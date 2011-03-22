@@ -273,6 +273,11 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/scroll/scroll_16x16.png', sizingMethod='crop');
 }
 
+.icon-control_panel {
+    background-image:url( /images/icons/control_panel/control_panel_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/control_panel/control_panel_16x16.png', sizingMethod='crop');
+}
+
 
 
 
