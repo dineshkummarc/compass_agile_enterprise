@@ -268,6 +268,12 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/palette/palette_16x16.png', sizingMethod='crop');
 }
 
+.icon-scroll {
+    background-image:url( /images/icons/scroll/scroll_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/scroll/scroll_16x16.png', sizingMethod='crop');
+}
+
+
 
 
 
