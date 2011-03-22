@@ -236,7 +236,7 @@ namespace :compass do
        
       if(args[:arg1]==":default")
         # TODO- Consider creating array of plugins dynamically
-        plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
+        plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit","rails_db_admin"]
         		 
         puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
         		 
