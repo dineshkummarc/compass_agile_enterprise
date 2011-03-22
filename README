@@ -31,17 +31,3 @@ compass:bootstrap:data -This rake task orchestrates the several additional tasks
      rails [myappname] -m ./compass_install.rb
           -OR-
      rails [myappname] -m http://[host]:[port]/[path_to_installer_file]/compass_install.rb
- 
- (Step 2) change to the newly created application directory
-  
-     cd [myappname]     
-         
- (Step 3) Run the desired compass profile install task (compass:install:[profile] where profile= core|all)
-     
-     rake compass:install:core
-     
- (Step 4) load bootstrap data using rake task
- 
-     rake compass:bootstrap:data
-     
- At this point the application created will be ready to run. Simply do
