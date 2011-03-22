@@ -75,6 +75,7 @@ puts "getting latest compass framwork plugins..."
 
 git :clone => 'git://github.com/portablemind/data_migrator.git "vendor/compass/plugins/data_migrator"'
 
+FileUtils.mkdir_p 'vendor/compass/plugins/data_migrator'
 inside('vendor/compass/plugins/data_migrator') do
   run 'git checkout'
 end
