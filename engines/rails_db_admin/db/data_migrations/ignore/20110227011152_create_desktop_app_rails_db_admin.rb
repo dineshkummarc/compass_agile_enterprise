@@ -2,7 +2,7 @@ class CreateDesktopAppRailsDbAdmin
   def self.up
     app = DesktopApplication.create(
       :description => 'RailsDbAdmin',
-      :icon => 'icon-rails-db-admin',
+      :icon => 'icon-rails_db_admin',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.RailsDbAdmin',
       :internal_identifier => 'rails_db_admin',
       :shortcut_id => 'rails_db_admin-win'
