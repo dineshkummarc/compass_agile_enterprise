@@ -66,20 +66,7 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                     Ext.get(this.iframeId).dom.contentDocument.location.reload(true);
                 }
             });
-//            tbarItems.push({
-//                iconCls:'icon-previous',
-//                scope:this,
-//                handler:function(button){
-//                    this.goBack();
-//                }
-//            });
-//            tbarItems.push({
-//                iconCls:'icon-next',
-//                scope:this,
-//                handler:function(button){
-//                    this.goForward();
-//                }
-//            });
+
             tbarItems.push("|");
             tbarItems.push({
                 iconCls:'icon-monitor',
@@ -89,15 +76,7 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                     this.gotToPage('/erp_app/organizer/');
                 }
             });
-            tbarItems.push({
-                iconCls:'icon-data',
-                text:'RailsDbAdmin',
-                scope:this,
-                handler:function(button){
-                    this.gotToPage('/rails_db_admin/base');
-                }
-            });
-
+           
             if(!Compass.ErpApp.Utility.isBlank(this.initialConfig.toolBarButtons)){
                 tbarItems = tbarItems.concat(this.initialConfig.toolBarButtons);
             }
