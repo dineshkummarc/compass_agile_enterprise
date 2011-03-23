@@ -324,6 +324,32 @@ class BaseErpServices < ActiveRecord::Migration
       end
     end
 
+    ## descriptive_assets
+    unless table_exists?(:descriptive_assets)
+      create_table :descriptive_assets do |t|
+        t.references :view_type
+        t.string     :internal_identifier
+        t.string     :description
+        t.string     :external_identifier
+        t.string     :external_id_source
+        t.references :described_record, :polymorphic => true
+
+        t.timestamps
+      end
+
+      add_index :descriptive_assets, :view_type_id
+      add_index :descriptive_assets, [:described_recored_id, :described_recored_type]
+    end
+
+    unless table_exists?(:view_types)
+      create_table :view_types do |t|
+        t.string     :internal_identifier
+        t.string     :description
+
+        t.timestamps
+      end
+    end
+
   end
 
   def self.down
@@ -333,7 +359,8 @@ class BaseErpServices < ActiveRecord::Migration
       :postal_addresses, :contact_purposes, :contact_types,
       :contacts, :individuals, :organizations, 
       :party_relationships, :relationship_types, :role_types, 
-      :party_roles, :parties, :categories, :category_classifications
+      :party_roles, :parties, :categories, :category_classifications,
+      :descriptive_assets, :view_types
     ].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
