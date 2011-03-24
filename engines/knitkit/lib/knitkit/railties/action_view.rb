@@ -4,7 +4,7 @@ ActionView::Base.class_eval do
     contents = @website_section.contents.select{|item| item.content_area == name.to_s}
     published_contents = []
     contents.each do |content|
-      content_version = Content.get_published_verison(@website, content)
+      content_version = Content.get_published_verison(@active_publication, content)
       published_contents << content_version unless content_version.nil?
     end
 

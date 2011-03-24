@@ -30,6 +30,11 @@ class BaseWorkEfforts < ActiveRecord::Migration
         t.integer :lft
         t.integer :rgt
       end
+
+      add_index :work_efforts, [:work_effort_record_id, :work_effort_record_type], :name => "work_effort_record_id_type"
+      add_index :work_efforts, [:facility_type, :facility_id], :name => "facility"
+      add_index :work_efforts, :work_effort_assignment_id
+      add_index :work_efforts, :finished_at
     end
 
     ## work_requirements
@@ -78,6 +83,9 @@ class BaseWorkEfforts < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :work_effort_statuses, :work_effort_status_type_id
+      add_index :work_effort_statuses, :work_effort_id
     end
 
     ## work_effort_status_types
@@ -90,6 +98,9 @@ class BaseWorkEfforts < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :work_effort_status_types, :internal_identifier
+      add_index :work_effort_status_types, :description
     end
 
     ## work_effort_assignments
@@ -108,6 +119,10 @@ class BaseWorkEfforts < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :work_effort_assignments, [:assigned_to_id, :assigned_to_type], :name => "assigned_to"
+      add_index :work_effort_assignments, :assigned_from
+      add_index :work_effort_assignments, :assigned_thru
     end
 
     ## valid_work_assignments
@@ -118,6 +133,7 @@ class BaseWorkEfforts < ActiveRecord::Migration
 
         t.timestamps
       end
+
     end
 
     ## valid_work_assignment_attributes
@@ -142,6 +158,11 @@ class BaseWorkEfforts < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :party_resource_availabilities, :from_date
+      add_index :party_resource_availabilities, :to_date
+      add_index :party_resource_availabilities, :pra_type_id
+      add_index :party_resource_availabilities, :party_id
     end
 
     unless table_exists?(:party_resource_availability_types)
@@ -151,6 +172,9 @@ class BaseWorkEfforts < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :party_resource_availability_types, :internal_identifier
+      add_index :party_resource_availability_types, :description
     end
 
     ## costs

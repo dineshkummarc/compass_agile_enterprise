@@ -147,8 +147,8 @@ class OrderTxn < ActiveRecord::Base
   end
 
   def set_shipping_info(party)
-    self.ship_to_first_name = party.first_name
-    self.ship_to_last_name = party.last_name
+    self.ship_to_first_name = arty.business_party.current_first_name
+    self.ship_to_last_name = arty.business_party.current_last_name
     shipping_address = party.shipping_address || party.primary_address
     unless shipping_address.nil?
       self.ship_to_address = shipping_address.address_line_1
@@ -164,16 +164,16 @@ class OrderTxn < ActiveRecord::Base
     self.email = party.primary_email_address.email_address unless party.primary_email_address.nil?
     self.phone_number = party.primary_phone_number.phone_number unless party.primary_phone_number.nil?
 
-    self.bill_to_first_name = party.first_name
-    self.bill_to_last_name = party.last_name
-    billing_address = party.shipping_address || party.primary_address
+    self.bill_to_first_name = party.business_party.current_first_name
+    self.bill_to_last_name = party.business_party.current_last_name
+    billing_address = party.billing_address || party.primary_address
     unless billing_address.nil?
       self.bill_to_address = billing_address.address_line_1
       self.bill_to_city = billing_address.city
       self.bill_to_state = billing_address.state
       self.bill_to_postal_code = billing_address.zip
-      self.bill_to_country_name = billing_address.country_name
-      self.bill_to_country = billing_address.country
+      #self.bill_to_country_name = billing_address.country_name
+      #self.bill_to_country = billing_address.country
     end
   end
 

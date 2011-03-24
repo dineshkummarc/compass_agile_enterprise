@@ -28,6 +28,9 @@ class BaseOrders < ActiveRecord::Migration
 		    t.column    :order_txn_record_type, :string
 		    t.timestamps
       end
+
+      add_index :order_txns, :order_txn_type_id
+      add_index :order_txns, [:order_txn_record_id, :order_txn_record_type]
     end
     
     unless table_exists?(:order_txn_types)
@@ -43,6 +46,8 @@ class BaseOrders < ActiveRecord::Migration
 		    t.column 	:external_id_source, 	:string
         t.timestamps
       end
+
+      add_index :order_txn_types, :parent_id
     end
     
 
@@ -63,6 +68,13 @@ class BaseOrders < ActiveRecord::Migration
         t.column    :product_offer_id,      	      :integer
         t.timestamps
       end
+
+      add_index :order_line_items, :order_txn_id
+      add_index :order_line_items, :order_line_item_type_id
+      add_index :order_line_items, :product_id
+      add_index :order_line_items, :product_instance_id
+      add_index :order_line_items, :product_type_id
+      add_index :order_line_items, :product_offer_id
     end
     
     unless table_exists?(:order_line_item_types)
@@ -78,6 +90,8 @@ class BaseOrders < ActiveRecord::Migration
 		    t.column 	:external_id_source, 	:string
         t.timestamps
       end
+
+      add_index :order_line_item_types, :parent_id
     end
     
     unless table_exists?(:order_line_item_pty_roles)
@@ -89,6 +103,11 @@ class BaseOrders < ActiveRecord::Migration
         t.column  :biz_txn_acct_root_id,      :integer 	#optional for splitting orders across accounts
         t.timestamps
       end
+
+      add_index :order_line_item_pty_roles, :order_line_item_id
+      add_index :order_line_item_pty_roles, :party_id
+      add_index :order_line_item_pty_roles, :line_item_role_type_id
+      add_index :order_line_item_pty_roles, :biz_txn_acct_root_id
     end
         
     unless table_exists?(:line_item_role_types)
@@ -104,12 +123,14 @@ class BaseOrders < ActiveRecord::Migration
 		    t.column 	:external_id_source, 	:string
       	t.timestamps
       end
+
+      add_index :line_item_role_types, :parent_id
     end
     
     unless table_exists?(:charge_lines)
       create_table :charge_lines do |t|
         t.string      :sti_type
-        t.references  :money_amount
+        t.references  :money
         t.string      :description     #could be expanded to include type information, etc.
         t.string      :external_identifier
         t.string      :external_id_source
@@ -118,7 +139,9 @@ class BaseOrders < ActiveRecord::Migration
         t.references :charged_item, :polymorphic => true
 
         t.timestamps
-      end  
+      end
+
+      add_index :charge_lines, [:charged_item_id, :charged_item_type]
     end
     
     unless table_exists?(:charge_line_payment_txns)
@@ -130,6 +153,9 @@ class BaseOrders < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :charge_line_payment_txns, [:payment_txn_id, :payment_txn_type]
+      add_index :charge_line_payment_txns, :charge_line_id
     end
   end
 

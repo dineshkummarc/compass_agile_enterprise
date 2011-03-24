@@ -16,6 +16,7 @@ class AddContactPurposes
       {:description => 'Fax', :internal_identifier => 'fax'},
       {:description => 'Mobile', :internal_identifier => 'mobile'},
       {:description => 'Emergency', :internal_identifier => 'emergency'},
+      {:description => 'Shipping', :internal_identifier => 'shipping'},
       {:description => 'Other', :internal_identifier => 'other'},
     ].each do |item|
       contact_purpose = ContactPurpose.find_by_internal_identifier(item[:internal_identifier])
@@ -39,6 +40,7 @@ class AddContactPurposes
       'fax',
       'mobile',
       'emergency',
+      'shipping',
       'other',
     ].each do |item|
       contact_purpose = ContactPurpose.find_by_internal_identifier(item)

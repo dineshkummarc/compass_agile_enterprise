@@ -1,9 +1,7 @@
 class ChargeLine < ActiveRecord::Base
   
-   #self.inheritance_column = "sti_type" 
-  
    belongs_to :charged_item, :polymorphic => true
-   belongs_to :money_amount, :dependent   => :destroy
+   belongs_to :money, :dependent => :destroy
    has_many   :charge_line_payment_txns, :dependent => :destroy
    
    def payment_txns
