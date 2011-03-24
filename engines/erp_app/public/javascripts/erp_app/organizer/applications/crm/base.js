@@ -616,7 +616,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     allowBlank: true
                 },
                 {
-                    dataIndex: 'city',
+                    name: 'city',
                     allowBlank: false
                 },
                 {

@@ -108,11 +108,13 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
         {
             header: 'Created',
             dataIndex: 'created_at',
+            renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
             width:200
         },
         {
             header: 'Last Update',
             dataIndex: 'updated_at',
+            renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
             width:200
         }
         ]);

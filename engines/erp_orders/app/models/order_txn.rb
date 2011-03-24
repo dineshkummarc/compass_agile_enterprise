@@ -147,16 +147,16 @@ class OrderTxn < ActiveRecord::Base
   end
 
   def set_shipping_info(party)
-    self.ship_to_first_name = arty.business_party.current_first_name
-    self.ship_to_last_name = arty.business_party.current_last_name
+    self.ship_to_first_name = party.business_party.current_first_name
+    self.ship_to_last_name = party.business_party.current_last_name
     shipping_address = party.shipping_address || party.primary_address
     unless shipping_address.nil?
       self.ship_to_address = shipping_address.address_line_1
       self.ship_to_city = shipping_address.city
       self.ship_to_state = shipping_address.state
       self.ship_to_postal_code = shipping_address.zip
-      self.ship_to_country_name = shipping_address.country_name
-      self.ship_to_country = shipping_address.country
+      #self.ship_to_country_name = shipping_address.country_name
+      #self.ship_to_country = shipping_address.country
     end
   end
 
