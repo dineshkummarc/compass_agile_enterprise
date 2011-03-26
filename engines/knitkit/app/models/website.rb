@@ -105,7 +105,7 @@ class Website < ActiveRecord::Base
 
     website_sections.each do |website_section|
       unless website_section.layout.blank?
-        File.open(File.join(sections_path,"#{website_section.title}.html.erb"), 'w+') {|f| f.write(website_section.layout) }
+        File.open(File.join(sections_path,"#{website_section.title}.rhtml"), 'w+') {|f| f.write(website_section.layout) }
       end
     end
 
@@ -201,7 +201,7 @@ class Website < ActiveRecord::Base
             article = Article.find_by_title(article_hash[:name])
             if article.nil?
               article = Article.new(:title => article_hash[:name])
-              article.html_content = entries.find{|entry| entry[:type] == 'articles' and entry[:name] == "#{article_hash[:name]}.html"}[:data]
+              article.body_html = entries.find{|entry| entry[:type] == 'articles' and entry[:name] == "#{article_hash[:name]}.html"}[:data]
             end
             section.contents << article
           end

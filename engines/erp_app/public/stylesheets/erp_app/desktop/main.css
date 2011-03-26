@@ -612,7 +612,7 @@ td.ux-taskButtons-edge {
 
 /* Desktop Shortcuts */
 #x-shortcuts dt {
-    float:left;
+    float:right;
     margin:15px 0 0 15px;
     clear:left;
     width:64px;

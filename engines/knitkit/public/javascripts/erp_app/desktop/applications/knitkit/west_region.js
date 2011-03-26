@@ -753,7 +753,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                 },
                 {
                     text:'Import Website',
-                    iconCls:'',
+                    iconCls:'icon-globe',
                     handler:function(btn){
                         var importWebsiteWindow = new Ext.Window({
                             layout:'fit',
