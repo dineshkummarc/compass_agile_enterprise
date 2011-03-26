@@ -1,13 +1,11 @@
 class ErpApp::Organizer::Crm::BaseController < ErpApp::Organizer::BaseController
   def menu
-    json_text = '['
+    menu = []
 
-    json_text += '{text:"Individuals", id:"individualsNode", leaf:true, iconCls:"icon-data", href:"javascript:void(\'\');Compass.Component.UserApp.Util.setActiveCenterItem(\'individuals_search_grid\');"},'
-    json_text += '{text:"Organizations", id:"organizationNode", leaf:true, iconCls:"icon-data", href:"javascript:void(\'\');Compass.Component.UserApp.Util.setActiveCenterItem(\'organizations_search_grid\');"},'
+    menu << {:text => 'Individuals', :id => 'individualsNode', :leaf => true, :iconCls => 'icon-user', :href => "javascript:void(\'\');Compass.Component.UserApp.Util.setActiveCenterItem(\'individuals_search_grid\');"}
+    menu << {:text => 'Organizations', :id => 'organizationNode', :leaf => true, :iconCls => 'icon-user', :href => "javascript:void(\'\');Compass.Component.UserApp.Util.setActiveCenterItem(\'organizations_search_grid\');"}
 
-    json_text += ']'
-
-    render :inline => json_text
+    render :inline => menu.to_json
   end
 
   def contact_purposes

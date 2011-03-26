@@ -111,7 +111,7 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
                 text: 'Delete',
                 iconCls: 'icon-delete',
                 handler: function(button) {
-                    var grid = button.findParentByType('partysearchgrid');
+                    var grid = button.findParentByType('partygrid');
                     var rec = grid.getSelectionModel().getSelected();
                     if (!rec) {
                         return false;

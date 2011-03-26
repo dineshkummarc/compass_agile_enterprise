@@ -155,7 +155,6 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
         config = Ext.apply({
             layout:'fit',
             frame: false,
-            autoScroll:true,
             region:'center',
             loadMask:true,
             plugins:[editor],

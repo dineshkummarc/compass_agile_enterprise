@@ -9,7 +9,6 @@ Compass.ErpApp.Organizer.Applications.Crm.Layout = Ext.extend(Ext.Panel, (functi
             var southPanel = new Ext.Panel({
                 layout:'fit',
                 region:'south',
-                autoScroll:true,
                 height:300,
                 collapsible:true,
                 border:false,
@@ -303,7 +302,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         xtype:'defaultmenutree',
         title:'CRM',
         menuRootIconCls:'icon-content',
-        rootNodeTitle:'Contacts',
+        rootNodeTitle:'Customers',
         treeConfig:{
             loader:{
                 dataUrl:'./crm/menu'
@@ -459,6 +458,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     editor: {
                         xtype:'textfield'
                     },
+                    allowBlank: false,
                     width:200
                 },
                 {
@@ -475,6 +475,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     editor: {
                         xtype:'textfield'
                     },
+                    allowBlank: false,
                     width:200
                 },
                 {
@@ -483,6 +484,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     editor: {
                         xtype:'textfield'
                     },
+                    allowBlank: false,
                     width:200
                 }
                 ,
@@ -492,6 +494,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     editor: {
                         xtype:'textfield'
                     },
+                    allowBlank: false,
                     width:200
                 }
                 ,
@@ -501,33 +504,28 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     editor: {
                         xtype:'textfield'
                     },
+                    allowBlank: false,
                     width:200
                 }
                 ],
                 fields:[
                 {
-                    name: 'address_line_1',
-                    allowBlank: false
+                    name: 'address_line_1'
                 },
                 {
-                    name: 'address_line_2',
-                    allowBlank: true
+                    name: 'address_line_2'
                 },
                 {
-                    dataIndex: 'city',
-                    allowBlank: false
+                    name: 'city'
                 },
                 {
-                    name: 'state',
-                    allowBlank: false
+                    name: 'state'
                 },
                 {
-                    name: 'zip',
-                    allowBlank: false
+                    name: 'zip'
                 },
                 {
-                    name: 'country',
-                    allowBlank: false
+                    name: 'country'
                 }
                 ],
                 contactPurposeStore:contactPurposeStore
