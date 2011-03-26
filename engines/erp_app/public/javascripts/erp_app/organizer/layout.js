@@ -76,7 +76,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
         "->",
         {
             xtype:'tbitem',
-            html:"<img style='height:32px !important; margin-top:-8px !important;' src='/shared/images/compass-footer-logo-beveled-1.png' />"
+            html:"<img style='height:35px !important; margin-top:-8px !important;' src='/images/erp_app/organizer/compass-footer-logo-rounded.png' />"
         }
         ]
     });

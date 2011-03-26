@@ -97,7 +97,7 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
             tbarItems = tbarItems.concat(config['tbarItems']);
         }
 
-        if(Compass.ErpApp.Utility.isBlank(config['disableToolbar'])){
+        if(Compass.ErpApp.Utility.isBlank(config['disableToolbar']) || !config['disableToolbar']){
            config['tbar'] = tbarItems
         }
 

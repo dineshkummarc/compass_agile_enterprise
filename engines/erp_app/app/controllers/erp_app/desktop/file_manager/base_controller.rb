@@ -82,7 +82,7 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
       json_str = "{success:false, error:'File does not exists'}"
     else
       name = File.basename(path)
-      File.delete(path)
+      FileUtils.rm_rf(path)
       json_str = "{success:true, error:'#{name} was deleted successfully'}"
     end
 

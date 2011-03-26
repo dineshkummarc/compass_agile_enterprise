@@ -3,6 +3,14 @@ Ext.ns("Compass.ErpApp.Desktop.Applications");
 Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
     id:'file_manager-win',
 
+    setWindowStatus : function(status){
+        this.win.setStatus(status);
+    },
+    
+    clearWindowStatus : function(){
+        this.win.clearStatus();
+    },
+
     init : function(){
         this.launcher = {
             text: 'File Manager',
@@ -12,6 +20,7 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
         }
     },
     createWindow : function(){
+        var self = this;
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('file_manager');
         if(!win){
@@ -46,10 +55,34 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
                         var fileType = path.split('.').pop();
                         contentCardPanel.removeAll(true);
                         contentCardPanel.add({
-                            disableToolbar:true,
+                            disableToolbar:!ErpApp.Authentication.RoleManager.hasRole('admin'),
                             xtype:'codemirror',
                             parser:fileType,
-                            sourceCode:content
+                            sourceCode:content,
+                            listeners:{
+                                'save':function(codeMirror, content){
+                                    self.setWindowStatus('Saving...');
+                                    var conn = new Ext.data.Connection();
+                                    conn.request({
+                                        url: './file_manager/base/update_file',
+                                        method: 'POST',
+                                        params:{
+                                            node:path,
+                                            content:content
+                                        },
+                                        success: function(response) {
+                                            var obj =  Ext.util.JSON.decode(response.responseText);
+                                            if(obj.success){
+                                                self.clearWindowStatus();
+                                            }
+                                        },
+                                        failure: function(response) {
+                                            self.clearWindowStatus();
+                                            Ext.Msg.alert('Error', 'Error saving content');
+                                        }
+                                    });
+                                }
+                            }
                         });
                         contentCardPanel.getLayout().setActiveItem(0);
                     }
@@ -76,6 +109,8 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
                     }
                 }
             });
+
+            this.win = win;
         }
         win.show();
         fileTreePanel.root.expand();
