@@ -85,7 +85,7 @@ class Website < ActiveRecord::Base
       }
 
       website_section.contents.each do |content|
-        section_hash[:articles] << {:name => content.title}
+        section_hash[:articles] << {:name => content.title, :content_area => content.content_area}
       end
 
       setup_hash[:sections] << section_hash
@@ -165,9 +165,10 @@ class Website < ActiveRecord::Base
             data = StringIO.new(data) if data.present?
             setup_hash = YAML.load(data)
           else
-            name = entry.name.sub(/__MACOSX\//, '')
-            type = name.split('/')[(name.split('/').count - 2)]
-            name = name.split('/').last
+            #ignore macs metadata
+            next if entry.name =~/._|__MACOSX\//
+            type =  entry.name.split('/')[(entry.name.split('/').count - 2)]
+            name = entry.name.split('/').last
             next if name.nil?
             name = name.sub(/._/, '')
             data = ''
@@ -200,7 +201,7 @@ class Website < ActiveRecord::Base
           section_hash[:articles].each do |article_hash|
             article = Article.find_by_title(article_hash[:name])
             if article.nil?
-              article = Article.new(:title => article_hash[:name])
+              article = Article.new(:title => article_hash[:name], :content_area => article_hash[:content_area])
               article.body_html = entries.find{|entry| entry[:type] == 'articles' and entry[:name] == "#{article_hash[:name]}.html"}[:data]
             end
             section.contents << article
