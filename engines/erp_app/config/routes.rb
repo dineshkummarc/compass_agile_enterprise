@@ -10,8 +10,6 @@ ActionController::Routing::Routes.draw do |map|
   #############################
   map.organizer_login '/erp_app/organizer/login', :controller => 'erp_app/organizer/login', :action => 'index'
   map.connect '/erp_app/organizer', :controller => 'erp_app/organizer/base', :action => 'index'
-  
-  #Organizer Applications
 
   #admin_center
   map.connect '/erp_app/organizer/admin_center/:action', :controller => 'erp_app/organizer/admin_center/base'

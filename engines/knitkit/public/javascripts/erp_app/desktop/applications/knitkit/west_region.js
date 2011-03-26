@@ -9,56 +9,81 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
 
     deleteSection : function(id){
         var self = this;
-        self.setWindowStatus('Deleting Section...');
-        var conn = new Ext.data.Connection();
-        conn.request({
-            url: './knitkit/section/delete',
-            method: 'POST',
-            params:{
-                id:id
-            },
-            success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
-                if(obj.success){
-                    self.clearWindowStatus();
-                    self.sitesTree.getRootNode().reload();
-                }
-                else{
-                    Ext.Msg.alert('Error', 'Error deleting section');
-                    self.clearWindowStatus();
-                }
-            },
-            failure: function(response) {
-                self.clearWindowStatus();
-                Ext.Msg.alert('Error', 'Error deleting section');
+        Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this section?', function(btn){
+            if(btn == 'no'){
+                return false;
+            }
+            else
+            if(btn == 'yes')
+            {
+                self.setWindowStatus('Deleting Section...');
+                var conn = new Ext.data.Connection();
+                conn.request({
+                    url: './knitkit/section/delete',
+                    method: 'POST',
+                    params:{
+                        id:id
+                    },
+                    success: function(response) {
+                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        if(obj.success){
+                            self.clearWindowStatus();
+                            self.sitesTree.getRootNode().reload();
+                        }
+                        else{
+                            Ext.Msg.alert('Error', 'Error deleting section');
+                            self.clearWindowStatus();
+                        }
+                    },
+                    failure: function(response) {
+                        self.clearWindowStatus();
+                        Ext.Msg.alert('Error', 'Error deleting section');
+                    }
+                });
             }
         });
     },
 
+    exportSite : function(id){
+        var self = this;
+        self.setWindowStatus('Exporting theme...');
+        window.open('/erp_app/desktop/knitkit/website/export?id='+id,'mywindow','width=400,height=200');
+        self.clearWindowStatus();
+    },
+
     deleteSite : function(id){
         var self = this;
-        self.setWindowStatus('Deleting site...');
-        var conn = new Ext.data.Connection();
-        conn.request({
-            url: './knitkit/site/delete',
-            method: 'POST',
-            params:{
-                id:id
-            },
-            success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
-                if(obj.success){
-                    self.clearWindowStatus();
-                    self.sitesTree.getRootNode().reload();
-                }
-                else{
-                    Ext.Msg.alert('Error', 'Error deleting site');
-                    self.clearWindowStatus();
-                }
-            },
-            failure: function(response) {
-                self.clearWindowStatus();
-                Ext.Msg.alert('Error', 'Error deleting site');
+        Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this website?', function(btn){
+            if(btn == 'no'){
+                return false;
+            }
+            else
+            if(btn == 'yes')
+            {
+                self.setWindowStatus('Deleting site...');
+                var conn = new Ext.data.Connection();
+                conn.request({
+                    url: './knitkit/site/delete',
+                    method: 'POST',
+                    params:{
+                        id:id
+                    },
+                    success: function(response) {
+                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        if(obj.success){
+                            self.clearWindowStatus();
+                            self.sitesTree.getRootNode().reload();
+                        }
+                        else{
+                            Ext.Msg.alert('Error', 'Error deleting site');
+                            self.clearWindowStatus();
+                        }
+                    },
+                    failure: function(response) {
+                        self.clearWindowStatus();
+                        Ext.Msg.alert('Error', 'Error deleting site');
+                    }
+                });
             }
         });
     },
@@ -553,6 +578,16 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 }
                             }
                         });
+
+                        items.push({
+                            text:'Export',
+                            iconCls:'icon-document_out',
+                            listeners:{
+                                'click':function(){
+                                    self.exportSite(node.id.split('_')[1]);
+                                }
+                            }
+                        });
                     }
 
                     var contextMenu = new Ext.menu.Menu({
@@ -580,7 +615,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             tbar:{
                 items:[
                 {
-                    text:'New Site',
+                    text:'New Website',
                     iconCls:'icon-add',
                     handler:function(btn){
                         var addWebsiteWindow = new Ext.Window({
@@ -714,6 +749,79 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             }]
                         });
                         addWebsiteWindow.show();
+                    }
+                },
+                {
+                    text:'Import Website',
+                    iconCls:'',
+                    handler:function(btn){
+                        var importWebsiteWindow = new Ext.Window({
+                            layout:'fit',
+                            width:375,
+                            title:'Import Website',
+                            height:100,
+                            plain: true,
+                            buttonAlign:'center',
+                            items: new Ext.FormPanel({
+                                labelWidth: 110,
+                                frame:false,
+                                fileUpload: true,
+                                bodyStyle:'padding:5px 5px 0',
+                                url:'./knitkit/site/import',
+                                defaults: {
+                                    width: 225
+                                },
+                                items: [
+                                {
+                                    xtype:'fileuploadfield',
+                                    fieldLabel:'Upload Website',
+                                    buttonText:'Upload',
+                                    buttonOnly:false,
+                                    allowBlank:false,
+                                    name:'website_data'
+                                }
+                                ]
+                            }),
+                            buttons: [{
+                                text:'Submit',
+                                listeners:{
+                                    'click':function(button){
+                                        var window = button.findParentByType('window');
+                                        var formPanel = window.findByType('form')[0];
+                                        self.setWindowStatus('Importing website...');
+                                        formPanel.getForm().submit({
+                                            success:function(form, action){
+                                                self.clearWindowStatus();
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                if(obj.success){
+                                                    self.sitesTree.getRootNode().reload();
+                                                    importWebsiteWindow.close();
+                                                }
+                                                else{
+                                                    Ext.Msg.alert("Error", obj.message);
+                                                }
+                                            },
+                                            failure:function(form, action){
+                                                self.clearWindowStatus();
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                if(obj != null){
+                                                    Ext.Msg.alert("Error", obj.message);
+                                                }
+                                                else{
+                                                    Ext.Msg.alert("Error", "Error importing website");
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            },{
+                                text: 'Close',
+                                handler: function(){
+                                    importWebsiteWindow.close();
+                                }
+                            }]
+                        });
+                        importWebsiteWindow.show();
                     }
                 }
                 ]

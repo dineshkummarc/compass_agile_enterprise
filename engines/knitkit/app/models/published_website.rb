@@ -18,8 +18,18 @@ class PublishedWebsite < ActiveRecord::Base
     new_publication = clone_publication(1, comment)
     elements = []
 
+    #get a publish sections
     website_sections = new_publication.website.website_sections
     website_sections.each do |website_section|
+      if new_publication.published_elements.find(:first,
+          :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', website_section.id, website_section.class.to_s, website_section.class.superclass.to_s]).nil?
+        published_element = PublishedElement.new
+        published_element.published_website = new_publication
+        published_element.published_element_record = website_section
+        published_element.version = website_section.version
+        published_element.save
+      end
+
       elements = elements | website_section.contents
     end
 

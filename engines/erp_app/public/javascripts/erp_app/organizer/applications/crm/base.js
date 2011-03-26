@@ -40,14 +40,14 @@ Compass.ErpApp.Organizer.Applications.Crm.Layout = Ext.extend(Ext.Panel, (functi
         /**
          * set the private member partyId
          * @param {Integer} partyId id to set member partyId to
-        */
+         */
         setPartyId : function(partyId){
             this.partyId = partyId;
         },
 
         /**
          * load emails for member partyId
-        */
+         */
         loadContactMechanisms : function(){
             if(this.partyId == null){
                 Ext.Msg.alert('Error', 'Member partyId not set');
@@ -305,8 +305,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         menuRootIconCls:'icon-content',
         rootNodeTitle:'Contacts',
         treeConfig:{
-            loader:{dataUrl:'./crm/menu'},
-			listeners:{
+            loader:{
+                dataUrl:'./crm/menu'
+            },
+            listeners:{
                 scope:this,
                 'contextmenu':function(node, e){
                     if(node.isLeaf()){
@@ -353,16 +355,17 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         id:'individualSearchGrid',
         xtype:'partygrid',
         partyType:'Individual',
+        selModel:new Ext.grid.RowSelectionModel({
+            listeners:{
+                'rowselect':function(selModel, rowIndex, record){
+                    var id = record.get("id");
+                    var contactsLayoutPanel = selModel.grid.findParentByType('contactslayout');
+                    contactsLayoutPanel.setPartyId(id);
+                    contactsLayoutPanel.loadContactMechanisms();
+                }
+            }
+        }),
         listeners:{
-            'rowclick':function(grid, rowIndex, e){
-                var store = grid.getStore();
-                var record = store.getAt(rowIndex);
-                var id = record.get("id");
-                var contactsLayoutPanel = grid.findParentByType('contactslayout');
-                contactsLayoutPanel.setPartyId(id);
-                contactsLayoutPanel.loadContactMechanisms();
-
-            },
             'addpartybtnclick':function(btn, grid){
                 addIndividualWindow.show();
             }
@@ -373,15 +376,17 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         id:'organizationSearchGrid',
         xtype:'partygrid',
         partyType:'Organization',
+        selModel:new Ext.grid.RowSelectionModel({
+            listeners:{
+                'rowselect':function(selModel, rowIndex, record){
+                    var id = record.get("id");
+                    var contactsLayoutPanel = selModel.grid.findParentByType('contactslayout');
+                    contactsLayoutPanel.setPartyId(id);
+                    contactsLayoutPanel.loadContactMechanisms();
+                }
+            }
+        }),
         listeners:{
-            'rowclick':function(grid, rowIndex, e){
-                var store = grid.getStore();
-                var record = store.getAt(rowIndex);
-                var id = record.get("id");
-                var contactsLayoutPanel = grid.findParentByType('contactslayout');
-                contactsLayoutPanel.setPartyId(id);
-                contactsLayoutPanel.loadContactMechanisms();
-            },
             'addpartybtnclick':function(btn, grid){
                 addOrganizationWindow.show();
             }
@@ -407,7 +412,9 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 {
                     header: 'Email Address',
                     dataIndex: 'email_address',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ],
@@ -428,7 +435,9 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     header: 'Phone Number',
                     dataIndex: 'phone_number',
                     width:200,
-                    editor: {xtype:'textfield'}
+                    editor: {
+                        xtype:'textfield'
+                    }
                 }
                 ],
                 fields:[
@@ -447,39 +456,51 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 {
                     header: 'Address Line 1',
                     dataIndex: 'address_line_1',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 },
                 {
                     header: 'Address Line 2',
                     dataIndex: 'address_line_2',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 },
                 {
                     header: 'City',
                     dataIndex: 'city',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 },
                 {
                     header: 'State',
                     dataIndex: 'state',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ,
                 {
                     header: 'Zip',
                     dataIndex: 'zip',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ,
                 {
                     header: 'Country',
                     dataIndex: 'country',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ],
@@ -530,7 +551,9 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 {
                     header: 'Email Address',
                     dataIndex: 'email_address',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ],
@@ -550,7 +573,9 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 {
                     header: 'Phone Number',
                     dataIndex: 'phone_number',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ],
@@ -570,39 +595,51 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 {
                     header: 'Address Line 1',
                     dataIndex: 'address_line_1',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 },
                 {
                     header: 'Address Line 2',
                     dataIndex: 'address_line_2',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 },
                 {
                     header: 'City',
                     dataIndex: 'city',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 },
                 {
                     header: 'State',
                     dataIndex: 'state',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ,
                 {
                     header: 'Zip',
                     dataIndex: 'zip',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ,
                 {
                     header: 'Country',
                     dataIndex: 'country',
-                    editor: {xtype:'textfield'},
+                    editor: {
+                        xtype:'textfield'
+                    },
                     width:200
                 }
                 ],

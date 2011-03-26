@@ -17,11 +17,6 @@ Compass.ErpApp.Login.Window = Ext.extend(Ext.Window, {
         });
     },
 
-	onShow: function (){
-		Compass.ErpApp.Login.Window.superclass.onShow.call(this, arguments);
-		this.findByType('form')[0].getForm().findField('login').focus(false, true);
-	},
-
     constructor : function(config) {
         var self = this;
         var appName = config['applicationName'] || ''
@@ -30,6 +25,7 @@ Compass.ErpApp.Login.Window = Ext.extend(Ext.Window, {
             width:350,
             title:appName + ' Login',
             height:150,
+            defaultButton:'login',
             closable:false,
             buttonAlign:'center',
             plain: true,
@@ -46,6 +42,7 @@ Compass.ErpApp.Login.Window = Ext.extend(Ext.Window, {
                     xtype:'textfield',
                     fieldLabel:'Username',
                     allowBlank:false,
+                    id:'login',
                     name:'login'
                 },
                 {
@@ -79,7 +76,7 @@ Compass.ErpApp.Login.Window = Ext.extend(Ext.Window, {
                 text:'Submit',
                 listeners:{
                     'click':function(button){
-                       self.submitForm();
+                        self.submitForm();
                     }
                 }
             }]

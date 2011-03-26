@@ -26,7 +26,7 @@ class OrderTxn < ActiveRecord::Base
     end
     # loop through all of the charges and combine charges for each money type
     all_charges.each do |charge|
-      cur_money = charge.money_amount
+      cur_money = charge.money
       cur_total = total_hash[cur_money.currency.internal_identifier]
       if (cur_total.nil?)
         cur_total = cur_money.clone

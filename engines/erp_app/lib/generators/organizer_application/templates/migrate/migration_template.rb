@@ -3,7 +3,7 @@ class CreateOrganizerApp<%=class_name %>
     OrganizerApplication.create(
       :description => '<%=description %>',
       :icon => '<%=icon %>',
-      :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.<%=class_name %>',
+      :javascript_class_name => 'Compass.ErpApp.Organizer.Applications.<%=class_name %>.Base',
       :internal_identifier => '<%=file_name %>'
     )
   end

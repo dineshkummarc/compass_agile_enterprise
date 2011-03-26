@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::BaseController
   IGNORED_PARAMS = %w{action controller id}
 
-  before_filter :set_website, :only => [:website_publications, :set_viewing_version, :activate_publication, :publish, :update, :delete]
+  before_filter :set_website, :only => [:export, :website_publications, :set_viewing_version, :activate_publication, :publish, :update, :delete]
   
   def index
     Website.include_root_in_json = false
@@ -99,6 +99,21 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     @website.destroy
 
     render :inline => {:success => true}.to_json
+  end
+
+  def export
+    zip_path = @website.export
+    send_file(zip_path.to_s, :stream => false) rescue raise "Error sending #{zip_path} file"
+  ensure
+    FileUtils.rm_r File.dirname(zip_path) rescue nil
+  end
+
+  def import
+    result, message = Website.import(params[:website_data])
+
+    render :inline => {:success => result, :message => message}.to_json
+  ensure
+    FileUtils.rm_r File.dirname(zip_path) rescue nil
   end
 
   private
