@@ -46,7 +46,7 @@ class BaseAppFramework < ActiveRecord::Migration
     end
 
     unless table_exists?(:valid_preference_types)
-      create_table :valid_preference_types, {:id => false} do |t|
+      create_table :valid_preference_types do |t|
         t.references :preference_type
         t.references :preferenced_record, :polymorphic => true
       end
