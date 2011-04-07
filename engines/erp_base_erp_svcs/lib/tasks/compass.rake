@@ -213,174 +213,12 @@ namespace :compass do
   end
   
   # tasks for seeding the initial install
-  
   namespace :bootstrap do
  
-    desc "execute the bootstrap data migrations"
-    task :data  do |t, args|
-      puts "Create Bootstrap Data\n\n"
-      puts "Copy ignored data migrations..."
-      Rake::Task["compass:bootstrap:copy_ignored_data_migrations"].invoke (":default")
-      puts "Run Data Migrations..."
-      Rake::Task["db:migrate_data"].invoke
-      puts "Delete Data Migrations..."
-      Rake::Task["compass:bootstrap:delete_data_migrations"].invoke (":default")
+    desc "execute the bootstrap data"
+    task :data => :environment   do |t, args|
+      ErpApp::Setup::Data.run_setup
     end #task :data
- 
-    desc "move data migrations from ignore directory to its parent"
-    # This task will allow you to move up to five plugin data_migration ignore files
-    task :copy_ignored_data_migrations, :arg1, :arg2, :arg3 ,:arg4, :arg5  do |t, args|
-     		
-      #TODO- Can Rake take variable argument list without pre-defining argument symbols
-      
-       
-      if(args[:arg1]==":default")
-        # TODO- Consider creating array of plugins dynamically
-        plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit","rails_db_admin"]
-        		 
-        puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
-        		 
-      else
-        plugins =Array.new
-        if (args[:arg1]!=nil)
-          plugins<<args[:arg1]
-        end
-        if (args[:arg2]!=nil)
-          plugins<<args[:arg2]
-        end
-        if (args[:arg3]!=nil)
-          plugins<<args[:arg3]
-        end
-        if (args[:arg4]!=nil)
-          plugins<<args[:arg4]
-        end
-        if (args[:arg5]!=nil)
-          plugins<<args[:arg5]
-        end
-      end
-      		
-      # if no plugins were supplied use the defaults
-      if(plugins.length==0)
-        puts "\nNo plugins arguments supplied.\n\nYou can supply up to five plugins\n\nRAKE TASK ARGUMENT FORM:\n\n"
-        puts "rake db:move_ignored_data_migrations[:default]- moves DEFAULT plugin data migrations"
-        puts "rake db:move_ignored_data_migrations[erp_app,erp_tech_services]- moves plugin for erp_app and erp_tech_services"
-        puts "\n\n EXITING RAKE TASK."
-        exit 1
-      end # plugin.length=0
-     
-      puts "Moving data migrations from 'ignore' directory to parent\n\n"
-       
-      
-      # loop over the plugins and check if the plugin exists
-      for idx in 0...plugins.length
-      
-        if(plugins[idx]!=nil)
-          puts "Processing [#{plugins[idx]}] plugin\n"
-          if(File.exists?("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore"))
-        
-            data_migrations=Dir.entries("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore")
-            moved_file_counter=0;
-          
-            for idx2 in 0...data_migrations.length
-              data_migration_filename= data_migrations[idx2]
-              if(data_migration_filename.starts_with?("."))
-                ## skip
-              else
-                #copy the data migration from the ignore file to it's parent
-                puts "\n\nMoving #{data_migration_filename} TO ./vendor/plugins/#{plugins[idx]}/db/data_migrations"
-                FileUtils.copy("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}",
-                  "./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}")
-                moved_file_counter=moved_file_counter+1
-                # delete the original
-                ## puts "Deleting ./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}"
-                ## File.delete("./vendor/plugins/#{plugins[idx]}/db/data_migrations/ignore/#{data_migration_filename}")
-					      	                         
-              end
-      	    
-            end
-            puts "Copied (#{moved_file_counter}) data migrations\n\n"
-      	  
-          else
-            puts "./vendor/plugins/"+plugins[idx]+"/db/data_migrations/ignore DIRECTORY IS EMPTY"
-          end
-        end
-      end # plugin loop
-      
-		end# task :copy_ignored_data_migrations
-		
-		desc "delete data migrations from directory to its parent"
-    # This task deletes the data migrations in the specified plugins
-    task :delete_data_migrations, :arg1, :arg2, :arg3 ,:arg4, :arg5  do |t, args|
-     		
-      #TODO- Can Rake take variable argument list without pre-defining argument symbols
-      
-       
-      if(args[:arg1]==":default")
-        # TODO- Consider creating array of plugins dynamically
-        plugins=["erp_app","erp_base_erp_svcs","erp_tech_services","knitkit"]
-        		 
-        puts "USING DEFAULT PLUGIN SET: #{plugins.join ', '}"
-        		 
-      else
-        plugins =Array.new
-        if (args[:arg1]!=nil)
-          plugins<<args[:arg1]
-        end
-        if (args[:arg2]!=nil)
-          plugins<<args[:arg2]
-        end
-        if (args[:arg3]!=nil)
-          plugins<<args[:arg3]
-        end
-        if (args[:arg4]!=nil)
-          plugins<<args[:arg4]
-        end
-        if (args[:arg5]!=nil)
-          plugins<<args[:arg5]
-        end
-      end
-      		
-      # if no plugins were supplied use the defaults
-      if(plugins.length==0)
-        puts "\nNo plugins arguments supplied.\n\nYou can supply up to five plugins\n\nRAKE TASK ARGUMENT FORM:\n\n"
-        puts "rake db:move_ignored_data_migrations[:default]- moves DEFAULT plugin data migrations"
-        puts "rake db:move_ignored_data_migrations[erp_app,erp_tech_services]- moves plugin for erp_app and erp_tech_services"
-        puts "\n\n EXITING RAKE TASK."
-        exit 1
-      end # plugin.length=0
-     
-      puts "Deleting data migrations \n\n"
-       
-      
-      # loop over the plugins and check if the plugin exists
-      for idx in 0...plugins.length
-      
-        if(plugins[idx]!=nil)
-          puts "Processing [#{plugins[idx]}] plugin\n"
-        			 
-          data_migrations=Dir.entries("./vendor/plugins/#{plugins[idx]}/db/data_migrations")
-          deleted_file_counter=0;
-          
-          for idx2 in 0...data_migrations.length
-            data_migration_filename= data_migrations[idx2]
-            if(data_migration_filename.ends_with?(".rb"))
-      	     				 
-  	      						
-              deleted_file_counter=deleted_file_counter+1
-              # delete the original
-              puts "Deleting ./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}"
-              File.delete("./vendor/plugins/#{plugins[idx]}/db/data_migrations/#{data_migration_filename}")
-					      	                         
-            end
-      	    
-          end
-          puts "deleted (#{deleted_file_counter}) data migrations\n\n"
-      	  
-			      	 
-        end
-      end # plugin loop
-      
-		end# task :delete_ignored_data_migrations
 	end # bootstrap namespace
 end
 
@@ -389,7 +227,6 @@ Rake::Task["db:migrate"].clear_actions
 
 namespace :db do
   task :migrate do
-  	#puts "\n\ninvoking db:migrate..."
   	Rake::Task["db:migrate:prepare_migrations"].reenable
     Rake::Task["db:migrate:prepare_migrations"].invoke
     
@@ -398,7 +235,6 @@ namespace :db do
     
     Rake::Task["db:migrate:cleanup_migrations"].reenable
     Rake::Task["db:migrate:cleanup_migrations"].invoke
-    #puts "completed db:migrate\n\n"
   end
 
   namespace :migrate do
@@ -415,7 +251,6 @@ namespace :db do
     task :prepare_migrations do
       
       target = "#{Rails.root}/db/migrate/"
-      #puts "\n\npreparing migrations in: #{target}}\n"
       # first copy all app migrations away
       files = Dir["#{target}*.rb"]
 

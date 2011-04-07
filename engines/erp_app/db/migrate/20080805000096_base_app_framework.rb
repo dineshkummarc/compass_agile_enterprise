@@ -37,12 +37,13 @@ class BaseAppFramework < ActiveRecord::Migration
     unless table_exists?(:preference_options_preference_types)
       create_table :preference_options_preference_types, {:id => false} do |t|
         t.references :preference_type
-        t.references :preference_option
+        t.references :preference_option,
 
         t.timestamps
       end
 
-      add_index :preference_options_preference_types, [:preference_type_id, :preference_option_id]
+      add_index :preference_options_preference_types, :preference_type_id
+      add_index :preference_options_preference_types, :preference_option_id
     end
 
     unless table_exists?(:valid_preference_types)
@@ -113,7 +114,8 @@ class BaseAppFramework < ActiveRecord::Migration
 
         t.timestamps
       end
-      add_index :applications_roles, [:application_id, :role_id]
+      add_index :applications_roles, :application_id
+      add_index :applications_roles, :role_id
     end
 
     unless table_exists?(:app_containers_applications)
@@ -124,7 +126,8 @@ class BaseAppFramework < ActiveRecord::Migration
         t.timestamps
       end
 
-      add_index :app_containers_applications, [:application_id, :app_container_id]
+      add_index :app_containers_applications, :application_id
+      add_index :app_containers_applications, :app_container_id
     end
 
     unless table_exists?(:widgets)
@@ -145,7 +148,8 @@ class BaseAppFramework < ActiveRecord::Migration
 
         t.timestamps
       end
-      add_index :applications_widgets, [:application_id, :widget_id]
+      add_index :applications_widgets, :application_id
+      add_index :applications_widgets, :widget_id
     end
 
     unless table_exists?(:roles_widgets)

@@ -1,4 +1,6 @@
+
 ActionController::Routing::Routes.draw do |map|
+  
   ##########################
   #ErpApp general routes
   ##########################
@@ -24,6 +26,12 @@ ActionController::Routing::Routes.draw do |map|
   map.desktop_login '/erp_app/desktop/login', :controller => 'erp_app/desktop/login', :action => 'index'
 
   #Desktop Applications
+
+  #tenancy
+  map.connect '/erp_app/desktop/tenancy/:action', :controller => 'erp_app/desktop/tenancy/base'
+
+  #tenancy
+  map.connect '/erp_app/desktop/tenancy/:action', :controller => 'erp_app/desktop/tenancy/base'
 
   #scaffold
   map.connect '/erp_app/desktop/scaffold/role/:action', :controller => 'erp_app/desktop/scaffold/role'

@@ -95,4 +95,5 @@ class ErpApp::ApplicationController < ActionController::Base
     @remember_me = params[:remember_me]
     @bad_visitor ||= UserFailure.failure_check(request.remote_ip)
   end
+  
 end

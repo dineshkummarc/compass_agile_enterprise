@@ -12,6 +12,7 @@ class BaseScheduling < ActiveRecord::Migration
         t.datetime :failed_at
         t.timestamps
       end
+      add_index :delayed_jobs, :run_at
     end
   end
 

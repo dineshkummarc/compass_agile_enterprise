@@ -130,7 +130,7 @@ class SetupKnitkit < ActiveRecord::Migration
       end
 
       #indexes
-      add_index :published_elements, [:published_element_record_id, :published_element_record_type]
+      add_index :published_elements, [:published_element_record_id, :published_element_record_type], :name => 'published_elm_idx'
       add_index :published_elements, :published_website_id
       add_index :published_elements, :version
     end
@@ -148,7 +148,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.timestamps
       end
 
-      add_index :comments, [:commented_record_id, :commented_record_type]
+      add_index :comments, [:commented_record_id, :commented_record_type], :name => 'commented_record_idx'
       add_index :comments, [:approved]
       add_index :comments, [:user_id]
     end

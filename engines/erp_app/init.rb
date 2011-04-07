@@ -3,6 +3,7 @@ require 'acts_as_app_container'
 require 'has_user_preferences'
 require 'rails_ext/railties/action_view'
 require 'erp_app/application_resource_loader/file_system_loader'
+require 'erp_app/setup/data'
 
 #add the observers path to load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)}/app/observers"
