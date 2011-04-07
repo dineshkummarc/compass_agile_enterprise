@@ -1,5 +1,5 @@
 require 'routing_filter'
-require "#{RAILS_ROOT}/vendor/plugins/knikit/lib/routing_filter/section_router.rb"
+require "#{RAILS_ROOT}/vendor/plugins/knitkit/lib/routing_filter/section_router.rb"
 
 ActionController::Routing::Routes.draw do |map|
   map.filter 'section_router'
