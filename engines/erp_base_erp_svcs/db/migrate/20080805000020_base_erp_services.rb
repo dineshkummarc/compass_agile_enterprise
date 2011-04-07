@@ -338,7 +338,7 @@ class BaseErpServices < ActiveRecord::Migration
       end
 
       add_index :descriptive_assets, :view_type_id
-      add_index :descriptive_assets, [:described_recored_id, :described_recored_type], :name => 'described_record_idx'
+      add_index :descriptive_assets, [:described_record_id, :described_record_type], :name => 'described_record_idx'
     end
 
     unless table_exists?(:view_types)
