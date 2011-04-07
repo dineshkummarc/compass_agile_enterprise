@@ -1,1 +1,0 @@
-require 'compass_extensions/erp_app_application_controller'
