@@ -76,11 +76,9 @@ module PermalinkFu
   module ClassMethods
     def self.setup_permalink_fu_on(base)
       base.extend self
-      class << base
-        attr_accessor :permalink_options
-        attr_accessor :permalink_attributes
-        attr_accessor :permalink_field
-      end
+      base.cattr_accessor :permalink_options
+      base.cattr_accessor :permalink_attributes
+      base.cattr_accessor :permalink_field
       base.send :include, InstanceMethods
 
       yield
@@ -106,7 +104,7 @@ module PermalinkFu
 
   # This contains instance methods for ActiveRecord models that have permalinks.
   module InstanceMethods
-  protected
+    protected
     def create_common_permalink
       return unless should_create_permalink?
       if read_attribute(self.class.permalink_field).blank? || permalink_fields_changed?
@@ -156,7 +154,7 @@ module PermalinkFu
       str.blank? ? PermalinkFu.random_permalink : str
     end
 
-  private
+    private
     def should_create_permalink?
       if self.class.permalink_options[:if]
         evaluate_method(self.class.permalink_options[:if])

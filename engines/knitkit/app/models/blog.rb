@@ -1,5 +1,13 @@
 class Blog < WebsiteSection
-  
+  def self.method_missing(name, *args, &block)
+    puts 'here'
+    if WebsiteSection.respond_to?(name)
+      WebsiteSection.send(name, args, block)
+    else
+      super
+    end
+  end
+
   def find_blog_posts
     Article.find_by_website_section_id(self.id).sort_by{|article| article.created_at}.reverse
   end

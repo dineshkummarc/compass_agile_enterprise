@@ -207,95 +207,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             }
                         });
                     }
-					
-                    if(node.attributes['canAddSections']){
-                        items.push({
-                            text:'Add Section',
-                            iconCls:'icon-add',
-                            listeners:{
-                                'click':function(){
-                                    var addSectionWindow = new Ext.Window({
-                                        layout:'fit',
-                                        width:375,
-                                        title:'New Section',
-                                        height:125,
-                                        plain: true,
-                                        buttonAlign:'center',
-                                        items: new Ext.FormPanel({
-                                            labelWidth: 110,
-                                            frame:false,
-                                            bodyStyle:'padding:5px 5px 0',
-                                            url:'./knitkit/section/new',
-                                            defaults: {
-                                                width: 225
-                                            },
-                                            items: [
-                                            {
-                                                xtype:'textfield',
-                                                fieldLabel:'Title',
-                                                allowBlank:false,
-                                                name:'title'
-                                            },
-                                            {
-                                                width: 100,
-                                                xtype: 'combo',
-                                                forceSelection:true,
-                                                store: [
-                                                ['Page','Page'],
-                                                ['Blog','Blog'],
-                                                ],
-                                                value:'Page',
-                                                fieldLabel: 'Type',
-                                                name: 'type',
-                                                allowBlank: false,
-                                                triggerAction: 'all'
-                                            },
-                                            {
-                                                xtype:'hidden',
-                                                name:'node_id',
-                                                value:node.id
-                                            }
-                                            ]
-                                        }),
-                                        buttons: [{
-                                            text:'Submit',
-                                            listeners:{
-                                                'click':function(button){
-                                                    var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
-                                                    self.setWindowStatus('Creating section...');
-                                                    formPanel.getForm().submit({
-                                                        reset:true,
-                                                        success:function(form, action){
-                                                            self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
-                                                            if(obj.success){
-                                                                self.sitesTree.getRootNode().reload();
-                                                            }
-                                                            else{
-                                                                Ext.Msg.alert("Error", obj.msg);
-                                                            }
-                                                        },
-                                                        failure:function(form, action){
-                                                            self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
-                                                            Ext.Msg.alert("Error", obj.msg);
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        },{
-                                            text: 'Close',
-                                            handler: function(){
-                                                addSectionWindow.close();
-                                            }
-                                        }]
-                                    });
-                                    addSectionWindow.show();
-                                }
-                            }
-                        });
-                    }
 
                     if(node.attributes['isSection']){
                         items.push({
@@ -331,6 +242,87 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             });
                         }
 
+                        items.push({
+                            text:'Update Section',
+                            iconCls:'icon-edit',
+                            listeners:{
+                                'click':function(){
+                                    var updateSectionWindow = new Ext.Window({
+                                        layout:'fit',
+                                        width:375,
+                                        title:'Update Section',
+                                        height:100,
+                                        plain: true,
+                                        buttonAlign:'center',
+                                        items: new Ext.FormPanel({
+                                            labelWidth: 110,
+                                            frame:false,
+                                            bodyStyle:'padding:5px 5px 0',
+                                            url:'./knitkit/section/update',
+                                            defaults: {
+                                                width: 225
+                                            },
+                                            items: [
+                                            {
+                                                xtype:'radiogroup',
+                                                fieldLabel:'Display in menu?',
+                                                name:'in_menu',
+                                                width:100,
+                                                columns:2,
+                                                items:[
+                                                {
+                                                    boxLabel:'Yes',
+                                                    name:'in_menu',
+                                                    inputValue: 'yes',
+                                                    checked:node.attributes.inMenu
+                                                },
+
+                                                {
+                                                    boxLabel:'No',
+                                                    name:'in_menu',
+                                                    inputValue: 'no',
+                                                    checked:!node.attributes.inMenu
+                                                }]
+                                            },
+                                            {
+                                                xtype:'hidden',
+                                                name:'id',
+                                                value:node.attributes.id.split('_')[1]
+                                            }
+                                            ]
+                                        }),
+                                        buttons: [{
+                                            text:'Submit',
+                                            listeners:{
+                                                'click':function(button){
+                                                    var window = button.findParentByType('window');
+                                                    var formPanel = window.findByType('form')[0];
+                                                    self.setWindowStatus('Updating section...');
+                                                    formPanel.getForm().submit({
+                                                        success:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            self.sitesTree.getRootNode().reload();
+                                                            updateSectionWindow.close();
+                                                        },
+                                                        failure:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },{
+                                            text: 'Close',
+                                            handler: function(){
+                                                updateSectionWindow.close();
+                                            }
+                                        }]
+                                    });
+                                    updateSectionWindow.show();
+                                }
+                            }
+                        });
 
                         //no layouts for blogs.
                         if(Compass.ErpApp.Utility.isBlank(node.attributes['isBlog']) && node.attributes['hasLayout']){
@@ -394,80 +386,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     }
                     else
                     if(node.attributes['isWebsite']){
-                        items.push({
-                            text:'Add Host',
-                            iconCls:'icon-add',
-                            listeners:{
-                                'click':function(){
-                                    var addHostWindow = new Ext.Window({
-                                        layout:'fit',
-                                        width:310,
-                                        title:'Add Host',
-                                        height:100,
-                                        plain: true,
-                                        buttonAlign:'center',
-                                        items: new Ext.FormPanel({
-                                            labelWidth: 50,
-                                            frame:false,
-                                            bodyStyle:'padding:5px 5px 0',
-                                            width: 425,
-                                            url:'./knitkit/site/add_host',
-                                            defaults: {
-                                                width: 225
-                                            },
-                                            items:[
-                                            {
-                                                xtype:'textfield',
-                                                fieldLabel:'Host',
-                                                name:'host',
-                                                allowBlank:false
-                                            },
-                                            {
-                                                xtype:'hidden',
-                                                name:'id',
-                                                value:node.id.split('_')[1]
-                                            }
-                                            ]
-                                        }),
-                                        buttons: [{
-                                            text:'Submit',
-                                            listeners:{
-                                                'click':function(button){
-                                                    var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
-                                                    self.setWindowStatus('Adding Host...');
-                                                    formPanel.getForm().submit({
-                                                        reset:true,
-                                                        success:function(form, action){
-                                                            self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
-                                                            if(obj.success){
-                                                                addHostWindow.close();
-                                                                self.sitesTree.getRootNode().reload();
-                                                            }
-                                                            else{
-                                                                Ext.Msg.alert("Error", obj.msg);
-                                                            }
-                                                        },
-                                                        failure:function(form, action){
-                                                            self.clearWindowStatus();
-                                                            Ext.Msg.alert("Error", "Error adding Host");
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        },{
-                                            text: 'Close',
-                                            handler: function(){
-                                                addHostWindow.close();
-                                            }
-                                        }]
-                                    });
-                                    addHostWindow.show();
-                                }
-                            }
-                        });
-
                         items.push({
                             text:'Publish',
                             iconCls:'icon-document_up',
@@ -667,6 +585,82 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
                     }
                     else
+                    if(node.attributes['isHostRoot']){
+                        items.push({
+                            text:'Add Host',
+                            iconCls:'icon-add',
+                            listeners:{
+                                'click':function(){
+                                    var addHostWindow = new Ext.Window({
+                                        layout:'fit',
+                                        width:310,
+                                        title:'Add Host',
+                                        height:100,
+                                        plain: true,
+                                        buttonAlign:'center',
+                                        items: new Ext.FormPanel({
+                                            labelWidth: 50,
+                                            frame:false,
+                                            bodyStyle:'padding:5px 5px 0',
+                                            width: 425,
+                                            url:'./knitkit/site/add_host',
+                                            defaults: {
+                                                width: 225
+                                            },
+                                            items:[
+                                            {
+                                                xtype:'textfield',
+                                                fieldLabel:'Host',
+                                                name:'host',
+                                                allowBlank:false
+                                            },
+                                            {
+                                                xtype:'hidden',
+                                                name:'id',
+                                                value:node.attributes.websiteId
+                                            }
+                                            ]
+                                        }),
+                                        buttons: [{
+                                            text:'Submit',
+                                            listeners:{
+                                                'click':function(button){
+                                                    var window = button.findParentByType('window');
+                                                    var formPanel = window.findByType('form')[0];
+                                                    self.setWindowStatus('Adding Host...');
+                                                    formPanel.getForm().submit({
+                                                        reset:true,
+                                                        success:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            if(obj.success){
+                                                                addHostWindow.close();
+                                                                self.sitesTree.getRootNode().reload();
+                                                            }
+                                                            else{
+                                                                Ext.Msg.alert("Error", obj.msg);
+                                                            }
+                                                        },
+                                                        failure:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            Ext.Msg.alert("Error", "Error adding Host");
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },{
+                                            text: 'Close',
+                                            handler: function(){
+                                                addHostWindow.close();
+                                            }
+                                        }]
+                                    });
+                                    addHostWindow.show();
+                                }
+                            }
+                        });
+                    }
+                    else
                     if(node.attributes['isHost']){
                         items.push({
                             text:'Update',
@@ -781,6 +775,114 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             });
                                         }
                                     });
+                                }
+                            }
+                        });
+                    }
+                    else if(node.attributes['isSectionRoot']){
+                        items.push({
+                            text:'Add Section',
+                            iconCls:'icon-add',
+                            listeners:{
+                                'click':function(){
+                                    var addSectionWindow = new Ext.Window({
+                                        layout:'fit',
+                                        width:375,
+                                        title:'New Section',
+                                        height:150,
+                                        plain: true,
+                                        buttonAlign:'center',
+                                        items: new Ext.FormPanel({
+                                            labelWidth: 110,
+                                            frame:false,
+                                            bodyStyle:'padding:5px 5px 0',
+                                            url:'./knitkit/section/new',
+                                            defaults: {
+                                                width: 225
+                                            },
+                                            items: [
+                                            {
+                                                xtype:'textfield',
+                                                fieldLabel:'Title',
+                                                allowBlank:false,
+                                                name:'title'
+                                            },
+                                            {
+                                                width: 100,
+                                                xtype: 'combo',
+                                                forceSelection:true,
+                                                store: [
+                                                ['Page','Page'],
+                                                ['Blog','Blog'],
+                                                ],
+                                                value:'Page',
+                                                fieldLabel: 'Type',
+                                                name: 'type',
+                                                allowBlank: false,
+                                                triggerAction: 'all'
+                                            },
+                                            {
+                                                xtype:'radiogroup',
+                                                fieldLabel:'Display in menu?',
+                                                name:'in_menu',
+                                                width:100,
+                                                columns:2,
+                                                items:[
+                                                {
+                                                    boxLabel:'Yes',
+                                                    name:'in_menu',
+                                                    inputValue: 'yes'
+                                                },
+
+                                                {
+                                                    boxLabel:'No',
+                                                    name:'in_menu',
+                                                    inputValue: 'no',
+                                                    checked:true
+                                                }]
+                                            },
+                                            {
+                                                xtype:'hidden',
+                                                name:'websiteId',
+                                                value:node.attributes.websiteId
+                                            }
+                                            ]
+                                        }),
+                                        buttons: [{
+                                            text:'Submit',
+                                            listeners:{
+                                                'click':function(button){
+                                                    var window = button.findParentByType('window');
+                                                    var formPanel = window.findByType('form')[0];
+                                                    self.setWindowStatus('Creating section...');
+                                                    formPanel.getForm().submit({
+                                                        reset:true,
+                                                        success:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            if(obj.success){
+                                                                self.sitesTree.getRootNode().reload();
+                                                            }
+                                                            else{
+                                                                Ext.Msg.alert("Error", obj.msg);
+                                                            }
+                                                        },
+                                                        failure:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },{
+                                            text: 'Close',
+                                            handler: function(){
+                                                addSectionWindow.close();
+                                            }
+                                        }]
+                                    });
+                                    addSectionWindow.show();
                                 }
                             }
                         });

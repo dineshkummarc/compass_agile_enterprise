@@ -2,18 +2,20 @@
 <% unless @website_sections.nil? %>
   <ul id="menu">
     <% @website_sections.each do |section| %>
-      <%if section.has_access?(current_user)%>
-        <% if !@website_section.nil? && section.id == @website_section.id %>
-          <li class="selected">
-            <%
-            section_found = true
-          else
-          %>
-          <li>
-          <%end%>
-          <a href="/<%= section.permalink %>"><%= section.title %></a>
-        </li>
-      <%end%>
+      <%if section.in_menu %>
+        <%if section.has_access?(current_user)%>
+          <% if !@website_section.nil? && section.id == @website_section.id %>
+            <li class="selected">
+              <%
+              section_found = true
+            else
+            %>
+            <li>
+            <%end%>
+            <a href="/<%= section.permalink %>"><%= section.title %></a>
+          </li>
+        <%end%>
+      <% end %>
     <% end %>
     <% if @website.allow_inquiries %>
       <% unless section_found  %>

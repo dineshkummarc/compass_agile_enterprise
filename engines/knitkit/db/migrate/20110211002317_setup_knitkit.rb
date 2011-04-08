@@ -33,6 +33,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.string :path
         t.string :permalink
         t.text :layout
+        t.boolean :in_menu
 
         #better nested set columns
         t.integer :parent_id

@@ -9,7 +9,6 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
     websites.each do |website|
       website_hash = {
         :text => website.title,
-        :canAddSections => true,
         :iconCls => 'icon-globe',
         :id => "website_#{website.id}",
         :leaf => false,
@@ -26,7 +25,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       }
 
       #handle hosts
-      hosts_hash = {:text => 'Hosts', :iconCls => 'icon-gear', :leaf => false, :children => []}
+      hosts_hash = {:text => 'Hosts', :iconCls => 'icon-gear', :isHostRoot => true, :websiteId => website.id, :leaf => false, :children => []}
       website.hosts.each do |website_host|
         hosts_hash[:children] << {:text => website_host.host, :id => website_host.id, :host => website_host.host, :iconCls => 'icon-globe', :url => "http://#{website_host.host}", :isHost => true, :leaf => true, :children => []}
       end
@@ -34,7 +33,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       website_hash[:children] << hosts_hash
 
       #handle sections
-      sections_hash = {:text => 'Sections', :iconCls => 'icon-content', :leaf => false, :children => []}
+      sections_hash = {:text => 'Sections', :isSectionRoot => true, :websiteId => website.id, :iconCls => 'icon-content', :leaf => false, :children => []}
       website.website_sections.each do |website_section|
         website_section_hash = {
           :text => website_section.title,
@@ -43,6 +42,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
           :type => website_section.type,
           :isSecured => !website_section.roles.empty?,
           :isSection => true,
+          :inMenu => website_section.in_menu,
           :hasLayout => !website_section.layout.blank?,
           :id => "section_#{website_section.id}",
           :url => "http://#{website.hosts.first}/#{website_section.permalink}"
@@ -52,9 +52,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
           website_section_hash[:isBlog] = true
           website_section_hash[:iconCls] = 'icon-blog'
           website_section_hash[:leaf] = true
-          website_section_hash[:canAddSections] = false
         else
-          website_section_hash[:canAddSections] = false
           unless website_section.children.empty?
             website_section_hash[:leaf] = false
             website_section_hash[:children] = []

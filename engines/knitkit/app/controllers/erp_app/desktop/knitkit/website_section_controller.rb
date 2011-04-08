@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knitkit::BaseController
-  IGNORED_PARAMS = %w{action controller node_id}
+  IGNORED_PARAMS = %w{action controller websiteId, in_menu}
 
-  before_filter :set_website_section, :only => [:update_security, :add_layout, :get_layout, :save_layout]
+  before_filter :set_website_section, :only => [:update, :update_security, :add_layout, :get_layout, :save_layout]
 
   def new
     result = {}
@@ -14,23 +14,16 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
         next if k == 'type' && v == 'Page'
         website_section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
       end
-      save_result = website_section.save
-
-      if save_result
-        node_id = params[:node_id]
-        type = node_id.split('_')[0]
-        id   = node_id.split('_')[1]
-
-        if type == 'section'
-          parent = Section.find(id)
-          website_section.move_to_child_of(parent)
-        else
-          website = Website.find(id)
-          website.website_sections << website_section
-          website.save
-        end
-
+      website_section.in_menu = params[:in_menu] == 'yes'
+      
+      if website_section.save
+        website = Website.find(params[:websiteId])
+        website.website_sections << website_section
+        website.save
+        
         result[:success] = true
+      else
+        result[:success] = false
       end
 
     end
@@ -51,6 +44,13 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
     else
       @website_section.remove_role(website.role)
     end
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def update
+    @website_section.in_menu = params[:in_menu] == 'yes'
+    @website_section.save
 
     render :inline => {:success => true}.to_json
   end
