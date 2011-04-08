@@ -1,9 +1,9 @@
 class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knitkit::BaseController
-  IGNORED_PARAMS = %w{action controller websiteId, in_menu}
-
   before_filter :set_website_section, :only => [:update, :update_security, :add_layout, :get_layout, :save_layout]
 
   def new
+    ignored_params = %w{action controller websiteId in_menu}
+
     result = {}
     if (params[:title] == 'Blog' || params[:title] == 'blog') && params[:type] == 'Blog'
       result[:sucess] = false
@@ -12,7 +12,7 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
       website_section = WebsiteSection.new
       params.each do |k,v|
         next if k == 'type' && v == 'Page'
-        website_section.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
+        website_section.send(k + '=', v) unless ignored_params.include?(k.to_s)
       end
       website_section.in_menu = params[:in_menu] == 'yes'
       
