@@ -12,7 +12,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :iconCls => 'icon-globe',
         :id => "website_#{website.id}",
         :leaf => false,
-        :url => "http://#{website.hosts.first}",
+        :url => "http://#{website.hosts.first.host}",
         :name => website.name,
         :title => website.title,
         :subtitle => website.subtitle,
@@ -45,7 +45,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
           :inMenu => website_section.in_menu,
           :hasLayout => !website_section.layout.blank?,
           :id => "section_#{website_section.id}",
-          :url => "http://#{website.hosts.first}/#{website_section.permalink}"
+          :url => "http://#{website.hosts.first.host}/#{website_section.permalink}"
         }
 
         if website_section.is_a?(Blog)
