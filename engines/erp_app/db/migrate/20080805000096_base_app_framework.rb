@@ -37,13 +37,13 @@ class BaseAppFramework < ActiveRecord::Migration
     unless table_exists?(:preference_options_preference_types)
       create_table :preference_options_preference_types, {:id => false} do |t|
         t.references :preference_type
-        t.references :preference_option,
+        t.references :preference_option
 
         t.timestamps
       end
 
-      add_index :preference_options_preference_types, :preference_type_id
-      add_index :preference_options_preference_types, :preference_option_id
+      add_index :preference_options_preference_types, :preference_type_id, :name => 'pref_opt_pref_type_pref_type_id_idx'
+      add_index :preference_options_preference_types, :preference_option_id, :name => 'pref_opt_pref_type_pref_opt_id_idx'
     end
 
     unless table_exists?(:valid_preference_types)
