@@ -195,16 +195,18 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     e.stopEvent();
                     var items = [];
 
-                    items.push({
-                        text:'View In Web Navigator',
-                        iconCls:'icon-globe',
-                        listeners:{
-                            'click':function(){
-                                var webNavigator = CompassDesktop.getModules().find("id == 'web-navigator-win'");
-                                webNavigator.createWindow(node.attributes['url']);
+                    if(!Compass.ErpApp.Utility.isBlank(node.attributes['url'])){
+                        items.push({
+                            text:'View In Web Navigator',
+                            iconCls:'icon-globe',
+                            listeners:{
+                                'click':function(){
+                                    var webNavigator = CompassDesktop.getModules().find("id == 'web-navigator-win'");
+                                    webNavigator.createWindow(node.attributes['url']);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
 					
                     if(node.attributes['canAddSections']){
                         items.push({
@@ -390,7 +392,82 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             }
                         });
                     }
-                    else{
+                    else
+                    if(node.attributes['isWebsite']){
+                        items.push({
+                            text:'Add Host',
+                            iconCls:'icon-add',
+                            listeners:{
+                                'click':function(){
+                                    var addHostWindow = new Ext.Window({
+                                        layout:'fit',
+                                        width:310,
+                                        title:'Add Host',
+                                        height:100,
+                                        plain: true,
+                                        buttonAlign:'center',
+                                        items: new Ext.FormPanel({
+                                            labelWidth: 50,
+                                            frame:false,
+                                            bodyStyle:'padding:5px 5px 0',
+                                            width: 425,
+                                            url:'./knitkit/site/add_host',
+                                            defaults: {
+                                                width: 225
+                                            },
+                                            items:[
+                                            {
+                                                xtype:'textfield',
+                                                fieldLabel:'Host',
+                                                name:'host',
+                                                allowBlank:false
+                                            },
+                                            {
+                                                xtype:'hidden',
+                                                name:'id',
+                                                value:node.id.split('_')[1]
+                                            }
+                                            ]
+                                        }),
+                                        buttons: [{
+                                            text:'Submit',
+                                            listeners:{
+                                                'click':function(button){
+                                                    var window = button.findParentByType('window');
+                                                    var formPanel = window.findByType('form')[0];
+                                                    self.setWindowStatus('Adding Host...');
+                                                    formPanel.getForm().submit({
+                                                        reset:true,
+                                                        success:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            if(obj.success){
+                                                                addHostWindow.close();
+                                                                self.sitesTree.getRootNode().reload();
+                                                            }
+                                                            else{
+                                                                Ext.Msg.alert("Error", obj.msg);
+                                                            }
+                                                        },
+                                                        failure:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            Ext.Msg.alert("Error", "Error adding Host");
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },{
+                                            text: 'Close',
+                                            handler: function(){
+                                                addHostWindow.close();
+                                            }
+                                        }]
+                                    });
+                                    addHostWindow.show();
+                                }
+                            }
+                        });
+
                         items.push({
                             text:'Publish',
                             iconCls:'icon-document_up',
@@ -585,6 +662,125 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             listeners:{
                                 'click':function(){
                                     self.exportSite(node.id.split('_')[1]);
+                                }
+                            }
+                        });
+                    }
+                    else
+                    if(node.attributes['isHost']){
+                        items.push({
+                            text:'Update',
+                            iconCls:'icon-edit',
+                            listeners:{
+                                'click':function(){
+                                    var updateHostWindow = new Ext.Window({
+                                        layout:'fit',
+                                        width:310,
+                                        title:'Update Host',
+                                        height:100,
+                                        plain: true,
+                                        buttonAlign:'center',
+                                        items: new Ext.FormPanel({
+                                            labelWidth: 50,
+                                            frame:false,
+                                            bodyStyle:'padding:5px 5px 0',
+                                            width: 425,
+                                            url:'./knitkit/site/update_host',
+                                            defaults: {
+                                                width: 225
+                                            },
+                                            items:[
+                                            {
+                                                xtype:'textfield',
+                                                fieldLabel:'Host',
+                                                name:'host',
+                                                value:node.host,
+                                                allowBlank:false
+                                            },
+                                            {
+                                                xtype:'hidden',
+                                                name:'id',
+                                                value:node.id
+                                            }
+                                            ]
+                                        }),
+                                        buttons: [{
+                                            text:'Submit',
+                                            listeners:{
+                                                'click':function(button){
+                                                    var window = button.findParentByType('window');
+                                                    var formPanel = window.findByType('form')[0];
+                                                    self.setWindowStatus('Updating Host...');
+                                                    formPanel.getForm().submit({
+                                                        reset:true,
+                                                        success:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            if(obj.success){
+                                                                updateHostWindow.close();
+                                                                self.sitesTree.getRootNode().reload();
+                                                            }
+                                                            else{
+                                                                Ext.Msg.alert("Error", obj.msg);
+                                                            }
+                                                        },
+                                                        failure:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            Ext.Msg.alert("Error", "Error updating Host");
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },{
+                                            text: 'Close',
+                                            handler: function(){
+                                                updateHostWindow.close();
+                                            }
+                                        }]
+                                    });
+                                    updateHostWindow.show();
+                                }
+                            }
+                        });
+
+                        items.push({
+                            text:'Delete',
+                            iconCls:'icon-delete',
+                            listeners:{
+                                'click':function(){
+                                    Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this Host?', function(btn){
+                                        if(btn == 'no'){
+                                            return false;
+                                        }
+                                        else
+                                        if(btn == 'yes')
+                                        {
+                                            self.setWindowStatus('Deleting Host...');
+                                            var conn = new Ext.data.Connection();
+                                            conn.request({
+                                                url: './knitkit/site/delete_host',
+                                                method: 'POST',
+                                                params:{
+                                                    id:node.id
+                                                },
+                                                success: function(response) {
+                                                    var obj =  Ext.util.JSON.decode(response.responseText);
+                                                    if(obj.success){
+                                                        self.clearWindowStatus();
+                                                        self.sitesTree.getRootNode().reload();
+                                                    }
+                                                    else{
+                                                        Ext.Msg.alert('Error', 'Error deleting Host');
+                                                        self.clearWindowStatus();
+                                                    }
+                                                },
+                                                failure: function(response) {
+                                                    self.clearWindowStatus();
+                                                    Ext.Msg.alert('Error', 'Error deleting Host');
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
                             }
                         });

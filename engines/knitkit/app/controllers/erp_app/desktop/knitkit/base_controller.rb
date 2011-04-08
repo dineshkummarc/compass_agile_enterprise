@@ -13,19 +13,28 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :iconCls => 'icon-globe',
         :id => "website_#{website.id}",
         :leaf => false,
-        :url => "http://#{website.host}",
+        :url => "http://#{website.hosts.first}",
         :name => website.name,
-        :host => website.host,
         :title => website.title,
         :subtitle => website.subtitle,
+        :isWebsite => true,
         :email => website.email,
         :siteName => website.title,
         :allowInquiries =>  website.allow_inquiries?,
         :emailInquiries =>  website.email_inquiries?,
         :children => []
       }
-      
+
+      #handle hosts
+      hosts_hash = {:text => 'Hosts', :iconCls => 'icon-gear', :leaf => false, :children => []}
+      website.hosts.each do |website_host|
+        hosts_hash[:children] << {:text => website_host.host, :id => website_host.id, :host => website_host.host, :iconCls => 'icon-globe', :url => "http://#{website_host.host}", :isHost => true, :leaf => true, :children => []}
+      end
+
+      website_hash[:children] << hosts_hash
+
       #handle sections
+      sections_hash = {:text => 'Sections', :iconCls => 'icon-content', :leaf => false, :children => []}
       website.website_sections.each do |website_section|
         website_section_hash = {
           :text => website_section.title,
@@ -36,7 +45,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
           :isSection => true,
           :hasLayout => !website_section.layout.blank?,
           :id => "section_#{website_section.id}",
-          :url => "http://#{website.host}/#{website_section.permalink}"
+          :url => "http://#{website.hosts.first}/#{website_section.permalink}"
         }
 
         if website_section.is_a?(Blog)
@@ -60,8 +69,10 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         end
 
         
-        website_hash[:children] << website_section_hash
+        sections_hash[:children] << website_section_hash
       end
+      
+      website_hash[:children] << sections_hash
       tree << website_hash
     end
 

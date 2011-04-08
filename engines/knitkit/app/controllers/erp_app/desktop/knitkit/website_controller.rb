@@ -61,7 +61,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def new
-    ignored_params = IGNORED_PARAMS | %w{allow_inquiries email_inquiries}
+    ignored_params = IGNORED_PARAMS | %w{allow_inquiries email_inquiries host}
 
     result = {}
     website = Website.new
@@ -72,6 +72,8 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     website.email_inquiries = params[:email_inquiries] == 'yes'
 
     if website.save
+      website.hosts << WebsiteHost.create(:host => params[:host])
+      website.save
       result[:success] = true
     else
       result[:success] = false
@@ -114,6 +116,28 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     render :inline => {:success => result, :message => message}.to_json
   ensure
     FileUtils.rm_r File.dirname(zip_path) rescue nil
+  end
+
+  def add_host
+    website = Website.find(params[:id])
+    website.hosts << WebsiteHost.create(:host => params[:host])
+    website.save
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def update_host
+    website_host = WebsiteHost.find(params[:id])
+    website_host.host = params[:host]
+    website_host.save
+
+    render :inline => {:success => true}.to_json
+  end
+
+  def delete_host
+    WebsiteHost.destroy(params[:id])
+
+    render :inline => {:success => true}.to_json
   end
 
   private

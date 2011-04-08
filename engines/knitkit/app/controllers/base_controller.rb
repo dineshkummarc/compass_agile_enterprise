@@ -14,7 +14,7 @@ class BaseController < ErpApp::ApplicationController
   
   protected
   def set_website
-    @website = Website.find_by_host!(request.host_with_port) # or raise "can not set website from host #{request.host_with_port}"
+    @website = Website.find_by_host(request.host_with_port)
   end
     
   def load_sections

@@ -1,8 +1,9 @@
 class Website < ActiveRecord::Base
-  validates_uniqueness_of :name, :host
-
   has_many :published_websites, :dependent => :destroy
   has_many :website_inquiries, :dependent => :destroy
+  has_many :website_hosts, :dependent => :destroy
+
+  alias :hosts :website_hosts
 
   has_many :website_sections, :dependent => :destroy, :order => :lft do
     def root
@@ -33,6 +34,10 @@ class Website < ActiveRecord::Base
     def active
       find(:all,:conditions => 'active = 1')
     end
+  end
+
+  def self.find_by_host(host)
+    WebsiteHost.find_by_host(host).website
   end
 
   def deactivate_themes!
@@ -69,7 +74,7 @@ class Website < ActiveRecord::Base
   def export_setup
     setup_hash = {
       :name => name,
-      :host => host,
+      :hosts => hosts.collect(&:host),
       :title => title,
       :subtitle => subtitle,
       :email => email,
@@ -184,13 +189,17 @@ class Website < ActiveRecord::Base
       if Website.find_by_name(setup_hash[:name]).nil?
         website = Website.new(
           :name => setup_hash[:name],
-          :host => setup_hash[:host],
           :title => setup_hash[:title],
           :subtitle => setup_hash[:subtitle],
           :email => setup_hash[:email],
           :allow_inquiries => setup_hash[:allow_inquiries],
           :email_inquiries => setup_hash[:email_inquiries]
         )
+
+        setup_hash[:hosts].each do |host|
+          website.hosts << WebsiteHost.create(:host => host)
+          website.save
+        end
 
         setup_hash[:sections].each do |section_hash|
           klass = section_hash[:type].constantize

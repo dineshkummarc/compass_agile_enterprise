@@ -4,7 +4,6 @@ class SetupKnitkit < ActiveRecord::Migration
     unless table_exists?(:websites)
       create_table :websites do |t|
         t.string :name
-        t.string :host
         t.string :title
         t.string :subtitle
         t.string :email
@@ -13,6 +12,17 @@ class SetupKnitkit < ActiveRecord::Migration
 
         t.timestamps
       end
+    end
+
+    unless table_exists?(:website_hosts)
+      create_table :website_hosts do |t|
+        t.references :website
+        t.string :host
+
+        t.timestamps
+      end
+
+      add_index :website_hosts, :website_id
     end
 
     unless table_exists?(:website_sections)
@@ -176,7 +186,9 @@ class SetupKnitkit < ActiveRecord::Migration
     Content.drop_versioned_table
 
     # check that each table exists before trying to delete it.
-    [:websites, :website_sections, :contents, :website_section_contents, :themes, :theme_files, :published_websites, :published_elements, :comments, :website_inquiries].each do |tbl|
+    [:websites, :website_sections, :contents, :website_section_contents,
+      :themes, :theme_files, :published_websites, :published_elements,
+      :comments, :website_inquiries,:website_hosts].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
       end
