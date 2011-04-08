@@ -37,7 +37,10 @@ class Website < ActiveRecord::Base
   end
 
   def self.find_by_host(host)
-    WebsiteHost.find_by_host(host).website
+    website = nil
+    websiteHost = WebsiteHost.find_by_host(host)
+    website = websiteHost.website unless websiteHost.nil?
+    website
   end
 
   def deactivate_themes!
