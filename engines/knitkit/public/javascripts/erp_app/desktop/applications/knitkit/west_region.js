@@ -831,14 +831,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 {
                                                     boxLabel:'Yes',
                                                     name:'in_menu',
-                                                    inputValue: 'yes'
+                                                    inputValue: 'yes',
+                                                    checked:true
                                                 },
 
                                                 {
                                                     boxLabel:'No',
                                                     name:'in_menu',
-                                                    inputValue: 'no',
-                                                    checked:true
+                                                    inputValue: 'no'
                                                 }]
                                             },
                                             {
