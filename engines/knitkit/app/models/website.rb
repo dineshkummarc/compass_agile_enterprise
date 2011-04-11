@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Website < ActiveRecord::Base
   has_many :published_websites, :dependent => :destroy
   has_many :website_inquiries, :dependent => :destroy
@@ -89,6 +91,7 @@ class Website < ActiveRecord::Base
         :name => website_section.title,
         :has_layout => !website_section.layout.blank?,
         :type => website_section.class.to_s,
+        :in_menu => website_section.in_menu,
         :articles => []
       }
 
@@ -104,7 +107,8 @@ class Website < ActiveRecord::Base
 
   def export
     tmp_dir = Website.make_tmp_dir
-
+    images = []
+    
     sections_path = Pathname.new(File.join(tmp_dir,'sections'))
     FileUtils.mkdir_p(sections_path) unless sections_path.exist?
 
@@ -113,12 +117,18 @@ class Website < ActiveRecord::Base
 
     website_sections.each do |website_section|
       unless website_section.layout.blank?
+        doc = Nokogiri::XML("<html><head></head><body>#{website_section.layout}</body></html>")
+        img_nodes = doc.xpath("//img")
+        images = images | img_nodes.collect{|node| node.attribute('src').content}
         File.open(File.join(sections_path,"#{website_section.title}.rhtml"), 'w+') {|f| f.write(website_section.layout) }
       end
     end
 
     contents = website_sections.collect(&:contents).flatten.uniq
     contents.each do |content|
+      doc = Nokogiri::XML("<html><head></head><body>#{content.body_html}</body></html>")
+      img_nodes = doc.xpath("//img")
+      images = images | img_nodes.collect{|node| node.attribute('src').content}
       File.open(File.join(articles_path,"#{content.title}.html"), 'w+') {|f| f.write(content.body_html) }
     end
 
@@ -132,6 +142,14 @@ class Website < ActiveRecord::Base
     Dir.entries(articles_path).each do |entry|
       next if entry =~ /^\./
       files << {:path => File.join(articles_path,entry), :name => File.join('articles/',File.basename(entry))}
+    end
+
+    images_path = "#{RAILS_ROOT}/vendor/plugins/erp_app/public"
+    images.each do |src|
+      src.gsub!('../', '')
+      file_path = File.join(images_path, src)
+      file_name = src.gsub('../', '')
+      files << {:path => file_path, :name => src}
     end
 
     returning(tmp_dir + "#{name}.zip") do |file_name|
@@ -162,6 +180,7 @@ class Website < ActiveRecord::Base
         f.read # no idea why we need this here, otherwise the zip can't be opened
       end unless file.path
 
+      images_path = "#{RAILS_ROOT}/vendor/plugins/erp_app/public"
       entries = []
       setup_hash = nil
 
@@ -172,6 +191,8 @@ class Website < ActiveRecord::Base
             entry.get_input_stream { |io| data = io.read }
             data = StringIO.new(data) if data.present?
             setup_hash = YAML.load(data)
+          elsif entry.name =~ /images*/
+            File.open(File.join(images_path,entry.name), 'w+') {|f| f.write(entry.get_input_stream.read) }
           else
             #ignore macs metadata
             next if entry.name =~/._|__MACOSX\//
@@ -206,7 +227,7 @@ class Website < ActiveRecord::Base
 
         setup_hash[:sections].each do |section_hash|
           klass = section_hash[:type].constantize
-          section = klass.new(:title => section_hash[:name])
+          section = klass.new(:title => section_hash[:name], :in_menu => section_hash[:in_menu])
           unless entries.find{|entry| entry[:type] == 'sections' and entry[:name] == "#{section_hash[:name]}.rhtml"}.nil?
             section.layout = entries.find{|entry| entry[:type] == 'sections' and entry[:name] == "#{section_hash[:name]}.rhtml"}[:data]
           end
