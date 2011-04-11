@@ -264,7 +264,7 @@ class BaseTechServices < ActiveRecord::Migration
         
         t.timestamps
       end
-      add_index :secured_models, [:secured_record_id, :secured_record_type]
+      add_index :secured_models, [:secured_record_id, :secured_record_type], :name => 'secured_record_idx'
     end
 
     unless table_exists?(:roles_secured_models)
