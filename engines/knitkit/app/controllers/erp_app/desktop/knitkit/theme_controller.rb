@@ -201,7 +201,6 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
         :iconCls => 'icon-globe',
         :id => "site_#{site.id}",
         :leaf => false,
-        :url => "http://#{site.host}",
         :children => []
       }
 
