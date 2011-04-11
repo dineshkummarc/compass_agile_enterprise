@@ -192,7 +192,11 @@ class Website < ActiveRecord::Base
             data = StringIO.new(data) if data.present?
             setup_hash = YAML.load(data)
           elsif entry.name =~ /images*/
-            File.open(File.join(images_path,entry.name), 'w+') {|f| f.write(entry.get_input_stream.read) }
+            next if entry.name =~/._|__MACOSX\//
+            path = File.join(images_path,entry.name)
+            directory_path = File.dirname(path)
+            FileUtils.mkdir_p directory_path unless File.directory? directory_path
+            File.open(path, 'w+') {|f| f.write(entry.get_input_stream.read) }
           else
             #ignore macs metadata
             next if entry.name =~/._|__MACOSX\//
