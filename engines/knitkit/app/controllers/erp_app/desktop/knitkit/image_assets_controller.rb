@@ -1,9 +1,9 @@
 class ErpApp::Desktop::Knitkit::ImageAssetsController < ErpApp::Desktop::FileManager::BaseController
 
-  IMAGE_FILE_EXENTIONS_REGEX = /^.?[^\.]+\.(jpe?g|png|gif|tiff)$/
+  IMAGE_FILE_EXTENSIONS_REGEX = /^.?[^\.]+\.(jpe?g|png|PNG|gif|tiff)$/
 
-  def initialize
-    @base_path = File.join(Rails.root, '/vendor/plugins/erp_app/public/images/')
+  def base_path
+    @base_path ||= File.join(Rails.root, '/vendor/plugins/erp_app/public/images/')
   end
 
   def expand_directory
@@ -12,13 +12,13 @@ class ErpApp::Desktop::Knitkit::ImageAssetsController < ErpApp::Desktop::FileMan
 
   def get_images
     directory = params[:directory]
-    directory = @base_path if directory == ROOT_NODE
+    directory = base_path if directory == ROOT_NODE
     data = {:images => []}
 
     Dir.entries(directory).each do |entry|
-      if entry =~ IMAGE_FILE_EXENTIONS_REGEX
+      if entry =~ IMAGE_FILE_EXTENSIONS_REGEX
         path = directory + '/' + entry
-        url_path = path.gsub(@base_path.to_s, '/images/')
+        url_path = path.gsub(base_path.to_s, '/images/')
         #url_path = url_path.gsub('/', '\/')
         short_name = entry
         if short_name.length > 16

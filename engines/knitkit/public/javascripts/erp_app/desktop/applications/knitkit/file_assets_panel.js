@@ -7,6 +7,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         allowDownload:false,
         addViewContentsToContextMenu:false,
         rootVisible:true,
+        controllerPath:'./knitkit/file_assets',
         standardUploadUrl:'./knitkit/file_assets/upload_file',
         xhrUploadUrl:'./knitkit/file_assets/upload_file',
         loader: new Ext.tree.TreeLoader({

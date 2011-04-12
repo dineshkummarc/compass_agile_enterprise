@@ -4,8 +4,8 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
   REMOVE_FILES_REGEX = /^\./
   ROOT_NODE = 'root_node'
 
-  def initialize
-    @base_path = Rails.root.to_s
+  def base_path
+    @base_path ||= Rails.root.to_s
   end
 
   def update_file
@@ -21,6 +21,8 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
     path = params[:path]
     name = params[:name]
 
+    path = base_path if path == ROOT_NODE
+
     File.open(File.join(path,name), 'w+') {|f| f.write('') }
 
     render :inline => {:success => true}.to_json
@@ -29,6 +31,8 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
   def create_folder
     path = params[:path]
     name = params[:name]
+
+    path = base_path if path == ROOT_NODE
 
     FileUtils.mkdir_p File.join(path,name)
 
@@ -45,6 +49,8 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
     path            = params[:node]
     new_parent_path = params[:parent_node]
 
+    new_parent_path = base_path if new_parent_path == ROOT_NODE
+    
     unless File.exists? path
       json_str = "{success:false, msg:'File does not exists'}"
     else
@@ -96,7 +102,7 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
       upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
     end
 
-    upload_path = @base_path if upload_path == ROOT_NODE
+    upload_path = base_path if upload_path == ROOT_NODE
 
     result = upload_file_to_path(upload_path)
 
@@ -153,7 +159,7 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
   def expand_file_directory(path, options={})
     #if path is root use root path else append it
     if path == ROOT_NODE
-      path = @base_path
+      path = base_path
     end
 
     render :inline => build_tree_for_directory(path, options)

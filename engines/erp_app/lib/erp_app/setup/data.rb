@@ -254,7 +254,7 @@ class ErpApp::Setup::Data
     #######################################
     #file manager app
     #######################################
-    app = DesktopApplication.create(
+    file_manager_app = DesktopApplication.create(
       :description => 'File Manager',
       :icon => 'icon-folders',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.FileManager',
@@ -262,15 +262,20 @@ class ErpApp::Setup::Data
       :shortcut_id => 'file_manager-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << app
-    PreferenceType.iid('autoload_application').preferenced_records << app
+    PreferenceType.iid('desktop_shortcut').preferenced_records << file_manager_app
+    PreferenceType.iid('autoload_application').preferenced_records << file_manager_app
 
-    app.save
+    file_manager_app.save
+
+    admin = User.find_by_login('admin')
+    setup_default_preferences_for_app(admin, file_manager_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
+    admin.desktop.applications << file_manager_app
+    admin.desktop.save
 
     #######################################
     #scaffold app
     #######################################
-    app = DesktopApplication.create(
+    scaffold_app = DesktopApplication.create(
       :description => 'Scaffold',
       :icon => 'icon-data',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.Scaffold',
@@ -278,15 +283,20 @@ class ErpApp::Setup::Data
       :shortcut_id => 'scaffold-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << app
-    PreferenceType.iid('autoload_application').preferenced_records << app
+    PreferenceType.iid('desktop_shortcut').preferenced_records << scaffold_app
+    PreferenceType.iid('autoload_application').preferenced_records << scaffold_app
 
-    app.save
+    scaffold_app.save
+
+    admin = User.find_by_login('admin')
+    setup_default_preferences_for_app(admin, scaffold_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
+    admin.desktop.applications << file_manager_app
+    admin.desktop.save
 
     #######################################
     #knitkit app
     #######################################
-    app = DesktopApplication.create(
+    knikit_app = DesktopApplication.create(
       :description => 'KnitKit',
       :icon => 'icon-palette',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.Knitkit',
@@ -294,15 +304,20 @@ class ErpApp::Setup::Data
       :shortcut_id => 'knitkit-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << app
-    PreferenceType.iid('autoload_application').preferenced_records << app
+    PreferenceType.iid('desktop_shortcut').preferenced_records << knikit_app
+    PreferenceType.iid('autoload_application').preferenced_records << knikit_app
 
-    app.save
+    knikit_app.save
+
+    admin = User.find_by_login('admin')
+    setup_default_preferences_for_app(admin, knikit_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
+    admin.desktop.applications << file_manager_app
+    admin.desktop.save
 
     #######################################
     #rails_db_admin app
     #######################################
-    app = DesktopApplication.create(
+    rails_db_admin_app = DesktopApplication.create(
       :description => 'RailsDbAdmin',
       :icon => 'icon-rails_db_admin',
       :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.RailsDbAdmin',
@@ -310,10 +325,15 @@ class ErpApp::Setup::Data
       :shortcut_id => 'rails_db_admin-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << app
-    PreferenceType.iid('autoload_application').preferenced_records << app
+    PreferenceType.iid('desktop_shortcut').preferenced_records << rails_db_admin_app
+    PreferenceType.iid('autoload_application').preferenced_records << rails_db_admin_app
 
-    app.save
+    rails_db_admin_app.save
+
+    admin = User.find_by_login('admin')
+    setup_default_preferences_for_app(admin, rails_db_admin_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
+    admin.desktop.applications << file_manager_app
+    admin.desktop.save
   end
 
   private

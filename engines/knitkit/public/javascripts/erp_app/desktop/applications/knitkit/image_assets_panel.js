@@ -41,6 +41,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
             dataUrl:'./knitkit/image_assets/expand_directory'
         }),
         containerScroll: true,
+        controllerPath:'./knitkit/image_assets',
         region:'north',
         height:200,
         title:'Images',
