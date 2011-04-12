@@ -290,7 +290,7 @@ class ErpApp::Setup::Data
 
     admin = User.find_by_login('admin')
     setup_default_preferences_for_app(admin, scaffold_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
-    admin.desktop.applications << file_manager_app
+    admin.desktop.applications << scaffold_app
     admin.desktop.save
 
     #######################################
@@ -311,7 +311,7 @@ class ErpApp::Setup::Data
 
     admin = User.find_by_login('admin')
     setup_default_preferences_for_app(admin, knikit_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
-    admin.desktop.applications << file_manager_app
+    admin.desktop.applications << knikit_app
     admin.desktop.save
 
     #######################################
@@ -332,7 +332,7 @@ class ErpApp::Setup::Data
 
     admin = User.find_by_login('admin')
     setup_default_preferences_for_app(admin, rails_db_admin_app, desktop_shortcut_pt, auto_load_app_pt, no_po)
-    admin.desktop.applications << file_manager_app
+    admin.desktop.applications << rails_db_admin_app
     admin.desktop.save
   end
 
