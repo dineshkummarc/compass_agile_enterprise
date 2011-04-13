@@ -145,7 +145,7 @@ class Theme < ActiveRecord::Base
       end
 
       def mkdir_p(dir)
-        FileUtils.mkdir_p(dir) unless File.exists?(dir)
+        FileUtils.mkdir_p(dir) unless ::File.exists?(dir)
       end
 
       def rm_empty_directories(path)
@@ -155,18 +155,6 @@ class Theme < ActiveRecord::Base
       rescue Errno::ENOTEMPTY, Errno::ENOENT, Errno::EINVAL
         # stop deleting directories
       end
-      
-#      def ensure_unique_filename
-#        if new_record? || changes['data_file_name']
-#          basename, extname = self.basename, self.extname
-#          i = extname =~ /^\d+\./ ? $1 : 1
-#          while ::File.exists?(path)
-#            self.name = [basename, i, extname].to_path('.')
-#            self.data_file_name = [basename, i, extname].to_path('.')
-#            i += 1
-#          end
-#        end
-#      end
     
   end
   

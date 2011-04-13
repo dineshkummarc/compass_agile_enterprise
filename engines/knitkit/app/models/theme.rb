@@ -2,15 +2,13 @@ require_dependency 'theme/file'
 require 'fileutils'
 
 class Theme < ActiveRecord::Base
-  cattr_accessor :root_dir
-  @@root_dir = "#{RAILS_ROOT}/vendor/plugins/knitkit/public"
-
-  cattr_accessor :default_preview
-  @@default_preview = "#{::File.dirname(__FILE__)}/../../public/preview.png"
-  
   THEME_STRUCTURE = ['stylesheets', 'javascripts', 'images', 'templates']
   
   class << self
+    def root_dir
+      @@root_dir ||= "#{RAILS_ROOT}/vendor/plugins/knitkit/public"
+    end
+
     def base_dir(website)
       "#{root_dir}/sites/site-#{website.id}/themes"
     end

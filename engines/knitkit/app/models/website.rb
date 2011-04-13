@@ -40,8 +40,8 @@ class Website < ActiveRecord::Base
 
   def self.find_by_host(host)
     website = nil
-    websiteHost = WebsiteHost.find_by_host(host)
-    website = websiteHost.website unless websiteHost.nil?
+    website_host = WebsiteHost.find_by_host(host)
+    website = website_host.website unless website_host.nil?
     website
   end
 
@@ -125,6 +125,8 @@ class Website < ActiveRecord::Base
     end
 
     contents = website_sections.collect(&:contents).flatten.uniq
+
+    #get images
     contents.each do |content|
       doc = Nokogiri::XML("<html><head></head><body>#{content.body_html}</body></html>")
       img_nodes = doc.xpath("//img")
@@ -144,13 +146,14 @@ class Website < ActiveRecord::Base
       files << {:path => File.join(articles_path,entry), :name => File.join('articles/',File.basename(entry))}
     end
 
-    images_path = "#{RAILS_ROOT}/vendor/plugins/erp_app/public"
     images.each do |src|
       src.gsub!('../', '')
-      file_path = File.join(images_path, src)
+      file_path = File.join(image_path, src)
       file_name = src.gsub('../', '')
-      files << {:path => file_path, :name => src}
+      files << {:path => file_path, :name => src} if File.exists? file_path
     end
+
+    files.uniq!
 
     returning(tmp_dir + "#{name}.zip") do |file_name|
       file_name.unlink if file_name.exist?
@@ -179,8 +182,7 @@ class Website < ActiveRecord::Base
         f.original_path = file.original_path
         f.read # no idea why we need this here, otherwise the zip can't be opened
       end unless file.path
-
-      images_path = "#{RAILS_ROOT}/vendor/plugins/erp_app/public"
+      
       entries = []
       setup_hash = nil
 
@@ -193,7 +195,7 @@ class Website < ActiveRecord::Base
             setup_hash = YAML.load(data)
           elsif entry.name =~ /images*/
             next if entry.name =~/._|__MACOSX\//
-            path = File.join(images_path,entry.name)
+            path = File.join(image_path,entry.name)
             directory_path = File.dirname(path)
             FileUtils.mkdir_p directory_path unless File.directory? directory_path
             File.open(path, 'w+') {|f| f.write(entry.get_input_stream.read) }
@@ -256,6 +258,16 @@ class Website < ActiveRecord::Base
 
       return success, message
     end
+  end
+
+  protected
+
+  def image_path
+    "#{RAILS_ROOT}/vendor/plugins/erp_app/public/images"
+  end
+
+  def file_assets_path
+    "#{RAILS_ROOT}/vendor/plugins/erp_app/public/file_assets"
   end
 
   private

@@ -161,7 +161,8 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
                                     }
                                 },{
                                     text: 'Reset',
-                                    handler: function(){
+                                    handler: function(btn){
+                                        var renameForm = btn.findParentByType('form');
                                         renameForm.getForm().reset();
                                     }
                                 }]

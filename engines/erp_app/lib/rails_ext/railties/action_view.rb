@@ -9,6 +9,9 @@ ActionView::Base.class_eval do
       "/javascripts/erp_app/shared/file_upload/upload_window.js"
     )
 
+    resources << stylesheet_link_tag("/stylesheets/erp_app/shared/file_upload/fileuploadfield.css",
+      "/stylesheets/erp_app/shared/file_upload/AwesomeUploader.css")
+
     resources
   end
 
