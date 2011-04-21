@@ -1,3 +1,11 @@
+===Welcome to Compass Agile Enterprise===
+
+Compass Agile Enterprise is a set of Rails Engines that incrementally add the functionality of an ERP and CMS to a Rails application.
+
+It is meant to stay completely out of the directories that a Rails application developer would use, so your app and public directories and clean for you to use.
+
+=================
+
 Compass.rake README
 
 TASK DESCRIPTIONS
