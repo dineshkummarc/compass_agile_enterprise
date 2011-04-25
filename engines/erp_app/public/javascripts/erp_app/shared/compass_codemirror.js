@@ -129,18 +129,7 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
             width: "100%",
             continuousScanning: 500,
             textWrapping: false,
-            lineNumbers: false,
-            onChange:function(){
-                var code = self.codeMirrorInstance.getCode();
-                self.setValue(code);
-            },
-            initCallback: function(editor) {
-                editor.win.document.body.lastChild.scrollIntoView();
-                try {
-                    var lineNumber = ((Ext.state.Manager.get("edcmr_" + oThis.itemId + '_lnmbr') !== undefined) ? Ext.state.Manager.get("edcmr_" + oThis.itemId + '_lnmbr') : 1);
-                    editor.jumpToLine(lineNumber);
-                }catch(e){}
-            },
+            lineNumbers: true,
             onChange: function() {
                 var code = self.codeMirrorInstance.getCode();
                 textAreaComp.setValue(code);
