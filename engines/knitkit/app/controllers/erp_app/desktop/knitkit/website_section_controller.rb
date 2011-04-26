@@ -50,6 +50,7 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
 
   def update
     @website_section.in_menu = params[:in_menu] == 'yes'
+    @website_section.title = params[:title]
     @website_section.save
 
     render :inline => {:success => true}.to_json

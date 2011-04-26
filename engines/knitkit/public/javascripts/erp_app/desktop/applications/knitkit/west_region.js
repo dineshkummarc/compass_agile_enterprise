@@ -251,7 +251,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         layout:'fit',
                                         width:375,
                                         title:'Update Section',
-                                        height:100,
+                                        height:125,
                                         plain: true,
                                         buttonAlign:'center',
                                         items: new Ext.FormPanel({
@@ -263,6 +263,12 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 width: 225
                                             },
                                             items: [
+                                            {
+                                              xtype:'textfield',
+                                              fieldLabel:'Title',
+                                              value:node.attributes.text,
+                                              name:'title'
+                                            },
                                             {
                                                 xtype:'radiogroup',
                                                 fieldLabel:'Display in menu?',

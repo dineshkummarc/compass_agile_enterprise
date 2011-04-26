@@ -22,7 +22,7 @@ class WebsiteSection < ActiveRecord::Base
   has_many :contents, :through => :website_section_contents
 
   validates_uniqueness_of :title
-  has_permalink :title
+  has_permalink :title, :update => true
   
   def articles 
     articles = Article.find_by_section_id(self.id)
