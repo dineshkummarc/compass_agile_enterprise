@@ -211,6 +211,7 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin  = Ext.extend(Ext.app.Module, {
     },
 
     createWindow : function(){
+        var self = this;
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('rails_db_admin');
         if(!win){
@@ -257,7 +258,8 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin  = Ext.extend(Ext.app.Module, {
                         text:'Database:'
                     },
                     {
-                        xtype:'railsdbadmin_databasecombo'
+                        xtype:'railsdbadmin_databasecombo',
+                        module: self
                     }
                     ]
                 },

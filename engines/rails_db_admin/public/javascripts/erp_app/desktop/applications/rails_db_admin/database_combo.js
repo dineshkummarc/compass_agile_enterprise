@@ -28,7 +28,13 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox = Ext.extend(E
             triggerAction:'all',
             forceSelection:true,
             mode:'local',
-            value:'development'
+            value:'development',
+            listeners:{
+                'select':function(combo, record, index){
+                  // switch databases                  
+                  combo.initialConfig.module.connectToDatatbase();
+                }
+            }
         }, config);
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox.superclass.constructor.call(this, config);
     }
