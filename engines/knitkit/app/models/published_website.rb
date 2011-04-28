@@ -20,6 +20,7 @@ class PublishedWebsite < ActiveRecord::Base
 
     #get a publish sections
     website_sections = new_publication.website.website_sections
+    website_sections = website_sections | website_sections.collect{|section| section.all_children}.flatten
     website_sections.each do |website_section|
       if new_publication.published_elements.find(:first,
           :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', website_section.id, website_section.class.to_s, website_section.class.superclass.to_s]).nil?

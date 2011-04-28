@@ -2,7 +2,7 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
   before_filter :set_website_section, :only => [:update, :update_security, :add_layout, :get_layout, :save_layout]
 
   def new
-    ignored_params = %w{action controller websiteId in_menu}
+    ignored_params = %w{action controller websiteId website_section_id in_menu}
 
     result = {}
     if (params[:title] == 'Blog' || params[:title] == 'blog') && params[:type] == 'Blog'
@@ -17,9 +17,15 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
       website_section.in_menu = params[:in_menu] == 'yes'
       
       if website_section.save
-        website = Website.find(params[:websiteId])
-        website.website_sections << website_section
-        website.save
+        unless params[:websiteId].blank?
+          website = Website.find(params[:websiteId])
+          website.website_sections << website_section
+          website.save
+        else
+          parent_website_section = WebsiteSection.find(params[:website_section_id])
+          website_section.move_to_child_of(parent_website_section)
+          parent_website_section.save
+        end
         
         result[:success] = true
       else

@@ -191,6 +191,16 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             region: 'center',
             rootVisible:false,
             listeners:{
+                'click':function(node, e){
+                    if(node.attributes['isSection']){
+                        self.getArticles(node);
+                    }
+                    else
+                    if(node.attributes['isHost']){
+                        var webNavigator = CompassDesktop.getModules().find("id == 'web-navigator-win'");
+                        webNavigator.createWindow(node.attributes['url']);
+                    }
+                },
                 'contextmenu':function(node, e){
                     e.stopEvent();
                     var items = [];
@@ -243,6 +253,113 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         }
 
                         items.push({
+                            text:'Add Section',
+                            iconCls:'icon-add',
+                            listeners:{
+                                'click':function(){
+                                    var addSectionWindow = new Ext.Window({
+                                        layout:'fit',
+                                        width:375,
+                                        title:'New Section',
+                                        height:150,
+                                        plain: true,
+                                        buttonAlign:'center',
+                                        items: new Ext.FormPanel({
+                                            labelWidth: 110,
+                                            frame:false,
+                                            bodyStyle:'padding:5px 5px 0',
+                                            url:'./knitkit/section/new',
+                                            defaults: {
+                                                width: 225
+                                            },
+                                            items: [
+                                            {
+                                                xtype:'textfield',
+                                                fieldLabel:'Title',
+                                                allowBlank:false,
+                                                name:'title'
+                                            },
+                                            {
+                                                width: 100,
+                                                xtype: 'combo',
+                                                forceSelection:true,
+                                                store: [
+                                                ['Page','Page'],
+                                                ['Blog','Blog'],
+                                                ],
+                                                value:'Page',
+                                                fieldLabel: 'Type',
+                                                name: 'type',
+                                                allowBlank: false,
+                                                triggerAction: 'all'
+                                            },
+                                            {
+                                                xtype:'radiogroup',
+                                                fieldLabel:'Display in menu?',
+                                                name:'in_menu',
+                                                width:100,
+                                                columns:2,
+                                                items:[
+                                                {
+                                                    boxLabel:'Yes',
+                                                    name:'in_menu',
+                                                    inputValue: 'yes',
+                                                    checked:true
+                                                },
+
+                                                {
+                                                    boxLabel:'No',
+                                                    name:'in_menu',
+                                                    inputValue: 'no'
+                                                }]
+                                            },
+                                            {
+                                                xtype:'hidden',
+                                                name:'website_section_id',
+                                                value:node.attributes.id.split('_')[1]
+                                            }
+                                            ]
+                                        }),
+                                        buttons: [{
+                                            text:'Submit',
+                                            listeners:{
+                                                'click':function(button){
+                                                    var window = button.findParentByType('window');
+                                                    var formPanel = window.findByType('form')[0];
+                                                    self.setWindowStatus('Creating section...');
+                                                    formPanel.getForm().submit({
+                                                        reset:true,
+                                                        success:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            if(obj.success){
+                                                                self.sitesTree.getRootNode().reload();
+                                                            }
+                                                            else{
+                                                                Ext.Msg.alert("Error", obj.msg);
+                                                            }
+                                                        },
+                                                        failure:function(form, action){
+                                                            self.clearWindowStatus();
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },{
+                                            text: 'Close',
+                                            handler: function(){
+                                                addSectionWindow.close();
+                                            }
+                                        }]
+                                    });
+                                    addSectionWindow.show();
+                                }
+                            }
+                        });
+
+                        items.push({
                             text:'Update Section',
                             iconCls:'icon-edit',
                             listeners:{
@@ -264,10 +381,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             },
                                             items: [
                                             {
-                                              xtype:'textfield',
-                                              fieldLabel:'Title',
-                                              value:node.attributes.text,
-                                              name:'title'
+                                                xtype:'textfield',
+                                                fieldLabel:'Title',
+                                                value:node.attributes.text,
+                                                name:'title'
                                             },
                                             {
                                                 xtype:'radiogroup',

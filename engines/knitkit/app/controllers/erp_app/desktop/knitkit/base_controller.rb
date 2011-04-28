@@ -35,39 +35,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       #handle sections
       sections_hash = {:text => 'Sections', :isSectionRoot => true, :websiteId => website.id, :iconCls => 'icon-content', :leaf => false, :children => []}
       website.website_sections.each do |website_section|
-        website_section_hash = {
-          :text => website_section.title,
-          :siteName => website.title,
-          :siteId => website.id,
-          :type => website_section.type,
-          :isSecured => !website_section.roles.empty?,
-          :isSection => true,
-          :inMenu => website_section.in_menu,
-          :hasLayout => !website_section.layout.blank?,
-          :id => "section_#{website_section.id}",
-          :url => "http://#{website.hosts.first.host}/#{website_section.permalink}"
-        }
-
-        if website_section.is_a?(Blog)
-          website_section_hash[:isBlog] = true
-          website_section_hash[:iconCls] = 'icon-blog'
-          website_section_hash[:leaf] = true
-        else
-          unless website_section.children.empty?
-            website_section_hash[:leaf] = false
-            website_section_hash[:children] = []
-          else
-            website_section_hash[:leaf] = true
-            if website_section_hash[:isSecured]
-              website_section_hash[:iconCls] = 'icon-document_lock'
-            else
-              website_section_hash[:iconCls] = 'icon-document'
-            end
-          end
-        end
-
-        
-        sections_hash[:children] << website_section_hash
+        sections_hash[:children] << build_section_hash(website_section, website)
       end
       
       website_hash[:children] << sections_hash
@@ -75,5 +43,45 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
     end
 
     render :json => tree.to_json
+  end
+
+  private
+  
+  def build_section_hash(website_section, website)
+    website_section_hash = {
+      :text => website_section.title,
+      :siteName => website.title,
+      :siteId => website.id,
+      :type => website_section.type,
+      :isSecured => !website_section.roles.empty?,
+      :isSection => true,
+      :inMenu => website_section.in_menu,
+      :hasLayout => !website_section.layout.blank?,
+      :id => "section_#{website_section.id}",
+      :url => "http://#{website.hosts.first.host}/#{website_section.permalink}"
+    }
+
+    if website_section.is_a?(Blog)
+      website_section_hash[:isBlog] = true
+      website_section_hash[:iconCls] = 'icon-blog'
+      website_section_hash[:leaf] = true
+    else
+      unless website_section.children.empty?
+        website_section_hash[:leaf] = false
+        website_section_hash[:children] = []
+        website_section.children.each do |child|
+          website_section_hash[:children] << build_section_hash(child, website)
+        end
+      else
+        website_section_hash[:leaf] = true
+      end
+      if website_section_hash[:isSecured]
+        website_section_hash[:iconCls] = 'icon-document_lock'
+      else
+        website_section_hash[:iconCls] = 'icon-document'
+      end
+    end
+
+    website_section_hash
   end
 end

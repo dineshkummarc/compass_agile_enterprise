@@ -158,7 +158,7 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 { width: 837px;
   overflow: hidden;
   margin: 0 auto 0 auto;
-  padding: 20px 24px 20px 37px;
+  padding: 40px 24px 20px 37px;
   background: #FFF url(/images/knitkit/content.png) repeat-y;}
 
 .sidebar
@@ -298,3 +298,33 @@ table tr td
     padding: 20px;
     color:white;
 }
+
+#submenubar
+{ width: 877px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;}
+
+ul#submenu, ul#submenu li
+{ float: left;
+  margin: 0;
+  padding: 0;}
+
+ul#submenu li
+{ list-style: none;}
+
+ul#submenu li a
+{ letter-spacing: 0.1em;
+  font: normal 100% 'lucida sans unicode', arial, sans-serif;
+  display: block;
+  float: left;
+  height: 37px;
+  padding: 0px 26px 0px 26px;
+  text-align: center;
+  color: #1293EE;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: transparent;}
+
+ul#submenu li a:hover, ul#submenu li.selected a, ul#submenu li.selected a:hover
+{ color: #000;}

@@ -21,7 +21,7 @@ class Website < ActiveRecord::Base
     end
 
     def permalinks
-      map(&:permalink)
+      collect{|website_section| website_section.permalinks}.flatten
     end
     
     # FIXME can this be on the nested_set?

@@ -3,6 +3,7 @@ require 'fileutils'
 
 class Theme < ActiveRecord::Base
   THEME_STRUCTURE = ['stylesheets', 'javascripts', 'images', 'templates']
+  BASE_LAYOUTS_VIEWS_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views"
   
   class << self
     def root_dir
@@ -184,6 +185,8 @@ class Theme < ActiveRecord::Base
 
   def create_theme_dir
     FileUtils.mkdir_p(path)
+    FileUtils.cp_r(BASE_LAYOUTS_VIEWS_PATH, path)
+    ::File.rename(::File.join(path,'views'), ::File.join(path,'templates'))
   end
 
   def delete_theme_dir

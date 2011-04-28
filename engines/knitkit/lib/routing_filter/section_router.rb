@@ -34,7 +34,15 @@ module RoutingFilter
     end
 
     def website_section_by_path(website, path)
-      website.website_sections.detect{|website_section| website_section.permalink == path }
+      valid_section = website.website_sections.detect{|website_section| website_section.permalink == path }
+      if valid_section.nil?
+        website.website_sections.each do |website_section|
+          valid_section = website_section.child_by_permalink(path)
+          break unless valid_section.nil?
+        end
+      end
+
+      valid_section
     end
 
     def recognize_pattern(paths)
