@@ -1,9 +1,0 @@
-<div style="float:right;font-size:15px;">
-  <% if current_user.nil? %>
-    <span>
-      <a href="/login">Login</a>&nbsp;|&nbsp;<a href="/signup/show">Signup</a>
-    </span>
-  <% else  %>
-  <span>Welcome <%= current_user.party.description %>&nbsp;|&nbsp;<a href="/erp_app/logout">Logout</a></span>
-  <% end %>
-</div>
