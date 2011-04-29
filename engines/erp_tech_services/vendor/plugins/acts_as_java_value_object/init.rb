@@ -1,1 +1,0 @@
-require 'acts_as_java_value_object'
