@@ -50,9 +50,7 @@ patch_file 'config/environment.rb',
   config.add_plugin(:all)
 
   #disable plugin
-  #config.disable_plugin(:engines)
-  config.disable_plugin(:acts_as_spring_entity)
-  config.disable_plugin(:acts_as_java_value_object)",
+  #config.disable_plugin(:engines)",
 :patch_mode => :insert_after
 
 patch_file 'config/environment.rb',
