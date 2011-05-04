@@ -183,7 +183,7 @@ class SetupKnitkit < ActiveRecord::Migration
     end
 
     unless table_exists?(:website_nav_items)
-      create_table :website_nav_item do |t|
+      create_table :website_nav_items do |t|
         t.references :website_nav
         t.string :title
         t.string :url
@@ -199,13 +199,13 @@ class SetupKnitkit < ActiveRecord::Migration
 
       add_index :website_nav_items, :website_nav_id
       add_index :website_nav_items, :position
-      add_index :website_sections, :parent_id
-      add_index :website_sections, :lft
-      add_index :website_sections, :rgt
+      add_index :website_nav_items, :parent_id
+      add_index :website_nav_items, :lft
+      add_index :website_nav_items, :rgt
     end
 
     unless table_exists?(:website_navs)
-      create_table :website_nav do |t|
+      create_table :website_navs do |t|
         t.references :website
         t.string :name
 
