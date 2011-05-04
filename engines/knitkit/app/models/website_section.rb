@@ -35,6 +35,10 @@ class WebsiteSection < ActiveRecord::Base
       @@types.uniq!
     end
   end
+  
+  def positioned_children
+    children.sort_by{|child| [child.position]}
+  end
 
   def permalinks
     links = [self.permalink]

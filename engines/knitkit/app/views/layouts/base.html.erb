@@ -19,7 +19,10 @@
             <h2><%= @website.subtitle %></h2>
           </div>
         </div>
-        <%= render_menu(@website_sections) %>
+        <%= 
+        #render_menu(@contents, {:name => 'my_menu'})
+        render_menu(@contents)
+      %>
       </div>
       <div id="site_content">
         <div id="content">

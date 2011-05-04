@@ -4,6 +4,7 @@ class Website < ActiveRecord::Base
   has_many :published_websites, :dependent => :destroy
   has_many :website_inquiries, :dependent => :destroy
   has_many :website_hosts, :dependent => :destroy
+  has_many :website_navs, :dependent => :destroy
 
   alias :hosts :website_hosts
 
@@ -23,6 +24,10 @@ class Website < ActiveRecord::Base
     def permalinks
       collect{|website_section| website_section.permalinks}.flatten
     end
+
+    def positioned
+      find(:all, :order => 'position')
+    end
     
     # FIXME can this be on the nested_set?
     def update_paths!
@@ -31,10 +36,19 @@ class Website < ActiveRecord::Base
       update paths.keys, paths.values
     end
   end
+  alias :sections :website_sections
+
+  def all_sections
+    sections_array = sections
+    sections_array.each do |section|
+        sections_array = sections_array | section.all_children
+    end
+    sections_array.flatten
+  end
   
   has_many :themes, :dependent => :destroy do
     def active
-      find(:all,:conditions => 'active = 1')
+      find(:all, :conditions => 'active = 1')
     end
   end
 

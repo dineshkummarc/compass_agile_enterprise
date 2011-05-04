@@ -149,6 +149,10 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def has_template?(directory, name)
+    self.templates.find(:first, :conditions => ['directory = ? and name = ?', directory, name])
+  end
+
   class << self
     def find_theme_root(file)
       theme_root = ''
@@ -184,9 +188,19 @@ class Theme < ActiveRecord::Base
   protected
 
   def create_theme_dir
+    #copy all layouts over to the theme
     FileUtils.mkdir_p(path)
     FileUtils.cp_r(BASE_LAYOUTS_VIEWS_PATH, path)
     ::File.rename(::File.join(path,'views'), ::File.join(path,'templates'))
+
+    #create Theme::File models for all the files
+    Dir.glob(::File.join(path,'/*/*/*')).each do |file|
+      next if file =~ /^\./
+      unless ::File.directory? file
+        name = file.sub(self.path + '/', '')
+        Theme::File.create!(:theme => self, :base_path => name, :data => IO.read(file)) rescue next
+      end
+    end
   end
 
   def delete_theme_dir

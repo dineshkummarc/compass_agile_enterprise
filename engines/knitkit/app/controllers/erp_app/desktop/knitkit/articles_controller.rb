@@ -64,13 +64,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
   end
 
   def existing_articles
-    current_articles = Article.find(:all,
-        :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-      :conditions => "website_section_id = #{params[:section_id]}")
-
-    available_articles = Article.all - current_articles
-
-    render :inline => available_articles.to_json(:only => [:title, :id])
+    Article.include_root_in_json = false
+    render :inline => Article.all.to_json(:only => [:title, :id])
   end
 
   def get

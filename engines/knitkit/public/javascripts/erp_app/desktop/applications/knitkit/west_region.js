@@ -7,7 +7,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         this.findParentByType('statuswindow').clearStatus();
     },
 
-    deleteSection : function(id){
+    deleteSection : function(node){
         var self = this;
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this section?', function(btn){
             if(btn == 'no'){
@@ -22,13 +22,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     url: './knitkit/section/delete',
                     method: 'POST',
                     params:{
-                        id:id
+                        id:node.id.split('_')[1]
                     },
                     success: function(response) {
                         var obj =  Ext.util.JSON.decode(response.responseText);
                         if(obj.success){
                             self.clearWindowStatus();
-                            self.sitesTree.getRootNode().reload();
+                            node.remove(true);
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting section');
@@ -51,7 +51,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         self.clearWindowStatus();
     },
 
-    deleteSite : function(id){
+    deleteSite : function(node){
         var self = this;
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this website?', function(btn){
             if(btn == 'no'){
@@ -66,13 +66,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     url: './knitkit/site/delete',
                     method: 'POST',
                     params:{
-                        id:id
+                        id:node.id.split('_')[1]
                     },
                     success: function(response) {
                         var obj =  Ext.util.JSON.decode(response.responseText);
                         if(obj.success){
                             self.clearWindowStatus();
-                            self.sitesTree.getRootNode().reload();
+                            node.remove(true);
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting site');
@@ -168,7 +168,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                 var obj = Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
-                    self.sitesTree.getRootNode().reload();
+                    if(secure){
+                        node.getUI().getIconEl().className = "x-tree-node-icon icon-document_lock";
+                    }
+                    else{
+                        node.getUI().getIconEl().className = "x-tree-node-icon icon-document";
+                    }
+                    node.attributes.isSecured = secure;
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error securing section');
@@ -190,7 +196,63 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             },
             region: 'center',
             rootVisible:false,
+            enableDD :true,
             listeners:{
+                'nodedragover':function(dragOverEvent){
+                    var targetNode = dragOverEvent.target;
+                    var dropNode = dragOverEvent.dropNode;
+
+                    if(dropNode.attributes['isWebsiteNavItem'] || dropNode.attributes['isSection']){
+                        if((targetNode.parentNode == dropNode.parentNode)){
+                            return true;
+                        }
+                    }
+
+                    return false
+                },
+                'nodedrop':function(dropEvent){
+                    var positionArray = [];
+                    var counter = 0;
+                    var parent = dropEvent.target.parentNode;
+                    var dropNode = dropEvent.dropNode;
+
+                    if(dropNode.attributes['isWebsiteNavItem']){
+                        parent.eachChild(function(node){
+                            positionArray.push({
+                                id:node.attributes.websiteNavItemId,
+                                position:counter,
+                                klass:'WebsiteNavItem'
+                            });
+                            counter++;
+                        });
+                    }
+                    else{
+                        parent.eachChild(function(node){
+                            positionArray.push({
+                                id:node.id.split('_')[1],
+                                position:counter,
+                                klass:'WebsiteSection'
+                            });
+                            counter++;
+                        });
+                    }
+
+                    var conn = new Ext.data.Connection();
+                    conn.request({
+                        url:'./knitkit/position/update',
+                        method: 'PUT',
+                        jsonData:{
+                            position_array:positionArray
+                        },
+                        success: function(response) {
+                            
+                        },
+                        failure: function(response) {
+                            Ext.Msg.alert('Error', 'Error saving positions.');
+                        }
+                    });
+
+                },
                 'click':function(node, e){
                     if(node.attributes['isSection']){
                         self.getArticles(node);
@@ -502,7 +564,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             iconCls:'icon-delete',
                             listeners:{
                                 'click':function(){
-                                    self.deleteSection(node.id.split('_')[1]);
+                                    self.deleteSection(node);
+                                    node.remove(true);
                                 }
                             }
                         });
@@ -692,7 +755,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             iconCls:'icon-delete',
                             listeners:{
                                 'click':function(){
-                                    self.deleteSite(node.id.split('_')[1]);
+                                    self.deleteSite(node);
                                 }
                             }
                         });
@@ -811,13 +874,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 xtype:'textfield',
                                                 fieldLabel:'Host',
                                                 name:'host',
-                                                value:node.host,
+                                                value:node.attributes.host,
                                                 allowBlank:false
                                             },
                                             {
                                                 xtype:'hidden',
                                                 name:'id',
-                                                value:node.id
+                                                value:node.attributes.websiteHostId
                                             }
                                             ]
                                         }),
@@ -878,7 +941,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 url: './knitkit/site/delete_host',
                                                 method: 'POST',
                                                 params:{
-                                                    id:node.id
+                                                    id:node.attributes.websiteHostId
                                                 },
                                                 success: function(response) {
                                                     var obj =  Ext.util.JSON.decode(response.responseText);
@@ -1010,7 +1073,594 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             }
                         });
                     }
+                    else
+                    if(node.attributes['isMenuRoot']){
+                        items.push({
+                            text:'Add Menu',
+                            iconCls:'icon-add',
+                            handler:function(btn){
+                                var addMenuWindow = new Ext.Window({
+                                    layout:'fit',
+                                    width:375,
+                                    title:'New Menu',
+                                    height:100,
+                                    plain: true,
+                                    buttonAlign:'center',
+                                    items: new Ext.FormPanel({
+                                        labelWidth: 50,
+                                        frame:false,
+                                        bodyStyle:'padding:5px 5px 0',
+                                        url:'./knitkit/website_nav/new',
+                                        defaults: {
+                                            width: 225
+                                        },
+                                        items: [
+                                        {
+                                            xtype:'textfield',
+                                            fieldLabel:'name',
+                                            allowBlank:false,
+                                            name:'name'
+                                        },
+                                        {
+                                            xtype:'hidden',
+                                            name:'website_id',
+                                            value:node.attributes.websiteId
+                                        }
+                                        ]
+                                    }),
+                                    buttons: [{
+                                        text:'Submit',
+                                        listeners:{
+                                            'click':function(button){
+                                                var window = button.findParentByType('window');
+                                                var formPanel = window.findByType('form')[0];
+                                                self.setWindowStatus('Creating menu...');
+                                                formPanel.getForm().submit({
+                                                    reset:true,
+                                                    success:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        if(obj.success){
+                                                            node.appendChild(obj.node);
+                                                        }
+                                                        else{
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    },
+                                                    failure:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        Ext.Msg.alert("Error", obj.msg);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },{
+                                        text: 'Close',
+                                        handler: function(){
+                                            addMenuWindow.close();
+                                        }
+                                    }]
+                                });
+                                addMenuWindow.show();
+                            }
+                        });
+                    }
+                    else
+                    if(node.attributes['isWebsiteNav']){
+                        items.push({
+                            text:'Add Menu Item',
+                            iconCls:'icon-add',
+                            handler:function(btn){
+                                var addMenuItemWindow = new Ext.Window({
+                                    layout:'fit',
+                                    width:375,
+                                    title:'New Menu Item',
+                                    height:200,
+                                    plain: true,
+                                    buttonAlign:'center',
+                                    items: new Ext.FormPanel({
+                                        labelWidth: 50,
+                                        frame:false,
+                                        bodyStyle:'padding:5px 5px 0',
+                                        url:'./knitkit/website_nav/add_menu_item',
+                                        defaults: {
+                                            width: 225
+                                        },
+                                        items: [
+                                        {
+                                            xtype:'textfield',
+                                            fieldLabel:'Title',
+                                            allowBlank:false,
+                                            name:'title'
+                                        },
+                                        {
+                                            xtype:'radiogroup',
+                                            fieldLabel:'Link to Section?',
+                                            name:'link_to_section',
+                                            allowBlank:false,
+                                            width:100,
+                                            columns:2,
+                                            items:[
+                                            {
+                                                boxLabel:'Yes',
+                                                name:'link_to_section',
+                                                inputValue: 'yes',
+                                                checked:true
+                                            },
 
+                                            {
+                                                boxLabel:'No',
+                                                name:'link_to_section',
+                                                inputValue: 'no'
+                                            }],
+                                            listeners:{
+                                                'change':function(radioGroup, radio){
+                                                    if(radio.inputValue == 'no'){
+                                                        Ext.getCmp('knitkit_website_nav_item_section').hide();
+                                                        Ext.getCmp('knitkit_website_nav_item_url').show();
+                                                    }
+                                                    else
+                                                    {
+                                                        Ext.getCmp('knitkit_website_nav_item_url').hide();
+                                                        Ext.getCmp('knitkit_website_nav_item_section').show();
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype:'combo',
+                                            id:'knitkit_website_nav_item_section',
+                                            hiddenName:'section_id',
+                                            name:'section_id',
+                                            loadingText:'Retrieving Sections...',
+                                            store:{
+                                                xtype:'jsonstore',
+                                                baseParams:{
+                                                    website_id:node.attributes.websiteId
+                                                },
+                                                url:'./knitkit/section/existing_sections',
+                                                fields:[
+                                                {
+                                                    name:'id'
+                                                },
+                                                {
+                                                    name:'title'
+
+                                                }
+                                                ]
+                                            },
+                                            forceSelection:true,
+                                            editable:true,
+                                            fieldLabel:'Section',
+                                            autoSelect:true,
+                                            typeAhead: true,
+                                            mode: 'remote',
+                                            displayField:'title',
+                                            valueField:'id',
+                                            triggerAction: 'all'
+                                        },
+                                        {
+                                            xtype:'textfield',
+                                            fieldLabel:'Url',
+                                            id:'knitkit_website_nav_item_url',
+                                            hidden:true,
+                                            name:'url'
+                                        },
+                                        {
+                                            xtype:'hidden',
+                                            name:'website_nav_id',
+                                            value:node.attributes.websiteNavId
+                                        }
+                                        ]
+                                    }),
+                                    buttons: [{
+                                        text:'Submit',
+                                        listeners:{
+                                            'click':function(button){
+                                                var window = button.findParentByType('window');
+                                                var formPanel = window.findByType('form')[0];
+                                                self.setWindowStatus('Creating menu item...');
+                                                formPanel.getForm().submit({
+                                                    reset:true,
+                                                    success:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        if(obj.success){
+                                                            node.appendChild(obj.node);
+                                                        }
+                                                        else{
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    },
+                                                    failure:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        if(action.response == null){
+                                                            Ext.Msg.alert("Error", 'Could not create menu item');
+                                                        }
+                                                        else{
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                       
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },{
+                                        text: 'Close',
+                                        handler: function(){
+                                            addMenuItemWindow.close();
+                                        }
+                                    }]
+                                });
+                                addMenuItemWindow.show();
+                            }
+                        });
+
+                        items.push({
+                            text:'Update',
+                            iconCls:'icon-edit',
+                            handler:function(btn){
+                                var updateMenuWindow = new Ext.Window({
+                                    layout:'fit',
+                                    width:375,
+                                    title:'Update Menu',
+                                    height:100,
+                                    plain: true,
+                                    buttonAlign:'center',
+                                    items: new Ext.FormPanel({
+                                        labelWidth: 50,
+                                        frame:false,
+                                        bodyStyle:'padding:5px 5px 0',
+                                        url:'./knitkit/website_nav/update',
+                                        defaults: {
+                                            width: 225
+                                        },
+                                        items: [
+                                        {
+                                            xtype:'textfield',
+                                            fieldLabel:'Name',
+                                            value:node.text,
+                                            id:'knitkit_website_nav_update_name',
+                                            allowBlank:false,
+                                            name:'name'
+                                        },
+                                        {
+                                            xtype:'hidden',
+                                            name:'website_nav_id',
+                                            value:node.attributes.websiteNavId
+                                        }
+                                        ]
+                                    }),
+                                    buttons: [{
+                                        text:'Submit',
+                                        listeners:{
+                                            'click':function(button){
+                                                var window = button.findParentByType('window');
+                                                var formPanel = window.findByType('form')[0];
+                                                self.setWindowStatus('Creating menu...');
+                                                formPanel.getForm().submit({
+                                                    reset:false,
+                                                    success:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        if(obj.success){
+                                                            var newText = Ext.getCmp('knitkit_website_nav_update_name').getValue();
+                                                            node.getUI().getTextEl().innerHTML = newText;
+                                                        }
+                                                        else{
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    },
+                                                    failure:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        Ext.Msg.alert("Error", obj.msg);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },{
+                                        text: 'Close',
+                                        handler: function(){
+                                            updateMenuWindow.close();
+                                        }
+                                    }]
+                                });
+                                updateMenuWindow.show();
+                            }
+                        });
+
+                        items.push({
+                            text:'Delete',
+                            iconCls:'icon-delete',
+                            handler:function(btn){
+                                Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this menu?', function(btn){
+                                    if(btn == 'no'){
+                                        return false;
+                                    }
+                                    else
+                                    if(btn == 'yes')
+                                    {
+                                        self.setWindowStatus('Deleting menu...');
+                                        var conn = new Ext.data.Connection();
+                                        conn.request({
+                                            url: './knitkit/website_nav/delete',
+                                            method: 'POST',
+                                            params:{
+                                                id:node.websiteNavId
+                                            },
+                                            success: function(response) {
+                                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                                if(obj.success){
+                                                    node.remove(true);
+                                                }
+                                                else{
+                                                    Ext.Msg.alert('Error', 'Error deleting menu');
+                                                    self.clearWindowStatus();
+                                                }
+                                            },
+                                            failure: function(response) {
+                                                self.clearWindowStatus();
+                                                Ext.Msg.alert('Error', 'Error deleting menu');
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else
+                    if(node.attributes['isWebsiteNavItem'])
+                    {
+                        items.push({
+                            text:'Update Menu Item',
+                            iconCls:'icon-edit',
+                            handler:function(btn){
+                                var addMenuItemWindow = new Ext.Window({
+                                    layout:'fit',
+                                    width:375,
+                                    title:'Update Menu Item',
+                                    height:175,
+                                    plain: true,
+                                    buttonAlign:'center',
+                                    items: new Ext.FormPanel({
+                                        labelWidth: 50,
+                                        frame:false,
+                                        bodyStyle:'padding:5px 5px 0',
+                                        url:'./knitkit/website_nav/update_menu_item',
+                                        defaults: {
+                                            width: 225
+                                        },
+                                        items: [
+                                        {
+                                            xtype:'textfield',
+                                            fieldLabel:'Title',
+                                            value:node.text,
+                                            allowBlank:false,
+                                            name:'title'
+                                        },
+                                        {
+                                            xtype:'combo',
+                                            fieldLabel:'Link to',
+                                            name:'link_to',
+                                            id:'knitkit_nav_item_link_to',
+                                            allowBlank:false,
+                                            width:100,
+                                            forceSelection:true,
+                                            editable:false,
+                                            autoSelect:true,
+                                            typeAhead: false,
+                                            mode: 'local',
+                                            triggerAction: 'all',
+                                            store:[
+                                            ['website_section','Section'],
+                                            //['article','Article'],
+                                            ['url','Url']
+                                            ],
+                                            value:node.attributes.linkToType,
+                                            listeners:{
+                                                'change':function(combo, newValue, oldValue){
+                                                    switch(newValue){
+                                                        case 'website_section':
+                                                            Ext.getCmp('knitkit_website_nav_item_section').show();
+                                                            Ext.getCmp('knitkit_website_nav_item_article').hide();
+                                                            Ext.getCmp('knitkit_website_nav_item_url').hide();
+                                                            break;
+                                                        case 'article':
+                                                            Ext.getCmp('knitkit_website_nav_item_section').hide();
+                                                            Ext.getCmp('knitkit_website_nav_item_article').show();
+                                                            Ext.getCmp('knitkit_website_nav_item_url').hide();
+                                                            break;
+                                                        case 'url':
+                                                            Ext.getCmp('knitkit_website_nav_item_section').hide();
+                                                            Ext.getCmp('knitkit_website_nav_item_article').hide();
+                                                            Ext.getCmp('knitkit_website_nav_item_url').show();
+                                                            break;
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            xtype:'combo',
+                                            id:'knitkit_website_nav_item_article',
+                                            hiddenName:'article_id',
+                                            hidden:(node.attributes.linkToType == 'website_section' || node.attributes.linkToType == 'url'),
+                                            name:'article_id',
+                                            loadingText:'Retrieving Articles...',
+                                            store:{
+                                                xtype:'jsonstore',
+                                                autoLoad:true,
+                                                baseParams:{
+                                                    website_id:node.attributes.websiteId
+                                                },
+                                                url:'./knitkit/articles/existing_articles',
+                                                fields:[
+                                                {
+                                                    name:'id'
+                                                },
+                                                {
+                                                    name:'title'
+
+                                                }
+                                                ],
+                                                listeners:{
+                                                    'load':function(store, records, options){
+                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(node.attributes.linkedToId);
+                                                    }
+                                                }
+                                            },
+                                            forceSelection:true,
+                                            editable:false,
+                                            fieldLabel:'Article',
+                                            autoSelect:true,
+                                            typeAhead: false,
+                                            mode: 'local',
+                                            displayField:'title',
+                                            valueField:'id',
+                                            triggerAction: 'all'
+                                        },
+                                        {
+                                            xtype:'combo',
+                                            id:'knitkit_website_nav_item_section',
+                                            hiddenName:'website_section_id',
+                                            hidden:(node.attributes.linkToType == 'url' || node.attributes.linkToType == 'article'),
+                                            name:'website_section_id',
+                                            loadingText:'Retrieving Sections...',
+                                            store:{
+                                                xtype:'jsonstore',
+                                                autoLoad:true,
+                                                baseParams:{
+                                                    website_id:node.attributes.websiteId
+                                                },
+                                                url:'./knitkit/section/existing_sections',
+                                                fields:[
+                                                {
+                                                    name:'id'
+                                                },
+                                                {
+                                                    name:'title'
+
+                                                }
+                                                ],
+                                                listeners:{
+                                                    'load':function(store, records, options){
+                                                        Ext.getCmp('knitkit_website_nav_item_section').setValue(node.attributes.linkedToId);
+                                                    }
+                                                }
+                                            },
+                                            forceSelection:true,
+                                            editable:false,
+                                            fieldLabel:'Section',
+                                            autoSelect:true,
+                                            typeAhead: false,
+                                            mode: 'local',
+                                            displayField:'title',
+                                            valueField:'id',
+                                            triggerAction: 'all'
+                                        },
+                                        {
+                                            xtype:'textfield',
+                                            fieldLabel:'Url',
+                                            value:node.attributes.url,
+                                            id:'knitkit_website_nav_item_url',
+                                            hidden:(node.attributes.linkToType == 'website_section' || node.attributes.linkToType == 'article'),
+                                            name:'url'
+                                        },
+                                        {
+                                            xtype:'hidden',
+                                            name:'website_nav_item_id',
+                                            value:node.attributes.websiteNavItemId
+                                        }
+                                        ]
+                                    }),
+                                    buttons: [{
+                                        text:'Submit',
+                                        listeners:{
+                                            'click':function(button){
+                                                var window = button.findParentByType('window');
+                                                var formPanel = window.findByType('form')[0];
+                                                self.setWindowStatus('Updating menu item...');
+                                                formPanel.getForm().submit({
+                                                    reset:false,
+                                                    success:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        if(obj.success){
+                                                            node.attributes.linkedToId = obj.linkedToId;
+                                                            node.attributes.linkToType = obj.linkToType;
+                                                            node.attributes.url = obj.url;
+                                                            node.getUI().getTextEl().innerHTML = obj.title;
+                                                        }
+                                                        else{
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                    },
+                                                    failure:function(form, action){
+                                                        self.clearWindowStatus();
+                                                        if(action.response == null){
+                                                            Ext.Msg.alert("Error", 'Could not create menu item');
+                                                        }
+                                                        else{
+                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            Ext.Msg.alert("Error", obj.msg);
+                                                        }
+                                                       
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },{
+                                        text: 'Close',
+                                        handler: function(){
+                                            addMenuItemWindow.close();
+                                        }
+                                    }]
+                                });
+                                addMenuItemWindow.show();
+                            }
+                        });
+
+                        items.push({
+                            text:'Delete',
+                            iconCls:'icon-delete',
+                            handler:function(btn){
+                                Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this menu item?', function(btn){
+                                    if(btn == 'no'){
+                                        return false;
+                                    }
+                                    else
+                                    if(btn == 'yes')
+                                    {
+                                        self.setWindowStatus('Deleting menu item...');
+                                        var conn = new Ext.data.Connection();
+                                        conn.request({
+                                            url: './knitkit/website_nav/delete_menu_item',
+                                            method: 'POST',
+                                            params:{
+                                                id:node.websiteNavItemId
+                                            },
+                                            success: function(response) {
+                                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                                if(obj.success){
+                                                    node.remove(true);
+                                                }
+                                                else{
+                                                    Ext.Msg.alert('Error', 'Error deleting menu item');
+                                                    self.clearWindowStatus();
+                                                }
+                                            },
+                                            failure: function(response) {
+                                                self.clearWindowStatus();
+                                                Ext.Msg.alert('Error', 'Error deleting menu item');
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
                     var contextMenu = new Ext.menu.Menu({
                         items:items
                     });

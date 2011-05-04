@@ -52,4 +52,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/knitkit/comments/:action/:content_id', :controller => 'erp_app/desktop/knitkit/comments'
   #inquiries
   map.connect '/erp_app/desktop/knitkit/inquiries/:action/:website_id', :controller => 'erp_app/desktop/knitkit/inquiries'
+  #website_nav
+  map.connect '/erp_app/desktop/knitkit/website_nav/:action', :controller => 'erp_app/desktop/knitkit/website_nav'
+  #position
+  map.connect '/erp_app/desktop/knitkit/position/:action', :controller => 'erp_app/desktop/knitkit/position'
 end

@@ -268,7 +268,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                                     baseParams:{
                                         section_id:self.initialConfig['sectionId']
                                     },
-                                    url:'./knitkit/articles/existing_articles',
+                                    url:'./knitkit/section/available_articles',
                                     fields:[
                                     {
                                         name:'id'

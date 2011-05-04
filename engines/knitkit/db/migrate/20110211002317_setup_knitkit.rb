@@ -34,6 +34,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.string :permalink
         t.text :layout
         t.boolean :in_menu
+        t.integer :position
 
         #better nested set columns
         t.integer :parent_id
@@ -44,6 +45,7 @@ class SetupKnitkit < ActiveRecord::Migration
       end
       #indexes
       add_index :website_sections, :website_id
+      add_index :website_sections, :position
       add_index :website_sections, :parent_id
       add_index :website_sections, :lft
       add_index :website_sections, :rgt
@@ -180,6 +182,39 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :website_inquiries, [:website_id]
     end
 
+    unless table_exists?(:website_nav_items)
+      create_table :website_nav_item do |t|
+        t.references :website_nav
+        t.string :title
+        t.string :url
+        t.integer :position
+
+        #better nested set columns
+        t.integer :parent_id
+        t.integer :lft
+        t.integer :rgt
+
+        t.timestamps
+      end
+
+      add_index :website_nav_items, :website_nav_id
+      add_index :website_nav_items, :position
+      add_index :website_sections, :parent_id
+      add_index :website_sections, :lft
+      add_index :website_sections, :rgt
+    end
+
+    unless table_exists?(:website_navs)
+      create_table :website_nav do |t|
+        t.references :website
+        t.string :name
+
+        t.timestamps
+      end
+
+      add_index :website_navs, :website_id
+    end
+
   end
 
   def self.down
@@ -189,7 +224,7 @@ class SetupKnitkit < ActiveRecord::Migration
     # check that each table exists before trying to delete it.
     [:websites, :website_sections, :contents, :website_section_contents,
       :themes, :theme_files, :published_websites, :published_elements,
-      :comments, :website_inquiries,:website_hosts].each do |tbl|
+      :comments, :website_inquiries,:website_hosts,:website_nav_items, :website_navs].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
       end

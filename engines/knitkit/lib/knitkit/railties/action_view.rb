@@ -31,4 +31,19 @@ ActionView::Base.class_eval do
 
     html
   end
+
+  def render_menu(contents, options=nil)
+    active_theme = @website.themes.active.first unless @website.themes.active.empty?
+    if !options.nil? && !options[:name].blank?
+      menu = WebsiteNav.find_by_name(options[:name].to_s)
+      raise "Menu with name #{options[:name]} does not exist" if menu.nil?
+      if !active_theme.nil? && active_theme.has_template?('templates/menus', "_#{options[:name]}.html.erb")
+        render :partial => "menus/#{options[:name]}", :locals => {:menu => menu}
+      else
+        render :partial => "menus/default", :locals => {:menu => menu}
+      end
+    else
+      render :partial => "shared/default_section_menu", :locals => {:contents => contents}
+    end
+  end
 end
