@@ -61,7 +61,13 @@ patch_file 'config/environment.rb',
 append_file 'config/environment.rb',
 "\n\n#forces rails to look in plugins if assets are not found
 plugin_assets = init.loaded_plugins.map { |plugin| File.join(plugin.directory, 'public') }.reject { |dir| not (File.directory?(dir) and File.exist?(dir)) }
-init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets"
+init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets
+
+ActionMailer::Base.delivery_method = :smtp
+ActionMailer::Base.smtp_settings = {
+  :address => '127.0.0.1',
+  :port => 25
+}"
 
 puts "getting latest compass framwork engines, this may take a bit grab a LARGE coffee..."
 
