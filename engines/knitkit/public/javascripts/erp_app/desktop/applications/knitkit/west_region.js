@@ -1,3 +1,9 @@
+Ext.override(Ext.data.Node, {
+    setLeaf: function(value){
+        this.leaf = value;
+    }
+}); 
+
 Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
@@ -395,6 +401,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                             self.clearWindowStatus();
                                                             var obj =  Ext.util.JSON.decode(action.response.responseText);
                                                             if(obj.success){
+                                                                node.setLeaf(false);
                                                                 node.appendChild(obj.node);
                                                             }
                                                             else{
@@ -734,7 +741,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     formPanel.getForm().submit({
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            node.text = form.findField('knitkitUpdateSiteTitle').getValue();
+                                                            node.setText(form.findField('knitkitUpdateSiteTitle').getValue());
                                                             editWebsiteWindow.close();
                                                         },
                                                         failure:function(form, action){
@@ -1445,7 +1452,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             url: './knitkit/website_nav/delete',
                                             method: 'POST',
                                             params:{
-                                                id:node.websiteNavId
+                                                id:node.attributes.websiteNavId
                                             },
                                             success: function(response) {
                                                 var obj =  Ext.util.JSON.decode(response.responseText);
