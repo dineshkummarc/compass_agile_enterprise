@@ -1,5 +1,16 @@
 Ext.ns("Compass.ErpApp.Utility.Data");
 
+Compass.ErpApp.Utility.promptReload = function(){
+    Ext.MessageBox.confirm('Confirm', 'Page must reload for changes to take affect. Reload now?', function(btn){
+        if(btn == 'no'){
+            return false;
+        }
+        else{
+            window.location.reload();
+        }
+    });
+};
+
 Compass.ErpApp.Utility.getRootUrl = function(){
     var url_pieces = location.href.split("/");
     var root_url = url_pieces[0] + url_pieces[1] + "//" + url_pieces[2] + "/"
@@ -148,9 +159,9 @@ Array.prototype.find = function (find_statement) {
 };
 
 String.prototype.underscore = function (){
-  return this.replace(/\s/g, "_");
+    return this.replace(/\s/g, "_");
 };
 
 String.prototype.downcase = function (){
-  return this.toLowerCase();
+    return this.toLowerCase();
 }

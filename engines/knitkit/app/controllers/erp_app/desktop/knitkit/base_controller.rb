@@ -69,7 +69,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
     render :json => tree.to_json
   end
 
-  private
+  protected
   
   def build_section_hash(website_section, website)
     website_section_hash = {

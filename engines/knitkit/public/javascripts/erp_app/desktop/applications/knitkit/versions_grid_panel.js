@@ -75,13 +75,19 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel = Ext.extend(Ext.g
                     }
                 },
                 handler: function(grid, rowIndex, colIndex) {
-                    var rec = grid.getStore().getAt(rowIndex);
-                    if(rec.get('published')){
-                        return false;
+                    if(ErpApp.Authentication.RoleManager.hasRole('publisher')){
+                        var rec = grid.getStore().getAt(rowIndex);
+                        if(rec.get('published')){
+                            return false;
+                        }
+                        else{
+                            grid.publish(rec)
+                        }
                     }
                     else{
-                        grid.publish(rec)
+                        ErpApp.Authentication.RoleManager.invalidRole({});
                     }
+
                 }
             }]
         }

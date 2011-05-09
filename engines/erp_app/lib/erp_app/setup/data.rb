@@ -314,6 +314,8 @@ class ErpApp::Setup::Data
     admin.desktop.applications << knikit_app
     admin.desktop.save
 
+    Role.create(:internal_identifier => 'publisher', :description => 'publisher')
+
     #######################################
     #rails_db_admin app
     #######################################

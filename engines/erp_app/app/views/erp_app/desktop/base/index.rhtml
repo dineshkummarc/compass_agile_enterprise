@@ -119,13 +119,11 @@ end
     </div>
     <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
     <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css'
-      #'GanttPlugin.css','treegrid.css'
     ) %>
     <%=
     javascript_include_tag("ext_3_3_0/RowEditor.js",
       "ext_3_3_1/DataView-more.js",
       "ext_3_3_1/RowExpander.js",
-      "erp_app/authentication/role_manager.js",
       "erp_app/utility.js",
       "erp_app/shared/active_ext/active_ext_grid.js",
       "erp_app/shared/status_window.js",
@@ -148,12 +146,6 @@ end
       "erp_app/shared/compass_ckeditor.js",
       "erp_app/shared/file_manager_tree.js",
       "erp_app/shared/column_editors.js"
-
-      #upload resources
-
-      #timeshare dev
-      #"timeshare/TreeGrid.js",
-      #"timeshare/GanttGrid.js"
     )
   %>
     <%=include_code_mirror%>

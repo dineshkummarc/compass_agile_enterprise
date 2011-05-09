@@ -120,10 +120,22 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
 
   def add_host
     website = Website.find(params[:id])
-    website.hosts << WebsiteHost.create(:host => params[:host])
+    website_host = WebsiteHost.create(:host => params[:host])
+    website.hosts << website_host
     website.save
 
-    render :inline => {:success => true}.to_json
+    render :inline => {
+      :success => true,
+      :node => {
+        :text => website_host.host,
+        :websiteHostId => website_host.id,
+        :host => website_host.host,
+        :iconCls => 'icon-globe',
+        :url => "http://#{website_host.host}",
+        :isHost => true,
+        :leaf => true,
+        :children => []}
+      }.to_json
   end
 
   def update_host

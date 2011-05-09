@@ -67,14 +67,7 @@ Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel = Ext
             jsonData:rolesJson,
             success: function(responseObject) {
                 self.clearWindowStatus();
-                Ext.MessageBox.confirm('Confirm', 'Page must reload for changes to take affect. Reload now?', function(btn){
-                    if(btn == 'no'){
-                        return false;
-                    }
-                    else{
-                        window.location.reload();
-                    }
-                });
+                Compass.ErpApp.Utility.promptReload();
             },
             failure: function() {
                 self.clearWindowStatus();
