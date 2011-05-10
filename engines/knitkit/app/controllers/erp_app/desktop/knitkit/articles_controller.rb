@@ -1,18 +1,18 @@
 class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::BaseController
-  IGNORED_PARAMS = %w{action controller position section_id}
+  IGNORED_PARAMS = %w{action controller id position section_id}
 
   def new
     result = {}
     website_section_id = params[:section_id]
     article = Article.new
 
-    params.each do |k,v|
-      article.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
-    end
+    article = set_attributes(article)
 
     if article.save
       section = WebsiteSection.find(website_section_id)
       section.contents << article
+      update_position(website_section_id, article)
+      
       result[:success] = true
     else
       result[:success] = false
@@ -26,14 +26,10 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     website_section_id = params[:section_id]
     article = Article.find(params[:id])
     
-    params.each do |k,v|
-      article.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
-    end
+    article = set_attributes(article)
 
     #handle position
-    section_content = WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?',website_section_id,article.id])
-    section_content.position = params['position']
-    section_content.save
+    update_position(website_section_id, article)
     
     if article.save
       result[:success] = true
@@ -42,6 +38,24 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     end
 
     render :inline => result.to_json
+  end
+ 
+  def set_attributes(article)
+    params.each do |k,v|
+      if k == 'tags'
+        article.tag_list = params[:tags].split(',').collect{|t| t.strip() }
+      else
+        article.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
+      end
+    end
+    
+    article    
+  end
+ 
+  def update_position(website_section_id, article)
+    section_content = WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?',website_section_id,article.id])
+    section_content.position = params['position']
+    section_content.save    
   end
  
   def delete
@@ -95,6 +109,19 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
       end
     end
 
-    render :inline => "{totalCount:#{total_count},data:#{articles.to_json(:only => [:content_area, :id, :title, :body_html, :excerpt_html], :methods => [:website_section_position])}}"
+    articles_array = []
+    articles.each do |a|
+      articles_hash = {}
+      articles_hash[:content_area] = a.content_area
+      articles_hash[:id] = a.id
+      articles_hash[:title] = a.title
+      articles_hash[:tag_list] = a.tag_list.join(', ')
+      articles_hash[:body_html] = a.body_html
+      articles_hash[:excerpt_html] = a.excerpt_html
+      articles_hash[:position] = a.position(website_section_id)
+      articles_array << articles_hash
+    end
+
+    render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position], :methods => [:website_section_position])}}"
   end
 end

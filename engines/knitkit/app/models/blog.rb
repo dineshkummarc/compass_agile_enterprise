@@ -1,4 +1,5 @@
 class Blog < WebsiteSection
+  
   def self.method_missing(name, *args, &block)
     puts 'here'
     if WebsiteSection.respond_to?(name)
