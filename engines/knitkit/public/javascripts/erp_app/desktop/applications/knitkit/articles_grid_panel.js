@@ -123,39 +123,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
         });
         editArticleWindow.show();
     },
-/*
-    saveArticle : function(record){
-        var self = this;
-        this.initialConfig['centerRegion'].setWindowStatus('Saving...');
-        var conn = new Ext.data.Connection();
-        conn.request({
-            url: './knitkit/articles/update/' + self.initialConfig['sectionId'],
-            method: 'POST',
-            params:{
-                id:record.get('id'),
-                title:record.get('title'),
-                position:record.get('website_section_position'),
-                excerpt_html:record.get('excerpt_html'),
-                content_area:record.get('content_area')
-            },
-            success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
-                if(obj.success){
-                    self.initialConfig['centerRegion'].clearWindowStatus();
-                    record.commit();
-                }
-                else{
-                    Ext.Msg.alert('Error', 'Error saving Article');
-                    self.initialConfig['centerRegion'].clearWindowStatus();
-                }
-            },
-            failure: function(response) {
-                self.initialConfig['centerRegion'].clearWindowStatus();
-                Ext.Msg.alert('Error', 'Error saving Article');
-            }
-        });
-    },
-*/
+
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel.superclass.initComponent.call(this, arguments);
         this.getStore().load();
@@ -186,7 +154,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 name:'excerpt_html'
             },
             {
-                name:'website_section_position'
+                name:'position'
             },
             {
                 name:'content_area'
@@ -466,7 +434,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
                 menuDisabled:true,
                 resizable:false,
                 header:'Pos',
-                dataIndex:'website_section_position',
+                dataIndex:'position',
                 width:30,
                 editable:false,
                 editor: new fm.TextField({
