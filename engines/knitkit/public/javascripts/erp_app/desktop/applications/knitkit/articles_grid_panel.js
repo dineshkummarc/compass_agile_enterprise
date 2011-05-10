@@ -37,7 +37,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
             params:{
                 id:record.get('id'),
                 title:record.get('title'),
-                position:record.get('section_position'),
+                position:record.get('website_section_position'),
                 excerpt_html:record.get('excerpt_html'),
                 content_area:record.get('content_area')
             },
@@ -86,7 +86,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 name:'excerpt_html'
             },
             {
-                name:'section_position'
+                name:'website_section_position'
             },
             {
                 name:'content_area'
@@ -364,7 +364,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
                 menuDisabled:true,
                 resizable:false,
                 header:'Pos',
-                dataIndex:'section_position',
+                dataIndex:'website_section_position',
                 width:30,
                 editable:true,
                 editor: new fm.TextField({
