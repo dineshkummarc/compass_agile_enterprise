@@ -17,6 +17,10 @@ class Blog < WebsiteSection
     Article.find_published_by_section(active_publication, self).sort_by{|article| article.created_at}.reverse
   end
 
+  def find_published_blog_posts_with_tag(active_publication, tag)
+    Article.find_published_by_section_with_tag(active_publication, self, tag).sort_by{|article| article.created_at}.reverse
+  end
+
   def find_blog_post(permalink)
     Article.find(
       :first,

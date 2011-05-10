@@ -275,6 +275,26 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
   border-top: 1px solid #D9D5CF;
   border-bottom: 1px solid #FFF;
   margin: 0 0 20px 0;}
+
+.blog_articles
+{
+  float: left;
+}
+
+.blog_post
+{
+  margin-bottom: 20px;
+}
+
+.blog_tags
+{ 
+  float: right;
+}
+
+.blog_link
+{ 
+  margin-bottom: 10px;
+}
   
 table
 { margin: 10px 0 30px 0;}

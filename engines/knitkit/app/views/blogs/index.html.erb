@@ -1,12 +1,28 @@
 <h2><%=h @website_section.title %></h2>
 
+<div class="blog_articles">
 <% @contents.each do |content| %>
 <div class="blog_post" id="blog_<%=h content.id %>">
   <h4><%=h content.title %></h4>
-  <p>Created on: <%= content.created_at.to_s(:long) %></p>
+  <p>
+    Created on: <%= content.created_at.to_s(:long) %><br />
+    Topics: <%=Content.find(content.content_id).tag_list %>
+  </p>
   <div class="blog_body">
     <%= content.excerpt_html %>
   </div>
   <div><%= link_to 'Read More...', blog_article_path(@website_section.id, content.permalink) %></div>
 </div>
 <% end %>
+</div>
+
+<div class="blog_tags">
+  <h4>Topics</h4>
+  <% Article.tag_counts_on(:tags).each do |tag| %>
+
+  <div class="tag_link">
+    <%= link_to tag.name, blog_tag_path(@website_section.id, tag.id) %>
+  </div>
+  
+  <% end %>
+</div>

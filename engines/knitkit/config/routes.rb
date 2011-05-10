@@ -24,6 +24,11 @@ ActionController::Routing::Routes.draw do |map|
                     :action => 'show',
                     :conditions => { :method => :get }
 
+  map.blog_tag 'blogs/:section_id/tag/:tag_id',
+                    :controller => 'blogs',
+                    :action => 'tag',
+                    :conditions => { :method => :get }
+
   map.comments '/comments/add/:section_id/:content_id', :controller => 'comments', :action => 'add'
   map.login '/login', :controller => 'login', :action => 'index'
   map.signup '/signup/:action', :controller => 'signup'

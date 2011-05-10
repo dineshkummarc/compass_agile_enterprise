@@ -1,4 +1,5 @@
 class Content < ActiveRecord::Base
+  acts_as_taggable
   acts_as_commentable
   acts_as_versioned
   can_be_published
@@ -15,9 +16,27 @@ class Content < ActiveRecord::Base
       :conditions => "website_section_id = #{website_section_id} ")
   end
 
+  def self.find_by_section_id_filtered_by_id( website_section_id, id_filter_list )
+    Content.find(:all, 
+      :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
+      :conditions => "website_section_id = #{website_section_id} AND contents.id IN (#{id_filter_list.join(',')})")
+  end
+
   def self.find_published_by_section(active_publication, website_section)
     published_content = []
     contents = self.find_by_section_id( website_section.id )
+    contents.each do |content|
+      content = get_published_verison(active_publication, content)
+      published_content << content unless content.nil?
+    end
+
+    published_content
+  end
+
+  def self.find_published_by_section_with_tag(active_publication, website_section, tag)
+    published_content = []    
+    id_filter_list = self.tagged_with(tag.name).collect{|t| t.id }    
+    contents = self.find_by_section_id_filtered_by_id( website_section.id, id_filter_list )
     contents.each do |content|
       content = get_published_verison(active_publication, content)
       published_content << content unless content.nil?
