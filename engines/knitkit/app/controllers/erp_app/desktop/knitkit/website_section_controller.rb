@@ -4,6 +4,9 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
   def new
     ignored_params = %w{action controller websiteId website_section_id in_menu}
 
+    website = nil
+    website_section = nil
+
     result = {}
     if (params[:title] == 'Blog' || params[:title] == 'blog') && params[:type] == 'Blog'
       result[:sucess] = false
@@ -23,11 +26,14 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
           website.save
         else
           parent_website_section = WebsiteSection.find(params[:website_section_id])
+          website = parent_website_section.website
+          website_section.website = website
           website_section.move_to_child_of(parent_website_section)
           parent_website_section.save
         end
         
         result[:success] = true
+        result[:node] = build_section_hash(website_section, website)
       else
         result[:success] = false
       end

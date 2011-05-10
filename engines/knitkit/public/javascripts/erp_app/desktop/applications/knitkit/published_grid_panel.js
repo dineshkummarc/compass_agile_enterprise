@@ -163,12 +163,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel = Ext.extend(Ext.
                         }
                     },
                     handler: function(grid, rowIndex, colIndex) {
-                        var rec = grid.getStore().getAt(rowIndex);
-                        if(rec.get('active')){
-                            return false;
+                        if(ErpApp.Authentication.RoleManager.hasRole('publisher')){
+                            var rec = grid.getStore().getAt(rowIndex);
+                            if(rec.get('active')){
+                                return false;
+                            }
+                            else{
+                                grid.activate(rec)
+                            }
                         }
                         else{
-                            grid.activate(rec)
+                            ErpApp.Authentication.RoleManager.invalidRole({});
                         }
                     }
                 }]

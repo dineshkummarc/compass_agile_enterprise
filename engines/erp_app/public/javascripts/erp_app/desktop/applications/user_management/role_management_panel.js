@@ -69,12 +69,15 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
             jsonData:rolesJson,
             success: function(responseObject) {
                 self.clearWindowStatus();
+                Compass.ErpApp.Utility.promptReload();
             },
             failure: function() {
                 self.clearWindowStatus();
                 Ext.Msg.alert('Status', 'Unable To Save Roles. Please Try Agian Later.');
             }
         });
+
+        
     },
 
     constructor : function(config) {

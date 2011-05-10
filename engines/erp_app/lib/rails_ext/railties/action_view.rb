@@ -34,8 +34,12 @@ ActionView::Base.class_eval do
   end
 
   def setup_role_manager(user)
+    js_string = '<script type="text/javascript" src="/javascripts/erp_app/authentication/role_manager.js"></script>'
+
     roles = user.roles
-    "<script type='text/javascript'>ErpApp.Authentication.RoleManager.roles = [#{roles.collect{|role| "'#{role.internal_identifier}'"}.join(',')}];</script>"
+    js_string << "<script type='text/javascript'>ErpApp.Authentication.RoleManager.roles = [#{roles.collect{|role| "'#{role.internal_identifier}'"}.join(',')}];</script>"
+
+    js_string
   end
 
   def include_code_mirror

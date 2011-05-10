@@ -55,6 +55,21 @@ ErpApp.Authentication.RoleManager = {
     hasAccessToWidget : function(widget_roles, xtype){
         var roles = widget_roles.find('xtype == "'+xtype+'"').roles;
         return this.hasRoles(roles);
+    },
+
+    /**
+     * Use when role check fails, displays message add logging if needed.
+     * @param {String} message to overwrite default
+     * @param {fn} function to call when complete
+     */
+    invalidRole : function(options){
+        Ext.Msg.show({
+            title:'Warning',
+            msg: options['msg'] || 'You do not have permission to perform that action.',
+            buttons: Ext.Msg.OK,
+            fn: options['fn'] || null,
+            iconCls:'icon-warning'
+        });
     }
 
 }
