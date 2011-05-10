@@ -18,7 +18,7 @@ class BaseController < ErpApp::ApplicationController
   end
     
   def load_sections
-    @website_sections = @website.website_sections
+    @website_sections = @website.website_sections.positioned
   end
     
   def set_section
