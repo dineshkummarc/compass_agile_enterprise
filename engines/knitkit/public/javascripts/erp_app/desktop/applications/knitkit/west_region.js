@@ -31,14 +31,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         id:node.id.split('_')[1]
                     },
                     success: function(response) {
+                        self.clearWindowStatus();
                         var obj =  Ext.util.JSON.decode(response.responseText);
                         if(obj.success){
-                            self.clearWindowStatus();
                             node.remove(true);
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting section');
-                            self.clearWindowStatus();
                         }
                     },
                     failure: function(response) {
@@ -75,14 +74,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         id:node.id.split('_')[1]
                     },
                     success: function(response) {
+                        self.clearWindowStatus();
                         var obj =  Ext.util.JSON.decode(response.responseText);
                         if(obj.success){
-                            self.clearWindowStatus();
                             node.remove(true);
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting site');
-                            self.clearWindowStatus();
                         }
                     },
                     failure: function(response) {
@@ -548,15 +546,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 id:sectionId
                                             },
                                             success: function(response) {
+                                                self.clearWindowStatus();
                                                 var obj =  Ext.util.JSON.decode(response.responseText);
                                                 if(obj.success){
-                                                    self.clearWindowStatus();
                                                     node.attributes.hasLayout = true;
                                                     self.editSectionLayout(node.text, sectionId, node.attributes.siteId);
                                                 }
                                                 else
                                                 {
-                                                    self.clearWindowStatus();
                                                     Ext.Msg.alert('Status', obj.message);
                                                 }
                                             },
@@ -960,14 +957,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     id:node.attributes.websiteHostId
                                                 },
                                                 success: function(response) {
+                                                    self.clearWindowStatus();
                                                     var obj =  Ext.util.JSON.decode(response.responseText);
                                                     if(obj.success){
-                                                        self.clearWindowStatus();
                                                         node.remove(true);
                                                     }
                                                     else{
                                                         Ext.Msg.alert('Error', 'Error deleting Host');
-                                                        self.clearWindowStatus();
                                                     }
                                                 },
                                                 failure: function(response) {
@@ -1455,13 +1451,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 id:node.attributes.websiteNavId
                                             },
                                             success: function(response) {
+                                                self.clearWindowStatus();
                                                 var obj =  Ext.util.JSON.decode(response.responseText);
                                                 if(obj.success){
                                                     node.remove(true);
                                                 }
                                                 else{
                                                     Ext.Msg.alert('Error', 'Error deleting menu');
-                                                    self.clearWindowStatus();
                                                 }
                                             },
                                             failure: function(response) {
@@ -1705,13 +1701,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 id:node.websiteNavItemId
                                             },
                                             success: function(response) {
+                                                self.clearWindowStatus();
                                                 var obj =  Ext.util.JSON.decode(response.responseText);
                                                 if(obj.success){
                                                     node.remove(true);
                                                 }
                                                 else{
                                                     Ext.Msg.alert('Error', 'Error deleting menu item');
-                                                    self.clearWindowStatus();
                                                 }
                                             },
                                             failure: function(response) {
