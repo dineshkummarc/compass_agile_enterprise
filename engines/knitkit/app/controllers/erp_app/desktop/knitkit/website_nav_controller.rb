@@ -30,6 +30,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
   end
 
   def delete
+    result = {}
     website_nav = WebsiteNav.find(params[:id])
 
     if website_nav.destroy
@@ -109,6 +110,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
   end
 
   def delete_menu_item
+    result = {}
     website_nav_item = WebsiteNavItem.find(params[:id])
 
     if website_nav_item.destroy
