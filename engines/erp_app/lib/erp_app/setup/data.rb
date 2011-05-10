@@ -37,8 +37,8 @@ class ErpApp::Setup::Data
     #######################################
     #roles
     #######################################
-    Role.create(:description => 'admin', :internal_identifier => 'admin')
-    Role.create(:description => 'employee', :internal_identifier => 'employee')
+    Role.create(:description => 'Admin', :internal_identifier => 'admin')
+    Role.create(:description => 'Employee', :internal_identifier => 'employee')
 
     #######################################
     #users
@@ -314,7 +314,7 @@ class ErpApp::Setup::Data
     admin.desktop.applications << knikit_app
     admin.desktop.save
 
-    Role.create(:internal_identifier => 'publisher', :description => 'publisher')
+    Role.create(:internal_identifier => 'publisher', :description => 'Publisher')
 
     #######################################
     #rails_db_admin app
