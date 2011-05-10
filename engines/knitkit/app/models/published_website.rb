@@ -52,7 +52,8 @@ class PublishedWebsite < ActiveRecord::Base
       published_element.save
     end
 
-    PublishedWebsite.activate(new_publication.website, new_publication.version)
+    #commenting out for now
+    #PublishedWebsite.activate(new_publication.website, new_publication.version)
   end
 
   def publish_element(comment, element, version)
@@ -72,7 +73,8 @@ class PublishedWebsite < ActiveRecord::Base
       new_published_element.save
     end
 
-    PublishedWebsite.activate(new_publication.website, new_publication.version)
+    #commenting out for now
+    #PublishedWebsite.activate(new_publication.website, new_publication.version)
   end
 
   private
