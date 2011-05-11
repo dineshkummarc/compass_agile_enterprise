@@ -46,7 +46,10 @@ Compass.ErpApp.Shared.CKeditor = Ext.extend(Ext.form.TextArea, {
             resize_enabled:false,
             base_path:'/javascripts/ckeditor/',
             toolbarStartupExpanded:false,
-            skin:'office2003'
+            enterMode:CKEDITOR.ENTER_BR,
+            shiftEnterMode:CKEDITOR.ENTER_P,
+            skin:'office2003',
+            extraPlugins:'codemirror'
         });
         var editor = CKEDITOR.replace(this.el.dom.name, this.initialConfig.ckEditorConfig);
         editor.extjsPanel = this;

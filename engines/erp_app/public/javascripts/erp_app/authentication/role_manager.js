@@ -65,7 +65,7 @@ ErpApp.Authentication.RoleManager = {
     invalidRole : function(options){
         Ext.Msg.show({
             title:'Warning',
-            msg: options['msg'] || 'You do not have permission to perform that action.',
+            msg: options['msg'] || 'You do not have permission to perform this action.',
             buttons: Ext.Msg.OK,
             fn: options['fn'] || null,
             iconCls:'icon-warning'

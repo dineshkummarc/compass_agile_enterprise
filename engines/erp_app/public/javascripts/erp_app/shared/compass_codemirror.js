@@ -44,7 +44,7 @@ Ext.apply(Compass.ErpApp.Shared.CodeMirrorConfig, {
             stylesheet: "/javascripts/erp_app/codemirror/jscolors.css"
         },
         html: {
-            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js"],
+            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
             stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
             
         }
@@ -127,8 +127,12 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
             path: Compass.ErpApp.Shared.CodeMirrorConfig.jsPath,
             height: "100%",
             width: "100%",
-            continuousScanning: 500,
+            passDelay: 300,
+            passTime: 35,
+            continuousScanning: 1000,
             textWrapping: false,
+            undoDepth: 3,
+            enterMode:'indent',
             lineNumbers: true,
             onChange: function() {
                 var code = self.codeMirrorInstance.getCode();

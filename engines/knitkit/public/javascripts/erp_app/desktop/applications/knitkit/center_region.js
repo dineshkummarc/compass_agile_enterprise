@@ -175,8 +175,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             autoHeight:true,
             value:content,
             ckEditorConfig:{
+                extraPlugins:'compassSave,codemirror',
                 toolbar:[
-                ['Source','-','compasssave','Preview','-','Templates'],
+                ['Source','-','CompassSave','Preview','-','Templates'],
                 ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
                 ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
                 ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
@@ -286,8 +287,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             autoHeight:true,
             value:content,
             ckEditorConfig:{
+                extraPlugins:'compassSave,codemirror',
                 toolbar:[
-                ['Source','-','compasssave','Preview','-','Templates'],
+                ['Source','-','CompassSave','Preview','-','Templates'],
                 ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
                 ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
                 ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
