@@ -15,15 +15,20 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
     Content::Version.class_exec(website) do
       @@website = website
-      def published
+      def active
         published_site_id = @@website.active_publication.id
         !PublishedElement.find(:first,
           :include => [:published_website],
           :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version]).nil?
       end
+
+      def published
+        !PublishedElement.find(:first,
+          :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.content_id, 'Content', self.version]).nil?
+      end
     end
 
-    render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :body_html, :excerpt_html, :created_at], :methods => [:published])}}"
+    render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :body_html, :excerpt_html, :created_at], :methods => [:active, :published])}}"
   end
 
   def publish_content

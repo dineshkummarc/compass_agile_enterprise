@@ -61,7 +61,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel = Ext.extend(Ext.g
             menuDisabled:true,
             resizable:false,
             xtype:'actioncolumn',
-            header:'Publish',
+            header:'Published',
             align:'center',
             width:60,
             items:[{
@@ -75,7 +75,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel = Ext.extend(Ext.g
                     }
                 },
                 handler: function(grid, rowIndex, colIndex) {
-                    if(ErpApp.Authentication.RoleManager.hasRole('publisher')){
+                    if(ErpApp.Authentication.RoleManager.hasRole(['publisher','admin'])){
                         var rec = grid.getStore().getAt(rowIndex);
                         if(rec.get('published')){
                             return false;
@@ -90,6 +90,22 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel = Ext.extend(Ext.g
 
                 }
             }]
+        },
+        {
+            header:'Active',
+            dataIndex:'active',
+            sortable:true,
+            align:'center',
+            width:60,
+            renderer:function(){
+                var rec = arguments[2];
+                if (rec.get('active')){
+                    return '<img class="x-action-col-0 active-col" ext:qtip="Active" src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="">'
+                }
+                else{
+                    return '<img class="x-action-col-0 activate-col" ext:qtip="Not Active" src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="">'
+                }
+            }
         }
         ]);
 
@@ -208,6 +224,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel = Ext.exten
                     name:'body_html'
                 },
                 {
+                    name:'active'
+                },
+                {
                     name:'created_at',
                     type:'date'
                 }
@@ -318,6 +337,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsBlogGridPanel = Ext.extend(C
                 },
                 {
                     name:'body_html'
+                },
+                {
+                    name:'active'
                 },
                 {
                     name:'created_at',
@@ -484,6 +506,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.VersionsWebsiteSectionGridPanel = Ex
                 {
                     name:'created_at',
                     type:'date'
+                },
+                {
+                    name:'active'
                 },
                 {
                     name:'published'

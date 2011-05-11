@@ -12,37 +12,28 @@ ErpApp.Authentication.RoleManager = {
 
     /**
  * Checks to see if the passed roles exists in this.roles
- * @param {String} internal_identifier of role
+ * @param {String or Array} internal_identifier of role or array of internal_identifiers
  */
     hasRole : function(role){
-        if(this.roles.contains(role)){
-            return true;
-        }
-        else{
-            return false;
-        }
-    },
-
-    /**
- * Checks to see if any of the passed roles exists in this.roles
- * @param {Array} array of roles
- */
-    hasRoles : function(roles){
         var result = false;
 
-        //if no roles were passed in then they have access
-        if(Compass.ErpApp.Utility.isBlank(roles) || roles.length == 0){
-            result = true;
-        }
-        else
-        {
+        if(role instanceof Array){
             var self = this;
-            Ext.each(roles,function(role){
+            Ext.each(role,function(role){
                 if(self.hasRole(role)){
                     result = true;
                     return false;
                 }
             });
+        }
+        else
+        {
+            if(this.roles.contains(role)){
+                result = true;
+            }
+            else{
+                result = false;
+            }
         }
 
         return result;
@@ -54,7 +45,7 @@ ErpApp.Authentication.RoleManager = {
      */
     hasAccessToWidget : function(widget_roles, xtype){
         var roles = widget_roles.find('xtype == "'+xtype+'"').roles;
-        return this.hasRoles(roles);
+        return this.hasRole(roles);
     },
 
     /**

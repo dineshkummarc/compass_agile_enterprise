@@ -579,7 +579,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     }
                     else
                     if(node.attributes['isWebsite']){
-                        if(ErpApp.Authentication.RoleManager.hasRole('publisher')){
+                        if(ErpApp.Authentication.RoleManager.hasRole(['admin','publisher'])){
                             items.push({
                                 text:'Publish',
                                 iconCls:'icon-document_up',
