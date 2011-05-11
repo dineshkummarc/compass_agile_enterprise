@@ -32,6 +32,26 @@ ActionView::Base.class_eval do
 
     resources
   end
+  
+  def include_highslide( options = {} )
+    resources = ''
+    
+    hs_version = options[:version].to_s.downcase
+    
+    if hs_version == 'full'
+      resources << javascript_include_tag("/javascripts/erp_app/highslide/highslide/highslide-full.js")
+    elsif hs_version == 'gallery'
+      resources << javascript_include_tag("/javascripts/erp_app/highslide/highslide/highslide-with-gallery.js")
+    elsif hs_version == 'html'
+      resources << javascript_include_tag("/javascripts/erp_app/highslide/highslide/highslide-with-html.js")
+    else
+      resources << javascript_include_tag("/javascripts/erp_app/highslide/highslide/highslide.js") 
+    end   
+    
+    resources <<  '<link rel="stylesheet" type="text/css" href="/javascripts/erp_app/highslide/highslide/highslide.css" />'
+
+    resources
+  end
 
   def setup_role_manager(user)
     js_string = '<script type="text/javascript" src="/javascripts/erp_app/authentication/role_manager.js"></script>'
