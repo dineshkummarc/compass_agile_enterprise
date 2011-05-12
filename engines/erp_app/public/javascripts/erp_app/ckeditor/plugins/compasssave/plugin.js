@@ -8,7 +8,7 @@
         }
     },
     //Section 2 : Create the button and add the functionality to it
-    b = 'compassSave';
+    b = 'compasssave';
     CKEDITOR.plugins.add(b,{
         init:function(editor){
             editor.addCommand(b,a);

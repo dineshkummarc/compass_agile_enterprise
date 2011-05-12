@@ -5,5 +5,5 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 CKEDITOR.editorConfig = function( config )
 {
-    config.extraPlugins = 'compassSave,compassupload,jwplayer';
+    config.extraPlugins = 'compasssave,compassupload,jwplayer';
 };
