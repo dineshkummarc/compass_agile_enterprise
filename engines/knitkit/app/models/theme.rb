@@ -131,7 +131,13 @@ class Theme < ActiveRecord::Base
           data = ''
           entry.get_input_stream { |io| data = io.read }
           data = StringIO.new(data) if data.present?
-          Theme::File.create!(:theme => self, :base_path => name, :data => data) rescue next
+          theme_file = Theme::File.find(:first, :conditions => ["theme_id = ? and name = ?", self.id, ::File.basename(name)])
+          unless theme_file.nil?
+            theme_file.data = data
+            theme_file.save
+          else
+            Theme::File.create!(:theme => self, :base_path => name, :data => data) rescue next
+          end
         end
       end
     end
