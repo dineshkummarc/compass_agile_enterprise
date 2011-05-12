@@ -33,7 +33,6 @@
                             passDelay: 300,
                             passTime: 35,
                             continuousScanning: 1000, /* Numbers lower than this suck megabytes of memory very quickly out of firefox */
-                            undoDepth: 1,
                             height: holderHeight,//editor.config.height || holderHeight, /* Adapt to holder height */
                             textWrapping: false,
                             lineNumbers: false,
