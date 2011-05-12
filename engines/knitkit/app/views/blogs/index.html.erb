@@ -18,7 +18,7 @@
 
 <div class="blog_tags">
   <h4>Topics</h4>
-  <% Article.tag_counts_on(:tags).each do |tag| %>
+  <% Article.tag_counts_on(:tags).sort! { |a,b| a.name.downcase <=> b.name.downcase }.each do |tag| %>
 
   <div class="tag_link">
     <%= link_to tag.name, blog_tag_path(@website_section.id, tag.id) %>
