@@ -220,10 +220,34 @@ namespace :compass do
       ErpApp::Setup::Data.run_setup
     end #task :data
 	end # bootstrap namespace
+
+  namespace :update do
+    desc "update current compass install"
+    task :run => :environment do
+      Dir.chdir( File.join(rails_root,"vendor/compass/engines") )
+      puts `git pull`
+      Dir.chdir( rails_root )
+      
+      Rake::Task["db:migrate"].invoke
+      Rake::Task["db:migrate_data"].invoke
+
+      begin
+        file = File.new("#{rails_root}/vendor/compass/engines/erp_base_erp_svcs/lib/tasks/update_notes/NOTES", "r")
+        while (line = file.gets)
+          puts "#{line}"
+        end
+        file.close
+      rescue => err
+        puts "Exception: #{err}"
+        err
+      end
+    end
+
+  end
+
 end
 
 Rake::Task["db:migrate"].clear_actions
-
 
 namespace :db do
   task :migrate do
