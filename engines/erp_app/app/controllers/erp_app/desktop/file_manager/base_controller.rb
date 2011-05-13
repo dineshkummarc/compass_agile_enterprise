@@ -55,6 +55,8 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
       json_str = "{success:false, msg:'File does not exists'}"
     else
       name = File.basename(path)
+      #make sure path is there.
+      FileUtils.mkdir_p new_parent_path unless File.directory? new_parent_path
       FileUtils.mv(path, new_parent_path + '/' + name)
       json_str = "{success:true, msg:'#{name} was moved to #{new_parent_path} successfully'}"
     end
