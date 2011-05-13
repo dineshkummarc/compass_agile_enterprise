@@ -1,3 +1,5 @@
+<img src="compass/engines/erp_app/public/images/art/compass-logo-1.png" />
+
 ===Welcome to Compass Agile Enterprise===
 
 Compass Agile Enterprise is a set of Rails Engines that incrementally add the functionality of an ERP and CMS to a Rails application.
@@ -16,7 +18,6 @@ compass:install:core - installs the core compass plugins
 compass:install:default - installs the core compass plugin and the default (eCommerce) plugins
 
 compass:bootstrap:data -This rake task orchestrates the several additional tasks in the following sequence
-<img src="compass/engines/erp_app/public/images/art/compass-logo-1.png" />
 
 compass:bootstrap:copy_ignored_data_migrations - copies the data migrations from the 'default plugins'
                                                   data_migrations/ignore dir up to the data_migrations dir
