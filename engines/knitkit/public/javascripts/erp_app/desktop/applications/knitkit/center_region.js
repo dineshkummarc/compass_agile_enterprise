@@ -175,7 +175,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             autoHeight:true,
             value:content,
             ckEditorConfig:{
-                extraPlugins:'compasssave,codemirror',
+                extraPlugins:'compasssave,codemirror,jwplayer',
                 toolbar:[
                 ['Source','-','CompassSave','Preview','-','Templates'],
                 ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
@@ -287,7 +287,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             autoHeight:true,
             value:content,
             ckEditorConfig:{
-                extraPlugins:'compasssave,codemirror',
+                extraPlugins:'compasssave,codemirror,jwplayer',
                 toolbar:[
                 ['Source','-','CompassSave','Preview','-','Templates'],
                 ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
