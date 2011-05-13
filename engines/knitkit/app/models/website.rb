@@ -41,7 +41,7 @@ class Website < ActiveRecord::Base
   def all_sections
     sections_array = sections
     sections_array.each do |section|
-        sections_array = sections_array | section.all_children
+      sections_array = sections_array | section.all_children
     end
     sections_array.flatten
   end
@@ -161,10 +161,10 @@ class Website < ActiveRecord::Base
     end
 
     images.each do |src|
-      src.gsub!('../', '')
-      file_path = File.join(image_path, src)
-      file_name = src.gsub('../', '')
-      files << {:path => file_path, :name => src} if File.exists? file_path
+      src = Website.clean_image_src(src)
+      file_path = File.join(Website.image_path, src)
+      file_name = File.basename(src)
+      files << {:path => file_path, :name => File.join('images',src)} if File.exists? file_path
     end
 
     files.uniq!
@@ -202,20 +202,18 @@ class Website < ActiveRecord::Base
 
       Zip::ZipFile.open(file.path) do |zip|
         zip.each do |entry|
+          next if entry.name =~ /__MACOSX\//
           if entry.name =~ /setup.yml/
             data = ''
             entry.get_input_stream { |io| data = io.read }
             data = StringIO.new(data) if data.present?
             setup_hash = YAML.load(data)
           elsif entry.name =~ /images*/
-            next if entry.name =~/._|__MACOSX\//
-            path = File.join(image_path,entry.name)
+            path = File.join(Website.image_path,entry.name.gsub('images/',''))
             directory_path = File.dirname(path)
             FileUtils.mkdir_p directory_path unless File.directory? directory_path
             File.open(path, 'w+') {|f| f.write(entry.get_input_stream.read) }
           else
-            #ignore macs metadata
-            next if entry.name =~/._|__MACOSX\//
             type =  entry.name.split('/')[(entry.name.split('/').count - 2)]
             name = entry.name.split('/').last
             next if name.nil?
@@ -272,16 +270,20 @@ class Website < ActiveRecord::Base
 
       return success, message
     end
-  end
 
-  protected
+    protected
 
-  def image_path
-    "#{RAILS_ROOT}/vendor/plugins/erp_app/public/images"
-  end
+    def image_path
+      "#{RAILS_ROOT}/vendor/plugins/erp_app/public/images"
+    end
 
-  def file_assets_path
-    "#{RAILS_ROOT}/vendor/plugins/erp_app/public/file_assets"
+    def file_assets_path
+      "#{RAILS_ROOT}/vendor/plugins/erp_app/public/file_assets"
+    end
+
+    def clean_image_src(src)
+      src.gsub!('../','')
+    end
   end
 
   private
