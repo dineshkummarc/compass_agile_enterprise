@@ -85,7 +85,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
   def get
     Article.include_root_in_json = false
 
-    sort  = params[:sort] || 'title'
+    sort  = params[:sort] || 'created_at'
     dir   = params[:dir] || 'DESC'
     limit = params[:limit] || 10
     start = params[:start] || 0

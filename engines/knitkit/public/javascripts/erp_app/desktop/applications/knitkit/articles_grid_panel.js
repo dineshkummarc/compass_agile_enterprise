@@ -434,6 +434,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
                 menuDisabled:true,
                 resizable:false,
                 header:'Pos',
+                sortable:true,
                 dataIndex:'position',
                 width:30,
                 editable:false,

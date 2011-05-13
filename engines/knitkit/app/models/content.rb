@@ -13,7 +13,8 @@ class Content < ActiveRecord::Base
   def self.find_by_section_id( website_section_id )
     Content.find(:all, 
       :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-      :conditions => "website_section_id = #{website_section_id} ")
+      :conditions => "website_section_id = #{website_section_id} ",
+      :order => "website_section_contents.position ASC, website_section_contents.created_at DESC")
   end
 
   def self.find_by_section_id_filtered_by_id( website_section_id, id_filter_list )
