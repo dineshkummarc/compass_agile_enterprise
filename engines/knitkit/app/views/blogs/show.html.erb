@@ -2,6 +2,7 @@
 <br/>
 <h3><%=h @published_content.title %></h3>
 <p>Created at: <%= @published_content.created_at.to_s(:long) %></p>
+<p><%= @published_content.excerpt_html %></p>
 <%= @published_content.body_html %>
 <h3>Comments</h3>
 <br/>
