@@ -289,7 +289,7 @@ class Website < ActiveRecord::Base
   private
   
   def website_role_iid
-    "website_#{self.name.underscore}_access"
+    "website_#{self.name.underscore.gsub("'","")}_access"
   end
 
 end
