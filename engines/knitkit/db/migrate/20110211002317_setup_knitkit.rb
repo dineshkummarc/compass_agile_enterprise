@@ -34,7 +34,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.string :permalink
         t.text :layout
         t.boolean :in_menu
-        t.integer :position
+        t.integer :position, :default => 0
 
         #better nested set columns
         t.integer :parent_id
@@ -74,7 +74,7 @@ class SetupKnitkit < ActiveRecord::Migration
       create_table :website_section_contents do |t|
         t.integer :website_section_id
         t.integer :content_id
-        t.integer :position
+        t.integer :position, :default => 0
 
         t.timestamps
       end
@@ -187,7 +187,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.references :website_nav
         t.string :title
         t.string :url
-        t.integer :position
+        t.integer :position, :default => 0
 
         #better nested set columns
         t.integer :parent_id
