@@ -457,7 +457,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
                 id: 'content_area'
             },
             {
-                xtype:'textfield',
+                xtype:'numberfield',
                 fieldLabel:'Position',
                 name:'position',
                 id: 'position'
