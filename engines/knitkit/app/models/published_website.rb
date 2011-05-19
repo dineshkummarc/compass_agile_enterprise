@@ -52,8 +52,10 @@ class PublishedWebsite < ActiveRecord::Base
       published_element.save
     end
 
-    #commenting out for now
-    #PublishedWebsite.activate(new_publication.website, new_publication.version)
+    #check if we want to auto active this publication
+    if new_publication.website.auto_activate_publication?
+      PublishedWebsite.activate(new_publication.website, new_publication.version)
+    end
   end
 
   def publish_element(comment, element, version)
@@ -73,8 +75,10 @@ class PublishedWebsite < ActiveRecord::Base
       new_published_element.save
     end
 
-    #commenting out for now
-    #PublishedWebsite.activate(new_publication.website, new_publication.version)
+    #check if we want to auto active this publication
+    if new_publication.website.auto_activate_publication?
+      PublishedWebsite.activate(new_publication.website, new_publication.version)
+    end
   end
 
   private

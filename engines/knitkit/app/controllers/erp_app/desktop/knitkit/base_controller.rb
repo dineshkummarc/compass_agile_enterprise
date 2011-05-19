@@ -19,8 +19,8 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :isWebsite => true,
         :email => website.email,
         :siteName => website.title,
-        :allowInquiries =>  website.allow_inquiries?,
         :emailInquiries =>  website.email_inquiries?,
+        :autoActivatePublication => website.auto_activate_publication?,
         :children => []
       }
 

@@ -232,7 +232,7 @@ namespace :compass do
       Rake::Task["db:migrate_data"].invoke
 
       begin
-        file = File.new("#{rails_root}/vendor/compass/engines/erp_base_erp_svcs/lib/tasks/update_notes/NOTES", "r")
+        file = File.new("#{rails_root}/vendor/compass/engines/erp_base_erp_svcs/lib/tasks/release_notes/NOTES", "r")
         while (line = file.gets)
           puts "#{line}"
         end

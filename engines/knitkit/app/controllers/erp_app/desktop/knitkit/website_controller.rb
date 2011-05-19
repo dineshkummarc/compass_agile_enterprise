@@ -68,7 +68,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     params.each do |k,v|
       website.send(k + '=', v) unless ignored_params.include?(k.to_s)
     end
-    website.allow_inquiries = params[:allow_inquiries] == 'yes'
+    website.auto_activate_publication = params[:auto_activate_publication] == 'yes'
     website.email_inquiries = params[:email_inquiries] == 'yes'
 
     if website.save
@@ -83,12 +83,12 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def update
-    ignored_params = IGNORED_PARAMS | %w{allow_inquiries email_inquiries}
+    ignored_params = IGNORED_PARAMS | %w{email_inquiries}
 
     params.each do |k,v|
       @website.send(k + '=', v) unless ignored_params.include?(k.to_s)
     end
-    @website.allow_inquiries = params[:allow_inquiries] == 'yes'
+    @website.auto_activate_publication = params[:auto_activate_publication] == 'yes'
     @website.email_inquiries = params[:email_inquiries] == 'yes'
 
     @website.save

@@ -57,6 +57,9 @@ ActionController::Routing::Routes.draw do |map|
   #file_manager
   map.connect '/erp_app/desktop/file_manager/:action', :controller => 'erp_app/desktop/file_manager/base'
   map.connect '/erp_app/desktop/file_manager/download_file/:path', :controller => 'erp_app/desktop/file_manager/base', :action => 'download_file'
+
+  #widget proxy
+  map.connect '/widgets/:widget_name/:widget_action', :controller => 'erp_app/widget_proxy'
 end
 
 

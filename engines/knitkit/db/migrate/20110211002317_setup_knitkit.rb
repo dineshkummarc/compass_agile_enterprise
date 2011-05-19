@@ -7,7 +7,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.string :title
         t.string :subtitle
         t.string :email
-        t.boolean :allow_inquiries
+        t.boolean :auto_activate_publication
         t.boolean :email_inquiries
 
         t.timestamps

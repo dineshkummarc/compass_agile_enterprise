@@ -48,13 +48,6 @@ class ErpApp::ApplicationController < ActionController::Base
     end
   end
 
-  #Authentication Stuff
-  protected
-  
-  def login_path
-    return ''
-  end
-
   def password_authentication(name, password)
     user = User.authenticate(name, password)
     if user
@@ -66,6 +59,12 @@ class ErpApp::ApplicationController < ActionController::Base
     end
   end
 
+  #Authentication Stuff
+  protected
+  
+  def login_path
+    return ''
+  end
 
   def successful_login(user)
     refered_from = session[:refered_from]

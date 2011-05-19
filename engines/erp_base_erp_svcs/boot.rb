@@ -6,7 +6,7 @@ require "#{File.dirname(__FILE__)}/lib/core_ext/hash"
 Rails::Configuration.class_eval do
   @@dependencies = {}
 
-  def set_depenencies(plugin, dependencies)
+  def set_dependencies(plugin, dependencies)
     @@dependencies[plugin] = dependencies
   end
   

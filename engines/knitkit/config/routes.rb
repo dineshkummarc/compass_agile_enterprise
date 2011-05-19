@@ -30,10 +30,7 @@ ActionController::Routing::Routes.draw do |map|
                     :conditions => { :method => :get }
 
   map.comments '/comments/add/:section_id/:content_id', :controller => 'comments', :action => 'add'
-  map.login '/login', :controller => 'login', :action => 'index'
-  map.signup '/signup/:action', :controller => 'signup'
   map.unauthorized '/unauthorized', :controller => 'unauthorized', :action => 'index'
-  map.contact '/contact_us', :controller => 'contact', :action => 'show'
   map.connect '/view_current_publication', :controller => 'base', :action => 'view_current_publication'
 
   map.connect '/search', :controller => 'search', :action => 'index', :conditions => { :method => :get }

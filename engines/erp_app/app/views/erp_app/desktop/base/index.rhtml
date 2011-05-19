@@ -120,12 +120,18 @@ end
     <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
     <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css'
     ) %>
+
     <%=
     javascript_include_tag("ext_3_3_0/RowEditor.js",
       "ext_3_3_1/DataView-more.js",
       "ext_3_3_1/RowExpander.js",
       "erp_app/utility.js",
-      "erp_app/shared/active_ext/active_ext_grid.js",
+      "erp_app/widgets.js") %>
+
+    <%=include_widget_javascript%>
+    
+    <%=
+    javascript_include_tag("erp_app/shared/active_ext/active_ext_grid.js",
       "erp_app/shared/status_window.js",
       "erp_app/shared/active_ext/active_ext_grid_panel.js",
       "erp_app/shared/dynamic_editable_grid_loader_panel.js",

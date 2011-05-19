@@ -8,6 +8,7 @@
     float: left;
     margin: 4px 0 4px 4px;
     padding: 5px;
+    cursor: pointer;
 }
 
 #image-assets .thumb {
@@ -20,6 +21,28 @@
     overflow: hidden;
     text-align: center;
     width: 80px;
+}
+
+#widgets .thumb img {
+    border: 1px solid white;
+    height: 48px;
+    width: 48px;
+}
+
+#widgets .thumb-wrap {
+    float: left;
+    margin: 4px 0 4px 4px;
+    padding: 5px;
+}
+
+#widgets .thumb {
+    padding: 3px;
+}
+
+#widgets .thumb-wrap span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
 }
 
 .approve-col{

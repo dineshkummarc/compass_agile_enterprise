@@ -4,7 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="generator" content="Knitkit - Compass AE Open source content management platform" />
     <title><%= @website.title %></title>
+    <%= javascript_include_tag 'prototype' %>
+    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
     <%= stylesheet_link_tag('knitkit/style.css') %>
+    <%= javascript_include_tag('erp_app/widgets.js') %>
     <%= yield :head %>
   </head>
   <body>
@@ -12,7 +15,8 @@
       <div id="header">
         <div id="logo">
           <%=render_version_viewing%>
-          <%=  render :partial => 'layouts/login' %>
+          <!-- Default login / logout summary display at top of page -->
+          <%= render :partial => 'layouts/login' %>
           <div id="logo_text">
             <!-- class="logo_colour", allows you to change the colour of the text -->
             <h1><a href="/"><%= @website.title %></a></h1>

@@ -4,7 +4,7 @@ class WebsiteSectionsController < BaseController
       @contents = Article.find_published_by_section(@active_publication, @website_section)
       unless @website_section.layout.nil?
         layout = @website_section.get_published_layout(@active_publication)
-        render :inline => layout,  :layout => 'base'
+        render :inline => layout, :layout => 'base'
       end
     else
       redirect_to '/unauthorized'

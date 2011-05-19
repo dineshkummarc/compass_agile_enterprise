@@ -463,6 +463,22 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         return false;
     },
 
+    addContentToActiveCodeMirror : function(content){
+        var activeTab = this.workArea.getActiveTab();
+        if(Compass.ErpApp.Utility.isBlank(activeTab)){
+            Ext.Msg.alert('Error', 'No editor');
+        }
+        else{
+            if(activeTab.findByType('codemirror').length == 0){
+                Ext.Msg.alert('Error', 'No codemirror found');
+            }
+            else{
+                activeTab.findByType('codemirror')[0].insertContent(content);
+            }
+        }
+        return false;
+    },
+
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion.superclass.initComponent.call(this, arguments);
     },
@@ -474,6 +490,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         });
         
         config = Ext.apply({
+            id:'knitkitCenterRegion',
             autoDestroy:true,
             layout:'border',
             region:'center',

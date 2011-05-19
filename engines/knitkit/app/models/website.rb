@@ -97,7 +97,6 @@ class Website < ActiveRecord::Base
       :title => title,
       :subtitle => subtitle,
       :email => email,
-      :allow_inquiries => allow_inquiries,
       :email_inquiries => email_inquiries,
       :sections => []}
     website_sections.each do |website_section|
@@ -234,7 +233,6 @@ class Website < ActiveRecord::Base
           :title => setup_hash[:title],
           :subtitle => setup_hash[:subtitle],
           :email => setup_hash[:email],
-          :allow_inquiries => setup_hash[:allow_inquiries],
           :email_inquiries => setup_hash[:email_inquiries]
         )
 

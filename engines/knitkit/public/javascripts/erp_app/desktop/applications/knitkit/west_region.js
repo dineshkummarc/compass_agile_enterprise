@@ -620,7 +620,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         layout:'fit',
                                         width:375,
                                         title:'Update Website',
-                                        height:265,
+                                        height:250,
                                         plain: true,
                                         buttonAlign:'center',
                                         items: new Ext.FormPanel({
@@ -638,13 +638,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 allowBlank:false,
                                                 name:'name',
                                                 value:node.attributes['name']
-                                            },
-                                            {
-                                                xtype:'textfield',
-                                                fieldLabel:'Host',
-                                                allowBlank:false,
-                                                name:'host',
-                                                value:node.attributes['host']
                                             },
                                             {
                                                 xtype:'textfield',
@@ -671,30 +664,30 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             },
                                             {
                                                 xtype:'radiogroup',
-                                                fieldLabel:'Allow Inquiries',
-                                                name:'allow_inquiries',
+                                                fieldLabel:'Auto Activate Publication?',
+                                                name:'auto_activate_publication',
+                                                id:'knitkitAutoActivatePublication',
                                                 width:100,
                                                 columns:2,
                                                 items:[
                                                 {
                                                     boxLabel:'Yes',
-                                                    name:'allow_inquiries',
+                                                    name:'auto_activate_publication',
                                                     inputValue: 'yes',
-                                                    checked:node.attributes['allowInquiries']
+                                                    checked:node.attributes['autoActivatePublication']
                                                 },
-
                                                 {
                                                     boxLabel:'No',
-                                                    name:'allow_inquiries',
+                                                    name:'auto_activate_publication',
                                                     inputValue: 'no',
-                                                    checked:!node.attributes['allowInquiries']
-                                                }
-                                                ]
+                                                    checked:!node.attributes['autoActivatePublication']
+                                                }]
                                             },
                                             {
                                                 xtype:'radiogroup',
-                                                fieldLabel:'Email Inquiries',
+                                                fieldLabel:'Email Inquiries?',
                                                 name:'email_inquiries',
+                                                id:'knitkitEmailInquiries',
                                                 width:100,
                                                 columns:2,
                                                 items:[
@@ -739,6 +732,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
                                                             node.setText(form.findField('knitkitUpdateSiteTitle').getValue());
+                                                            node.attributes.emailInquiries = form.findField('knitkitEmailInquiries').getValue().inputValue == 'yes';
+                                                            node.attributes.autoActivatePublication = form.findField('knitkitAutoActivatePublication').getValue().inputValue == 'yes';
                                                             editWebsiteWindow.close();
                                                         },
                                                         failure:function(form, action){
@@ -1201,7 +1196,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             triggerAction: 'all',
                                             store:[
                                             ['website_section','Section'],
-                                            //['article','Article'],
                                             ['url','Url']
                                             ],
                                             value:'website_section',
@@ -1210,62 +1204,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     switch(newValue){
                                                         case 'website_section':
                                                             Ext.getCmp('knitkit_create_website_nav_item_section').show();
-                                                            // Ext.getCmp('knitkit_website_nav_item_article').hide();
                                                             Ext.getCmp('knitkit_create_website_nav_item_url').hide();
                                                             break;
-                                                        //                                                        case 'article':
-                                                        //                                                            Ext.getCmp('knitkit_website_nav_item_section').hide();
-                                                        //                                                            Ext.getCmp('knitkit_website_nav_item_article').show();
-                                                        //                                                            Ext.getCmp('knitkit_website_nav_item_url').hide();
-                                                        //                                                            break;
                                                         case 'url':
                                                             Ext.getCmp('knitkit_create_website_nav_item_section').hide();
-                                                            //  Ext.getCmp('knitkit_website_nav_item_article').hide();
                                                             Ext.getCmp('knitkit_create_website_nav_item_url').show();
                                                             break;
                                                     }
                                                 }
                                             }
                                         },
-                                        //                                        {
-                                        //                                            xtype:'combo',
-                                        //                                            id:'knitkit_create_website_nav_item_article',
-                                        //                                            hiddenName:'article_id',
-                                        //                                            hidden:(node.attributes.linkToType == 'website_section' || node.attributes.linkToType == 'url'),
-                                        //                                            name:'article_id',
-                                        //                                            loadingText:'Retrieving Articles...',
-                                        //                                            store:{
-                                        //                                                xtype:'jsonstore',
-                                        //                                                autoLoad:true,
-                                        //                                                baseParams:{
-                                        //                                                    website_id:node.attributes.websiteId
-                                        //                                                },
-                                        //                                                url:'./knitkit/articles/existing_articles',
-                                        //                                                fields:[
-                                        //                                                {
-                                        //                                                    name:'id'
-                                        //                                                },
-                                        //                                                {
-                                        //                                                    name:'title'
-                                        //
-                                        //                                                }
-                                        //                                                ],
-                                        //                                                listeners:{
-                                        //                                                    'load':function(store, records, options){
-                                        //                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(node.attributes.linkedToId);
-                                        //                                                    }
-                                        //                                                }
-                                        //                                            },
-                                        //                                            forceSelection:true,
-                                        //                                            editable:false,
-                                        //                                            fieldLabel:'Article',
-                                        //                                            autoSelect:true,
-                                        //                                            typeAhead: false,
-                                        //                                            mode: 'local',
-                                        //                                            displayField:'title',
-                                        //                                            valueField:'id',
-                                        //                                            triggerAction: 'all'
-                                        //                                        },
+                                       
                                         {
                                             xtype:'combo',
                                             id:'knitkit_create_website_nav_item_section',
@@ -1752,7 +1701,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             layout:'fit',
                             width:375,
                             title:'New Website',
-                            height:265,
+                            height:300,
                             plain: true,
                             buttonAlign:'center',
                             items: new Ext.FormPanel({
@@ -1796,25 +1745,21 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 },
                                 {
                                     xtype:'radiogroup',
-                                    fieldLabel:'Allow Inquiries',
-                                    name:'allow_inquiries',
+                                    fieldLabel:'Auto Activate Publication?',
+                                    name:'auto_activate_publication',
                                     width:100,
                                     columns:2,
                                     items:[
                                     {
                                         boxLabel:'Yes',
-                                        name:'allow_inquiries',
-                                        inputValue: 'yes',
-                                        checked:true
+                                        name:'auto_activate_publication',
+                                        inputValue: 'yes'
                                     },
-
                                     {
                                         boxLabel:'No',
-                                        name:'allow_inquiries',
-                                        inputValue: 'no',
-                                        checked:false
-                                    }
-                                    ]
+                                        name:'auto_activate_publication',
+                                        inputValue: 'no'
+                                    }]
                                 },
                                 {
                                     xtype:'radiogroup',

@@ -158,6 +158,11 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
 
     getValue : function(){
         return this.codeMirrorInstance.getCode();
+    },
+
+    insertContent : function(value){
+        var currentCode = this.codeMirrorInstance.getCode();
+        this.codeMirrorInstance.setCode(currentCode + value);
     }
 });
 Ext.reg('codemirror', Compass.ErpApp.Shared.CodeMirror);
