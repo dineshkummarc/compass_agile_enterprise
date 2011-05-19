@@ -1758,7 +1758,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                     {
                                         boxLabel:'No',
                                         name:'auto_activate_publication',
-                                        inputValue: 'no'
+                                        inputValue: 'no',
+                                        checked:true
                                     }]
                                 },
                                 {
