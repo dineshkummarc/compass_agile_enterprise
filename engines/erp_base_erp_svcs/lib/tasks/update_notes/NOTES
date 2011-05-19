@@ -1,9 +1,0 @@
-Compass AE Update Notes
-===============
-
-New Functionality
-
-Added active flag to version history for articles and section layouts.
-Added CodeMirror syntax highlighting to CkEditor
-Added Tagging to Blog posts
-Added Highslide library
