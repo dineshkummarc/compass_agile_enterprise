@@ -1,0 +1,8 @@
+<div>
+  <h1>Please address the following issues</h1>
+  <ul>
+    <% @website_inquiry.errors.collect do |e, m| %>
+      <li><%="#{e.humanize unless e == "base"} #{m}"%></li>
+    <% end %>
+  </ul>
+</div>
