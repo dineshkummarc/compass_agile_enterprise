@@ -1,0 +1,10 @@
+<p>
+  <%=render :partial => 'search' %>
+</p>
+
+<% @results.each do |r| %>
+  <p>
+    <a href="/<%=r[:link] %>"><%= r[:title] %></a><br />
+    <%= r[:content].body_html[0..100] unless r[:content].body_html.nil?  %><br />
+  </p>
+<% end %>

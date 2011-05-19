@@ -16,7 +16,6 @@ class WebsiteSection < ActiveRecord::Base
 
   acts_as_nested_set if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
   
-
   belongs_to :website
   has_many :website_section_contents, :dependent => :destroy
   has_many :contents, :through => :website_section_contents

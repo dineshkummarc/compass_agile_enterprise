@@ -5,11 +5,61 @@ class Content < ActiveRecord::Base
   can_be_published
 
   has_many :website_section_contents, :dependent => :destroy
-  has_many :sections, :through => :website_section_contents
+  has_many :website_sections, :through => :website_section_contents
     
   validates_presence_of :type
   validates_uniqueness_of :title
+
+  unless $USE_SOLR_FOR_CONTENT
+    def self.search(keyword, page, per_page)
+      Content.find(:all, 
+        :joins => :website_sections,
+        :conditions => "contents.title LIKE '%#{keyword}%' 
+                        OR contents.excerpt_html LIKE '%#{keyword}%' 
+                        OR contents.body_html LIKE '%#{keyword}%'",
+        :order => "contents.created_at DESC").paginate(:page => page, :per_page => per_page)
+    end
+  end
+
+  def self.do_search(query = '', page = 1, per_page = 20)
+
+    if $USE_SOLR_FOR_CONTENT
+      @results = Content.search do
+        unless query.empty?
+          keywords query 
+        end
+        paginate :page => page, :per_page => per_page
+      end
+      
+      results = @results.results
+    else
+      @results = Content.search(query, page, per_page)
+      results = @results      
+    end
     
+    # an article can belong to multiple sections so we must loop thru and get all sections
+    # and if it is a blog get the article link and title
+    results_array = []
+    results.each do |content|
+      content.website_sections.each do |section|
+        results_hash = {}
+        if section.attributes['type'] == 'Blog'
+          results_hash[:link] = section.permalink + '/' + content.permalink
+          results_hash[:title] = content.title
+        else
+          results_hash[:link] = section.permalink
+          results_hash[:title] = section.title
+        end
+        results_hash[:section] = section
+        results_hash[:content] = content
+        
+        results_array << results_hash
+      end
+    end
+    
+    results_array
+  end
+      
   def self.find_by_section_id( website_section_id )
     Content.find(:all, 
       :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",

@@ -36,6 +36,9 @@ ActionController::Routing::Routes.draw do |map|
   map.contact '/contact_us', :controller => 'contact', :action => 'show'
   map.connect '/view_current_publication', :controller => 'base', :action => 'view_current_publication'
 
+  map.connect '/search', :controller => 'search', :action => 'index', :conditions => { :method => :get }
+  map.connect '/search', :controller => 'search', :action => 'create', :conditions => { :method => :post }
+
   #Desktop Applications
   #knitkit
   map.connect '/erp_app/desktop/knitkit/:action', :controller => 'erp_app/desktop/knitkit/base'
