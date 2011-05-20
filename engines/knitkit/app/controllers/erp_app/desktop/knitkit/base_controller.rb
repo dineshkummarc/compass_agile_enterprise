@@ -85,7 +85,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       :url => "http://#{website.hosts.first.host}/#{website_section.permalink}"
     }
 
-    if website_section.is_a?(Blog)
+    if website_section.is_a?(Blog) || website_section.type == 'Blog'
       website_section_hash[:isBlog] = true
       website_section_hash[:iconCls] = 'icon-blog'
       website_section_hash[:leaf] = true
