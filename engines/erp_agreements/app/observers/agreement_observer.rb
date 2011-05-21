@@ -4,8 +4,7 @@ class AgreementObserver < ActiveRecord::Observer
       #Rescued because callbacks on postal address create has a contact but
       #may not have a party yet
       agreement.agreement_party_roles.each do |agreement_party_role|
-        #PartySearchFact.update_search_fact(agreement_party_role.party) #Commented out due to custom OlPartySearchFact
-        OlPartySearchFact.update_search_fact(agreement_party_role.party)
+        PartySearchFact.update_search_fact(agreement_party_role.party)
       end
     rescue
     end
@@ -17,8 +16,7 @@ class AgreementObserver < ActiveRecord::Observer
       #may not have a party yet
       agreement.agreement_party_roles.each do |agreement_party_role|
         party = Party.find(agreement_party_role.party.id)
-        #PartySearchFact.update_search_fact(party) #Commented out due to custom OlPartySearchFact
-        OlPartySearchFact.update_search_fact(party)
+        PartySearchFact.update_search_fact(party)
       end
     rescue
     end
