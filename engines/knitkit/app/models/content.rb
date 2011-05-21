@@ -10,18 +10,35 @@ class Content < ActiveRecord::Base
   validates_presence_of :type
   validates_uniqueness_of :title
 
-  def self.search(website_id, keyword, page, per_page)
+  def self.search(options = {})
+    if options[:section_permalink].nil? or options[:section_permalink].empty?
+      section_scope = ''
+    else
+      if options[:section_permalink].nil?
+        section_scope = ''
+      else
+        section_scope = "website_sections.permalink = '#{options[:section_permalink]}' AND"
+      end
+    end
+
+    if options[:content_type].nil? or options[:content_type].empty?
+      content_type_scope = ''
+    else
+      content_type_scope = "website_sections.type = '#{options[:content_type]}' AND"
+    end
+    
     Content.find(:all,
       :joins => :website_sections,
-      :conditions => "website_sections.website_id = #{website_id} AND
-                      (contents.title LIKE '%#{keyword}%' 
-                      OR contents.excerpt_html LIKE '%#{keyword}%' 
-                      OR contents.body_html LIKE '%#{keyword}%')",
-      :order => "contents.created_at DESC").paginate(:page => page, :per_page => per_page)
+      :conditions => "#{content_type_scope} #{section_scope} 
+                      website_sections.website_id = #{options[:website_id]} AND
+                      (contents.title LIKE '%#{options[:query]}%' 
+                      OR contents.excerpt_html LIKE '%#{options[:query]}%' 
+                      OR contents.body_html LIKE '%#{options[:query]}%')",
+      :order => "contents.created_at DESC").paginate(:page => options[:page], :per_page => options[:per_page])
   end
 
-  def self.do_search(website_id, query = '', page = 1, per_page = 20)
-    @results = Content.search(website_id, query, page, per_page)
+  def self.do_search(options = {})    
+    @results = Content.search(options)
 
     build_search_results(@results)    
   end

@@ -6,6 +6,12 @@ Content.class_eval do
       text :title
       text :excerpt_html    
       text :body_html
+      string :website_section_id do
+        website_sections.first.id # index website_section_id so solr does not need reindexed when section title/permalink changes        
+      end
+      string :type do
+        website_sections.first.type        
+      end
       string :website_id do
         website_sections.first.website_id
       end
@@ -14,21 +20,34 @@ Content.class_eval do
     # alias_method :search, :solr_search unless method_defined? :search
     # the above line in sunspot plugin doesn't all you overwrite the search method in content base model.
     # add this to force overwriting it.
-    # THIS IS NOT WORKING CORRECTLY! You must still call solr_search directly!
-    def self.search
-      self.solr_search
+    def self.search(options = {}, &block)
+      self.solr_search(options = {}, &block)
     end
 
     # overwrite and add solr functionality.
-    def self.do_search(website_id, query = '', page = 1, per_page = 20)
+    def self.do_search(options = {})
 
-      @results = Content.solr_search do
-        unless query.empty?
-          keywords query
+      if options[:section_permalink].nil?
+        website_section_id = nil
+      else
+        website_section_id = WebsiteSection.find_by_permalink(options[:section_permalink]).id rescue nil
+      end
+
+      @results = Content.search do
+        unless options[:query].empty?
+          keywords options[:query]
         end
 
-        with(:website_id, website_id)
-        paginate :page => page, :per_page => per_page
+        unless options[:content_type].nil? or options[:content_type].empty?
+          with(:type, options[:content_type])
+        end
+
+        unless website_section_id.nil?
+          with(:website_section_id, website_section_id)
+        end
+
+        with(:website_id, options[:website_id])
+        paginate :page => options[:page], :per_page => options[:per_page]
       end
 
       build_search_results(@results.results)
