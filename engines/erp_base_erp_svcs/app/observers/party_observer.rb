@@ -1,15 +1,11 @@
 class PartyObserver < ActiveRecord::Observer
+
   def after_save(party)
     begin
-      OlPartySearchFact.update_search_fact(party)
+      PartySearchFact.update_search_fact(party)
     rescue
+      logger.warn 'PartySearchFact/Solr update failed on Party.after_save'
     end
   end
 
-  def after_create(party)
-    begin
-      OlPartySearchFact.update_search_fact(party)
-    rescue
-    end
-  end
 end

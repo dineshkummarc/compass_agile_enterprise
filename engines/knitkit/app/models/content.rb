@@ -10,20 +10,37 @@ class Content < ActiveRecord::Base
   validates_presence_of :type
   validates_uniqueness_of :title
 
-  def self.search(keyword, page, per_page)
+  def self.search(options = {})
+    if options[:section_permalink].nil? or options[:section_permalink].empty?
+      section_scope = ''
+    else
+      if options[:section_permalink].nil?
+        section_scope = ''
+      else
+        section_scope = "website_sections.permalink = '#{options[:section_permalink]}' AND"
+      end
+    end
+
+    if options[:content_type].nil? or options[:content_type].empty?
+      content_type_scope = ''
+    else
+      content_type_scope = "website_sections.type = '#{options[:content_type]}' AND"
+    end
+    
     Content.find(:all,
       :joins => :website_sections,
-      :conditions => "contents.title LIKE '%#{keyword}%'
-                        OR contents.excerpt_html LIKE '%#{keyword}%' 
-                        OR contents.body_html LIKE '%#{keyword}%'",
-      :order => "contents.created_at DESC").paginate(:page => page, :per_page => per_page)
+      :conditions => "#{content_type_scope} #{section_scope} 
+                      website_sections.website_id = #{options[:website_id]} AND
+                      (contents.title LIKE '%#{options[:query]}%' 
+                      OR contents.excerpt_html LIKE '%#{options[:query]}%' 
+                      OR contents.body_html LIKE '%#{options[:query]}%')",
+      :order => "contents.created_at DESC").paginate(:page => options[:page], :per_page => options[:per_page])
   end
 
-  def self.do_search(query = '', page = 1, per_page = 20)
-    @results = Content.search(query, page, per_page)
-    results = @results
+  def self.do_search(options = {})    
+    @results = Content.search(options)
 
-    build_search_results(results)
+    build_search_results(@results)    
   end
       
   def self.find_by_section_id( website_section_id )
@@ -82,24 +99,23 @@ class Content < ActiveRecord::Base
   protected
 
   def self.build_search_results(results)
-    # an article can belong to multiple sections so we must loop thru and get all sections
     # and if it is a blog get the article link and title
     results_array = []
     results.each do |content|
-      content.website_sections.each do |section|
-        results_hash = {}
-        if section.attributes['type'] == 'Blog'
-          results_hash[:link] = section.permalink + '/' + content.permalink
-          results_hash[:title] = content.title
-        else
-          results_hash[:link] = section.permalink
-          results_hash[:title] = section.title
-        end
-        results_hash[:section] = section
-        results_hash[:content] = content
+      section = content.website_sections.first
 
-        results_array << results_hash
+      results_hash = {}
+      if section.attributes['type'] == 'Blog'
+        results_hash[:link] = section.permalink + '/' + content.permalink
+        results_hash[:title] = content.title
+      else
+        results_hash[:link] = section.permalink
+        results_hash[:title] = section.title
       end
+      results_hash[:section] = section
+      results_hash[:content] = content
+
+      results_array << results_hash
     end
     
     results_array

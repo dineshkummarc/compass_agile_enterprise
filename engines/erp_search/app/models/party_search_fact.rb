@@ -32,14 +32,14 @@ class PartySearchFact < ActiveRecord::Base
   end
   
   def self.update_search_fact(party)    
-    sf = OlPartySearchFact.find(:first, :conditions => ["party_id = ?", party.id])
+    sf = PartySearchFact.find(:first, :conditions => ["party_id = ?", party.id])
 
-    sf = OlPartySearchFact.create(:party_id => party.id) if sf.nil?
+    sf = PartySearchFact.create(:party_id => party.id) if sf.nil?
     sf.update_search_fact(party)
   end
 
   def self.destroy_search_fact(party)
-    sf = OlPartySearchFact.find(:first, :conditions => ["party_id = ?", party.id])
+    sf = PartySearchFact.find(:first, :conditions => ["party_id = ?", party.id])
 
     return if sf.nil?
 
