@@ -265,10 +265,16 @@ namespace :db do
     
     desc "list pending migrations"
     task :list_pending => :environment do
+      Rake::Task["db:migrate:prepare_migrations"].reenable
+      Rake::Task["db:migrate:prepare_migrations"].invoke
+
       pending_migrations = ActiveRecord::Migrator.new('up', 'db/migrate/').pending_migrations.collect{|item| File.basename(item.filename)}
       puts "================Pending Migrations=========="
       puts pending_migrations
       puts "================================================="
+
+      Rake::Task["db:migrate:cleanup_migrations"].reenable
+      Rake::Task["db:migrate:cleanup_migrations"].invoke
     end
 
     desc "Copy migrations from plugins to db/migrate"
