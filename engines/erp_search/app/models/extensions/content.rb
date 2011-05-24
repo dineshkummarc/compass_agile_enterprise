@@ -50,9 +50,19 @@ Content.class_eval do
         paginate :page => options[:page], :per_page => options[:per_page]
       end
 
-      build_search_results(@results.results)
+      @search_results = build_search_results(@results.results) 
+
+      @page_results = WillPaginate::Collection.create(options[:page], options[:per_page], @results.results.total_entries) do |pager|
+         pager.replace(@search_results)
+      end
+
+      return @page_results
     end
 
+    def total_pages
+      page_count
+    end
+    
     def after_save
       Sunspot.commit
     end

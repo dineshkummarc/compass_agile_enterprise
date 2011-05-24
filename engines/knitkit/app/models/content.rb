@@ -36,7 +36,13 @@ class Content < ActiveRecord::Base
   def self.do_search(options = {})    
     @results = Content.search(options)
 
-    build_search_results(@results)    
+    @search_results = build_search_results(@results) 
+    
+    @page_results = WillPaginate::Collection.create(options[:page], options[:per_page], @results.total_entries) do |pager|
+       pager.replace(@search_results)
+    end
+    
+    return @page_results
   end
       
   def self.find_by_section_id( website_section_id )
@@ -93,7 +99,7 @@ class Content < ActiveRecord::Base
   end
 
   protected
-
+  
   def self.build_search_results(results)
     # and if it is a blog get the article link and title
     results_array = []

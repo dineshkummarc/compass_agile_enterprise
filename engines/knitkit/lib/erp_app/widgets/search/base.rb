@@ -1,13 +1,25 @@
 class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
+  
+  def set_variables
+    @results_permalink = params[:results_permalink]
+    @section_permalink = params[:section_permalink]
+    @content_type = params[:content_type]
+    @per_page = params[:per_page]
+    
+    if @results_permalink.nil? or @results_permalink.blank?
+      @ajax_results = true
+    else
+      @ajax_results = false
+    end
+  end
 
   def index
-    @results_permalink = params[:results_permalink]
-
+    set_variables
     render
   end
 
   def new
-    @results_permalink = params[:results_permalink]
+    set_variables
     @website = Website.find_by_host(request.host_with_port)
 
     options = {
@@ -15,11 +27,11 @@ class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
       :query => params[:query],
       :content_type => params[:content_type],
       :section_permalink => params[:section_permalink],
-      :page => params[:page],
-      :per_page => params[:per_page]
+      :page => (params[:page] || 1),
+      :per_page => (params[:per_page] || 20)
     }
     @results = Content.do_search(options)
-    
+
     render :view => :show
   end
   
