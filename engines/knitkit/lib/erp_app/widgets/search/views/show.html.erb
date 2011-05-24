@@ -1,6 +1,4 @@
-<% if @ajax_results %>
-  <%=render :partial => '/ajax' %>
-<% else %>  
+<% unless @ajax_results %>
 <p>
   <%=render :partial => '/search' %>
 </p>
