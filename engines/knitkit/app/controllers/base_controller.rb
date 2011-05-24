@@ -39,22 +39,4 @@ class BaseController < ErpApp::ApplicationController
     end
   end
   
-  def page
-    offset = params[:start].to_f
-    
-    if offset > 0
-      return (offset / params[:limit].to_f).to_i + 1
-    else 
-      return 1
-    end
-  end
-  
-  def per_page
-    if !params[:limit].nil?
-      return params[:limit].to_i
-    else
-      return 20
-    end
-  end
-  
 end

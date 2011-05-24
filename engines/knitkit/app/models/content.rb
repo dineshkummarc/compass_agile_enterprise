@@ -14,11 +14,7 @@ class Content < ActiveRecord::Base
     if options[:section_permalink].nil? or options[:section_permalink].empty?
       section_scope = ''
     else
-      if options[:section_permalink].nil?
-        section_scope = ''
-      else
-        section_scope = "website_sections.permalink = '#{options[:section_permalink]}' AND"
-      end
+      section_scope = "website_sections.permalink = '#{options[:section_permalink]}' AND"
     end
 
     if options[:content_type].nil? or options[:content_type].empty?

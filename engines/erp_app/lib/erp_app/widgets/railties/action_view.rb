@@ -16,4 +16,13 @@ ActionView::Base.class_eval do
     ErpApp::Widgets::JavascriptLoader.glob_javascript
   end
 
+  def get_widget_action
+    params[:widget_action] || 'index'
+  end
+
+  def set_widget_params(widget_params={})
+    widget_params.merge!(params)
+    widget_params
+  end
+
 end
