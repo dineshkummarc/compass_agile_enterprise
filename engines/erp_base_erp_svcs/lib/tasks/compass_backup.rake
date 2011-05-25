@@ -3,7 +3,7 @@ require "activerecord"
 namespace :compass do
   namespace :backup do
   	
-  	BACKUP_DIR = '/backup/pgsql'
+  	BACKUP_DIR = '/backup/postgres'
   	SU_POSTGRES = true 
   	
   	desc 'backup all postgres databases'
@@ -29,6 +29,10 @@ namespace :compass do
 
     def green(text); 
       colorize(text, "\033[32m")
+    end
+
+    def red(text)
+      colorize(text, "\033[31m")
     end
 
     def colorize(text, color_code)
