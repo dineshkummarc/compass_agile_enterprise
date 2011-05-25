@@ -16,10 +16,14 @@ namespace :compass do
 
       puts red("Backing up ALL postgres databases via pg_dump")
       databases.each do |db|
-        puts "Dumping #{db} to #{PG_BACKUP_DIR}"
-        cmd = "pg_dump #{db} > #{PG_BACKUP_DIR}/#{db}_#{Time.now.strftime(TIMESTAMP_FORMAT)}.pgsql"
-        cmd = "sudo su postgres -c \"#{cmd}\"" if SU_POSTGRES
-        execute_command(cmd)
+        unless db == "template0"
+          puts "Dumping #{db} to #{PG_BACKUP_DIR}"
+          cmd = "pg_dump #{db} > #{PG_BACKUP_DIR}/#{db}_#{Time.now.strftime(TIMESTAMP_FORMAT)}.pgsql"
+          cmd = "sudo su postgres -c \"#{cmd}\"" if SU_POSTGRES
+          execute_command(cmd)
+        else
+          puts "Skipping template0 database ..."
+        end
       end
       
       puts "\nBackup Complete."
