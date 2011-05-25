@@ -71,6 +71,20 @@ class WebsiteSection < ActiveRecord::Base
     layout_content
   end
 
+  def get_topics
+    sql = "SELECT tags.*, taggings.tags_count AS count FROM \"tags\" 
+                  JOIN (SELECT taggings.tag_id, COUNT(taggings.tag_id) AS tags_count FROM \"taggings\" 
+                        INNER JOIN contents ON contents.id = taggings.taggable_id AND contents.type = 'Article' 
+                        INNER JOIN website_section_contents ON contents.id=website_section_contents.content_id 
+                        WHERE (taggings.taggable_type = 'Content' AND taggings.context = 'tags') 
+                        AND website_section_contents.website_section_id=#{self.id}
+                        GROUP BY taggings.tag_id HAVING COUNT(*) > 0 AND COUNT(taggings.tag_id) > 0) 
+                        AS taggings ON taggings.tag_id = tags.id
+                  ORDER BY tags.name ASC"
+
+    ActsAsTaggableOn::Tag.find_by_sql(sql)
+  end
+
   private
 
   def self.get_published_verison(active_publication, content)
@@ -84,6 +98,7 @@ class WebsiteSection < ActiveRecord::Base
     end
     content_version
   end
+    
 end
 
 
