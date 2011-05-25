@@ -20,8 +20,8 @@ ActionView::Base.class_eval do
     params[:widget_action] || 'index'
   end
 
-  def set_widget_params(widget_params={})
-    widget_params.merge!(params)
+  def set_widget_params(widget_params={})   
+    widget_params.merge!(params.symbolize_keys)
     widget_params
   end
 
