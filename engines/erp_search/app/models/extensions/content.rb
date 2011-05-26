@@ -27,7 +27,7 @@ Content.class_eval do
     # overwrite and add solr functionality.
     def self.do_search(options = {})
 
-      if options[:section_permalink].nil?
+      if options[:section_permalink].nil? or options[:section_permalink].blank?
         website_section_id = nil
       else
         website_section_id = WebsiteSection.find_by_permalink(options[:section_permalink]).id rescue nil

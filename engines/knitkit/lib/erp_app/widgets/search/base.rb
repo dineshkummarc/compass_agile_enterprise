@@ -5,6 +5,7 @@ class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
     @section_permalink = params[:section_permalink]
     @content_type = params[:content_type]
     @per_page = params[:per_page]
+    @css_class = params[:class]
     
     if @results_permalink.nil? or @results_permalink.blank?
       @ajax_results = true
