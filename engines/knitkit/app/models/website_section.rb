@@ -71,6 +71,10 @@ class WebsiteSection < ActiveRecord::Base
     layout_content
   end
 
+  def get_tags
+    get_topics
+  end
+  
   def get_topics
     sql = "SELECT tags.*, taggings.tags_count AS count FROM \"tags\" 
                   JOIN (SELECT taggings.tag_id, COUNT(taggings.tag_id) AS tags_count FROM \"taggings\" 
