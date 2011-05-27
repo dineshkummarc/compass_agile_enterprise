@@ -1,7 +1,10 @@
 <h2><%=h @blog.title %></h2>
 <br/>
 <h3><%=h @published_content.title %></h3>
-<p>Created at: <%= @published_content.created_at.to_s(:long) %></p>
+<p>
+  Posted: <%= @published_content.created_at.to_s(:long) %><br />
+  Topics: <%=Content.find(@published_content.content_id).tag_list %>  
+</p>
 <p><%= @published_content.excerpt_html %></p>
 <%= @published_content.body_html %>
 <h3>Comments</h3>
@@ -9,21 +12,18 @@
 <%
 if @published_content.content.comments.recent.approved.empty?
 %>
-No Comments
+  No Comments
 <%
 else
-  @published_content.content.comments.recent.approved.each do |comment|
-%>
+  @published_content.content.comments.recent.approved.each do |comment| %>
     <%=render :partial => 'comment', :locals => {:comment => comment}%>
-<%
-  end
-end
-%>
+<%end
+end %>
 <br/><br/>
 <hr/>
-<%unless current_user.nil?%>
+<% unless current_user.nil? %>
 <%= render :partial => 'add_comment' %>
-<%end%>
+<% end %>
 
 
 

@@ -5,7 +5,7 @@
     <div class="blog_post" id="blog_<%=h content.id %>">
       <h4><%=h content.title %></h4>
       <p>
-        Created on: <%= content.created_at.to_s(:long) %><br />
+        Posted: <%= content.created_at.to_s(:long) %><br />
         Topics: <%=Content.find(content.content_id).tag_list %>
       </p>
       <div class="blog_body">
@@ -36,13 +36,13 @@
    #                    Leave blank if you want results to display via ajax on the same page as the search form
    #                    Enter the permalink of results page if you want the search results to display on a new page
    # per_page: Number of results per page %>
-<%= render_widget :search,
-                  :action => get_widget_action,
-                  :params => set_widget_params({
-                               :content_type => 'Blog',
-                               :section_permalink => 'myblog',
-                               :results_permalink => 'search',
-                               :per_page => 20,
-                               :class => ''
-                    }) %>
+  <%= render_widget :search,
+                    :action => get_widget_action,
+                    :params => set_widget_params({
+                                 :content_type => 'Blog',
+                                 :section_permalink => 'myblog',
+                                 :results_permalink => 'search',
+                                 :per_page => 20,
+                                 :class => ''
+                      }) %>
 </div>
