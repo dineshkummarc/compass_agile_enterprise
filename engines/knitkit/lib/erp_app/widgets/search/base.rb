@@ -1,5 +1,13 @@
 class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
   
+  def self.name
+    "search"
+  end
+
+  def self.title
+    "Search"
+  end
+  
   def set_variables
     @results_permalink = params[:results_permalink]
     @section_permalink = params[:section_permalink]

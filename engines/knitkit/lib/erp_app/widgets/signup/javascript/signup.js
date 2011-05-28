@@ -1,6 +1,6 @@
 Compass.ErpApp.Widgets.Signup = {
     addSignup:function(){
-        Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror('<%= render_widget :signup%>');
+        Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror('<%= render_widget :signup %>');
     }
 }
 

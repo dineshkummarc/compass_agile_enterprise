@@ -1,4 +1,13 @@
 class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
+
+  def self.name
+    "contact_us"
+  end
+  
+  def self.title
+    "Contact Us"
+  end
+  
   def index
     render
   end

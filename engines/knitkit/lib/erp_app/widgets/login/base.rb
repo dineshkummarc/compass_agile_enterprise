@@ -1,4 +1,13 @@
 class ErpApp::Widgets::Login::Base < ErpApp::Widgets::Base
+
+  def self.name
+    "login"
+  end
+
+  def self.title
+    "Login"
+  end
+
   def index
     @logout_to = params[:logout_to]
     @login_to  = params[:login_to]

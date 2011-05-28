@@ -30,7 +30,7 @@ Content.class_eval do
       if options[:section_permalink].nil? or options[:section_permalink].blank?
         website_section_id = nil
       else
-        website_section_id = WebsiteSection.find_by_permalink(options[:section_permalink]).id rescue nil
+        website_section_id = WebsiteSection.find_by_permalink_and_website_id(options[:section_permalink], options[:website_id]).id rescue nil
       end
 
       @results = Content.search do

@@ -107,6 +107,18 @@ module ErpApp
         action_view.render({:file => view_template, :template_format => :html})
       end
 
+      def self.base_layout
+        file = File.join(Rails.root,"/vendor/plugins/knitkit/lib/erp_app/widgets/#{self.name}/views/layouts/base.html.erb")
+        IO.read(file)
+      end
+
+      def self.installed_widgets
+        widgets = Dir.entries(File.join(Rails.root,"/vendor/plugins/knitkit/lib/erp_app/widgets/"))
+        widgets.delete('.')
+        widgets.delete('..')
+        widgets      
+      end
+
       protected
       #get location of this class that is being executed
       def locate

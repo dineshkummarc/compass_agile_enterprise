@@ -1,4 +1,13 @@
 class ErpApp::Widgets::Signup::Base < ErpApp::Widgets::Base
+
+  def self.name
+    "signup"
+  end
+
+  def self.title
+    "Sign Up"
+  end
+
   def index
     render
   end

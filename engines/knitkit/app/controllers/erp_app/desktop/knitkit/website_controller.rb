@@ -71,9 +71,29 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     website.auto_activate_publication = params[:auto_activate_publication] == 'yes'
     website.email_inquiries = params[:email_inquiries] == 'yes'
 
+    # create homepage
+    website_section = WebsiteSection.new
+    website_section.title = "Home"      
+    website.website_sections << website_section
+    
+    # create default sections for each widget using widget layout
+    widgets = ErpApp::Widgets::Base.installed_widgets
+    widgets.each do |w|
+      website_section = WebsiteSection.new
+      widget_class = "ErpApp::Widgets::#{w.camelize}::Base".constantize
+      website_section.title = widget_class.title
+      website_section.in_menu = 't'
+      website_section.layout = widget_class.base_layout
+      website.website_sections << website_section
+    end
+
     if website.save
-      website.hosts << WebsiteHost.create(:host => params[:host])
+      website.hosts << WebsiteHost.create(:host => params[:host])      
       website.save
+
+      website.publish("Publish Default Sections")
+      PublishedWebsite.activate(website, 1)
+      
       result[:success] = true
     else
       result[:success] = false

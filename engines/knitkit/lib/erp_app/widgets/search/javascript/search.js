@@ -6,7 +6,7 @@ widgetTpl = new Ext.Template(
     "   # results_permalink: How do you want your results to display? via ajax? or on a new page?\n",
     "   #                    Leave blank if you want results to display via ajax on the same page as the search form\n",
     "   #                    Enter the permalink of results page if you want the search results to display on a new page\n",
-    "   # per_page: Number of results per page %>\n",
+    "   # per_page: Number of results per page \n",
     "   # class: CSS class for the form %>\n",
     "<%= render_widget :search, \n",
     "                  :action => get_widget_action,\n",
