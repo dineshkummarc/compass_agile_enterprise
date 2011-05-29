@@ -1,6 +1,15 @@
 class ErpApp::Widgets::<%= class_name %>::Base < ErpApp::Widgets::Base
+
+  def self.title
+    "<%= class_name %>"
+  end
+
   def index
     render
+  end
+
+  def self.name
+    File.dirname(__FILE__).split('/')[-1]
   end
 
   <% unless in_erp_app? %>

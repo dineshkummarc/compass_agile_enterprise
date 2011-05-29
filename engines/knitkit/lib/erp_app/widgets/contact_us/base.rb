@@ -1,9 +1,5 @@
 class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
 
-  def self.name
-    "contact_us"
-  end
-  
   def self.title
     "Contact Us"
   end
@@ -31,6 +27,10 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
     else
       render :view => :error
     end
+  end
+
+  def self.name
+    File.dirname(__FILE__).split('/')[-1]
   end
 
   #if module lives outside of erp_app plugin this needs to be overriden

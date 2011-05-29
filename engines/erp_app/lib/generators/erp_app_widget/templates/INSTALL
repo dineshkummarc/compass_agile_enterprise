@@ -5,7 +5,7 @@
 
 script/generate erp_app_widget [widget_name] [description] [icon_url] (optional fields) [plugin to create in]
 
-What will be created
+What has been created
 
 1. Folder structure [plugin]/lib/widgets/[widget_name]
 

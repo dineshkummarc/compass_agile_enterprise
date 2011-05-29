@@ -1,9 +1,5 @@
 class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
   
-  def self.name
-    "search"
-  end
-
   def self.title
     "Search"
   end
@@ -42,6 +38,10 @@ class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
     @results = Content.do_search(options)
 
     render :view => :show
+  end
+
+  def self.name
+    File.dirname(__FILE__).split('/')[-1]
   end
   
   #if module lives outside of erp_app plugin this needs to be overriden
