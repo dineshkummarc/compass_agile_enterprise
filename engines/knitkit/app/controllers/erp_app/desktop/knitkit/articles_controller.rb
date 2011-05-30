@@ -7,12 +7,10 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article = Article.new
 
     article = set_attributes(article)
-
+    article.website_sections << WebsiteSection.find(website_section_id)
+    
     if article.save
-      section = WebsiteSection.find(website_section_id)
-      section.contents << article
       update_position(website_section_id, article)
-      
       result[:success] = true
     else
       result[:success] = false
