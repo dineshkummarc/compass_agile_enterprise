@@ -1,4 +1,4 @@
-![Logo](engines/erp_app/public/images/art/compass-logo-1-medium.png)
+![Logo](http://github.com/portablemind/compass/raw/master/engines/erp_app/public/images/art/compass-logo-1-medium.png)
 
 ===Welcome to Compass Agile Enterprise===
 
