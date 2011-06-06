@@ -1,4 +1,4 @@
-require "activerecord"
+require "active_record"
 
 namespace :compass do
   namespace :backup do
