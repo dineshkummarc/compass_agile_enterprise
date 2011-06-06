@@ -7,6 +7,7 @@ class ErpApp::Organizer::BaseController < ErpApp::ApplicationController
 
   def index
     @organizer = ::Organizer.find_by_user(current_user)
+    @user = current_user
   end
 
 end

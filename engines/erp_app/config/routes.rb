@@ -12,9 +12,6 @@ ActionController::Routing::Routes.draw do |map|
   #############################
   map.organizer_login '/erp_app/organizer/login', :controller => 'erp_app/organizer/login', :action => 'index'
   map.connect '/erp_app/organizer', :controller => 'erp_app/organizer/base', :action => 'index'
-
-  #admin_center
-  map.connect '/erp_app/organizer/admin_center/:action', :controller => 'erp_app/organizer/admin_center/base'
   
   #crm
   map.connect '/erp_app/organizer/crm/:action/:id', :controller => 'erp_app/organizer/crm/base'
@@ -59,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/file_manager/download_file/:path', :controller => 'erp_app/desktop/file_manager/base', :action => 'download_file'
 
   #widget proxy
-  map.connect '/widgets/:widget_name/:widget_action', :controller => 'erp_app/widget_proxy'
+  map.connect '/widgets/:widget_name/:widget_action/:uuid/:id', :controller => 'erp_app/widget_proxy'
 end
 
 

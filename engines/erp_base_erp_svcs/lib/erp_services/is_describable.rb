@@ -26,6 +26,10 @@ module ErpServices
         self.descriptions.find(:all, :conditions => ['view_type_id = ?', ViewType.find_by_internal_identifier(view_iid).id])
       end
 
+      def find_description_by_iid(iid)
+        self.descriptions.find(:first, :conditions => ['internal_identifier = ?', iid])
+      end
+
       def add_description(view_type, description)
         descriptive_asset = DescriptiveAsset.create(
           :view_type => view_type,

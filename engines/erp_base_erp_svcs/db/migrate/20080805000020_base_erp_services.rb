@@ -329,7 +329,7 @@ class BaseErpServices < ActiveRecord::Migration
       create_table :descriptive_assets do |t|
         t.references :view_type
         t.string     :internal_identifier
-        t.string     :description
+        t.text       :description
         t.string     :external_identifier
         t.string     :external_id_source
         t.references :described_record, :polymorphic => true

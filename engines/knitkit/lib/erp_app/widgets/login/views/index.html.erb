@@ -1,4 +1,4 @@
-<div id="result"></div>
+<div id="<%=widget_result_id%>"></div>
 <div>
   <% form_remote_tag :url => build_widget_url(:new), :html => {:id => 'login_form'} do %>
     <div class="form_settings">
@@ -14,7 +14,7 @@
       <input type="hidden" name="login_to" value="<%=@login_to%>" />
       <p style="padding-top: 15px">
         <span>&nbsp;</span>
-        <%=  submit_tag "Login", :disable_with => "Please wait...", :class => "submit" %>
+        <%= submit_tag "Login", :disable_with => "Please wait...", :class => "submit", :style => 'margin:0px;'%> | <%= link_to 'Sign Up', @signup_url %>
       </p>
     </div>
   <% end %>

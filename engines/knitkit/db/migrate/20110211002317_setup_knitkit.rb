@@ -102,21 +102,6 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :themes, :active
     end
 
-    unless table_exists?(:theme_files)
-      create_table :theme_files do |t|
-        t.references :theme
-        t.string :type
-        t.string :name
-        t.string :directory
-        t.string :data_file_name
-        t.string :data_content_type
-        t.integer :data_file_size
-        t.datetime :data_updated_at
-
-        t.timestamps
-      end
-    end
-
     unless table_exists?(:published_websites)
       create_table :published_websites do |t|
         t.references :website

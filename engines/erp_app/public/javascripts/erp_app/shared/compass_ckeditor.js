@@ -30,7 +30,8 @@ Compass.ErpApp.Shared.CKeditor = Ext.extend(Ext.form.TextArea, {
 
     constructor : function(config){
         config = Ext.apply({
-            grow:true
+            grow:true,
+            hideLabel:true
         },config);
         Compass.ErpApp.Shared.CKeditor.superclass.constructor.call(this, config);
     },
@@ -46,7 +47,6 @@ Compass.ErpApp.Shared.CKeditor = Ext.extend(Ext.form.TextArea, {
             resize_enabled:false,
             base_path:'/javascripts/ckeditor/',
             toolbarStartupExpanded:false,
-            enterMode:CKEDITOR.ENTER_BR,
             shiftEnterMode:CKEDITOR.ENTER_P,
             skin:'office2003',
             extraPlugins:'codemirror'

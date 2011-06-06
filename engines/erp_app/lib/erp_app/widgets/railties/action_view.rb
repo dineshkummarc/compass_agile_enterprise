@@ -1,15 +1,26 @@
 ActionView::Base.class_eval do
   def render_widget(name, opts={})
-    id = "#{Digest::SHA1.hexdigest Time.now.to_s}_#{name}"
-
     action = opts[:action] || :index
     params = opts[:params].nil? ? '{}' : opts[:params].to_json
 
-    "<div id='#{id}'></div><script type='text/javascript'>Compass.ErpApp.Widgets.setup('#{id}', '#{name}', '#{action}', #{params})</script>"
+    uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(100).to_s)
+
+    "<div id='#{uuid}'></div><script type='text/javascript'>
+      Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params});
+      Compass.ErpApp.Widgets.LoadedWidgets.push({id:'#{uuid}', name:'#{name}', action:'#{action}', params:#{params}});
+     </script>"
   end
 
-  def build_widget_url(action)
-    "/widgets/#{@widget_name}/#{action}"
+  def build_widget_url(action,id=nil)
+    if id
+      "/widgets/#{@widget_name}/#{action}/#{@uuid}/#{id}"
+    else
+      "/widgets/#{@widget_name}/#{action}/#{@uuid}"
+    end
+  end
+  
+  def widget_result_id
+    "#{@uuid}_result"
   end
 
   def include_widget_javascript

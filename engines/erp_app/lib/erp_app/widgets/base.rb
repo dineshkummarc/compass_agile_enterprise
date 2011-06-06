@@ -13,6 +13,8 @@ module ErpApp
       attr_accessor :controller
       attr_accessor :name
       attr_accessor :view
+      attr_accessor :uuid
+      attr_accessor :widget_params
 
       include ::ActionController::Helpers
       include ::ActionController::RequestForgeryProtection
@@ -41,16 +43,20 @@ module ErpApp
       class_inheritable_accessor :default_template_format
       self.default_template_format = :html
 
-      delegate :params, :session, :request, :logger, :authenticated?, :to => :controller
+      delegate :params, :session, :request, :logger, :authenticated?, :current_user, :to => :controller
 
       attr_accessor :controller
       attr_reader   :state_name
 
 
-      def initialize(controller, name, view)
+      def initialize(controller, name, view, uuid, widget_params)
         self.name = name
         self.controller = controller
         self.view = view
+        self.uuid = uuid
+        self.widget_params = widget_params
+        store_widget_params
+        merge_params
       end
 
       def setup_action_view
@@ -123,6 +129,19 @@ module ErpApp
       #get location of this class that is being executed
       def locate
         File.dirname(__FILE__)
+      end
+
+      private
+      def merge_params
+        stored_widget_params = session[:widgets][self.uuid]
+        unless stored_widget_params.nil?
+          self.params.merge!(stored_widget_params)
+        end
+      end
+
+      def store_widget_params
+        session[:widgets] = {} if session[:widgets].nil?
+        session[:widgets][self.uuid] = self.widget_params if (!self.widget_params.nil? and !self.widget_params.empty?)
       end
 
     end

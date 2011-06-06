@@ -5,8 +5,20 @@ class ErpApp::Widgets::Login::Base < ErpApp::Widgets::Base
   end
 
   def index
-    @logout_to = params[:logout_to]
-    @login_to  = params[:login_to]
+    @logout_to  = params[:logout_to]
+    @login_to   = params[:login_to]
+    @signup_url = params[:signup_url]
+    
+    render
+  end
+
+  def login_header
+    @login_url     = params[:login_url]
+    @signup_url    = params[:signup_url]
+    @authenticated = self.authenticated?
+    if self.authenticated?
+      @user = self.current_user
+    end
     
     render
   end

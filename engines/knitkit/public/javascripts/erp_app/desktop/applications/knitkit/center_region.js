@@ -122,19 +122,25 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         var self = this;
         var file_name = node.id.split('/').pop().split('.')[0];
         var fileType = node.id.split('.').pop();
-        this.workArea.add({
-            title:file_name,
-            tbarItems:tbarItems,
-            xtype:'codemirror',
-            parser:fileType,
-            sourceCode:content,
+        this.workArea.add(
+        {
             closable:true,
-            listeners:{
-                'save':function(codeMirror, content){
-                    self.saveTemplateFile(node.id, content);
+            title:file_name,
+            xtype:'panel',
+            layout:'fit',
+            items:[{
+                tbarItems:tbarItems,
+                xtype:'codemirror',
+                parser:fileType,
+                sourceCode:content,
+                closable:true,
+                listeners:{
+                    'save':function(codeMirror, content){
+                        self.saveTemplateFile(node.id, content);
+                    }
                 }
-            }
-        });
+            }]
+            });
         this.workArea.setActiveTab(this.workArea.items.length - 1);
         return false;
     },
