@@ -4,4 +4,7 @@
   <%=content.body_html %>
 <% end %>
 
-<%= render_widget :login, :params => {:logout_to => "/home", :login_to => "/home"} %>
+<%= render_widget :login, 
+                  :params => {:logout_to => "/home", 
+                              :login_to => "/home", 
+                              :signup_url => '/sign-up'} %>
