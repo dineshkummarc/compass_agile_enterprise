@@ -71,7 +71,7 @@ ActionMailer::Base.smtp_settings = {
 
 puts "getting latest compass framwork engines, this may take a bit grab a LARGE coffee..."
 
-git :clone => 'git://github.com/portablemind/compass.git "vendor/compass"'
+git :clone => 'git://github.com/portablemind/compass_agile_enterprise.git "vendor/compass"'
  
 inside('vendor/compass/engines') do
   run 'git checkout'
@@ -81,6 +81,7 @@ puts "getting latest compass framwork plugins..."
 
 git :clone => 'git://github.com/portablemind/data_migrator.git "vendor/compass/plugins/data_migrator"'
 
+FileUtils.mkdir_p 'vendor/compass/plugins/data_migrator'
 inside('vendor/compass/plugins/data_migrator') do
   run 'git checkout'
 end
