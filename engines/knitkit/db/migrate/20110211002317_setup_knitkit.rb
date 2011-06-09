@@ -151,22 +151,6 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :comments, [:user_id]
     end
 
-    unless table_exists?(:website_inquiries)
-      create_table :website_inquiries do |t|
-        t.string   :first_name
-        t.string   :last_name
-        t.string   :email
-        t.text     :inquiry
-        t.references :user
-        t.references :website
-
-        t.timestamps
-      end
-
-      add_index :website_inquiries, [:user_id]
-      add_index :website_inquiries, [:website_id]
-    end
-
     unless table_exists?(:website_nav_items)
       create_table :website_nav_items do |t|
         t.references :website_nav
@@ -209,7 +193,7 @@ class SetupKnitkit < ActiveRecord::Migration
     # check that each table exists before trying to delete it.
     [:websites, :website_sections, :contents, :website_section_contents,
       :themes, :theme_files, :published_websites, :published_elements,
-      :comments, :website_inquiries,:website_hosts,:website_nav_items, :website_navs].each do |tbl|
+      :comments,:website_hosts,:website_nav_items, :website_navs].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
       end

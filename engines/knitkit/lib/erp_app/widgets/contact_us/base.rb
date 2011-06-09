@@ -10,15 +10,19 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
 
   def new
     @website = Website.find_by_host(request.host_with_port)
-    @website_inquiry = WebsiteInquiry.create(
-      :email => params[:email],
-      :first_name => params[:first_name],
-      :last_name => params[:last_name],
-      :inquiry => params[:inquiry]
-    )
+
+    DynamicFormDocument.declare("ContactUs")
+    @website_inquiry = ContactUs.new
+    @website_inquiry.data.created_with_form_id = params[:dynamic_form_id]
+    
+    params[:website_id] = @website.id
+    params.each do |k,v|
+      @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
+    end
+    
+    @website_inquiry.data.created_by = current_user.id
+    
     if @website_inquiry.valid?
-      @website_inquiry.website = @website
-      @website_inquiry.user = self.controller.user unless self.controller.user.nil?
       @website_inquiry.save
       if @website.email_inquiries?
         @website_inquiry.send_email

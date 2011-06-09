@@ -1,0 +1,118 @@
+= dynamic_attributes
+
+dynamic_attributes is a gem that lets you dynamically specify attributes on ActiveRecord models, which will be serialized and deserialized to a given text column. Example:
+
+    >> dm = DynamicModel.new(:field_test => 'I am a dynamic attribute')
+      +-------+-------------+--------------------------------------------+
+      | title | description | dynamic_attributes                         |
+      +-------+-------------+--------------------------------------------+
+      |       |             | {"field_test"=>"I am a dynamic_attribute"} |
+      +-------+-------------+--------------------------------------------+
+    >> dm.field_test
+      => "I am a dynamic_attribute"
+    >> dm.field_test2
+      NoMethodError: undefined method `field_test2'
+    >> dm.field_test2 = 'I am too!'
+      => 'I am too!'
+    >> dm.field_test2
+      => 'I am too!'
+    >> dm.save
+      +-------+-------------+------------------------------------------------------------------------+
+      | title | description | dynamic_attributes                                                     |
+      +-------+-------------+------------------------------------------------------------------------+
+      |       |             | {"field_test2"=>"I am too!", "field_test"=>"I am a dynamic_attribute"} |
+      +-------+-------------+------------------------------------------------------------------------+
+          
+
+
+
+== Requirements
+
+* Rails 2.x / 3 (Tested for 2.3.5, 2.3.8 & 3).
+
+== Installation
+
+* config.gem 'dynamic_attributes', sudo rake gems:install
+* gem install dynamic_attributes
+
+== Usage
+
+To add dynamic_attributes to an AR model, take the following steps:
+
+* Create a migration to add a column to serialize the dynamic attributes to:
+
+    class AddDynamicAttributesToDynamicModels < ActiveRecord::Migration
+      def self.up
+        add_column :dynamic_models, :dynamic_attributes, :text
+      end
+
+      def self.down
+        remove_column :dynamic_models, :dynamic_attributes
+      end
+    end
+  
+* Add dynamic_attributes to your AR model:
+
+    class DynamicModel < ActiveRecord::Base
+      has_dynamic_attributes
+    end  
+  
+* Now you can add dynamic attributes in several ways. Examples:
+
+  - New: DynamicModel.new(:title => 'Hello', :field_summary => 'This is a dynamic attribute')
+  - Create: DynamicModel.create(:title => 'Hello', :field_summary => 'This is a dynamic attribute')
+  - Update: 
+    * dynamic_model.update_attribute(:field_summary, 'This is a dynamic attribute')
+    * dynamic_model.update_attributes(:field_summary => 'This is a dynamic attribute', :description => 'Testing')
+  - Set manually: dynamic_model.field_summary = 'This is a dynamic attribute'
+  
+Note that a dynamic attribute should be prefixed (by default with 'field_'), see the Options section for more info. 
+
+* Get Info:
+  * dynamic_model.has_dynamic_attribute?(dynamic_attribute)
+    * Returns whether a given attribute is a dynamic attribute. Accepts strings and symbols.
+  * dynamic_model.read_dynamic_attribute(dynamic_attribute)
+    * Returns the value for a given dynamic attribute. Returns nil if the attribute does not exist or if the attribute is not a dynamic attribute.   
+  * dynamic_model.persisting_dynamic_attributes
+    * Returns an array of the dynamic attributes that will be persisted.
+  * DynamicModel.dynamic_attribute_field
+    * Returns the serialization attribute. You can access this serialization attribute directly if you need to.
+  * DynamicModel.dynamic_attribute_prefix
+    * Returns the method prefix of dynamic attributes, see below for more info.
+  * DynamicModel.destroy_dynamic_attribute_for_nil
+    * Returns whether dynamic attributes with null values will be persisted, see below for more info.
+      
+== Options
+
+The has_dynamic_attribute call takes three different options:
+
+* :dynamic_attribute_field
+  - Defines the database column to serialize to.
+* :dynamic_attribute_prefix
+  - Defines the prefix that a dynamic attribute should have. All attribute assignments that start with this prefix will become dynamic attributes. Note that it's not recommended to set this prefix to the empty string; as every method call that falls through to method_missing will become a dynamic attribute.
+* :destroy_dynamic_attribute_for_nil
+  - When set to true, the module will remove a dynamic attribute when its value is set to nil. Defaults to false, causing the module to store a dynamic attribute even if its value is nil.
+
+By default, the has_dynamic_attributes call without options equals to calling: 
+
+has_dynamic_attributes :dynamic_attribute_field => :dynamic_attributes, :dynamic_attribute_prefix => 'field_', :destroy_dynamic_attribute_for_nil => false
+  
+Take a look at the code Rdoc for more information!
+
+== Validations
+
+The validations provided by AR can be used for dynamic attributes as if it is a normal attribute.
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2010 Reinier de Lange. See LICENSE for details.

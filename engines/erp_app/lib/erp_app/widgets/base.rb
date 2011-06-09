@@ -10,6 +10,8 @@ require 'action_controller/base'
 module ErpApp
   module Widgets
     class Base
+      IGNORED_PARAMS = %w{action controller uuid widget_name widget_action dynamic_form_id dynamic_form_model_id model_name}
+
       attr_accessor :controller
       attr_accessor :name
       attr_accessor :view

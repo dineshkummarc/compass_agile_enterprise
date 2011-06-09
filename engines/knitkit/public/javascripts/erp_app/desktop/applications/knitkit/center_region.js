@@ -460,7 +460,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         }
         else{
             if(activeTab.findByType('codemirror').length == 0){
-                Ext.Msg.alert('Error', 'No codemirror found');
+                Ext.Msg.alert('Error', 'No codemirror found.');
             }
             else{
                 activeTab.findByType('codemirror')[0].setValue(content);
@@ -476,7 +476,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         }
         else{
             if(activeTab.findByType('codemirror').length == 0){
-                Ext.Msg.alert('Error', 'No codemirror found');
+                Ext.Msg.alert('Error', 'No codemirror found. Note that a widget can only be added to a Layout.');
             }
             else{
                 activeTab.findByType('codemirror')[0].insertContent(content);

@@ -1,7 +1,13 @@
 #remove this plugin for the load once paths
 ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_once_paths.select{|path| path =~ %r(^#{File.dirname(__FILE__)}) }
+
 #add the observers path to load_paths
-ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)}/app/observers"
+ActiveSupport::Dependencies.load_paths << "#{File.dirname(__FILE__)}/app/observers"
+
+# load widget models
+ErpApp::Widgets::Base.installed_widgets.each do |widget|
+  ActiveSupport::Dependencies.load_paths << "#{File.dirname(__FILE__)}/lib/erp_app/widgets/#{widget}/models"
+end
 
 require 'core_ext'
 require 'theme_support'
