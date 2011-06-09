@@ -77,6 +77,9 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     website.website_sections << website_section
     
     # create default sections for each widget using widget layout
+    # needs updated to support widgets in more than just knitkit plugin
+    # but should handle the case where the base layout may not exist
+    # widgets with no base layout should not be installed
     widgets = ErpApp::Widgets::Base.installed_widgets
     widgets.each do |w|
       website_section = WebsiteSection.new

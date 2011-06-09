@@ -2,7 +2,6 @@ require 'nokogiri'
 
 class Website < ActiveRecord::Base
   has_many :published_websites, :dependent => :destroy
-  has_many :website_inquiries, :dependent => :destroy
   has_many :website_hosts, :dependent => :destroy
   has_many :website_navs, :dependent => :destroy
 
