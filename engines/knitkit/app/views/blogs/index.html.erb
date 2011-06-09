@@ -14,6 +14,9 @@
       <div><%= link_to 'Read More...', blog_article_path(@website_section.id, content.permalink) %></div>
     </div>
   <% end %>
+  
+  <%= will_paginate @contents, :class => "blog_pagination", :params => { :per_page => params[:per_page] } %>
+  
 </div>
 
 <div class="sidebar blog_tags">

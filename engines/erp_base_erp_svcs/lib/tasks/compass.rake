@@ -61,6 +61,7 @@ namespace :compass do
     
     # call the database migration task
     Rake::Task['db:migrate'].invoke
+    Rake::Task['db:migrate_data'].invoke
     Rake::Task['compass:assets:install'].invoke
     
   end
