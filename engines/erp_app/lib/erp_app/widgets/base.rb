@@ -115,11 +115,14 @@ module ErpApp
         action_view.render({:file => view_template, :template_format => :html})
       end
 
+      # needs updated to support widgets in more than just knitkit plugin
+      # but should handle the case where the base layout may not exist
       def self.base_layout
         file = File.join(Rails.root,"/vendor/plugins/knitkit/lib/erp_app/widgets/#{self.name}/views/layouts/base.html.erb")
         IO.read(file)
       end
 
+      # needs updated to support widgets in more than just knitkit plugin
       def self.installed_widgets
         widgets = Dir.entries(File.join(Rails.root,"/vendor/plugins/knitkit/lib/erp_app/widgets/"))
         widgets.delete('.')
