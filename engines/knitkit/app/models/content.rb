@@ -62,7 +62,7 @@ class Content < ActiveRecord::Base
     published_content = []
     contents = self.find_by_section_id( website_section.id )
     contents.each do |content|
-      content = get_published_verison(active_publication, content)
+      content = get_published_version(active_publication, content)
       published_content << content unless content.nil?
     end
 
@@ -74,7 +74,7 @@ class Content < ActiveRecord::Base
     id_filter_list = self.tagged_with(tag.name).collect{|t| t.id }    
     contents = self.find_by_section_id_filtered_by_id( website_section.id, id_filter_list )
     contents.each do |content|
-      content = get_published_verison(active_publication, content)
+      content = get_published_version(active_publication, content)
       published_content << content unless content.nil?
     end
 
@@ -125,7 +125,7 @@ class Content < ActiveRecord::Base
 
   private
 
-  def self.get_published_verison(active_publication, content)
+  def self.get_published_version(active_publication, content)
     content_version = nil
     published_website_id = active_publication.id
     published_element = PublishedElement.find(:first,

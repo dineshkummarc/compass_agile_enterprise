@@ -1,5 +1,5 @@
 class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::BaseController
-  IGNORED_PARAMS = %w{action controller id position section_id}
+  IGNORED_PARAMS = %w{action controller id position section_id content_area}
 
   def new
     result = {}
@@ -10,7 +10,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article.website_sections << WebsiteSection.find(website_section_id)
     
     if article.save
-      update_position(website_section_id, article)
+      update_position_and_content_area(website_section_id, article)
+      
       result[:success] = true
     else
       result[:success] = false
@@ -26,10 +27,9 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     
     article = set_attributes(article)
 
-    #handle position
-    update_position(website_section_id, article)
-    
     if article.save
+      update_position_and_content_area(website_section_id, article)
+
       result[:success] = true
     else
       result[:success] = false
@@ -49,13 +49,18 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     
     article    
   end
- 
-  def update_position(website_section_id, article)
-    section_content = WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?',website_section_id,article.id])
+
+  def get_section_content(website_section_id, article)
+    WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?', website_section_id, article.id])
+  end
+  
+  def update_position_and_content_area(website_section_id, article)
+    section_content = get_section_content(website_section_id, article)
+    section_content.content_area = params['content_area']
     section_content.position = params['position']
     section_content.save    
   end
- 
+  
   def delete
     result = {}
 
@@ -110,7 +115,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     articles_array = []
     articles.each do |a|
       articles_hash = {}
-      articles_hash[:content_area] = a.content_area
+      articles_hash[:content_area] = get_section_content(website_section_id, a).content_area
       articles_hash[:id] = a.id
       articles_hash[:title] = a.title
       articles_hash[:tag_list] = a.tag_list.join(', ')

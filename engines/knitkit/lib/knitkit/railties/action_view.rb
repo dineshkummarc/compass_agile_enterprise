@@ -1,15 +1,32 @@
 ActionView::Base.class_eval do
-  def render_content(name)
-    html = ''
-    contents = @website_section.contents.select{|item| item.content_area == name.to_s}
-    published_contents = []
-    contents.each do |content|
-      content_version = Content.get_published_verison(@active_publication, content)
-      published_contents << content_version unless content_version.nil?
-    end
+  
+  # render a piece of content by permalink regardless if it belongs to a section or not
+  def render_content(permalink)
+    content = Content.find_by_permalink(permalink.to_s)
+    content_version = Content.get_published_version(@active_publication, content)
+    body_html = content.body_html.nil? ? '' : content.body_html
+    
+    body_html
+  end
 
-    contents = published_contents.sort_by{|content_version| content_version.content.position(@website_section.id).blank? ? 0 : content_version.content.position(@website_section.id) }
-    contents.each do |content|
+  def render_content_area(name)
+    html = ''
+    
+    section_contents = WebsiteSectionContent.find(:all,
+      :joins => :content,
+      :conditions => {
+        :website_section_id => @website_section.id,
+        :content_area => name.to_s },
+      :order => :position )
+      
+    published_contents = []
+    section_contents.each do |sc|
+      content_version = Content.get_published_version(@active_publication, sc.content)
+      published_contents << content_version unless content_version.nil?    
+    end
+    
+#    contents = published_contents.sort_by{|content_version| content_version.content.position(@website_section.id).blank? ? 0 : content_version.content.position(@website_section.id) }
+    published_contents.each do |content|
       body_html = content.body_html.nil? ? '' : content.body_html
       html << body_html
     end

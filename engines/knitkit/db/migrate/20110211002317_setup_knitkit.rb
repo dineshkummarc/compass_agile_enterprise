@@ -32,6 +32,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.references :website
         t.string :path
         t.string :permalink
+        t.string :content_area
         t.text :layout
         t.boolean :in_menu
         t.integer :position, :default => 0
@@ -58,7 +59,6 @@ class SetupKnitkit < ActiveRecord::Migration
         t.string :type
         t.string :title
         t.string :permalink
-        t.string :content_area
         t.text :excerpt_html
         t.text :body_html
 

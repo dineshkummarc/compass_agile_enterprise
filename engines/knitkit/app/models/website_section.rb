@@ -91,7 +91,7 @@ class WebsiteSection < ActiveRecord::Base
 
   private
 
-  def self.get_published_verison(active_publication, content)
+  def self.get_published_version(active_publication, content)
     content_version = nil
     published_website_id = active_publication.id
     published_element = PublishedElement.find(:first,
