@@ -25,7 +25,6 @@ ActionView::Base.class_eval do
       published_contents << content_version unless content_version.nil?    
     end
     
-#    contents = published_contents.sort_by{|content_version| content_version.content.position(@website_section.id).blank? ? 0 : content_version.content.position(@website_section.id) }
     published_contents.each do |content|
       body_html = content.body_html.nil? ? '' : content.body_html
       html << body_html
