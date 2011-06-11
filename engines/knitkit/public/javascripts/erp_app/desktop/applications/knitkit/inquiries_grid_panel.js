@@ -58,7 +58,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel = Ext.extend(Ext.
                 name:'created_at'
             },
             {
-                name:'inquiry'
+                name:'message'
             },
             {
                 name:'username'
@@ -107,7 +107,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel = Ext.extend(Ext.
                     tooltip:'View',
                     handler :function(grid, rowIndex, colIndex){
                         var rec = grid.getStore().getAt(rowIndex);
-                        self.initialConfig['centerRegion'].showComment(rec.get('inquiry'));
+                        self.initialConfig['centerRegion'].showComment(rec.get('message'));
                     }
                 }]
             },

@@ -17,7 +17,17 @@ class ErpApp::Desktop::Knitkit::InquiriesController < ErpApp::Desktop::Knitkit::
 
     website_inquiries = website.website_inquiries.find(:all, :order => "#{sort} #{dir}", :limit => limit, :offset => start)
 
-    render :inline => "{totalCount:#{website.website_inquiries.count}, inquiries:#{website_inquiries.to_json(:methods => [:username])}}"
+    wi = []
+    website_inquiries.each do |i|
+      wihash = i.data.dynamic_attributes_without_prefix
+#      puts i.data.created_by.inspect
+      wihash['id'] = i.id
+      wihash['username'] = i.data.created_by.login
+      wihash['created_at'] = i.data.created_at
+      wi << wihash
+    end
+    
+    render :inline => "{totalCount:#{website.website_inquiries.count}, inquiries:#{wi.to_json(:methods => [:username])}}"
   end
 
   def delete

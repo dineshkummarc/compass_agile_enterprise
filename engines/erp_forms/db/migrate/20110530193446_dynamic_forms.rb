@@ -29,8 +29,8 @@ class DynamicForms < ActiveRecord::Migration
         t.string :internal_identifier
         t.boolean :default
 
-        t.integer :created_by
-        t.integer :updated_by
+        t.integer :created_by_id
+        t.integer :updated_by_id
 
         t.timestamps
       end
@@ -49,8 +49,8 @@ class DynamicForms < ActiveRecord::Migration
         t.integer :created_with_form_id
         t.integer :updated_with_form_id
 
-        t.integer :created_by
-        t.integer :updated_by
+        t.integer :created_by_id
+        t.integer :updated_by_id
 
         t.timestamps
       end

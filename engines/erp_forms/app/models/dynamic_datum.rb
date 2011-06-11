@@ -6,6 +6,17 @@ class DynamicDatum < ActiveRecord::Base
   belongs_to :reference, :polymorphic => true
   belongs_to :created_with_form, :class_name => "DynamicForm"
   belongs_to :updated_with_form, :class_name => "DynamicForm"
+  belongs_to :created_by, :class_name => "User"
+  belongs_to :updated_by, :class_name => "User"
+  
+  def dynamic_attributes_without_prefix
+    attrs = {}
+    self.dynamic_attributes.each do |k,v|
+      attrs[k[DYNAMIC_ATTRIBUTE_PREFIX.length..(k.length)]] = v
+    end
+    
+    attrs
+  end
   
   def sorted_dynamic_attributes
     if !self.updated_with_form.nil?
