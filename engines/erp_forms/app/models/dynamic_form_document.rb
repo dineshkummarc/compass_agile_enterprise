@@ -11,6 +11,10 @@ class DynamicFormDocument < ActiveRecord::Base
     Object.const_set(klass_name, Class.new(DynamicFormDocument)) unless Object.const_defined?(klass_name)
   end
 
+  def send_email
+    WebsiteInquiryMailer.deliver_inquiry(self)
+  end
+
   #get all file in root app/models, first level plugins app/models & extensions
   def self.models_with_dynamic_data
     model_names = []

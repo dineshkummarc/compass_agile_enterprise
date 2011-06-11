@@ -11,11 +11,10 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
   def new
     @website = Website.find_by_host(request.host_with_port)
 
-    DynamicFormDocument.declare("ContactUs")
-    @website_inquiry = ContactUs.new
+    @website_inquiry = WebsiteInquiry.new
     @website_inquiry.data.created_with_form_id = params[:dynamic_form_id]
-    
-    params[:website_id] = @website.id
+    @website_inquiry.website_id = @website.id
+
     params.each do |k,v|
       @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
     end

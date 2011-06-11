@@ -79,27 +79,27 @@ class DynamicFormField
     options = DynamicFormField.set_default_field_options(options)
 
     field = "{
-        xtype: '#{xtype}',
-        fieldLabel: '#{options[:fieldLabel]}',
-        name: '#{options[:name]}',
-        value: '#{options[:value]}', 
-        allowBlank: #{options[:allowblank]},  
-        readOnly: #{options[:readonly]},
-        width: #{options[:width]},
-        height: #{options[:height]},
-        labelWidth: #{options[:labelwidth]}"
+        \"xtype\": \"#{xtype}\",
+        \"fieldLabel\": \"#{options[:fieldLabel]}\",
+        \"name\": \"#{options[:name]}\",
+        \"value\": \"#{options[:value]}\", 
+        \"allowBlank\": #{options[:allowblank]},  
+        \"readOnly\": #{options[:readonly]},
+        \"width\": #{options[:width]},
+        \"height\": #{options[:height]},
+        \"labelWidth\": #{options[:labelwidth]}"
         
-    field += "maxLength: #{options[:maxlength]}," unless options[:maxlength].nil?
+    field += "\"maxLength\": #{options[:maxlength]}," unless options[:maxlength].nil?
     
     if selections and selections != []
       field += ",
-        store: #{selections.to_json}"
+        \"store\": #{selections.to_json}"
     end
     
     if options[:validation_regex] and options[:validation_regex] != ''
       field += ",    
-        validateOnBlur: true,
-        validator: function(v){
+        \"validateOnBlur\": true,
+        \"validator\": function(v){
           var pattern = /#{options[:validation_regex]}/;
           var regex = new RegExp(pattern);
           return regex.test(v);          
@@ -117,8 +117,8 @@ class DynamicFormField
     options[:value] = '' if options[:value].nil?
     options[:readonly] = 'false' if options[:readonly].nil?
     options[:maxlength] = nil if options[:maxlength].nil?
-    options[:width] = "'auto'" if options[:width].nil?
-    options[:height] = "'auto'" if options[:height].nil?
+    options[:width] = '"auto"' if options[:width].nil?
+    options[:height] = '"auto"' if options[:height].nil?
     options[:validation_regex] = '' if options[:validation_regex].nil?
     options[:labelwidth] = '75' if options[:labelwidth].nil?
     

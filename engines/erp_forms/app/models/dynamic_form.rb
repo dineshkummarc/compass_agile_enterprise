@@ -53,9 +53,31 @@ class DynamicForm < ActiveRecord::Base
 	  end
   end
   
-  # check field against form definition to see if field still exists
-  def deprecated_field?(field_name)
+  # parse JSON definition into a ruby object 
+  # returns an array of hashes
+  def definition_object
+    d = self.definition
+
+    # remove preceding comma
+    validateOnBlur = '"validateOnBlur": true,'
+    d = d.gsub(validateOnBlur,'"validateOnBlur": true')         
+
+    # remove validator, not JSON compliant
+    validator = '\"validator\": function\(v\)\{(.+)\}\},'   
+    regex = Regexp.new(validator, Regexp::MULTILINE)
+    d = d.gsub(regex,'},')         
     
+    JSON.parse(d)
+  end
+  
+  # check field against form definition to see if field still exists
+  # returns true if field does not exist
+  def deprecated_field?(field_name)
+    definition_object.each do |field|
+      return false if field['name'] == field_name.to_s
+    end
+    
+    return true
   end
   
   def self.concat_fields_to_build_definition(array_of_fields)
@@ -129,7 +151,7 @@ class DynamicForm < ActiveRecord::Base
       });        
 
        </script>"
-      puts javascript
+      #puts javascript
     javascript
   end
   

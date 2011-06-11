@@ -1,4 +1,5 @@
-First Name: <%=@website_inquiry.first_name%>
-Last Name: <%=@website_inquiry.last_name%>
-Email: <%=@website_inquiry.email%>
-Inquiry: <%=@website_inquiry.inquiry%>
+<% @website_inquiry.data.sorted_dynamic_attributes.each do |field|
+field.each do |k,v| %>
+<%=k.gsub('dyn_','') %>: <%=v %>
+<% end
+end %>

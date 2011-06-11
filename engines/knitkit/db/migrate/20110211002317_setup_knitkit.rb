@@ -25,6 +25,16 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :website_hosts, :website_id
     end
 
+    unless table_exists?(:website_inquiries)
+      create_table :website_inquiries do |t|
+        t.integer :website_id
+
+        t.timestamps
+      end
+
+      add_index :website_inquiries, :website_id
+    end
+
     unless table_exists?(:website_sections)
       create_table :website_sections do |t|
         t.string :title
