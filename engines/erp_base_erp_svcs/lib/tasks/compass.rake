@@ -61,7 +61,6 @@ namespace :compass do
     
     # call the database migration task
     Rake::Task['db:migrate'].invoke
-    Rake::Task['db:migrate_data'].invoke
     Rake::Task['compass:assets:install'].invoke
     
   end
@@ -219,6 +218,7 @@ namespace :compass do
     desc "execute the bootstrap data"
     task :data => :environment   do |t, args|
       ErpApp::Setup::Data.run_setup
+      Rake::Task['db:migrate_data'].invoke
     end #task :data
 	end # bootstrap namespace
 
