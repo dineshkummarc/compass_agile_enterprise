@@ -17,16 +17,13 @@ compass:install:core - installs the core compass plugins
 
 compass:install:default - installs the core compass plugin and the default (eCommerce) plugins
 
-compass:bootstrap:data -This rake task orchestrates the several additional tasks in the following sequence
+compass:bootstrap:data - This rake task sets up some default data such as an Administrative user account and desktop applications for Iris.
+ 
+If you run the installer below the following is executed
 
-compass:bootstrap:copy_ignored_data_migrations - copies the data migrations from the 'default plugins'
-                                                  data_migrations/ignore dir up to the data_migrations dir
- 
- db:migrate_data- executes the data migrations moved by the previous task
- 
- compass:bootstrap:delete_data_migrations - deletes the recently moved data migrations
- 
- 
+compass:install:core
+compass:bootstrap:data
+
  
  COMPASS_INSTALLATION
  ====================
