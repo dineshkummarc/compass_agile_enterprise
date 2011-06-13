@@ -88,7 +88,7 @@ end
 
 rake 'compass:install:core -R vendor/compass/engines/erp_base_erp_svcs/lib/tasks'
 rake 'compass:assets:install'
-#rake 'db:migrate_data'
+rake 'compass:bootstrap:data'
 
 FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
 
