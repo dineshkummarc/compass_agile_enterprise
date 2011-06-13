@@ -21,7 +21,8 @@ compass:bootstrap:data - This rake task sets up some default data such as an Adm
  
 If you run the installer below the following is executed
 
-compass:install:core
+compass:install:core 
+
 compass:bootstrap:data
 
  
@@ -32,6 +33,4 @@ compass:bootstrap:data
  
  (Step 1) Create a new Rails application using the compass installer template
      
-     rails [myappname] -m ./compass_install.rb
-          -OR-
-     rails [myappname] -m http://[host]:[port]/[path_to_installer_file]/compass_install.rb
+ rails [myappname] -m http://www.portablemind.com/file_assets/compass_install.rb
