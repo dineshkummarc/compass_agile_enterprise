@@ -1,6 +1,9 @@
 require 'erp_services/pricing/acts_as_fee'
 require 'erp_services/pricing/acts_as_priceable'
 
+#shopping cart helper widget helpers
+require 'erp_app/widgets/shopping_cart/helpers'
+
 #remove this plugin for the load once paths
 ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_once_paths.select{|path| path =~ %r(^#{File.dirname(__FILE__)}) }
 

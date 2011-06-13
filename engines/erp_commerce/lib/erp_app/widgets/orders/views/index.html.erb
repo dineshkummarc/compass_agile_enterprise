@@ -1,0 +1,63 @@
+<style type="text/css">
+  #products-view {
+    font-family:'Lucida Grande','Lucida Sans Unicode',sans-serif;
+    text-align:center;
+    font-size:14px;
+    width:100%;
+    border-collapse: collapse;
+    border: 2px solid #CCCCCC;
+  }
+
+  #products-view a {
+    text-decoration:none;
+  }
+
+  #products-view img {
+    height:60px;
+    width:65px;
+    padding-right:15px;
+  }
+
+  #products-view div
+  {
+    float:left;
+    text-align:left;
+  }
+
+  #products-view th {
+    padding: 0 0.5em;
+    height:30px;
+    text-align:center;
+    background:url("/images/knitkit/footer.png") repeat-x scroll 0 0 #29425E;
+  }
+
+  .highlight:hover
+  {
+    background-color:#FFFFEE;
+  }
+
+  #products-view td+td {
+    border-left: 1px solid #CCC;
+    text-align: center;
+  }
+</style>
+<table id="products-view">
+  <thead>
+    <tr>
+      <th>Order Number</th>
+      <th>Order At</th>
+      <th>Status</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+    <tr>
+      <td><%=order.order_number%></td>
+      <td><%=order.created_at.to_time.strftime("%m/%d/%Y %I:%M%p")%></td>
+      <td><%=order.status%></td>
+      <td><%=number_to_currency(order.get_total_charges.sum{|money| money.amount})%></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

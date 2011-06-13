@@ -251,10 +251,8 @@ class BaseTxnsAndAccts < ActiveRecord::Migration
     
     unless table_exists?(:financial_txns)
       create_table :financial_txns do |t|
-         t.column      :amount_id, :integer
-
-         #polymorphic tables 
-         t.references  :payment, :polymorphic => true
+         t.integer :money_id, :integer
+         t.integer :payment_id, :integer
         
         t.timestamps
       end  

@@ -10,6 +10,7 @@ class BaseInventory < ActiveRecord::Migration
         t.column 	:external_id_source, 	        :string
         t.column  :product_type_id,             :integer
         t.column  :number_available,            :integer
+        t.string  :sku
         t.timestamps
       end
     end

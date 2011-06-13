@@ -81,8 +81,12 @@ class ErpCommerceBase < ActiveRecord::Migration
       add_column :order_txns, :bill_to_last_name, :string
     end  
     
-    unless columns(:order_txns).collect {|c| c.name}.include?('bill_to_address')
-      add_column :order_txns, :bill_to_address, :string
+    unless columns(:order_txns).collect {|c| c.name}.include?('bill_to_address_line_1')
+      add_column :order_txns, :bill_to_address_line_1, :string
+    end
+
+    unless columns(:order_txns).collect {|c| c.name}.include?('bill_to_address_line_2')
+      add_column :order_txns, :bill_to_address_line_2, :string
     end
     
     unless columns(:order_txns).collect {|c| c.name}.include?('bill_to_city')

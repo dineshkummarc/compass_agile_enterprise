@@ -4,6 +4,7 @@ ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)
 #require acts_as mixins
 require 'erp_services/txns/acts_as_order_txn'
 
+
 #remove this plugin for the load once paths
 ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_once_paths.select{|path| path =~ %r(^#{File.dirname(__FILE__)}) }
 

@@ -28,6 +28,12 @@ class BaseErpServicesIndexes < ActiveRecord::Migration
     
     add_index :postal_addresses, :geo_country_id
     add_index :postal_addresses, :geo_zone_id
+
+    add_index :geo_countries, :name
+    add_index :geo_countries, :iso_code_2
+    add_index :geo_zones, :geo_country_id
+    add_index :geo_zones, :zone_name
+    add_index :geo_zones, :zone_code
     
     #add_index :party_search_facts, :party_id
         

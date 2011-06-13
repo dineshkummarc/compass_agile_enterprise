@@ -14,8 +14,8 @@ class FinancialTxnAccount < ActiveRecord::Base
               }
 
   belongs_to :agreement
-  belongs_to :balance, :class_name => "Money", :dependent => :destroy
-  belongs_to :payment_due, :class_name => "Money", :dependent => :destroy
+  belongs_to :balance, :class_name => "ErpBaseErpSvcs::Money", :dependent => :destroy
+  belongs_to :payment_due, :class_name => "ErpBaseErpSvcs::Money", :dependent => :destroy
   belongs_to :financial_account, :polymorphic => true, :dependent => :destroy
   
   def financial_txns(result_set, options={})
@@ -49,7 +49,7 @@ class FinancialTxnAccount < ActiveRecord::Base
   def authorize_payment_txn(credit_card_info, gateway)
     due_amount = self.payment_due.amount
 
-    financial_txn = FinancialTxn.create(:money => MoneyAmount.create(:amount => due_amount))
+    financial_txn = FinancialTxn.create(:money => ErpBaseErpSvcs::Money.create(:amount => due_amount))
 
     financial_txn.account = self
     financial_txn.description = "Payment on account #{self.account_number} of #{due_amount}"

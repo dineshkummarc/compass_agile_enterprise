@@ -28,19 +28,6 @@ class BaseTechServicesIndexes < ActiveRecord::Migration
     add_index :audit_logs, [:event_record_id, :event_record_type], :name => 'event_record_index'
     
     add_index :invitations, :sender_id
-    
-    add_index :geo_countries, :name
-    add_index :geo_countries, :external_id
-    
-    add_index :geo_zones, :geo_country_id
-    
-    add_index :image_assets, :parent_id
-    add_index :image_assets, :filename
-    
-    add_index :content_mgt_assets, [:digital_asset_id, :digital_asset_type], :name => "btsi_4"
-    
-    add_index :entity_content_assignments, :content_mgt_asset_id
-    add_index :entity_content_assignments, [:da_assignment_id, :da_assignment_type], :name => "btsi_5"
   end
 
   def self.down

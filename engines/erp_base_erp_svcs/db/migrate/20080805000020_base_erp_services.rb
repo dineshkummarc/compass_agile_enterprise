@@ -350,6 +350,26 @@ class BaseErpServices < ActiveRecord::Migration
       end
     end
 
+    unless table_exists?(:geo_countries)
+      create_table :geo_countries do |t|
+        t.column :name,         :string
+        t.column :iso_code_2,   :string,  :length => 2
+        t.column :iso_code_3,   :string,  :length => 3
+        t.column :display,      :boolean, :default => true
+        t.column :external_id,  :integer
+        t.column :created_at,   :datetime
+      end
+    end
+
+    unless table_exists?(:geo_zones)
+      create_table :geo_zones do |t|
+        t.column :geo_country_id, :integer
+        t.column :zone_code,      :string,  :default => 2
+        t.column :zone_name,      :string
+        t.column :created_at,     :datetime
+      end
+    end
+
   end
 
   def self.down

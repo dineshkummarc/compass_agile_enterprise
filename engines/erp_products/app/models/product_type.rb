@@ -2,11 +2,12 @@ class ProductType < ActiveRecord::Base
 
   acts_as_nested_set
   acts_as_priceable
+  has_file_assets
+  is_describable
   
   include TechServices::Utils::DefaultNestedSetMethods
 
 	belongs_to :product_type_record, :polymorphic => true  
-  has_many   :entity_content_assignments, :as => :da_assignment, :dependent => :destroy
   has_one    :product_instance
 
   def prod_type_relns_to
@@ -15,15 +16,6 @@ class ProductType < ActiveRecord::Base
 
   def prod_type_relns_from
     ProdTypeReln.find(:all, :conditions => ['prod_type_id_from = ?',id])
-  end
-
-  def images
-    entity_content_assignments.collect do |eca|
-      da = eca.content_mgt_asset.digital_asset
-      if da.is_a?(ImageAsset)
-        da
-      end
-    end
   end
   
   def clear_all_but_this_default_list_image_flags(entity_content_assn)

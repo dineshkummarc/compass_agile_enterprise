@@ -1,7 +1,8 @@
 class PricingPlan < ActiveRecord::Base
 
-  has_many  :valid_price_plan_components
-  has_many  :pricing_plan_components, :through => :valid_price_plan_components
+  has_many   :valid_price_plan_components
+  has_many   :pricing_plan_components, :through => :valid_price_plan_components
+  belongs_to :currency, :class_name => 'ErpBaseErpSvcs::Currency'
   
   alias :components :pricing_plan_components
 
@@ -21,8 +22,6 @@ class PricingPlan < ActiveRecord::Base
       rule_ctx[:price] = price
       eval(self.pricing_calculation)
     end
-
-
 
     #this should be replaced wtih an application of the pricing_calculation
     price.description = self.description
