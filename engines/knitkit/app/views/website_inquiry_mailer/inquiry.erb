@@ -1,5 +1,5 @@
-<% @website_inquiry.data.sorted_dynamic_attributes.each do |field|
+<% @website_inquiry.data.sorted_dynamic_attributes(false).each do |field|
 field.each do |k,v| %>
-<%=k.gsub('dyn_','') %>: <%=v %>
+<%=k %>: <%=v %>
 <% end
 end %>

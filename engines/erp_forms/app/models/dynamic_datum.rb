@@ -18,7 +18,8 @@ class DynamicDatum < ActiveRecord::Base
     attrs
   end
   
-  def sorted_dynamic_attributes
+  def sorted_dynamic_attributes(with_prefix=true)
+    
     if !self.updated_with_form.nil?
       form = self.updated_with_form
     elsif !self.created_with_form.nil?
@@ -28,12 +29,21 @@ class DynamicDatum < ActiveRecord::Base
     end
     
     unless form.nil?
-      keys = form.definition_object.collect{|f| DYNAMIC_ATTRIBUTE_PREFIX + f['name']}
+      if with_prefix
+        keys = form.definition_object.collect{|f| DYNAMIC_ATTRIBUTE_PREFIX + f['name']}
+      else
+        keys = form.definition_object.collect{|f| f['name']}
+      end
 
       sorted = []
       keys.each do |key|
         attribute = {}      
-        attribute[key] = self.dynamic_attributes[key]
+        if with_prefix
+          attribute[key] = self.dynamic_attributes[key]
+        else
+          attribute[key] = self.dynamic_attributes_without_prefix[key]
+        end
+        
         sorted << attribute
       end
       
