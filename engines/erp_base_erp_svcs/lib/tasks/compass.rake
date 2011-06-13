@@ -58,9 +58,6 @@ namespace :compass do
   task :install do
   	# call the perform method set to :install
     perform(:install)
-    
-    # call the database migration task
-    Rake::Task['db:migrate'].invoke
     Rake::Task['compass:assets:install'].invoke
     
   end
