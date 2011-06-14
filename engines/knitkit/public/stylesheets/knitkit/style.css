@@ -248,7 +248,7 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 { padding: 5px; 
   width: 299px; 
   font: 100% arial; 
-  border: 1px solid #E5E5DB; 
+  border: 1px solid #CCCCCC;
   background: #FFF; 
   color: #47433F;}
   

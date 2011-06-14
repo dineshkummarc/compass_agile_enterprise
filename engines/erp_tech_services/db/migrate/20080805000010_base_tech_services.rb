@@ -203,61 +203,6 @@ class BaseTechServices < ActiveRecord::Migration
       end
     end
 
-    unless table_exists?(:geo_countries)
-      create_table :geo_countries do |t|
-        t.column :name,         :string
-        t.column :type,         :string,  :default => "GeoCountry"
-        t.column :iso_code_2,   :string,  :length => 2
-        t.column :iso_code_3,   :string,  :length => 3
-        t.column :display,      :boolean, :default => true
-        t.column :external_id,  :integer
-        t.column :created_at,   :datetime
-      end
-    end
-
-    unless table_exists?(:geo_zones)
-      create_table :geo_zones do |t|
-        t.column :geo_country_id, :integer
-        t.column :zone_code,      :string,  :default => 2
-        t.column :zone_name,      :string
-        t.column :created_at,     :datetime
-      end
-    end
-
-    unless table_exists?(:image_assets)
-      create_table :image_assets do |t|
-        t.column :parent_id,    :integer
-        t.column :content_type, :string
-        t.column :filename,     :string    
-        t.column :thumbnail,    :string 
-        t.column :file_size,    :integer
-        t.column :width,        :integer
-        t.column :height,       :integer
-        t.column :description,  :string
-        t.timestamps
-      end
-    end
-
-    unless table_exists?(:content_mgt_assets)
-      create_table :content_mgt_assets do |t|
-        t.column    :digital_asset_id,    :integer
-        t.column    :digital_asset_type,  :string
-        t.column    :description,         :string
-        t.timestamps
-      end
-    end
-    
-    unless table_exists?(:entity_content_assignments)
-      create_table :entity_content_assignments do |t|
-        t.column    :content_mgt_asset_id,      :integer      
-        t.column    :da_assignment_id,          :integer
-        t.column    :da_assignment_type,        :string
-        t.column    :default_list_image_flag,   :integer
-        t.column    :description,               :string
-        t.timestamps
-      end
-    end
-
     unless table_exists?(:secured_models)
       create_table :secured_models do |t|
         t.references :secured_record, :polymorphic => true
@@ -278,17 +223,30 @@ class BaseTechServices < ActiveRecord::Migration
       add_index :roles_secured_models, :role_id
     end
 
+    unless table_exists?(:file_assets)
+      create_table :file_assets do |t|
+        t.references :file_asset_holder, :polymorphic => true
+        t.string :type
+        t.string :name
+        t.string :directory
+        t.string :data_file_name
+        t.string :data_content_type
+        t.integer :data_file_size
+        t.datetime :data_updated_at
+
+        t.timestamps
+      end
+    end
+
   end
 
   def self.down
     # check that each table exists before trying to delete it.
     [
-      :entity_content_assignments, :content_mgt_assets, :image_assets, 
-      :geo_zones, :geo_countries, :invitations,
-      :audit_logs, :security_questions, :sessions, 
+      :invitations,:audit_logs, :security_questions, :sessions, 
       :simple_captcha_data, :four_oh_fours, :user_failures, 
       :logged_exceptions, :roles_users, :roles, :audit_log_items, :audit_log_item_types,
-      :users, :secured_models, :roles_secured_models
+      :users, :secured_models, :roles_secured_models, :file_assets
     ].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl

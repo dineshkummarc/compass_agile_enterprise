@@ -128,14 +128,18 @@ Compass.ErpApp.Organizer.Layout = function(config){
 };
 
 Ext.ns('Compass.Component.UserApp.Util');
-Compass.Component.UserApp.Util.setActiveCenterItem = function(id){
+Compass.Component.UserApp.Util.setActiveCenterItem = function(id, loadRemoteData){
     Ext.ComponentMgr.get('erp_app_viewport_center').layout.setActiveItem(id);
     var activeItem = Ext.ComponentMgr.get(id);
-    var hasLoad = ( (typeof activeItem.loadRemoteData) != 'undefined' );
+    
+    if ( loadRemoteData === undefined || loadRemoteData ) {
+        var hasLoad = ( (typeof activeItem.loadRemoteData) != 'undefined' );
 
-    if(hasLoad){
-        activeItem.loadRemoteData();
+        if(hasLoad){
+            activeItem.loadRemoteData();
+        }
     }
+
 };
 
 

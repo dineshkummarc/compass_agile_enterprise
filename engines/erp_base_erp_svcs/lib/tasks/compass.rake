@@ -59,7 +59,7 @@ namespace :compass do
   	# call the perform method set to :install
     perform(:install)
     Rake::Task['compass:assets:install'].invoke
-    
+    Rake::Task['db:migrate'].invoke
   end
 
   desc 'uninstall selected compass engines (pick some with engines=all plugins=all or engines=name1,name2 plugins=name3)'

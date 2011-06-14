@@ -53,7 +53,7 @@
 }
 
 .icon-user {
-    background-image:url( /images/icons/user/user_16x16.png );
+    background-image:url( /images/icons/user/user_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/user/user_16x16.png', sizingMethod='crop');
 }
 

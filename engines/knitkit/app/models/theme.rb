@@ -1,10 +1,12 @@
-require_dependency 'theme/file'
+#require_dependency 'theme/file'
 require 'fileutils'
 
 class Theme < ActiveRecord::Base
   THEME_STRUCTURE = ['stylesheets', 'javascripts', 'images', 'templates']
   BASE_LAYOUTS_VIEWS_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views"
-  
+
+  has_file_assets
+
   class << self
     def root_dir
       @@root_dir ||= "#{RAILS_ROOT}/vendor/plugins/knitkit/public"
@@ -43,12 +45,6 @@ class Theme < ActiveRecord::Base
   end
   
   belongs_to :website
-  has_many :files, :order => "directory ASC, name ASC", :class_name => 'Theme::File', :dependent => :delete_all
-  has_many :templates, :order => "directory ASC, name ASC"
-  has_many :images, :order => "directory ASC, name ASC"
-  has_many :javascripts, :order => "directory ASC, name ASC"
-  has_many :stylesheets, :order => "directory ASC, name ASC"
-  has_one  :preview
 
   has_permalink :name, :theme_id, :scope => :website_id,
     :only_when_blank => false, :sync_url => true
@@ -83,33 +79,34 @@ class Theme < ActiveRecord::Base
   end
 
   def copy(options={})
-    clone = nil
-    begin
-      clone = self.clone
-      clone.theme_id = options[:theme_id]
-      clone.name = options[:name]
-      clone.active = false
-      clone.id = nil
-      clone.files = []
-      clone_path = self.path.sub(self.theme_id, options[:theme_id])
-      FileUtils.cp_r(self.path, clone_path)
-      clone.save
-      self.files.each do |file|
-        clone_file = file.clone
-        clone_file.id = nil
-        clone_file.name = file.name
-        clone_file.theme = clone
-        clone_file.save
-      end
-    rescue Exception=>ex
-      unless clone.nil?
-        clone.destroy
-      end
-      if File.exists(clone_path)
-        File.delete(clone_path)
-      end
-    end
-    clone
+    raise 'not implemented'
+#    clone = nil
+#    begin
+#      clone = self.clone
+#      clone.theme_id = options[:theme_id]
+#      clone.name = options[:name]
+#      clone.active = false
+#      clone.id = nil
+#      clone.files = []
+#      clone_path = self.path.sub(self.theme_id, options[:theme_id])
+#      FileUtils.cp_r(self.path, clone_path)
+#      clone.save
+#      self.files.each do |file|
+#        clone_file = file.clone
+#        clone_file.id = nil
+#        clone_file.name = file.name
+#        clone_file.file_asset_holder = clone
+#        clone_file.save
+#      end
+#    rescue Exception=>ex
+#      unless clone.nil?
+#        clone.destroy
+#      end
+#      if File.exists(clone_path)
+#        File.delete(clone_path)
+#      end
+#    end
+#    clone
   end
   
   def import(file)
@@ -131,12 +128,12 @@ class Theme < ActiveRecord::Base
           data = ''
           entry.get_input_stream { |io| data = io.read }
           data = StringIO.new(data) if data.present?
-          theme_file = Theme::File.find(:first, :conditions => ["theme_id = ? and name = ?", self.id, ::File.basename(name)])
+          theme_file = self.files.find(:first, :conditions => ["name = ?", ::File.basename(name)])
           unless theme_file.nil?
             theme_file.data = data
             theme_file.save
           else
-            Theme::File.create!(:theme => self, :base_path => name, :data => data) rescue next
+            self.add_file(name, data) rescue next
           end
         end
       end
@@ -197,14 +194,14 @@ class Theme < ActiveRecord::Base
     #copy all layouts over to the theme
     FileUtils.mkdir_p(path)
     FileUtils.cp_r(BASE_LAYOUTS_VIEWS_PATH, path)
+    #rename views to templates
     ::File.rename(::File.join(path,'views'), ::File.join(path,'templates'))
 
-    #create Theme::File models for all the files
+    #create FileAssets for all the files
     Dir.glob(::File.join(path,'/*/*/*')).each do |file|
       next if file =~ /^\./
       unless ::File.directory? file
-        name = file.sub(self.path + '/', '')
-        Theme::File.create!(:theme => self, :base_path => name, :data => IO.read(file)) rescue next
+        self.add_file(file, IO.read(file))
       end
     end
   end

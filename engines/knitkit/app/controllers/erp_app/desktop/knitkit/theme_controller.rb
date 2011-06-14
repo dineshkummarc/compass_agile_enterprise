@@ -82,8 +82,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     name = params[:name]
 
     theme = get_theme(path)
-    name = File.join(path.sub(theme.path + '/', ''),name)
-    Theme::File.create!(:theme => theme, :base_path => name, :data => '#Empty File')
+    theme.add_file(File.join(path,name), '#Empty File')
 
     render :inline => {:success => true}.to_json
   end
@@ -110,10 +109,10 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     end
 
     theme = get_theme(upload_path)
-    name = File.join(upload_path.sub(theme.path + '/', ''),name)
+    name = File.join(upload_path,name)
 
     begin
-      Theme::File.create!(:theme => theme, :base_path => name, :data => contents)
+      theme.add_file(name, contents)
       result = {:success => true}
     rescue Exception=>ex
       logger.error ex.message
@@ -182,12 +181,8 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   def get_them_file(path)
     theme = get_theme(path)
-    modified_path = path.sub(theme.path + '/', '')
-    file_name = modified_path.split("/").last
-    modified_path = modified_path.split('/');
-    modified_path.delete(file_name)
-    directory = modified_path.join('/')
-    theme.files.find(:first, :conditions => ['name = ? and directory = ?', file_name, directory])
+    path = path.gsub!(RAILS_ROOT,'')
+    theme.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
   end
 
   def setup_tree

@@ -1,11 +1,11 @@
 class AddUsdCurrency
   
   def self.up
-    Currency.create(:name => 'US Dollar', :internal_identifier => 'USD')
+    ErpBaseErpSvcs::Currency.create(:name => 'US Dollar', :internal_identifier => 'USD')
   end
   
   def self.down
-    Currency.usd.destroy
+    ErpBaseErpSvcs::Currency.usd.destroy
   end
 
 end

@@ -402,6 +402,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         id:'individuals_search_grid',
         southComponent:{
             xtype:'tabpanel',
+            id:'individualsTabPanel',
             items:[
             {
                 xtype:'contactmechanismgrid',
@@ -540,6 +541,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         id:'organizations_search_grid',
         southComponent:{
             xtype:'tabpanel',
+            id:'organizationTabPanel',
             items:[
             {
                 xtype:'contactmechanismgrid',

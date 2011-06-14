@@ -158,6 +158,23 @@ Array.prototype.find = function (find_statement) {
     return null;
 };
 
+Array.prototype.select = function (find_statement) {
+    var sub_array = [];
+    try
+    {
+        for (var i = 0; i < this.length; i++) {
+            var statement = "this[i]." + find_statement;
+            if(eval(statement)){
+                sub_array.push(this[i]);
+            }
+        }
+    }
+    catch(ex){
+        return null;
+    }
+    return sub_array;
+};
+
 String.prototype.underscore = function (){
     return this.replace(/\s/g, "_");
 };

@@ -25,6 +25,9 @@ class PricingMigrations < ActiveRecord::Migration
         t.string 	:external_identifier
         t.string 	:external_id_source
 
+        t.date    :from_date
+        t.date    :thru_date
+
         #this is here as a placeholder for an 'interpreter' or 'rule' pattern
         t.string  :matching_rules
         #this is here as a placeholder for an 'interpreter' or 'rule' pattern

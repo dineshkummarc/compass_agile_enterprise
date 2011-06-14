@@ -10,20 +10,24 @@ class OrderTxn < ActiveRecord::Base
   # validation
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :update, :allow_nil => true
 
+  #find a order by given biz txn party role iid and party
+  def self.find_by_party_role(biz_txn_party_role_type_iid, party)
+    biz_txn_party_roles = BizTxnPartyRole.find(
+      :all,
+      :conditions => ['party_id = ? and biz_txn_party_role_type_id = ?', party.id, BizTxnPartyRoleType.find_by_internal_identifier(biz_txn_party_role_type_iid).id])
+
+    biz_txn_party_roles.collect{|item| item.biz_txn_event.biz_txn_record}
+  end
+
   # get the total charges for an order.
   # The total will be returned as Money.
   # There may be multiple Monies assocated with an order, such as points and
   # dollars. To handle this, the method should return an array of Monies
   #
   def get_total_charges
-    all_charges = []
-
     # get all of the charge lines associated with the order and order_lines
     total_hash = Hash.new
-    all_charges.concat(charge_lines)
-    order_line_items.each do |line_item|
-      all_charges.concat(line_item.charge_lines)
-    end
+    all_charges = get_all_charge_lines
     # loop through all of the charges and combine charges for each money type
     all_charges.each do |charge|
       cur_money = charge.money
@@ -39,10 +43,21 @@ class OrderTxn < ActiveRecord::Base
     return total_hash.values
   end
 
+  #get all charge lines on order and order line items
+  def get_all_charge_lines
+    all_charges = []
+    all_charges.concat(charge_lines)
+    order_line_items.each do |line_item|
+      all_charges.concat(line_item.charge_lines)
+    end
+    all_charges
+  end
+
   def submit
     #Template Method
   end
 
+  #add product_type or product_instance line item
   def add_line_item(object, reln_type = nil, to_role = nil, from_role = nil)
     class_name = object.class.name
     if object.is_a?(Array)
@@ -58,7 +73,6 @@ class OrderTxn < ActiveRecord::Base
       return add_product_instance_line_item(object, reln_type, to_role, from_role)
 	  end
   end
-
 
 	def add_product_type_line_item(product_type, reln_type = nil, to_role = nil, from_role = nil)
 
@@ -151,7 +165,8 @@ class OrderTxn < ActiveRecord::Base
     self.ship_to_last_name = party.business_party.current_last_name
     shipping_address = party.shipping_address || party.primary_address
     unless shipping_address.nil?
-      self.ship_to_address = shipping_address.address_line_1
+      self.ship_to_address_line_1 = shipping_address.address_line_1
+      self.ship_to_address_line_2 = shipping_address.address_line_2
       self.ship_to_city = shipping_address.city
       self.ship_to_state = shipping_address.state
       self.ship_to_postal_code = shipping_address.zip
@@ -161,14 +176,15 @@ class OrderTxn < ActiveRecord::Base
   end
 
   def set_billing_info(party)
-    self.email = party.primary_email_address.email_address unless party.primary_email_address.nil?
-    self.phone_number = party.primary_phone_number.phone_number unless party.primary_phone_number.nil?
+    self.email = party.find_contact_mechanism_with_purpose(EmailAddress, ContactPurpose.billing).email_address unless party.find_contact_mechanism_with_purpose(EmailAddress, ContactPurpose.billing).nil?
+    self.phone_number = party.find_contact_mechanism_with_purpose(PhoneNumber, ContactPurpose.billing).phone_number unless party.find_contact_mechanism_with_purpose(PhoneNumber, ContactPurpose.billing).nil?
 
     self.bill_to_first_name = party.business_party.current_first_name
     self.bill_to_last_name = party.business_party.current_last_name
     billing_address = party.billing_address || party.primary_address
     unless billing_address.nil?
-      self.bill_to_address = billing_address.address_line_1
+      self.bill_to_address_line_1 = billing_address.address_line_1
+      self.bill_to_address_line_2 = billing_address.address_line_2
       self.bill_to_city = billing_address.city
       self.bill_to_state = billing_address.state
       self.bill_to_postal_code = billing_address.zip
@@ -214,7 +230,7 @@ class OrderTxn < ActiveRecord::Base
         financial_txn.authorize_payment(credit_card, gateway, gateway_options)
         if financial_txn.payments.empty?
           all_txns_authorized = false
-          gateway_message = 'Unknown Protobase Error'
+          gateway_message = 'Unknown Gateway Error'
           break
         elsif !financial_txn.payments.first.success
           all_txns_authorized = false

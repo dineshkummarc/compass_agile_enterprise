@@ -108,7 +108,7 @@ class ErpApp::Setup::Data
     desktop_backgroud_pt.save
 
     #create widgets and assign roles
-    app_mgr = Widget.create(
+    app_mgr = ::Widget.create(
       :description => 'Application Management',
       :icon => 'icon-user',
       :xtype => 'controlpanel_userapplicationmgtpanel',
@@ -118,7 +118,7 @@ class ErpApp::Setup::Data
     app_mgr.roles << Role.iid('admin')
     app_mgr.save
 
-    role_mgr = Widget.create(
+    role_mgr = ::Widget.create(
       :description => 'Role Management',
       :icon => 'icon-user',
       :xtype => 'usermanagement_rolemanagementpanel',
@@ -128,7 +128,7 @@ class ErpApp::Setup::Data
     role_mgr.roles << Role.iid('admin')
     role_mgr.save
 
-    personal_info = Widget.create(
+    personal_info = ::Widget.create(
       :description => 'User Personal Info',
       :icon => 'icon-user',
       :xtype => 'usermanagement_personalinfopanel',
@@ -179,7 +179,7 @@ class ErpApp::Setup::Data
     end
 
     #system_management_app
-    app_role_management = Widget.create(
+    app_role_management = ::Widget.create(
       :description => 'Application Role Management',
       :icon => 'icon-document',
       :xtype => 'systemmanagement_applicationrolemanagment',
@@ -210,7 +210,7 @@ class ErpApp::Setup::Data
     #######################################
     #organizer setup
     #######################################
-    party_contact_mgm_widget = Widget.create(
+    party_contact_mgm_widget = ::Widget.create(
       :description => 'Party Contact Management',
       :icon => 'icon-grid',
       :xtype => 'contactmechanismgrid',
@@ -221,7 +221,7 @@ class ErpApp::Setup::Data
     party_contact_mgm_widget.roles << Role.iid('employee')
     party_contact_mgm_widget.save
 
-    party_mgm_widget = Widget.create(
+    party_mgm_widget = ::Widget.create(
       :description => 'Party Management',
       :icon => 'icon-grid',
       :xtype => 'partygrid',

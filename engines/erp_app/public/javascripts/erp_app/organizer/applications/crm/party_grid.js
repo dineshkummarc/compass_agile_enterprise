@@ -98,7 +98,7 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
                     }
                 }
             },
-            '-',
+            '|',
             {
                 text: 'Add',
                 iconCls: 'icon-add',
@@ -106,7 +106,7 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
                     grid.fireEvent('addpartybtnclick', this, grid);
                 }
             },
-            '-',
+            '|',
             {
                 text: 'Delete',
                 iconCls: 'icon-delete',
@@ -133,7 +133,6 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
         });
 
         this.store.load();
-
 
         Compass.ErpApp.Organizer.Applications.Crm.PartyGrid.superclass.initComponent.call(this, arguments);
     },

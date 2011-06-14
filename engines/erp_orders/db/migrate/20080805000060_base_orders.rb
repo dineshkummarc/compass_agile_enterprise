@@ -12,13 +12,14 @@ class BaseOrders < ActiveRecord::Migration
 		    t.column 		:email,              :string 
 		    t.column 		:phone_number,       :string 
 		    # Shipping Address 
-		    t.column 		:ship_to_first_name,   :string 
-		    t.column 		:ship_to_last_name,    :string 
-		    t.column 		:ship_to_address, 	   :string 
-		    t.column 		:ship_to_city,         :string
-		    t.column    :ship_to_state,        :string
-		    t.column 		:ship_to_postal_code,  :string 
-		    t.column 		:ship_to_country,      :string 
+		    t.column 		:ship_to_first_name,     :string
+		    t.column 		:ship_to_last_name,      :string
+		    t.column 		:ship_to_address_line_1, :string
+        t.column 		:ship_to_address_line_2, :string
+		    t.column 		:ship_to_city,           :string
+		    t.column    :ship_to_state,          :string
+		    t.column 		:ship_to_postal_code,    :string
+		    t.column 		:ship_to_country,        :string
 		    # Private parts 
 		    t.column 		:customer_ip, 			    :string 
 		    t.column    :order_number,          :integer
