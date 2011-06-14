@@ -73,7 +73,8 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
 
     # create homepage
     website_section = WebsiteSection.new
-    website_section.title = "Home"      
+    website_section.title = "Home"
+    website_section.in_menu = true
     website.website_sections << website_section
     
     # create default sections for each widget using widget layout
@@ -85,7 +86,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
       website_section = WebsiteSection.new
       widget_class = "ErpApp::Widgets::#{w.camelize}::Base".constantize
       website_section.title = widget_class.title
-      website_section.in_menu = 't'
+      website_section.in_menu = true unless ["Login", "Sign Up"].include?(widget_class.title)
       website_section.layout = widget_class.base_layout
       website.website_sections << website_section
     end
