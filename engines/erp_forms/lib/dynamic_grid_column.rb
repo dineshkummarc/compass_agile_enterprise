@@ -47,6 +47,13 @@ class DynamicGridColumn
   end
   
   def self.build_delete_column(action='')
+    action = "var messageBox = Ext.MessageBox.confirm(
+      'Confirm', 'Are you sure?', 
+      function(btn){
+        if (btn == 'yes'){ 
+          #{action}               
+        }
+      });"    
     DynamicGridColumn.build_action_column("Delete", "/images/icons/delete/delete_16x16.png", action)
   end
   

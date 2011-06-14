@@ -227,7 +227,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 handler :function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
                     var id = rec.get('id');
-                    self.deleteArticle(id);
+                    var messageBox = Ext.MessageBox.confirm(
+                      'Confirm', 'Are you sure?', 
+                      function(btn){
+                        if (btn == 'yes'){ 
+                          self.deleteArticle(id);
+                        }
+                      }
+                    );
                 }
             }]
         }
