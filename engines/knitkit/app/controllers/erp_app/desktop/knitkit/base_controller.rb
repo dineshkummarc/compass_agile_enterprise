@@ -70,6 +70,24 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
   end
 
   protected
+
+  def page
+    offset = params[:start].to_f
+    
+    if offset > 0
+      return (offset / params[:limit].to_f).to_i + 1
+    else 
+      return 1
+    end
+  end
+  
+  def per_page
+    if !params[:limit].nil?
+      return params[:limit].to_i
+    else
+      return 20
+    end
+  end
   
   def build_section_hash(website_section, website)
     website_section_hash = {

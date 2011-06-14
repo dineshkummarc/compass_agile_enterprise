@@ -133,6 +133,7 @@ Compass.ErpApp.Shared.DynamicEditableGrid = Ext.extend(Ext.grid.GridPanel, {
         }
 
         config = Ext.apply({
+            id: 'DynamicEditableGrid',
             layout:'fit',
             frame: false,
             autoScroll:true,

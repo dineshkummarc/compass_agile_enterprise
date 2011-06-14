@@ -18,7 +18,7 @@ ActionView::Base.class_eval do
   def include_extjs(version='ext', theme=nil)
     resources = ''
 
-    if Rails.env == 'development'
+    if Rails.env == 'development' or Rails.env == 'adam'
       resources << javascript_include_tag("/javascripts/#{version}/adapter/ext/ext-base-debug.js","#{version}/ext-all-debug.js")
     else
       resources << javascript_include_tag("/javascripts/#{version}/adapter/ext/ext-base.js","#{version}/ext-all.js")
