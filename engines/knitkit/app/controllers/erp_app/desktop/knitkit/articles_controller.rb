@@ -49,17 +49,6 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     
     article    
   end
-
-  def get_section_content(website_section_id, article)
-    WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?', website_section_id, article.id])
-  end
-  
-  def update_position_and_content_area(website_section_id, article)
-    section_content = get_section_content(website_section_id, article)
-    section_content.content_area = params['content_area']
-    section_content.position = params['position']
-    section_content.save    
-  end
   
   def delete
     result = {}
@@ -126,5 +115,18 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     end
 
     render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position], :methods => [:website_section_position])}}"
+  end
+
+  private
+
+  def get_section_content(website_section_id, article)
+    WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?', website_section_id, article.id])
+  end
+
+  def update_position_and_content_area(website_section_id, article)
+    section_content = get_section_content(website_section_id, article)
+    section_content.content_area = params['content_area']
+    section_content.position = params['position']
+    section_content.save
   end
 end

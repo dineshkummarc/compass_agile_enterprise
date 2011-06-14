@@ -42,7 +42,6 @@ class SetupKnitkit < ActiveRecord::Migration
         t.references :website
         t.string :path
         t.string :permalink
-        t.string :content_area
         t.text :layout
         t.boolean :in_menu
         t.integer :position, :default => 0
@@ -84,6 +83,7 @@ class SetupKnitkit < ActiveRecord::Migration
       create_table :website_section_contents do |t|
         t.integer :website_section_id
         t.integer :content_id
+        t.string  :content_area
         t.integer :position, :default => 0
 
         t.timestamps
