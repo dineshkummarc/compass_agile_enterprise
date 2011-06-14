@@ -19,7 +19,7 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
       @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
     end
     
-    @website_inquiry.data.created_by = current_user.id
+    @website_inquiry.data.created_by_id = current_user.id
     
     if @website_inquiry.valid?
       @website_inquiry.save
