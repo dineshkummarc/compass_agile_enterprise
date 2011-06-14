@@ -26,6 +26,10 @@ class ProductType < ActiveRecord::Base
       end
     end
   end
+
+  def images_path
+    File.join(RAILS_ROOT,'public/products/images',"#{self.description.underscore}_#{self.id}")
+  end
  
   def to_label
     "#{description}"

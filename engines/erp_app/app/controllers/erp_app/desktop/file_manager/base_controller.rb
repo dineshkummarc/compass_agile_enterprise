@@ -23,6 +23,8 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
 
     path = base_path if path == ROOT_NODE
 
+    FileUtils.mkdir_p path unless File.exists? path
+
     File.open(File.join(path,name), 'w+') {|f| f.write('') }
 
     render :inline => {:success => true}.to_json

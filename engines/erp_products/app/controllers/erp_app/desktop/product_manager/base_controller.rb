@@ -14,7 +14,7 @@ class ErpApp::Desktop::ProductManager::BaseController < ErpApp::Desktop::BaseCon
         :price => product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : product_type.get_current_simple_amount_with_currency,
         :available => product_type.inventory_entries.first.number_available,
         :sold => product_type.inventory_entries.first.number_sold,
-        :sku => product_type.inventory_entries.first.sku
+        :sku => product_type.inventory_entries.first.sku.nil? ? '' : product_type.inventory_entries.first.sku
       }
     end
 
@@ -136,7 +136,7 @@ class ErpApp::Desktop::ProductManager::BaseController < ErpApp::Desktop::BaseCon
 
       product_type = ProductType.find(params[:product_type_id])
       #build path
-      path = File.join(RAILS_ROOT,'public/products/images',"#{product_type.description.underscore}_#{product_type.id}",name)
+      path = File.join(product_type.images_path,name)
 
       product_type.add_file(path, contents)
       result = {:success => true}
