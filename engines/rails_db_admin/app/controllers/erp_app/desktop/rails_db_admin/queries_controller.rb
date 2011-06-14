@@ -25,7 +25,7 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
     
     @query_support.delete_query(query_name, database_connection_name)
    
-    render :inline => "{success:true}"
+    renderr :text => "{success:true}"
   end
   
   def saved_queries_tree
@@ -39,7 +39,7 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
     
     names_tree_nodes = names_tree_nodes[0..names_tree_nodes.length - 2] unless names_tree_nodes.blank?
     
-    render :inline => "[#{names_tree_nodes}]"
+    render :text => "[#{names_tree_nodes}]"
   end
   
   def open_query
@@ -91,7 +91,7 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
     end
 
 
-    render :inline => json_text
+    render :text => json_text
   end
   
   def select_top_fifty
@@ -106,7 +106,7 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
     json_text += "fields:#{build_store_fields(table)}"
     json_text += "}"
     
-    render :inline => json_text
+    render :text => json_text
   end
   
   def execute_query
@@ -149,6 +149,6 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
       json_text += "}"
     end
 
-    render :inline => json_text
+    renderr :text => json_text
   end
 end
