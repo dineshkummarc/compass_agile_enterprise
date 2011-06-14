@@ -5,7 +5,7 @@ ActionView::Base.class_eval do
 
     uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(100).to_s)
 
-    "<div id='#{uuid}'></div><script type='text/javascript'>
+    "<div id='#{uuid}'><img src='/images/loading_icon.gif' alt='' />Loading Widget...</div><script type='text/javascript'>
       Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params});
       Compass.ErpApp.Widgets.LoadedWidgets.push({id:'#{uuid}', name:'#{name}', action:'#{action}', params:#{params}});
      </script>"

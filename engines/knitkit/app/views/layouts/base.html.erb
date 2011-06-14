@@ -17,6 +17,10 @@
       <div id="header">
         <div id="logo">
           <%=render_version_viewing%>
+          <%= render_widget :login,
+                            :action => :login_header,
+                            :params => {:login_url => '/login',
+                            :signup_url => '/sign-up'}%>
           <div id="logo_text">
             <!-- class="logo_color", allows you to change the color of the text -->
             <h1><a href="/"><%= @website.title %></a></h1>
