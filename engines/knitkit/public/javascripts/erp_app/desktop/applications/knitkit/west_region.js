@@ -731,7 +731,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     formPanel.getForm().submit({
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            node.setText(form.findField('knitkitUpdateSiteTitle').getValue());
+                                                            node.attributes['name'] = form.findField('name').getValue();
+                                                            node.attributes['title'] = form.findField('title').getValue();
+                                                            node.attributes['subtitle'] = form.findField('subtitle').getValue();
+                                                            node.attributes['email'] = form.findField('email').getValue();
+                                                            node.setText(node.attributes['title']);
                                                             node.attributes.emailInquiries = form.findField('knitkitEmailInquiries').getValue().inputValue == 'yes';
                                                             node.attributes.autoActivatePublication = form.findField('knitkitAutoActivatePublication').getValue().inputValue == 'yes';
                                                             editWebsiteWindow.close();
