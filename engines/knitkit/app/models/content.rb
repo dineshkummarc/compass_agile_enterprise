@@ -24,12 +24,12 @@ class Content < ActiveRecord::Base
     end
     
     Content.find(:all,
-      :joins => :website_sections,
+      :include => :website_sections,
       :conditions => "#{content_type_scope} #{section_scope} 
                       website_sections.website_id = #{options[:website_id]} AND
-                      (contents.title LIKE '%#{options[:query]}%' 
-                      OR contents.excerpt_html LIKE '%#{options[:query]}%' 
-                      OR contents.body_html LIKE '%#{options[:query]}%')",
+                      (UPPER(contents.title) LIKE UPPER('%#{options[:query]}%') 
+                        OR UPPER(contents.excerpt_html) LIKE UPPER('%#{options[:query]}%') 
+                        OR UPPER(contents.body_html) LIKE UPPER('%#{options[:query]}%') )",
       :order => "contents.created_at DESC").paginate(:page => options[:page], :per_page => options[:per_page])
   end
 
