@@ -9,7 +9,7 @@ class Theme < ActiveRecord::Base
 
   class << self
     def root_dir
-      @@root_dir ||= "#{RAILS_ROOT}/vendor/plugins/knitkit/public"
+      @@root_dir ||= "#{RAILS_ROOT}/public"
     end
 
     def base_dir(website)

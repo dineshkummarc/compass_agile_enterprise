@@ -134,10 +134,10 @@ class ErpApp::Desktop::ProductManager::BaseController < ErpApp::Desktop::BaseCon
         end
       end
 
-      #build path
-      path = File.join(RAILS_ROOT,'vendor/plugins/erp_products/public/images',name)
-
       product_type = ProductType.find(params[:product_type_id])
+      #build path
+      path = File.join(RAILS_ROOT,'public/products/images',"#{product_type.description.underscore}_#{product_type.id}",name)
+
       product_type.add_file(path, contents)
       result = {:success => true}
     rescue Exception=>ex
