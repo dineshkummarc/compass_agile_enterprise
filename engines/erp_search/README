@@ -1,13 +1,31 @@
 ErpSearch
 =========
 
-Introduction goes here.
+ERP Search adds Solr extensions to Compass using Sunspot.
 
 
 Example
 =======
 
-Example goes here.
+Start Solr server:
+rake sunspot:solr:start
+
+Index Content:
+rake sunspot:reindex_content
+
+Index Parties:
+rake sunspot:reindex_party_search_facts
+
+Index Roles:
+rake sunspot:reindex_roles
+
+Stop Solr server:
+rake sunspot:solr:stop  
 
 
-Copyright (c) 2010 [name of plugin creator], released under the MIT license
+Gem Dependencies
+================
+sunspot_rails
+sunspot
+
+Copyright (c) 2011 Adam Hull, released under the MIT license
