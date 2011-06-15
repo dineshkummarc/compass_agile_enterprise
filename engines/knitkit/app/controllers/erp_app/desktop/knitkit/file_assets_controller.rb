@@ -1,7 +1,7 @@
 class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileManager::BaseController
 
   def base_path
-    @base_path ||= File.join(Rails.root, '/vendor/plugins/erp_app/public/file_assets/')
+    @base_path ||= File.join(Rails.root, '/public/file_assets/')
   end
 
   def expand_directory

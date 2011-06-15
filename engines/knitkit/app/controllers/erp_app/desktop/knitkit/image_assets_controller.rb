@@ -3,7 +3,7 @@ class ErpApp::Desktop::Knitkit::ImageAssetsController < ErpApp::Desktop::FileMan
   IMAGE_FILE_EXTENSIONS_REGEX = /^.?[^\.]+\.(jpe?g|png|PNG|gif|tiff)$/
 
   def base_path
-    @base_path ||= File.join(Rails.root, '/vendor/plugins/erp_app/public/images/')
+    @base_path ||= File.join(Rails.root, "/public/images/")
   end
 
   def expand_directory
