@@ -12,7 +12,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article.created_by = current_user
     
     if article.save
-      update_position_and_content_area(website_section_id, article)
+      website_section = WebsiteSection.find(website_section_id)
+      article.update_content_area_and_position_by_section(website_section, params['content_area'], params['position'])
       
       result[:success] = true
     else
@@ -32,7 +33,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article = set_attributes(article)
 
     if article.save
-      update_position_and_content_area(website_section_id, article)
+      website_section = WebsiteSection.find(website_section_id)
+      article.update_content_area_and_position_by_section(website_section, params['content_area'], params['position'])
 
       result[:success] = true
     else
@@ -108,7 +110,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     articles_array = []
     articles.each do |a|
       articles_hash = {}
-      articles_hash[:content_area] = get_section_content(website_section_id, a).content_area
+      articles_hash[:content_area] = a.content_area_by_website_section(WebsiteSection.find(website_section_id))
       articles_hash[:id] = a.id
       articles_hash[:title] = a.title
       articles_hash[:tag_list] = a.tag_list.join(', ')
@@ -119,18 +121,5 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     end
 
     render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position], :methods => [:website_section_position])}}"
-  end
-
-  private
-
-  def get_section_content(website_section_id, article)
-    WebsiteSectionContent.find(:first, :conditions => ['website_section_id = ? and content_id = ?', website_section_id, article.id])
-  end
-
-  def update_position_and_content_area(website_section_id, article)
-    section_content = get_section_content(website_section_id, article)
-    section_content.content_area = params['content_area']
-    section_content.position = params['position']
-    section_content.save
   end
 end

@@ -109,7 +109,9 @@ class Website < ActiveRecord::Base
       }
 
       website_section.contents.each do |content|
-        section_hash[:articles] << {:name => content.title, :content_area => content.content_area}
+        content_area = content.content_area_by_website_section(website_section)
+        position = content.position_by_website_section(website_section)
+        section_hash[:articles] << {:name => content.title, :content_area => content_area, :position => position}
       end
 
       setup_hash[:sections] << section_hash
@@ -250,12 +252,13 @@ class Website < ActiveRecord::Base
           section_hash[:articles].each do |article_hash|
             article = Article.find_by_title(article_hash[:name])
             if article.nil?
-              article = Article.new(:title => article_hash[:name], :content_area => article_hash[:content_area])
+              article = Article.new(:title => article_hash[:name])
               article.body_html = entries.find{|entry| entry[:type] == 'articles' and entry[:name] == "#{article_hash[:name]}.html"}[:data]
             end
             section.contents << article
+            section.save
+            article.update_content_area_and_position_by_section(section, article_hash[:content_area], article_hash[:position])
           end
-          section.save
           website.website_sections << section
         end
 
