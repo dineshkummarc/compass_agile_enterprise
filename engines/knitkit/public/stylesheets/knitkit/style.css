@@ -287,6 +287,7 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 .blog_articles
 {
   float: left;
+  min-height: 300px;
 }
 
 .blog_post
