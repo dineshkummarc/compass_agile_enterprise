@@ -14,7 +14,7 @@ ActionController::Routing::Routes.draw do |map|
     :action       => "show",
     :conditions => { :method => :get }
 
-  map.blogs 'blogs/:section_id',
+  map.blogs 'blogs/:section_id.:format',
                     :controller => 'blogs',
                     :action => 'index',
                     :conditions => { :method => :get }
@@ -24,7 +24,7 @@ ActionController::Routing::Routes.draw do |map|
                     :action => 'show',
                     :conditions => { :method => :get }
 
-  map.blog_tag 'blogs/:section_id/tag/:tag_id',
+  map.blog_tag 'blogs/:section_id/tag/:tag_id.:format',
                     :controller => 'blogs',
                     :action => 'tag',
                     :conditions => { :method => :get }
