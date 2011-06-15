@@ -35,6 +35,8 @@ class DynamicForms < ActiveRecord::Migration
         t.timestamps
       end
 
+      add_index :dynamic_forms, :created_by_id
+      add_index :dynamic_forms, :updated_by_id
       add_index :dynamic_forms, :dynamic_form_model_id
       add_index :dynamic_forms, :model_name
       add_index :dynamic_forms, :internal_identifier
@@ -55,6 +57,10 @@ class DynamicForms < ActiveRecord::Migration
         t.timestamps
       end
 
+      add_index :dynamic_data, :created_with_form_id
+      add_index :dynamic_data, :updated_with_form_id
+      add_index :dynamic_data, :created_by_id
+      add_index :dynamic_data, :updated_by_id
       add_index :dynamic_data, :reference_type
       add_index :dynamic_data, :reference_id
     end

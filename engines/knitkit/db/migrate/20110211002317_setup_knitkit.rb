@@ -54,6 +54,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.timestamps
       end
       #indexes
+      add_index :website_sections, :permalink
       add_index :website_sections, :website_id
       add_index :website_sections, :position
       add_index :website_sections, :parent_id
@@ -71,10 +72,16 @@ class SetupKnitkit < ActiveRecord::Migration
         t.text :excerpt_html
         t.text :body_html
 
+        t.integer :created_by_id
+        t.integer :updated_by_id
+
         t.timestamps
       end
       #indexes
       add_index :contents, :type
+      add_index :contents, :created_by_id
+      add_index :contents, :updated_by_id
+      add_index :contents, :permalink
 
       Content.create_versioned_table
     end
@@ -92,6 +99,7 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :website_section_contents, :website_section_id
       add_index :website_section_contents, :content_id
       add_index :website_section_contents, :position
+      add_index :website_section_contents, :content_area
     end
 
     unless table_exists?(:themes)

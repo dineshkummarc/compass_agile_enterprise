@@ -8,6 +8,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
 
     article = set_attributes(article)
     article.website_sections << WebsiteSection.find(website_section_id)
+
+    article.created_by = current_user
     
     if article.save
       update_position_and_content_area(website_section_id, article)
@@ -24,6 +26,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     result = {}
     website_section_id = params[:section_id]
     article = Article.find(params[:id])
+
+    article.updated_by = current_user
     
     article = set_attributes(article)
 

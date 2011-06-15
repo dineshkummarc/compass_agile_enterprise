@@ -6,6 +6,8 @@ class Content < ActiveRecord::Base
 
   has_many :website_section_contents, :dependent => :destroy
   has_many :website_sections, :through => :website_section_contents
+  belongs_to :created_by, :class_name => "User"
+  belongs_to :updated_by, :class_name => "User"
     
   validates_presence_of :type
   validates_uniqueness_of :title

@@ -2,8 +2,8 @@
 <br/>
 <h3><%=h @published_content.title %></h3>
 <p>
-  Posted: <%= @published_content.created_at.to_s(:long) %><br />
-  Topics: <%=Content.find(@published_content.content_id).tag_list %>  
+  Posted: <%= @published_content.created_at.to_s(:long) %> <%="by #{@published_content.content.created_by.login}" rescue '' %><br />
+  Topics: <%= @published_content.content.tag_list %>  
 </p>
 <p><%= @published_content.excerpt_html %></p>
 <%= @published_content.body_html %>

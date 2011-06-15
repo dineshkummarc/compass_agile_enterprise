@@ -20,7 +20,7 @@ class ErpApp::Widgets::DynamicForms::Base < ErpApp::Widgets::Base
       @form_data.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
     end
     
-    @form_data.data.created_by = current_user.id
+    @form_data.data.created_by = current_user unless current_user.nil?
     
     if @form_data.valid?
       @form_data.save
