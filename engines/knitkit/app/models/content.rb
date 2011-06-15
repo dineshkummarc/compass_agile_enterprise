@@ -39,7 +39,7 @@ class Content < ActiveRecord::Base
     @search_results = build_search_results(@results) 
     
     @page_results = WillPaginate::Collection.create(options[:page], options[:per_page], @results.total_entries) do |pager|
-       pager.replace(@search_results)
+      pager.replace(@search_results)
     end
     
     return @page_results
@@ -96,6 +96,31 @@ class Content < ActiveRecord::Base
 
   def get_comments(limit)
     self.commentable.comments.recent.limit(limit).all
+  end
+
+  def update_content_area_and_position_by_section(section, content_area, position)
+    website_section_content = WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id])
+    unless website_section_content.nil?
+      website_section_content.content_area = content_area
+      website_section_content.position = position
+      website_section_content.save
+    end
+  end
+
+  def content_area_by_website_section(section)
+    content_area = nil
+    unless WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).nil?
+      content_area = WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).content_area
+    end
+    content_area
+  end
+
+  def position_by_website_section(section)
+    position = nil
+    unless WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).nil?
+      position = WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).position
+    end
+    position
   end
 
   protected
