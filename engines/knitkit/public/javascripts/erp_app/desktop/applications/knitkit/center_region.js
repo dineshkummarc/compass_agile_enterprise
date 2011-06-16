@@ -12,7 +12,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             title:title + ' - Layout',
             disableToolbar:true,
             xtype:'codemirror',
-            parser:'erb',
+            parser:'rhtml',
             sourceCode:template,
             closable:true
         });

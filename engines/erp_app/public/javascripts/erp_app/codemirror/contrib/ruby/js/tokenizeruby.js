@@ -1,3 +1,4 @@
+
 var tokenizeRuby = (function() {
 
   function buildProgress(word) {

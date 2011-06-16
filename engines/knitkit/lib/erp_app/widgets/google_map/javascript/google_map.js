@@ -49,9 +49,8 @@ Compass.ErpApp.Widgets.GoogleMap = {
                                                     "   :params => {:address => '{address}',\n",
                                                     "               :title => '{title}'}%>");
                         var content = tpl.apply(data);
-						
                         Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror(content);
-                        addGoogleMapWidgetWindow.close();
+						basicForm.reset();
                     }
                 }
             },{
