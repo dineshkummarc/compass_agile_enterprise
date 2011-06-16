@@ -30,6 +30,10 @@ end
 
 File.unlink 'public/index.html' rescue Errno::ENOENT
 
+patch_file 'config/initializers/session_store.rb',
+"# ActionController::Base.session_store = :active_record_store",
+"  ActionController::Base.session_store = :active_record_store",
+:patch_mode => :change
 
 patch_file 'config/environment.rb',
 "require File.join(File.dirname(__FILE__), 'boot')",
