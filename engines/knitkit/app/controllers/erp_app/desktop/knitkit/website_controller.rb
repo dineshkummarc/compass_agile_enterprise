@@ -83,8 +83,10 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     # widgets with no base layout should not be installed
     widgets = ErpApp::Widgets::Base.installed_widgets
     widgets.each do |w|
-      website_section = WebsiteSection.new
       widget_class = "ErpApp::Widgets::#{w.camelize}::Base".constantize
+      #if there is no base layout ignore this widget
+      next if widget_class.base_layout.nil?
+      website_section = WebsiteSection.new
       website_section.title = widget_class.title
       website_section.in_menu = true unless ["Login", "Sign Up"].include?(widget_class.title)
       website_section.layout = widget_class.base_layout
