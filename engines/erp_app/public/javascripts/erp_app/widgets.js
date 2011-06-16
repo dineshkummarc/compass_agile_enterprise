@@ -5,7 +5,7 @@ Compass.ErpApp.Widgets = {
         var conn = new Ext.data.Connection();
         var widgetParams = {
             widget_params:Ext.util.JSON.encode(params)
-            }
+        }
         conn.request({
             url: '/widgets/'+name+'/'+action+'/'+uuid,
             method: 'POST',
@@ -14,7 +14,7 @@ Compass.ErpApp.Widgets = {
                 Ext.get(uuid).dom.innerHTML = response.responseText;
                 var scriptTags = Ext.get(uuid).dom.getElementsByTagName("script");
                 Ext.each(scriptTags, function(scriptTag){
-                     eval(scriptTag.text);
+                    eval(scriptTag.text);
                 });
             },
             failure: function(response) {
