@@ -5,6 +5,10 @@ class ErpApp::Widgets::GoogleMap::Base < ErpApp::Widgets::Base
   end
 
   def index
+    @uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(100).to_s)
+    @address = params[:address]
+    @title = params[:title]
+
     render
   end
 

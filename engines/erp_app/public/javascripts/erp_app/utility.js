@@ -182,3 +182,36 @@ String.prototype.underscore = function (){
 String.prototype.downcase = function (){
     return this.toLowerCase();
 }
+
+Compass.ErpApp.Utility.JsLoader = {
+    load : function(url,fireOnSuccess) {
+        var ss = document.getElementsByTagName("script");
+        for (i = 0;i < ss.length; i++) {
+            if (ss[i].src && ss[i].src.indexOf(url) != -1)
+            {
+                if (fireOnSuccess)
+                    this.onSuccess();
+                return;
+            }
+        }
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.src = url;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(s);
+        var self = this;
+        s.onload = s.onreadystatechange = function()
+        {
+            if (this.readyState && this.readyState == "loading")
+                return;
+            if (fireOnSuccess)
+                self.onSuccess();
+        }
+        s.onerror = function() {
+            head.removeChild(s);
+            self.onFailure(); 
+        }
+    },
+    onSuccess : function() { },
+    onFailure : function() { }
+}

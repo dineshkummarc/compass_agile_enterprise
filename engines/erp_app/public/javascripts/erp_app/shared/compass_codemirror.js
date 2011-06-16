@@ -25,12 +25,12 @@ Ext.apply(Compass.ErpApp.Shared.CodeMirrorConfig, {
             stylesheet: Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolors.css"
         },
         rhtml:{
-            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js","contrib/ruby/js/parseruby.js","contrib/ruby/js/parserubyhtmlmixed.js","contrib/ruby/js/tokenizeruby.js"],
-            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolors.css",Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
+            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js","contrib/ruby/js/parserubyhtmlmixed.js","contrib/ruby/js/tokenizeruby.js"],
+            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolorshtml.css",Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
         },
         erb:{
             parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js","contrib/ruby/js/parseruby.js","contrib/ruby/js/parserubyhtmlmixed.js","contrib/ruby/js/tokenizeruby.js"],
-            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolors.css",Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
+            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolorshtml.css",Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
         },
         dummy:{
             parserfile: ["parsedummy.js"]

@@ -44,46 +44,13 @@ Compass.ErpApp.Widgets.GoogleMap = {
                             title:title,
                             address:address
                         };
-                        
-                        var tpl = new Ext.XTemplate("<style type='text/css'>\n",
-                            "html { height: 100% }",
-                            "body { height: 100%; margin: 0px; padding: 0px }\n",
-                            "#map_canvas { height: 100% }\n",
-                            "</style>\n",
-                            "<script type='text/javascript' src='http://maps.google.com/maps/api/js?sensor=false'>\n",
-                            "<\/script>\n",
-                            "<div id='map_canvas' style='width:500px;height:500px;border:solid 1px black;'></div>\n",
-                            "<script type='text/javascript'>\n",
-                            "  var geocoder;\n",
-                            "  var map;\n",
-                            "  var address = '{address}';\n",
-                            "  var locationName = '{title}';\n",
-                            "  function initialize() {\n",
-                            "    geocoder = new google.maps.Geocoder();",
-                            "    geocoder.geocode( { 'address': address}, function(results, status) {\n",
-                            "      if (status == google.maps.GeocoderStatus.OK) {\n",
-                            "        var myOptions = {\n",
-                            "        	zoom: 18,\n",
-                            "        	center: results[0].geometry.location,\n",
-                            "        	mapTypeId: google.maps.MapTypeId.SATELLITE\n",
-                            "    	 };\n",
-                            "        map = new google.maps.Map(document.getElementById('map_canvas'),myOptions);\n",
-                            "        var marker = new google.maps.Marker({\n",
-                            "            map: map,\n",
-                            "            title: locationName,\n",
-                            "            position: results[0].geometry.location\n",
-                            "        });\n",
-                            "      } else {\n",
-                            "        alert('Geocode was not successful for the following reason: ' + status);\n",
-                            "      }\n",
-                            "    });\n",
-                            "  }\n",
-                            "<\/script>\n",
-                            "<script type='text/javascript'>initialize();<\/script>);\n");
+
+                        var tpl = new Ext.Template("<%= render_widget :google_map,\n",
+                                                    "   :params => {:address => '{address}',\n",
+                                                    "               :title => '{title}'}%>");
                         var content = tpl.apply(data);
-						
                         Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror(content);
-                        addGoogleMapWidgetWindow.close();
+						basicForm.reset();
                     }
                 }
             },{
