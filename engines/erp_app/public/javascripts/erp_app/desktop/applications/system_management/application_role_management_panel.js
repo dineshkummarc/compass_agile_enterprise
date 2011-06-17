@@ -105,7 +105,7 @@ Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPa
                 'click':function(node){
                     if(node.attributes['leaf'])
                     {
-                        this.selectWidget(node.id);
+                        this.selectWidget(node.attributes.widget_id);
                     }
                 }
             }

@@ -29,10 +29,20 @@ class ErpApp::Desktop::BaseController < ErpApp::ApplicationController
   private
   
   def build_node(node_hash)
-    ext_json = "{text:'#{node_hash[:text]}', id:#{node_hash[:id]}, "
+    ext_json = "{text:'#{node_hash[:text]}', "
+    
+    unless node_hash[:id].blank?
+       ext_json << "id:#{node_hash[:id]}, "
+    end
 
     unless node_hash[:icon_cls].blank?
       ext_json << "iconCls: \"#{node_hash[:icon_cls]}\","
+    end
+
+    unless node_hash[:attributes].blank?
+      node_hash[:attributes].each do |k,v|
+        ext_json << '"'+k.to_s+'":"'+v.to_s+'",'
+      end
     end
 
     if node_hash[:is_leaf]

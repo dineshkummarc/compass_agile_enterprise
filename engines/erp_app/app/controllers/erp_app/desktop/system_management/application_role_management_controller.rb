@@ -7,9 +7,9 @@ class ErpApp::Desktop::SystemManagement::ApplicationRoleManagementController < E
       if !app.widgets.nil? && !app.widgets.empty?
         children_hashes = []
         app.widgets.each do |widget|
-          children_hashes << {:text => widget.description, :is_leaf => true, :icon_cls => 'icon-document', :id => widget.id}
+          children_hashes << {:text => widget.description, :is_leaf => true, :icon_cls => 'icon-document', :attributes => {:widget_id => widget.id}}
         end
-        node_hashes << {:text => app.description, :icon_cls => app.icon, :id => app.id, :is_leaf => false, :children => children_hashes}
+        node_hashes << {:text => app.description, :icon_cls => app.icon, :is_leaf => false, :children => children_hashes, :attributes => {:app_id => app.id}}
       end
     end
     render :inline => build_ext_tree(node_hashes)
