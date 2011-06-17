@@ -1,4 +1,4 @@
-  #require_dependency 'theme/file'
+#require_dependency 'theme/file'
 require 'fileutils'
 
 class Theme < ActiveRecord::Base
@@ -80,33 +80,33 @@ class Theme < ActiveRecord::Base
 
   def copy(options={})
     raise 'not implemented'
-#    clone = nil
-#    begin
-#      clone = self.clone
-#      clone.theme_id = options[:theme_id]
-#      clone.name = options[:name]
-#      clone.active = false
-#      clone.id = nil
-#      clone.files = []
-#      clone_path = self.path.sub(self.theme_id, options[:theme_id])
-#      FileUtils.cp_r(self.path, clone_path)
-#      clone.save
-#      self.files.each do |file|
-#        clone_file = file.clone
-#        clone_file.id = nil
-#        clone_file.name = file.name
-#        clone_file.file_asset_holder = clone
-#        clone_file.save
-#      end
-#    rescue Exception=>ex
-#      unless clone.nil?
-#        clone.destroy
-#      end
-#      if File.exists(clone_path)
-#        File.delete(clone_path)
-#      end
-#    end
-#    clone
+    #    clone = nil
+    #    begin
+    #      clone = self.clone
+    #      clone.theme_id = options[:theme_id]
+    #      clone.name = options[:name]
+    #      clone.active = false
+    #      clone.id = nil
+    #      clone.files = []
+    #      clone_path = self.path.sub(self.theme_id, options[:theme_id])
+    #      FileUtils.cp_r(self.path, clone_path)
+    #      clone.save
+    #      self.files.each do |file|
+    #        clone_file = file.clone
+    #        clone_file.id = nil
+    #        clone_file.name = file.name
+    #        clone_file.file_asset_holder = clone
+    #        clone_file.save
+    #      end
+    #    rescue Exception=>ex
+    #      unless clone.nil?
+    #        clone.destroy
+    #      end
+    #      if File.exists(clone_path)
+    #        File.delete(clone_path)
+    #      end
+    #    end
+    #    clone
   end
   
   def import(file)
@@ -145,7 +145,11 @@ class Theme < ActiveRecord::Base
     returning(tmp_dir + "#{name}.zip") do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
-        files.each { |file| zip.add(file.base_path, file.path) if ::File.exists?(file.path) }
+        theme_path = self.path.gsub(RAILS_ROOT, '')
+        files.each {|file|
+          name = file.base_path.gsub(theme_path + '/','')
+          zip.add(name, file.path) if ::File.exists?(file.path)
+        }
         ::File.open(tmp_dir + 'about.yml', 'w') { |f| f.write(about.to_yaml) }
         zip.add('about.yml', tmp_dir + 'about.yml')
       end
