@@ -57,7 +57,7 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
     
     columns, values, exception = @query_support.execute_sql(query)
 
-    if columns.empty? || values.empty?
+    if columns.blank? || values.blank?
       json_text = "{success:false,query:\"#{query}\",exception:\"Empty result set\"}"
     elsif exception.nil?
 
@@ -149,6 +149,6 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
       json_text += "}"
     end
 
-    renderr :text => json_text
+    render :text => json_text
   end
 end

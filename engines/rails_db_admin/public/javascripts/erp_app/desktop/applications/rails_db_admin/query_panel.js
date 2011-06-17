@@ -47,7 +47,8 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
             {
                 xtype:'codemirror',
                 parser:'sql',
-                sourceCode:this.initialConfig['query']
+                sourceCode:this.initialConfig['query'],
+                disableSave:true
             }
             ]
 			

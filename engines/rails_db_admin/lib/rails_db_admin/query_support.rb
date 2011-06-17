@@ -2,7 +2,7 @@ require 'tech_services/utils/compass_logger.rb'
 
 class RailsDbAdmin::QuerySupport
   
-  PLUGIN_LOCATION_LOCATION = "vendor/plugins/erp_app/vendor/plugins/rails_db_admin/queries/"
+  QUERY_LOCATION = "#{RAILS_ROOT}/public/rails_db_admin/queries/"
   
   def initialize(database_connection_class)
    @connection = database_connection_class.connection
@@ -38,12 +38,12 @@ class RailsDbAdmin::QuerySupport
   end
   
   def get_saved_query_names(database_connection_name)
-    path = "#{PLUGIN_LOCATION_LOCATION}#{database_connection_name}/"
+    path = "#{QUERY_LOCATION}#{database_connection_name}/"
     
     query_files = []
     
     if File.directory? path
-      query_files = Dir.entries(RAILS_ROOT + "/" + path).map{|directory| directory}
+      query_files = Dir.entries(path).map{|directory| directory}
       query_files.delete_if{|name| name =~ /^\./}
       query_files.each do |file_name|
         file_name.gsub!('.sql', '')
@@ -54,7 +54,7 @@ class RailsDbAdmin::QuerySupport
   end
   
   def save_query(query, name, database_connection_name)
-    path = "#{PLUGIN_LOCATION_LOCATION}#{database_connection_name}/"
+    path = "#{QUERY_LOCATION}#{database_connection_name}/"
     
     unless File.directory? path
       FileUtils.mkdir_p(path)
@@ -68,7 +68,7 @@ class RailsDbAdmin::QuerySupport
   end
   
   def delete_query(name, database_connection_name)
-    path = "#{PLUGIN_LOCATION_LOCATION}#{database_connection_name}/"
+    path = "#{QUERY_LOCATION}#{database_connection_name}/"
     
     if File.exist?("#{path}#{name}.sql")
       FileUtils.rm("#{path}#{name}.sql")
@@ -76,7 +76,7 @@ class RailsDbAdmin::QuerySupport
   end
   
   def get_query(name, database_connection_name)
-    path = "#{PLUGIN_LOCATION_LOCATION}#{database_connection_name}/"
+    path = "#{QUERY_LOCATION}#{database_connection_name}/"
     
     query = ""
     

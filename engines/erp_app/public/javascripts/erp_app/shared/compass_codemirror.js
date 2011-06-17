@@ -70,10 +70,6 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
 
     constructor : function(config){
         var tbarItems = [{
-                text: 'Save',
-                handler: this.save,
-                scope: this
-            }, {
                 text: 'Undo',
                 handler: function() {
                     this.codeMirrorInstance.undo();
@@ -92,6 +88,14 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             }];
+
+        if(!config['disableSave']){
+            tbarItems.push({
+                text: 'Save',
+                handler: this.save,
+                scope: this
+            });
+        }
 
         if(!Compass.ErpApp.Utility.isBlank(config['tbarItems'])){
             tbarItems = tbarItems.concat(config['tbarItems']);
