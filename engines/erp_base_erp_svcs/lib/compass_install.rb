@@ -65,7 +65,7 @@ patch_file 'config/environment.rb',
 append_file 'config/environment.rb',
 "\n\n#forces rails to look in plugins if assets are not found
 plugin_assets = init.loaded_plugins.map { |plugin| File.join(plugin.directory, 'public') }.reject { |dir| not (File.directory?(dir) and File.exist?(dir)) }
-init.configuration.middleware.use TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets
+init.configuration.middleware.insert_before(::Rack::Lock, TechServices::Utils::Rack::StaticOverlay, :roots => plugin_assets)
 
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.smtp_settings = {
@@ -91,7 +91,6 @@ inside('vendor/compass/plugins/data_migrator') do
 end
 
 rake 'compass:install:core -R vendor/compass/engines/erp_base_erp_svcs/lib/tasks'
-rake 'compass:assets:install'
 rake 'compass:bootstrap:data'
 
 FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
