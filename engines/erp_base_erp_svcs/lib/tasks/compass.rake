@@ -58,7 +58,6 @@ namespace :compass do
   task :install do
   	# call the perform method set to :install
     perform(:install)
-    Rake::Task['compass:assets:install'].invoke
     Rake::Task['db:migrate'].invoke
   end
 
@@ -66,84 +65,6 @@ namespace :compass do
   task :uninstall do
   	# call the perform set to :uninstall
     perform(:uninstall)
-  end
-
-  namespace :assets do
-    if Rake.application.unix?
-      desc "Symlinks public assets from plugins to public/"
-    else
-      desc "Copy public assets from plugins to public/"
-    end
-    task :install do
-      if Rake.application.unix?
-        symlink_plugins
-      elsif Rake.application.windows?
-        copy_plugins
-      else
-        raise 'unknown system platform'
-      end
-    end
-
-    # creates a symbolic link to the plugin rather than forcing a local copy
-
-    def symlink_plugins
-      puts "Symlinks public assets from plugins to public/"
-      target_dir = "public"
-      sources = Dir["vendor/plugins/{*,*/**}/public/*/*"] +
-        Dir["vendor/plugins/{*,*/**}/vendor/plugins/**/public/*/*"]
-
-      sources.each do |source|
-        split = source.split('/')
-        folder, type = split[-1], split[-2]
-        target = "#{target_dir}/#{type}/#{folder}"
-        relative_source = Pathname.new(source).relative_path_from(Pathname.new("#{target_dir}/#{type}")).to_s
-        # TODO: is this necessary? it seems so ...
-        FileUtils.rm_rf target if File.exists?(target) || File.symlink?(target)
-        FileUtils.mkdir_p(File.dirname(target))
-        test = FileUtils.ln_s relative_source, target, :force => true # :verbose => true
-        print "."
-      end
-      #make sure to copy the splash screen
-      FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
-      print "Done\n"
-    end
-
-    # copies the plugin for platforms that dont support symbolic link
-    
-    def copy_plugins
-      target = "#{Rails.root}/public/"
-      sources = Dir["#{Rails.root}/vendor/plugins/{*,*/**}/public/*"] +
-        Dir["#{Rails.root}/vendor/plugins/{*,*/**}/vendor/plugins/**/public/*"]
-
-      FileUtils.mkdir_p(target) unless File.directory?(target)
-      FileUtils.cp_r sources, target
-      #make sure to copy the splash screen
-      FileUtils.cp "vendor/plugins/erp_app/public/index.html", "public/"
-    end
-
-    if not Rake.application.unix?
-      desc "Copy assets from public to their respective engines"
-      task :backport => :environment do
-        if Rake.application.unix?
-          raise 'no need to backport on unix - directories are symlinked!'
-        elsif Rake.application.windows?
-          sources = Dir["#{Rails.root}/public/{images,javascripts,stylesheets}/*"]
-          sources.select { |s| File.directory?(s) }.each do |source|
-            path = source.gsub("#{Rails.root}/public/", '')
-            # determine asset type and owning plugin
-            type, plugin_name = path.split('/')
-            plugin = Rails.plugins[plugin_name.to_sym]
-            if plugin
-              target = "#{plugin.directory}/public/#{type}"
-              FileUtils.mkdir_p(target) unless File.directory?(target)
-              FileUtils.cp_r source, target
-            end
-          end
-        else
-          raise 'unknown system platform'
-        end
-      end
-    end
   end
 
   # the perform method is the workhorse of the installer it retrieves engines and plugins from
