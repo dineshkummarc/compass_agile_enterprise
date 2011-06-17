@@ -92,10 +92,5 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
     #load controller
     controller = "ErpApp::Desktop::Scaffold::#{name.classify}Controller"
     controller.constantize unless class_exists?(controller)
-    
-    #make directory if it does not exists
-    FileUtils.mkdir_p "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/" unless File.directory?("#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/")
-    #copy generated fild up to base public directory
-    FileUtils.cp_r "#{ERP_APP_PATH}/public/javascripts/erp_app/desktop/applications/scaffold/#{name.underscore}_active_ext.js", "#{RAILS_ROOT}/public/javascripts/erp_app/desktop/applications/scaffold/"
   end
 end
