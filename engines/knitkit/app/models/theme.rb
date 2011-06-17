@@ -1,4 +1,4 @@
-#require_dependency 'theme/file'
+  #require_dependency 'theme/file'
 require 'fileutils'
 
 class Theme < ActiveRecord::Base
@@ -153,7 +153,7 @@ class Theme < ActiveRecord::Base
   end
 
   def has_template?(directory, name)
-    self.templates.find(:first, :conditions => ['directory = ? and name = ?', directory, name])
+    self.templates.find{|item| item.directory == directory and item.name == name}
   end
 
   class << self

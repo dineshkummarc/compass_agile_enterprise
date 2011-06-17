@@ -8,7 +8,7 @@ module TechServices
 		module ClassMethods
 
   		def has_file_assets
-  		  has_many :files, :as => :file_asset_holder, :class_name => 'FileAsset', :dependent => :delete_all
+  		  has_many :files, :as => :file_asset_holder, :class_name => 'FileAsset', :dependent => :delete_all 
 
 			  extend TechServices::HasFileAssets::SingletonMethods
 			  include TechServices::HasFileAssets::InstanceMethods
@@ -27,6 +27,10 @@ module TechServices
 
       def images
         self.files.find(:all, :conditions => ['type = ?', 'Image'])
+      end
+
+      def templates
+        self.files.find(:all, :conditions => ['type = ?', 'Template'])
       end
 		end
 	end
