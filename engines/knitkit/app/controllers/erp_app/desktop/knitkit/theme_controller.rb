@@ -34,15 +34,6 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     render :inline => {:success => true}.to_json
   end
 
-  def copy
-    clone = @theme.copy(params)
-    if clone
-      render :inline => {:success => true}.to_json
-    else
-      render :inline => {:success => false}.to_json
-    end
-  end
-
   def delete
     @theme.destroy
     render :inline => {:success => true}.to_json

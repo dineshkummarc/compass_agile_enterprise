@@ -241,14 +241,6 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                     fieldLabel:'Summary',
                                     allowBlank:true,
                                     name:'summary'
-                                },
-                                {
-                                    xtype:'fileuploadfield',
-                                    fieldLabel:'Upload Theme',
-                                    buttonText:'Upload',
-                                    buttonOnly:false,
-                                    allowBlank:true,
-                                    name:'theme_data'
                                 }
                                 ]
                             }),
@@ -286,14 +278,14 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                     }
                 },
                 {
-                    text:'Copy Theme',
-                    iconCls:'icon-copy',
+                    text:'Upload Theme',
+                    iconCls:'icon-upload',
                     handler:function(btn){
-                        var copyThemeWindow = new Ext.Window({
+                        var uploadThemeWindow = new Ext.Window({
                             layout:'fit',
                             width:375,
-                            title:'Copy Theme',
-                            height:175,
+                            title:'New Theme',
+                            height:140,
                             plain: true,
                             buttonAlign:'center',
                             items: new Ext.FormPanel({
@@ -301,14 +293,15 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                 frame:false,
                                 bodyStyle:'padding:5px 5px 0',
                                 fileUpload: true,
-                                url:'./knitkit/theme/copy',
+                                url:'./knitkit/theme/new',
                                 defaults: {
                                     width: 225
                                 },
                                 items: [
-                                {
+                                 {
                                     xtype:'combo',
                                     hiddenName:'site_id',
+                                    name:'site_id',
                                     store:sitesJsonStore,
                                     forceSelection:true,
                                     editable:false,
@@ -319,44 +312,15 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                     displayField:'name',
                                     valueField:'id',
                                     triggerAction: 'all',
-                                    allowBlank:false,
-                                    listeners:{
-                                        'select':function(combo, record, index){
-                                            themesJsonStore.setBaseParam('site_id', record.get('id'));
-                                            themesJsonStore.load();
-                                            Ext.getCmp('knitkit_themes_tree_panel_copy_theme_themes_combo').enable();
-                                        }
-
-                                    }
-                                },
-                                {
-                                    xtype:'combo',
-                                    hiddenName:'id',
-                                    id:'knitkit_themes_tree_panel_copy_theme_themes_combo',
-                                    store:themesJsonStore,
-                                    forceSelection:true,
-                                    editable:false,
-                                    disabled:true,
-                                    fieldLabel:'Theme',
-                                    emptyText:'Select Theme...',
-                                    typeAhead: false,
-                                    mode: 'remote',
-                                    displayField:'name',
-                                    valueField:'id',
-                                    triggerAction: 'all',
                                     allowBlank:false
                                 },
                                 {
-                                    xtype:'textfield',
-                                    fieldLabel:'Name',
-                                    allowBlank:false,
-                                    name:'name'
-                                },
-                                {
-                                    xtype:'textfield',
-                                    fieldLabel:'Theme ID',
-                                    allowBlank:false,
-                                    name:'theme_id'
+                                    xtype:'fileuploadfield',
+                                    fieldLabel:'Upload Theme',
+                                    buttonText:'Upload',
+                                    buttonOnly:false,
+                                    allowBlank:true,
+                                    name:'theme_data'
                                 }
                                 ]
                             }),
@@ -366,7 +330,7 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                     'click':function(button){
                                         var window = button.findParentByType('window');
                                         var formPanel = window.findByType('form')[0];
-                                        self.initialConfig['centerRegion'].setWindowStatus('Copying theme...');
+                                        self.initialConfig['centerRegion'].setWindowStatus('Creating theme...');
                                         formPanel.getForm().submit({
                                             reset:true,
                                             success:function(form, action){
@@ -375,13 +339,10 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                                                 if(obj.success){
                                                     self.getRootNode().reload();
                                                 }
-                                                else{
-                                                    Ext.Msg.alert("Error", "Error copying theme");
-                                                }
                                             },
                                             failure:function(form, action){
                                                 self.initialConfig['centerRegion'].clearWindowStatus();
-                                                Ext.Msg.alert("Error", "Error copying theme");
+                                                Ext.Msg.alert("Error", "Error creating theme");
                                             }
                                         });
                                     }
@@ -389,11 +350,11 @@ Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.
                             },{
                                 text: 'Close',
                                 handler: function(){
-                                    copyThemeWindow.close();
+                                    uploadThemeWindow.close();
                                 }
                             }]
                         });
-                        copyThemeWindow.show();
+                        uploadThemeWindow.show();
                     }
                 }
                 ]

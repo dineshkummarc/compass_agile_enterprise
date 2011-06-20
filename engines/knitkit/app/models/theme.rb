@@ -77,37 +77,6 @@ class Theme < ActiveRecord::Base
       result
     end
   end
-
-  def copy(options={})
-    raise 'not implemented'
-    #    clone = nil
-    #    begin
-    #      clone = self.clone
-    #      clone.theme_id = options[:theme_id]
-    #      clone.name = options[:name]
-    #      clone.active = false
-    #      clone.id = nil
-    #      clone.files = []
-    #      clone_path = self.path.sub(self.theme_id, options[:theme_id])
-    #      FileUtils.cp_r(self.path, clone_path)
-    #      clone.save
-    #      self.files.each do |file|
-    #        clone_file = file.clone
-    #        clone_file.id = nil
-    #        clone_file.name = file.name
-    #        clone_file.file_asset_holder = clone
-    #        clone_file.save
-    #      end
-    #    rescue Exception=>ex
-    #      unless clone.nil?
-    #        clone.destroy
-    #      end
-    #      if File.exists(clone_path)
-    #        File.delete(clone_path)
-    #      end
-    #    end
-    #    clone
-  end
   
   def import(file)
     file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
