@@ -96,6 +96,25 @@ Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 });
             },
+            'click':function(node, e){
+                var msg = Ext.Msg.wait("Loading", "Retrieving contents...");
+                var conn = new Ext.data.Connection();
+                conn.request({
+                    url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/get_contents',
+                    method: 'POST',
+                    params:{
+                        node:node.id
+                    },
+                    success: function(response) {
+                        msg.hide();
+                        self.fireEvent('contentLoaded', this, node, response.responseText);
+                    },
+                    failure: function() {
+                        Ext.Msg.alert('Status', 'Error loading contents');
+                        msg.hide();
+                    }
+                });
+            },
             'contextmenu':function(node, e){
                 e.stopEvent();
                 if(node.attributes['contextMenuDisabled']) return false;
