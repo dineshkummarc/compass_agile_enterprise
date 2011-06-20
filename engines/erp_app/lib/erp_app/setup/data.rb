@@ -167,7 +167,7 @@ class ErpApp::Setup::Data
 
       pref = Preference.create(
         :preference_type => desktop_backgroud_pt,
-        :preference_option => default_background_po
+        :preference_option => portablemind_background_po
       )
 
       desktop.user_preferences << UserPreference.create(
