@@ -102,7 +102,7 @@ class Theme < ActiveRecord::Base
             theme_file.data = data
             theme_file.save
           else
-            self.add_file(name, data) rescue next
+            self.add_file(File.join(self.path,name), data) rescue next
           end
         end
       end
