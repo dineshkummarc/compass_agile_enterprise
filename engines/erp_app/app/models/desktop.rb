@@ -9,7 +9,7 @@ class Desktop < ActiveRecord::Base
 
     pref = Preference.create(
       :preference_type => desktop_backgroud_pt,
-      :preference_option => PreferenceOption.iid('default_desktop_background')
+      :preference_option => PreferenceOption.iid('portablemind_desktop_background')
     )
 
     self.user_preferences << UserPreference.create(
