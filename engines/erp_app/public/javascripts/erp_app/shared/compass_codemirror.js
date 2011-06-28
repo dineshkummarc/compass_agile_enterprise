@@ -79,7 +79,7 @@ Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
             });
         }
 		
-		tbarItems.concat([{
+		tbarItems = tbarItems.concat([{
                 text: 'Undo',
                 handler: function() {
                     this.codeMirrorInstance.undo();
