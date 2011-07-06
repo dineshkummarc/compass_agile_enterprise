@@ -142,6 +142,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             var codeMirror = btn.findParentByType('codemirror');
                             Ext.MessageBox.prompt('New File', 'Please enter content area name:', function(btn, text){
                                 if(btn == 'ok'){
+                                    codeMirror.setValue(codeMirror.getValue() + '<%=render_content_area(:'+text+')%>');
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text: 'Insert Content',
+                        handler: function(btn){
+                            var codeMirror = btn.findParentByType('codemirror');
+                            Ext.MessageBox.prompt('New File', 'Please enter permalink:', function(btn, text){
+                                if(btn == 'ok'){
                                     codeMirror.setValue(codeMirror.getValue() + '<%=render_content(:'+text+')%>');
                                 }
                             });
