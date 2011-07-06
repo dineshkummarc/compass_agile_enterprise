@@ -3,7 +3,6 @@ class CreateDefaultDynamicModelsAndForms
   def self.up
     #insert data here
     DynamicFormModel.create(:model_name => 'DynamicFormDocument')
-    DynamicFormModel.create(:model_name => 'WebsiteInquiry')
 
     fields = []
 
@@ -20,7 +19,7 @@ class CreateDefaultDynamicModelsAndForms
     d.model_name = 'WebsiteInquiry'
     d.internal_identifier = 'contact_us'
     d.default = true
-    d.dynamic_form_model_id = DynamicFormModel.find_by_model_name('WebsiteInquiry')
+    d.dynamic_form_model = DynamicFormModel.create(:model_name => 'WebsiteInquiry')
     d.save
   end
   
