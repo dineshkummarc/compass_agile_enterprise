@@ -24,9 +24,7 @@ ActionView::Base.class_eval do
   end
 
   def include_widget_javascript
-    js = "<script type='text/javascript' src='/javascripts/erp_app/widgets.js' ></script>"
-    js << ErpApp::Widgets::JavascriptLoader.glob_javascript
-    js
+    ErpApp::Widgets::JavascriptLoader.glob_javascript
   end
 
   def get_widget_action

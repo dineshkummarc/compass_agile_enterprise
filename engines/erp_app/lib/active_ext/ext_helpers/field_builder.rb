@@ -47,7 +47,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def display_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'displayfield',
         :labelWidth => 140
       }
@@ -57,7 +57,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def build_boolean_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'combo',
         :labelWidth => 140,
         :forceSelection => true,
@@ -70,7 +70,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def build_date_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'datefield',
         :labelWidth => 140
       }
@@ -90,7 +90,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def build_string_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'textfield',
         :labelWidth => 140
       }
@@ -100,7 +100,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def build_integer_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'numberfield',
         :labelWidth => 140
       }
@@ -110,7 +110,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def build_decimal_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'numberfield',
         :labelWidth => 140
       }
@@ -120,7 +120,7 @@ module ActiveExt::ExtHelpers::FieldBuilder
 
     def build_float_field(options={})
       field_json = {
-        :width => 250,
+        :width => 150,
         :xtype => 'numberfield',
         :labelWidth => 140
       }

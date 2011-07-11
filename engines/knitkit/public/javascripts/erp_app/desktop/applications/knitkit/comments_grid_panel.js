@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel",{
-    extend:"Ext.grid.Panel",
-    alias:'knitkit_commentsgridpanel',
+Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.grid.GridPanel, {
     approve : function(rec){
         var self = this;
         self.initialConfig['centerRegion'].setWindowStatus('Approving Comment...');
@@ -209,3 +207,5 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel",{
         Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('knitkit_commentsgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel);

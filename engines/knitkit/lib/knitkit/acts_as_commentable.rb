@@ -23,6 +23,7 @@ module Knitkit
     end
 
     module InstanceMethods
+    
     end
   end
 end

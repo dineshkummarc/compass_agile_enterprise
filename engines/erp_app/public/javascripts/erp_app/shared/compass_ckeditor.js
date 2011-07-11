@@ -1,6 +1,6 @@
 /**
  * @class Compass.ErpApp.Shared.CKeditor
- * @extends Ext.form.field.TextArea
+ * @extends Ext.form.TextArea
  * Converts a textarea into a CkEditor Instance
  * 
  * @author Russell Holmes - russellfholmes@gmail.com / http://www.portablemind.com
@@ -9,9 +9,9 @@
  * ckEditorConfig - configuration for CkEditor Instance
  */
 
-Ext.define("Compass.ErpApp.Shared.CKeditor",{
-    extend:"Ext.form.field.TextArea",
-    alias:'widget.ckeditor',
+Ext.ns("Compass.ErpApp.Shared");
+
+Compass.ErpApp.Shared.CKeditor = Ext.extend(Ext.form.TextArea, {
     ckEditorInstance : null,
 
     initComponent: function() {
@@ -51,59 +51,50 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
             skin:'office2003',
             extraPlugins:'codemirror'
         });
-        var editor = CKEDITOR.replace(this.inputEl.id, this.initialConfig.ckEditorConfig);
+        var editor = CKEDITOR.replace(this.el.dom.name, this.initialConfig.ckEditorConfig);
         editor.extjsPanel = this;
         this.ckEditorInstance = editor;
-        this.setValue(this.defaultValue);
     },
 
-    textAreaResized : function(textarea, adjWidth, adjHeight){
+    textAreaResized : function(textarea, adjWidth, adjHeight, rawWidth, rawHeight){
 
         if(!Compass.ErpApp.Utility.isBlank(this.ckEditorInstance))
         {
-            if(!Compass.ErpApp.Utility.isBlank(adjWidth) && !Compass.ErpApp.Utility.isBlank(adjHeight)){
-                var el = document.getElementById('cke_contents_' + this.inputEl.id);
+            if(!Compass.ErpApp.Utility.isBlank(rawWidth) && !Compass.ErpApp.Utility.isBlank(rawHeight)){
+                var el = document.getElementById('cke_contents_' + this.id);
                 
                 if(!Compass.ErpApp.Utility.isBlank(el)){
-                    var toolBoxDiv = document.getElementById('cke_top_' + this.inputEl.id).getElementsByTagName('div')[0];
+                    var toolBoxDiv = document.getElementById('cke_top_' + this.id).getElementsByTagName('div')[0];
                     var toolBoxEl = Ext.get(toolBoxDiv);
                     var displayValue = toolBoxEl.getStyle('display');
                     if(displayValue != 'none'){
                         this.ckEditorInstance.execCommand( 'toolbarCollapse' );
-                        el.style.height = adjHeight - 51 + 'px';
+                        el.style.height = rawHeight - 51 + 'px';
                         this.ckEditorInstance.execCommand( 'toolbarCollapse' );
                     }
                     else{
-                        el.style.height = adjHeight - 51 + 'px';
+                        el.style.height = rawHeight - 51 + 'px';
                     }
 					
                 }
                 else{
-                    this.ckEditorInstance.config.height = adjHeight - 51;
+                    this.ckEditorInstance.config.height = rawHeight - 51;
                 }
             }
         }
     },
 
     setValue : function(value){
-        if(this.ckEditorInstance){
-            this.ckEditorInstance.setData(value);
-        }
-        else{
-            this.defaultValue = value;
-        }
-            
+        this.ckEditorInstance.setData(value);
     },
 
     getValue : function(){
-        if(this.ckEditorInstance)
-            var value = this.ckEditorInstance.getData();
+        var value = this.ckEditorInstance.getData();
         return value;
     },
 
     getRawValue : function(){
-        if(this.ckEditorInstance)
-            var value = this.ckEditorInstance.getData();
+        var value = this.ckEditorInstance.getData();
         return value;
     },
 
@@ -111,3 +102,4 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
         this.ckEditorInstance.insertHtml(html);
     }
 });
+Ext.reg('ckeditor', Compass.ErpApp.Shared.CKeditor);

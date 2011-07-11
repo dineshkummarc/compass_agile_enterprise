@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
-    extend:"Ext.Panel",
-    alias:'widget.knitkit_centerregion',
+Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -34,11 +32,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 content:content
             },
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     var activeTab = self.workArea.getActiveTab();
-                    activeTab.query('knitkit_versionswebsitesectiongridpanel')[0].store.load();
+                    activeTab.findByType('knitkit_versionswebsitesectiongridpanel')[0].getStore().reload();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving layout');
@@ -104,7 +102,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 content:content
             },
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                 }
@@ -122,8 +120,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     editTemplateFile : function(node, content, tbarItems){
         var self = this;
-        var file_name = node.data.id.split('/').pop().split('.')[0];
-        var fileType = node.data.id.split('.').pop();
+        var file_name = node.id.split('/').pop().split('.')[0];
+        var fileType = node.id.split('.').pop();
         this.workArea.add(
         {
             closable:true,
@@ -138,7 +136,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 closable:true,
                 listeners:{
                     'save':function(codeMirror, content){
-                        self.saveTemplateFile(node.data.id, content);
+                        self.saveTemplateFile(node.id, content);
                     }
                 }
             }]
@@ -159,11 +157,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 html:content
             },
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     var activeTab = self.workArea.getActiveTab();
-                    activeTab.query('knitkit_versionsbloggridpanel')[0].getStore().load();
+                    activeTab.findByType('knitkit_versionsbloggridpanel')[0].getStore().reload();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving excerpt');
@@ -250,11 +248,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 html:content
             },
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     var activeTab = self.workArea.getActiveTab();
-                    activeTab.query('knitkit_versions'+contentType+'gridpanel')[0].getStore().load();;
+                    activeTab.findByType('knitkit_versions'+contentType+'gridpanel')[0].getStore().reload();;
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving contents');
@@ -293,7 +291,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         var self = this;
         var ckEditor = new Compass.ErpApp.Shared.CKeditor({
             autoHeight:true,
-            //value:content,
+            value:content,
             ckEditorConfig:{
                 extraPlugins:'compasssave,codemirror,jwplayer',
                 toolbar:[
@@ -320,8 +318,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 }
             }
         });
-
-        ckEditor.setValue(content);
 
         var centerRegionLayout = new Ext.Panel({
             layout:'border',
@@ -354,7 +350,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     showComment : function(comment){
         var activeTab = this.workArea.getActiveTab();
-        var cardPanel = activeTab.query('panel')[0];
+        var cardPanel = activeTab.findByType('panel')[0];
         cardPanel.removeAll(true);
         cardPanel.add({
             disableToolbar:true,
@@ -431,11 +427,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.query('ckeditor').length == 0){
+            if(activeTab.findByType('ckeditor').length == 0){
                 Ext.Msg.alert('Error', 'No ckeditor found');
             }
             else{
-                activeTab.query('ckeditor')[0].insertHtml(html);
+                activeTab.findByType('ckeditor')[0].insertHtml(html);
             }
         }
         return false;
@@ -447,11 +443,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.query('ckeditor').length == 0){
+            if(activeTab.findByType('ckeditor').length == 0){
                 Ext.Msg.alert('Error', 'No ckeditor found');
             }
             else{
-                activeTab.query('ckeditor')[0].setValue(html);
+                activeTab.findByType('ckeditor')[0].setValue(html);
             }
         }
         return false;
@@ -463,11 +459,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.query('codemirror').length == 0){
+            if(activeTab.findByType('codemirror').length == 0){
                 Ext.Msg.alert('Error', 'No codemirror found.');
             }
             else{
-                activeTab.query('codemirror')[0].setValue(content);
+                activeTab.findByType('codemirror')[0].setValue(content);
             }
         }
         return false;
@@ -479,11 +475,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.query('codemirror').length == 0){
+            if(activeTab.findByType('codemirror').length == 0){
                 Ext.Msg.alert('Error', 'No codemirror found. Note that a widget can only be added to a Layout.');
             }
             else{
-                activeTab.query('codemirror')[0].insertContent(content);
+                activeTab.findByType('codemirror')[0].insertContent(content);
             }
         }
         return false;
@@ -511,3 +507,5 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('knitkit_centerregion', Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion);

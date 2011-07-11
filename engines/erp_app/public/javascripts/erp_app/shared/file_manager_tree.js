@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
-    extend:"Ext.tree.Panel",
-    alias:'widget.compassshared_filemanager',
+Compass.ErpApp.Shared.FileManagerTree = Ext.extend(Ext.tree.TreePanel, {
     /*
 	addtional config options
 	
@@ -12,17 +10,6 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
         the above variable will be set when the context menu is shown.
      */
 
-    findParentNode : function(record){
-        if(record.data.id.toString().indexOf("/") == -1)
-            return null;
-
-        var parentDirectory = ''
-        var paths = record.data.id.split("/");
-        paths.pop();
-        parentDirectory = paths.join('/')
-        return record.store.getAt(record.store.find("id", parentDirectory));
-    },
-
     initComponent: function() {
         Compass.ErpApp.Shared.FileManagerTree.superclass.initComponent.call(this, arguments);
 
@@ -31,21 +18,21 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
          * @event fileDeleted
          * Fired after file is deleted.
          * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
-         * @param {Ext.data.model} model that represents tree node
+         * @param (Ext.Tree.Node) node Node that was deleted
          */
             'fileDeleted',
             /**
          * @event fileuploaded
          * Fired after file is uploaded.
          * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
-         * @param {Ext.data.model} model that represents tree node
+         * @param (Ext.Tree.Node) node Node that was file was uploaded to
          */
             'fileUploaded',
             /**
          * @event contentLoaded
          * Fired after cotent is loaded from server
          * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
-	 * @param {Ext.data.Model} model that represents tree node
+	 * @param {Ext.Tree.Node} node Node that content was loaded for
          * @param (String) content returned from server
          */
             'contentLoaded',
@@ -53,31 +40,25 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
          * @event contextMenu
          * Fired after content is loaded from server
          * @param {Compass.ErpApp.Shared.FileManagerTree} fileManagerTree This object
-         * @param {Ext.data.model} model that represents tree node
+         * @param {Ext.Tree.Node} node Node that content was loaded for
          * @param (Event) event for this click
          */
             'handleContextMenu'
             );
+
+        this.setRootNode({
+            xtype:'asynctreenode',
+            text: 'Folders',
+            id:'root_node',
+            allowDrag:false,
+            allowDrop:false
+        });
     },
 
     selectedNode:null,
 
     constructor: function(config){
         var self = this;
-        
-        var store = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url:config['url'] || './file_manager/base/expand_directory'
-            },
-            root: {
-                text: 'Files',
-                id:'root_node',
-                expanded: true
-            },
-            fields:config['fields'] || [{name:'text'},{name:'id'},{name:'leaf'}]
-        });
-
         var defaultListeners = {
             scope:this,
             'movenode':function(tree, node, oldParent, newParent, index){
@@ -115,38 +96,33 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                     }
                 });
             },
-            'itemclick':function(view, record, item, index, e){
-                e.stopEvent();
-                if(record.get('leaf')){
-                    var msg = Ext.Msg.wait("Loading", "Retrieving contents...");
-                    var conn = new Ext.data.Connection();
-                    conn.request({
-                        url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/get_contents',
-                        method: 'POST',
-                        params:{
-                            node:record.data.id
-                        },
-                        success: function(response) {
-                            msg.hide();
-                            self.fireEvent('contentLoaded', this, record, response.responseText);
-                        },
-                        failure: function() {
-                            Ext.Msg.alert('Status', 'Error loading contents');
-                            msg.hide();
-                        }
-                    });
-                }
+            'click':function(node, e){
+                var msg = Ext.Msg.wait("Loading", "Retrieving contents...");
+                var conn = new Ext.data.Connection();
+                conn.request({
+                    url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/get_contents',
+                    method: 'POST',
+                    params:{
+                        node:node.id
+                    },
+                    success: function(response) {
+                        msg.hide();
+                        self.fireEvent('contentLoaded', this, node, response.responseText);
+                    },
+                    failure: function() {
+                        Ext.Msg.alert('Status', 'Error loading contents');
+                        msg.hide();
+                    }
+                });
             },
-            'itemcontextmenu':function(view, record, item, index, e){
+            'contextmenu':function(node, e){
                 e.stopEvent();
-                if(record.data['contextMenuDisabled']) return false;
-                if(record.data['handleContextMenu']){
-                    self.fireEvent('handleContextMenu', this, record, e);
+                if(node.attributes['contextMenuDisabled']) return false;
+                if(node.attributes['handleContextMenu']){
+                    self.fireEvent('handleContextMenu', this, node, e);
                     return false;
                 }
-
-                var parentNode = self.findParentNode(record);
-                self.selectedNode = record;
+                self.selectedNode = node;
                 var menuItems = [
                 {
                     text:'Rename',
@@ -159,23 +135,23 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                 width: 500,
                                 frame: true,
                                 buttonAlign:'center',
+                                autoHeight: true,
                                 bodyStyle: 'padding: 10px 10px 0 10px;',
                                 labelWidth: 50,
                                 defaults: {
                                     anchor: '95%',
                                     allowBlank: false,
-                                    msgTarget: 'side',
-                                    labelWidth:50
+                                    msgTarget: 'side'
                                 },
                                 items: [{
                                     xtype: 'textfield',
                                     fieldLabel: 'Name',
                                     name:'file_name',
-                                    value:record.data["text"]
+                                    value:node.attributes["text"]
                                 },{
                                     xtype:'hidden',
                                     name:'node',
-                                    value:record.data.id
+                                    value:node.id
                                 }],
                                 buttons: [{
                                     text: 'Save',
@@ -185,21 +161,19 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                             renameForm.getForm().submit({
                                                 url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/rename_file',
                                                 waitMsg: 'Renaming your file to ...',
-                                                success: function(form, action){
-                                                    if(action.result.success){
-                                                        store.load({
-                                                            node:parentNode
-                                                        });
+                                                success: function(form, o){
+                                                    if(o.result.data.success){
+                                                        node.parentNode.reload();
                                                         var window = renameForm.findParentByType('window')
                                                         window.close()
                                                     }
                                                     else{
-                                                        Ext.Msg.alert("Error", action.result.error);
+                                                        Ext.Msg.alert("Error", o.result.data.error);
                                                     }
 
                                                 },
-                                                failure:function(form, action){
-                                                    Compass.ErpApp.Utility.HandleFormFailure(action);
+                                                failure:function(form, o){
+                                                    Ext.Msg.alert('Error', o.result.data.error);
                                                 }
                                             });
                                         }
@@ -214,18 +188,20 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                             };
 
                             var type = '';
-                            if(record.data["leaf"]){
+                            if(node.attributes["leaf"]){
                                 type = 'file'
                             }
                             else{
                                 type = 'directory'
                             }
 
-                            var renameWindow = Ext.create('Ext.window.Window', {
+                            var renameWindow = new Ext.Window({
                                 title:'Rename ' + type,
-                                layout: 'fit',
+                                closeAction:'hide',
+                                autoDestroy:true,
+                                frame:true,
                                 width:500,
-                                height:120,
+                                autoHeight: true,
                                 items:[
                                 renameForm
                                 ]
@@ -254,23 +230,21 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                         url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/delete_file',
                                         method: 'POST',
                                         params:{
-                                            node:record.data.id
+                                            node:node.id
                                         },
                                         success: function(response) {
-                                            var responseObj =  Ext.decode(response.responseText);
+                                            var responseObj =  Ext.util.JSON.decode(response.responseText);
                                             msg.hide();
                                             if(responseObj.success){
-                                                store.load({
-                                                    node:parentNode
-                                                });
-                                                self.fireEvent('fileDeleted', this, record);
+                                                node.parentNode.reload();
+                                                self.fireEvent('fileDeleted', this, node);
                                             }
                                             else{
                                                 Ext.Msg.alert("Error", responseObj.error);
                                             }
                                         },
                                         failure: function(response) {
-                                            var responseObj =  Ext.decode(response.responseText);
+                                            var responseObj =  Ext.util.JSON.decode(response.responseText);
                                             msg.hide();
                                             Ext.Msg.alert('Status', responseObj.msg);
                                         }
@@ -287,10 +261,10 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                 if(!Compass.ErpApp.Utility.isBlank(this.initialConfig['additionalContextMenuItems']))
                 {
                     Ext.each(this.initialConfig['additionalContextMenuItems'], function(item){
-                        if(item.nodeType == 'folder' && !record.data['leaf']){
+                        if(item.nodeType == 'folder' && !node.attributes['leaf']){
                             menuItems.push(item);
                         }
-                        else if(item.nodeType == 'leaf' && record.data['leaf']){
+                        else if(item.nodeType == 'leaf' && node.attributes['leaf']){
                             menuItems.push(item);
                         }
                         else if(Compass.ErpApp.Utility.isBlank(item.nodeType)){
@@ -300,7 +274,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                 }
 				
                 //if this is not a leaf allow reload
-                if(!record.data['leaf']){
+                if(!node.attributes['leaf']){
                     /*reload folder menu item*/
                     menuItems.push({
                         text:'Reload',
@@ -308,7 +282,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                         listeners:{
                             scope:this,
                             'click':function(){
-                                store.load({node:record});
+                                node.reload();
                             }
                         }
                     });
@@ -325,12 +299,12 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                     flashUploadUrl:this.initialConfig['flashUploadUrl'],
                                     xhrUploadUrl:this.initialConfig['xhrUploadUrl'],
                                     extraPostData:{
-                                        directory:record.data.id
+                                        directory:node.id
                                     },
                                     listeners:{
                                         'fileuploaded':function(){
-                                            store.load({node:record});
-                                            self.fireEvent('fileUploaded', this, record);
+                                            node.reload();
+                                            self.fireEvent('fileUploaded', this, node);
                                         }
                                     }
                                 });
@@ -354,14 +328,12 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                             url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/create_file',
                                             method: 'POST',
                                             params:{
-                                                path:record.data.id,
+                                                path:node.id,
                                                 name:text
                                             },
                                             success: function(response) {
                                                 msg.hide();
-                                                store.load({
-                                                    node:record
-                                                });
+                                                node.reload();
                                             },
                                             failure: function() {
                                                 Ext.Msg.alert('Status', 'Error creating file.');
@@ -389,14 +361,12 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                             url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/create_folder',
                                             method: 'POST',
                                             params:{
-                                                path:record.data.id,
+                                                path:node.id,
                                                 name:text
                                             },
                                             success: function(response) {
                                                 msg.hide();
-                                                store.load({
-                                                    node:record
-                                                });
+                                                node.reload();
                                             },
                                             failure: function() {
                                                 Ext.Msg.alert('Status', 'Error creating folder.');
@@ -423,11 +393,11 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                         url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/get_contents',
                                         method: 'POST',
                                         params:{
-                                            node:record.data.id
+                                            node:node.id
                                         },
                                         success: function(response) {
                                             msg.hide();
-                                            self.fireEvent('contentLoaded', this, record, response.responseText);
+                                            self.fireEvent('contentLoaded', this, node, response.responseText);
                                         },
                                         failure: function() {
                                             Ext.Msg.alert('Status', 'Error loading contents');
@@ -445,7 +415,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                             iconCls:'icon-document',
                             listeners:{
                                 'click':function(){
-                                    window.open("./file_manager/base/download_file/?path=" + record.data.id,'mywindow','width=400,height=200');
+                                    window.open("./file_manager/base/download_file/?path=" + node.id,'mywindow','width=400,height=200');
                                 }
                             }
                         });
@@ -455,7 +425,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                 var contextMenu = new Ext.menu.Menu({
                     items:menuItems
                 });
-                window.file_manager_context_menu_node = record;
+                window.file_manager_context_menu_node = node;
                 contextMenu.showAt(e.xy);
             }
         };
@@ -465,13 +435,16 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
             defaultListeners[i] = config.listeners[i];
 		
         config['listeners'] = defaultListeners;
-
         config = Ext.apply({
-            store:store,
+            // tree
             animate:false,
+            enableDD:true,
             containerScroll: true,
             autoDestroy:true,
             split:true,
+            loader: config['loader'] || new Ext.tree.TreeLoader({
+                dataUrl:'./file_manager/base/expand_directory'
+            }),
             autoScroll:true,
             margins: '5 0 5 5'
         }, config);
@@ -479,3 +452,5 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
         Compass.ErpApp.Shared.FileManagerTree.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('compassshared_filemanager', Compass.ErpApp.Shared.FileManagerTree);

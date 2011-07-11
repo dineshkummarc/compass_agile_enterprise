@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
-    extend:"Ext.tree.Panel",
-    alias:'widget.scaffold_modelstreepanel',
+Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree = Ext.extend(Ext.tree.TreePanel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -23,7 +21,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
                     },
                     success: function(response) {
                         self.clearWindowStatus();
-                        var obj =  Ext.decode(response.responseText);
+                        var obj =  Ext.util.JSON.decode(response.responseText);
                         if(obj.success){
                             Ext.MessageBox.confirm('Confirm', 'Page must reload for changes to take affect. Reload now?', function(btn){
                                 if(btn == 'no'){
@@ -40,7 +38,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
                     },
                     failure: function(response) {
                         self.clearWindowStatus();
-                        var obj = Ext.decode(response.responseText);
+                        var obj =  Ext.util.JSON.decode(response.responseText);
                         if(!Compass.ErpApp.Utility.isBlank(obj) && !Compass.ErpApp.Utility.isBlank(obj.msg)){
                             Ext.Msg.alert("Error", obj.msg);
                         }
@@ -59,29 +57,17 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
 
     constructor : function(config) {
         var self = this;
-
-        var store = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './scaffold/get_active_ext_models'
-            },
-            root: {
-                text: 'Models',
-                draggable:false
-            },
-            fields:[
-                {name:'text'},
-                {name:'iconCls'},
-                {name:'model'},
-                {name:'leaf'}
-            ]
-        });
-
         config = Ext.apply({
-            store:store,
             animate:false,
             region:'west',
             autoScroll:true,
+            loader: new Ext.tree.TreeLoader({
+                dataUrl:'./scaffold/get_active_ext_models'
+            }),
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Models',
+                draggable:false
+            }),
             tbar:{
                 items:[
                 {
@@ -101,9 +87,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
             width: 250,
             height: 300,
             listeners:{
-                'itemclick':function(view, record){
-                    if(record.data.leaf){
-                        self.initialConfig.scaffold.loadModel(record.data.model);
+                'click':function(node, e){
+                    e.stopEvent();
+                    if(node.attributes.leaf){
+                        self.initialConfig.scaffold.loadModel(node.id);
                     }
                 },
                 'contextmenu':function(node, e){
@@ -115,6 +102,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
         Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('scaffold_modelstreepanel', Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree);
 
 
 

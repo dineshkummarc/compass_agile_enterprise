@@ -1,17 +1,17 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.<%=class_name %>",{
-    extend:"Ext.ux.desktop.Module",
+Ext.ns("Compass.ErpApp.Desktop.Applications");
+
+Compass.ErpApp.Desktop.Applications.<%=class_name %>  = Ext.extend(Ext.app.Module, {
     id:'<%=file_name %>-win',
     init : function(){
         this.launcher = {
             text: '<%=description %>',
             iconCls:'<%=icon %>',
-            handler: this.createWindow,
+            handler : this.createWindow,
             scope: this
         }
     },
-
     createWindow : function(){
-       var desktop = this.app.getDesktop();
+        var desktop = this.app.getDesktop();
         var win = desktop.getWindow('<%=file_name %>');
         if(!win){
             win = desktop.createWindow({

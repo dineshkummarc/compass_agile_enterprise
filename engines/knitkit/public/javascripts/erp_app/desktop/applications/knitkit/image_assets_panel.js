@@ -1,18 +1,22 @@
 Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     var self = this;
-    this.imageAssetsDataView = Ext.create("Ext.view.View",{
+    this.imageAssetsDataView = new Ext.DataView({
         id:'images',
         autoDestroy:true,
+        itemSelector: 'div.thumb-wrap',
         style:'overflow:auto',
-        store: Ext.create('Ext.data.Store', {
-            proxy: {
-                type: 'ajax',
-                url: './knitkit/image_assets/get_images',
-                reader: {
-                    type: 'json',
-                    root: 'images'
-                }
+        multiSelect: true,
+        plugins: new Ext.DataView.DragSelector({
+            dragSafe:true
+        }),
+        store: new Ext.data.JsonStore({
+            url: './knitkit/image_assets/get_images',
+            autoLoad: false,
+            baseParams:{
+                directory:null
             },
+            root: 'images',
+            id:'name',
             fields:['name', 'url','shortName']
         }),
         tpl: new Ext.XTemplate(
@@ -24,50 +28,39 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
             )
     });
 
-    this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
+    this.fileTreePanel = new Compass.ErpApp.Shared.FileManagerTree({
         autoDestroy:true,
+        xtype:'compassshared_filemanager',
+        collapsible:true,
         allowDownload:false,
-        addViewContentsToContextMenu:false,
-        rootVisible:true,
-        controllerPath:'./knitkit/image_assets',
         standardUploadUrl:'./knitkit/image_assets/upload_file',
         xhrUploadUrl:'./knitkit/image_assets/upload_file',
-        url:'./knitkit/image_assets/expand_directory',
+        addViewContentsToContextMenu:false,
+        rootVisible:true,
+        loader: new Ext.tree.TreeLoader({
+            dataUrl:'./knitkit/image_assets/expand_directory'
+        }),
         containerScroll: true,
+        controllerPath:'./knitkit/image_assets',
+        region:'north',
         height:200,
         title:'Images',
-        collapsible:true,
-        region:'north',
         listeners:{
-            'itemclick':function(view, record, item, index, e){
-                e.stopEvent();
-                if(!record.data["leaf"])
+            'click':function(node){
+                if(!node.attributes["leaf"])
                 {
                     var store = self.imageAssetsDataView.getStore();
-                    store.setProxy({
-                        type: 'ajax',
-                        url: './knitkit/image_assets/get_images',
-                        reader: {
-                            type: 'json',
-                            root: 'images'
-                        },
-                        extraParams:{
-                            directory:record.data.id
-                        }
-                    });
-                    store.load();
-                }
-                else{
-                    return false;
+                    store.setBaseParam('directory', node.id);
+                    store.reload();
                 }
             },
             'fileDeleted':function(fileTreePanel, node){
                 var store = self.imageAssetsDataView.getStore();
-                store.load();
+                store.reload();
             },
             'fileUploaded':function(fileTreePanel, node){
                 var store = self.imageAssetsDataView.getStore();
-                store.load();
+                store.reload();
             }
         }
     });
@@ -86,7 +79,12 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
         layout: 'border',
         autoDestroy:true,
         title:'Image Assets',
-        items: [this.fileTreePanel, imagesPanel]
+        items: [this.fileTreePanel, imagesPanel],
+        listeners:{
+            'activate':function(){
+                self.fileTreePanel.getRootNode().reload();
+            }
+        }
     });
 }
 

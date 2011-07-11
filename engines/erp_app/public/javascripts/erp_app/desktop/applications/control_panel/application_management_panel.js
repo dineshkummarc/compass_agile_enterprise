@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel",{
-    extend:"Ext.Panel",
-    alias:"widget.controlpanel_applicationmanagementpanel",
+Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel = Ext.extend(Ext.Panel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -12,7 +10,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
     selectApplication: function(applicationId){
         this.settingsCard.removeAll(true);
         var form = new Compass.ErpApp.Shared.PreferenceForm({
-            url:"./control_panel/application_management/update/" + applicationId,
+            updateUrl:"./control_panel/application_management/update/" + applicationId,
             setupPreferencesUrl:"./control_panel/application_management/setup/" + applicationId,
             loadPreferencesUrl:"./control_panel/application_management/preferences/" + applicationId,
             width:350,
@@ -28,7 +26,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
                    
                 },
                 'afterUpdate':function(form,preferences, response){
-                    var responseObj = Ext.decode(response.responseText);
+                    var responseObj = Ext.util.JSON.decode(response.responseText);
                     if(responseObj.success){
                         if(responseObj.shortcut == 'yes')
                         {
@@ -56,35 +54,31 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
     },
 
     constructor : function(config) {
-
-        var store = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './control_panel/application_management/current_user_applcations'
-            },
-            root: {
-                text: 'Applications',
-                expanded: true
-            }
-        });
-
-        this.applicationsTree = Ext.create('Ext.tree.Panel', {
-            store: store,
-            width:200,
-            height:200,
+        this.applicationsTree = new Ext.tree.TreePanel({
+            animate:false,
+            autoScroll:true,
             region:'west',
-            useArrows: true,
+            loader: new Ext.tree.TreeLoader({
+                dataUrl:'./control_panel/application_management/current_user_applcations'
+            }),
+            enableDD:false,
+            containerScroll: true,
             border: false,
+            width:200,
+            frame:true,
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Applications',
+                draggable:false
+            }),
             listeners:{
                 scope:this,
-                'itemclick':function(view, record){
-                    if(record.get('leaf'))
+                'click':function(node){
+                    if(node.attributes['leaf'])
                     {
-                        this.selectApplication(record.get('id'));
+                        this.selectApplication(node.id);
                     }
                 }
             }
-
         });
 
         this.settingsCard = new Ext.Panel({
@@ -102,6 +96,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
         Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('controlpanel_applicationmanagementpanel', Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel);
 
 
 

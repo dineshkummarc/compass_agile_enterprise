@@ -29,7 +29,7 @@ class ErpApp::Desktop::Scaffold::BaseController < ErpApp::Desktop::BaseControlle
     result = []
 
     models.each do |model|
-      result << {:text => model, :model => model.underscore, :iconCls => 'icon-grid', :leaf => true}
+      result << {:text => model, :id => model.underscore, :iconCls => 'icon-grid', :leaf => true}
     end
 
     render :inline => result.to_json

@@ -1,7 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel",{
-    extend:"Ext.Panel",
-    requires:['Ext.ux.desktop.Wallpaper'],
-    alias:"widget.controlpanel_desktopmanagementpanel",
+Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel = Ext.extend(Ext.Panel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -35,7 +32,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                     width:150,
                     triggerAction: 'all',
                     store:store,
-                    name:preferenceType.internal_identifier,
+                    hiddenName:preferenceType.internal_identifier,
                     listeners:{
                         scope:self,
                         'select':function(combo){
@@ -52,7 +49,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                     forceSelection:true,
                     id:preferenceType.internal_identifier + '_id',
                     fieldLabel:preferenceType.description,
-                    name:preferenceType.internal_identifier,
+                    hiddenName:preferenceType.internal_identifier,
                     valueField:'field1',
                     width:150,
                     triggerAction: 'all',
@@ -89,8 +86,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
             html:'<div style="padding:5px;text-align:center"><span>Preview</span><br/><img height=140 width=140 id="wallpaper_background_image" src="../../images/wallpaper/desktop.gif" /><br/></div>'
         }
 
-        this.form = Ext.create('Compass.ErpApp.Shared.PreferenceForm',{
-            url:'./control_panel/desktop_management/update_desktop_preferences',
+        this.form = new Compass.ErpApp.Shared.PreferenceForm({
+            updateUrl:'./control_panel/desktop_management/update_desktop_preferences',
             setupPreferencesUrl:'./control_panel/desktop_management/desktop_preferences',
             loadPreferencesUrl:'./control_panel/desktop_management/selected_desktop_preferences',
             width:350,
@@ -108,8 +105,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                 },
                 'afterUpdate':function(form,preferences){
                     var preference = preferences.find("preference_type.internal_identifier == 'desktop_background'");
-                    compassDesktop.getDesktop().setWallpaper("../../images/wallpaper/" + preference.preference_option.value, true);
-                    Compass.ErpApp.Utility.promptReload();
+                    Ext.get('x-wallpaper').dom.src = "../../images/wallpaper/" + preference.preference_option.value;
                 }
             }
         });
@@ -131,13 +127,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                             plain: true,
                             buttonAlign:'center',
                             items: new Ext.FormPanel({
+                                labelWidth: 110,
                                 frame:false,
                                 fileUpload: true,
                                 bodyStyle:'padding:5px 5px 0',
                                 width: 425,
-                                defaults:{
-                                    labelWidth:110
-                                },
                                 url:'./control_panel/desktop_management/add_background',
                                 items:[
                                 {
@@ -148,7 +142,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                                     name:'description'
                                 },
                                 {
-                                    xtype:'filefield',
+                                    xtype:'fileuploadfield',
                                     fieldLabel:'Background Image',
                                     buttonText:'Upload',
                                     buttonOnly:false,
@@ -162,15 +156,15 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                                 listeners:{
                                     'click':function(button){
                                         var window = button.findParentByType('window');
-                                        var formPanel = window.query('form')[0];
+                                        var formPanel = window.findByType('form')[0];
                                         self.setWindowStatus('Adding background...');
                                         formPanel.getForm().submit({
                                             reset:true,
                                             success:function(form, action){
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.decode(action.response.responseText);
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
                                                 if(obj.success){
-                                                    self.setup();
+                                                    
                                                 }
                                                 else{
                                                     Ext.Msg.alert("Error", obj.msg);
@@ -178,12 +172,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                                             },
                                             failure:function(form, action){
                                                 self.clearWindowStatus();
-                                                if(action.response !== undefined){
-                                                    var obj =  Ext.decode(action.response.responseText);
-                                                    Ext.Msg.alert("Error", obj.message);
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                if(!Compass.ErpApp.Utility.isBlank(obj) && !Compass.ErpApp.Utility.isBlank(obj.msg)){
+                                                    Ext.Msg.alert("Error", obj.msg);
                                                 }
                                                 else{
-                                                    Ext.Msg.alert("Error", 'Error adding background.');
+                                                    Ext.Msg.alert("Error", "Error creating theme");
                                                 }
                                             }
                                         });
@@ -205,6 +199,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
         Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('controlpanel_desktopmanagementpanel', Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel);
 
 
 

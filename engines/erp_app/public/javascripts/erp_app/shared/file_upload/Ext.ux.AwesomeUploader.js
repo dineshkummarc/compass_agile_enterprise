@@ -29,9 +29,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-Ext.define("Ext.ux.AwesomeUploader",{
-    extend:"Ext.Container",
-    alias:'widget.awesomeuploader',
+Ext.ns('Ext.ux');
+
+Ext.ux.AwesomeUploader = Ext.extend(Ext.Container, {
     initComponent:function(){
 
         this.addEvents(
@@ -56,32 +56,54 @@ Ext.define("Ext.ux.AwesomeUploader",{
         this.initialConfig = this.initialConfig || {};
 
         Ext.apply(this, {
-            awesomeUploaderRoot: this.initialConfig.awesomeUploaderRoot || '',
-            i18n: Ext.ux.AwesomeUploaderLocalization,
+            awesomeUploaderRoot: this.initialConfig.awesomeUploaderRoot || ''
+            ,
+            i18n: Ext.ux.AwesomeUploaderLocalization
+            ,
             locale:'english'
         });
 
         Ext.apply(this, this.initialConfig, {
-            autoStartUpload:false,
-            alwaysShowFullFilePath:false,
-            allowDragAndDropAnywhere:false,
-            xhrUploadUrl:this.awesomeUploaderRoot+'xhrupload.php',
-            xhrFileNameHeader:'X-File-Name',
-            xhrExtraPostDataPrefix:'extraPostData_',
-            xhrFilePostName:'file_data',
-            xhrSendMultiPartFormData:false,
-            maxFileSizeBytes: 3145728, // 3 * 1024 * 1024 = 3 MiB,
-            standardButtonText: this.i18n[this.locale].browseButtonText,
-            standardUploadFilePostName:'file_data',
-            standardUploadUrl:this.awesomeUploaderRoot+'upload.php',
-            supressPopups:false,
-            extraPostData:{},
-            fileId:0, //counter for unique file ids
-            fileQueue:{},
+            autoStartUpload:false
+            ,
+            alwaysShowFullFilePath:false
+            ,
+            allowDragAndDropAnywhere:false
+            ,
+            xhrUploadUrl:this.awesomeUploaderRoot+'xhrupload.php'
+            ,
+            xhrFileNameHeader:'X-File-Name'
+            ,
+            xhrExtraPostDataPrefix:'extraPostData_'
+            ,
+            xhrFilePostName:'file_data'
+            ,
+            xhrSendMultiPartFormData:false
+            ,
+            maxFileSizeBytes: 3145728 // 3 * 1024 * 1024 = 3 MiB
+            ,
+            standardButtonText: this.i18n[this.locale].browseButtonText
+            ,
+            standardUploadFilePostName:'file_data'
+            ,
+            standardUploadUrl:this.awesomeUploaderRoot+'upload.php'
+            ,
+            supressPopups:false
+            ,
+            extraPostData:{}
+            //,width:56
+            //,height:22
+            ,
+            fileId:0 //counter for unique file ids
+            ,
+            fileQueue:{}
+            ,
             items:{
-                xtype:'box', //upload button container,
+                xtype:'box' //upload button container
+                ,
                 listeners:{
-                    scope:this,
+                    scope:this
+                    ,
                     render:function(){
                         this.initDragAndDropUploader();
                         this.initStandardUpload();
@@ -91,7 +113,8 @@ Ext.define("Ext.ux.AwesomeUploader",{
         });
 
         Ext.ux.AwesomeUploader.superclass.initComponent.apply(this, arguments);
-    },
+    }
+    ,
     startUpload:function(){
         var fileId;
         for(fileId in this.fileQueue){
@@ -107,14 +130,15 @@ Ext.define("Ext.ux.AwesomeUploader",{
                     break;
             }
         }
-    },
+    }
+    ,
     abortAllUploads:function(){
         var fileId;
         for(fileId in this.fileQueue){
-            fileId = parseInt(fileId);
             this.abortUpload(fileId);
         }
-    },
+    }
+    ,
     abortUpload:function(fileId){
 
         if(this.fileQueue[fileId].status == 'started'){
@@ -135,14 +159,15 @@ Ext.define("Ext.ux.AwesomeUploader",{
             this.fileQueue[fileId].status = 'aborted';
             this.fireEvent('uploadaborted', this, Ext.apply({}, this.fileQueue[fileId]));
         }
-    },
+    }
+    ,
     removeAllUploads:function(){
         var fileId;
         for( fileId in this.fileQueue){
-            fileId = parseInt(fileId);
             this.removeUpload(fileId);
         }
-    },
+    }
+    ,
     removeUpload:function(fileId){
         if(this.fileQueue[fileId].status == 'started'){
             this.abortUpload(fileId);
@@ -150,27 +175,33 @@ Ext.define("Ext.ux.AwesomeUploader",{
 
         this.fileQueue[fileId].status = 'removed';
         var fileInfo = {
-            id: fileId,
-            name: this.fileQueue[fileId].name,
+            id: fileId
+            ,
+            name: this.fileQueue[fileId].name
+            ,
             size: this.fileQueue[fileId].size
         };
         delete this.fileQueue[fileId];
         this.fireEvent('uploadremoved', this, fileInfo);
-    },
+    }
+    ,
     initDragAndDropUploader:function(){
 
         this.el.on({
             dragenter:function(event){
                 event.browserEvent.dataTransfer.dropEffect = 'move';
                 return true;
-            },
+            }
+            ,
             dragover:function(event){
                 event.browserEvent.dataTransfer.dropEffect = 'move';
                 event.stopEvent();
                 return true;
-            },
+            }
+            ,
             drop:{
-                scope:this,
+                scope:this
+                ,
                 fn:function(event){
                     event.stopEvent();
                     var files = event.browserEvent.dataTransfer.files;
@@ -194,12 +225,14 @@ Ext.define("Ext.ux.AwesomeUploader",{
                 dragenter:function(event){
                     event.browserEvent.dataTransfer.dropEffect = 'move';
                     return true;
-                },
+                }
+                ,
                 dragover:function(event){
                     event.browserEvent.dataTransfer.dropEffect = 'move';
                     event.stopEvent();
                     return true;
-                },
+                }
+                ,
                 drop:{
                     scope:this
                     ,
@@ -228,14 +261,17 @@ Ext.define("Ext.ux.AwesomeUploader",{
                 body.on({
                     dragenter:function(event){
                         return true;
-                    },
+                    }
+                    ,
                     dragleave:function(event){
                         return true;
-                    },
+                    }
+                    ,
                     dragover:function(event){
                         event.stopEvent();
                         return true;
-                    },
+                    }
+                    ,
                     drop:function(event){
                         event.stopEvent();
                         return true;
@@ -244,26 +280,34 @@ Ext.define("Ext.ux.AwesomeUploader",{
             }
         }
 
-    },
+    }
+    ,
     initStandardUpload:function(param){
         if(this.uploader){
-            this.uploader.fileInputEl = null; //remove reference to file field. necessary to prevent destroying file field during an active upload.
+            this.uploader.fileInput = null; //remove reference to file field. necessary to prevent destroying file field during an active upload.
             Ext.destroy(this.uploader);
         }
 
-        this.uploader = Ext.create("Ext.form.field.File",{
-            renderTo:this.items.items[0].el.dom,
-            autoDestroy:true,
-            buttonText:this.standardButtonText,
-            buttonOnly:true,
-            name:this.standardUploadFilePostName,
+        this.uploader = new Ext.ux.form.FileUploadField({
+            renderTo:this.items.items[0].el.dom
+            ,
+            buttonText:this.standardButtonText
+            ,
+            buttonOnly:true
+            ,
+            name:this.standardUploadFilePostName
+            ,
             listeners:{
-                scope:this,
-                change:this.standardUploadFileSelected
+                scope:this
+                ,
+                fileselected:this.standardUploadFileSelected
             }
         });
-    },
+
+    }
+    ,
     standardUploadFileSelected:function(fileBrowser, fileName){
+
         if(!this.alwaysShowFullFilePath){
             var lastSlash = fileName.lastIndexOf('/'); //check for *nix full file path
             if( lastSlash < 0 ){
@@ -275,16 +319,20 @@ Ext.define("Ext.ux.AwesomeUploader",{
         }
 
         var fileInfo = {
-            id: ++this.fileId,
-            name:fileName,
-            status:'queued',
-            method:'standard',
+            id: ++this.fileId
+            ,
+            name:fileName
+            ,
+            status:'queued'
+            ,
+            method:'standard'
+            ,
             size:'0'
         };
 
-        if(Ext.isDefined(fileBrowser.fileInputEl.dom.files) ){
-            fileInfo.size = fileBrowser.fileInputEl.dom.files[0].size;
-        }
+        if(Ext.isDefined(fileBrowser.fileInput.dom.files) ){
+            fileInfo.size = fileBrowser.fileInput.dom.files[0].size;
+        };
 
         if( fileInfo.size > this.maxFileSizeBytes){
             this.uploaderAlert('<BR>'+ fileInfo.name + this.i18n[this.locale].fileSizeError);
@@ -293,12 +341,16 @@ Ext.define("Ext.ux.AwesomeUploader",{
         }
         //save reference to filebrowser
         fileInfo.fileBrowser = fileBrowser;
-        var formEl = document.createElement('form'),extraPost;
+
+        var formEl = document.createElement('form'),
+        extraPost;
 
         formEl = this.items.items[0].el.appendChild(formEl);
-        fileInfo.fileBrowser.fileInputEl.addCls('au-hidden');
-        formEl.appendChild(fileBrowser.fileInputEl); //add reference from current file browser file input to this newly created form el
-        formEl.addCls('au-hidden');
+
+        fileInfo.fileBrowser.fileInput.addClass('au-hidden');
+
+        formEl.appendChild(fileBrowser.fileInput); //add reference from current file browser file input to this newly created form el
+        formEl.addClass('au-hidden');
         fileInfo.form = formEl;
 
         this.initStandardUpload(); //re-init uploader for multiple simultaneous uploads
@@ -310,9 +362,9 @@ Ext.define("Ext.ux.AwesomeUploader",{
             }
             this.fileQueue[fileInfo.id] = fileInfo;
         }
-        
-        return true;
-    },
+
+    }
+    ,
     uploaderAlert:function(text){
         if(this.supressPopups){
             return true;
@@ -320,10 +372,14 @@ Ext.define("Ext.ux.AwesomeUploader",{
         if(this.uploaderAlertMsg === undefined || !this.uploaderAlertMsg.isVisible()){
             this.uploaderAlertMsgText = this.i18n[this.locale].uploaderAlertErrorPrefix +'<BR>'+ text;
             this.uploaderAlertMsg = Ext.MessageBox.show({
-                title: this.i18n[this.locale].uploaderAlertErrorPrefix,
-                msg: this.uploaderAlertMsgText,
-                buttons: Ext.Msg.OK,
-                modal: false,
+                title: this.i18n[this.locale].uploaderAlertErrorPrefix
+                ,
+                msg: this.uploaderAlertMsgText
+                ,
+                buttons: Ext.Msg.OK
+                ,
+                modal: false
+                ,
                 icon: Ext.MessageBox.ERROR
             });
         }else{
@@ -332,39 +388,53 @@ Ext.define("Ext.ux.AwesomeUploader",{
             this.uploaderAlertMsg.getDialog().focus();
         }
 
-    },
+    }
+    ,
     dragAndDropUploadStart:function(fileInfo){
         var upload = new Ext.ux.XHRUpload({
-            url:this.xhrUploadUrl,
-            filePostName:this.xhrFilePostName,
-            fileNameHeader:this.xhrFileNameHeader,
-            extraPostData:this.extraPostData,
-            sendMultiPartFormData:this.xhrSendMultiPartFormData,
-            file:fileInfo.file,
+            url:this.xhrUploadUrl
+            ,
+            filePostName:this.xhrFilePostName
+            ,
+            fileNameHeader:this.xhrFileNameHeader
+            ,
+            extraPostData:this.extraPostData
+            ,
+            sendMultiPartFormData:this.xhrSendMultiPartFormData
+            ,
+            file:fileInfo.file
+            ,
             listeners:{
-                scope:this,
+                scope:this
+                ,
                 uploadloadstart:function(event){
                     this.fireEvent('uploadstart', this, Ext.apply({}, fileInfo) );
-                },
+                }
+                ,
                 uploadprogress:function(event){
                     this.fireEvent('uploadprogress', this, fileInfo.id, event.loaded, event.total);
-                },
+                }
                 // XHR Browser Events
+                ,
                 loadstart:function(event){
                     fileInfo.status = 'started';
                     this.fireEvent('start', this, Ext.apply({}, fileInfo) );
-                },
+                }
+                ,
                 progress:function(event){
                     this.fireEvent('progress', this, Ext.apply({}, fileInfo), event.loaded, event.total);
-                },
+                }
+                ,
                 abort:function(event){
                     fileInfo.status = 'aborted';
                     this.fireEvent('abort', this, Ext.apply({}, fileInfo), 'XHR upload aborted');
-                },
+                }
+                ,
                 error:function(event){
                     fileInfo.status = 'error';
                     this.fireEvent('error', this, Ext.apply({}, fileInfo), 'XHR upload error');
-                },
+                }
+                ,
                 load:function(event){
                     this.processUploadResult(fileInfo, upload.xhr.responseText);
                 }
@@ -372,14 +442,20 @@ Ext.define("Ext.ux.AwesomeUploader",{
         });
         fileInfo.upload = upload;
         upload.send();
-    },
+    }
+    ,
     processDragAndDropFileUpload:function(file){
         var fileInfo = {
-            id: ++this.fileId,
-            name: file.name,
-            size: file.size,
-            status:'queued',
-            method: 'dnd',
+            id: ++this.fileId
+            ,
+            name: file.name
+            ,
+            size: file.size
+            ,
+            status:'queued'
+            ,
+            method: 'dnd'
+            ,
             file: file
         };
 
@@ -394,7 +470,8 @@ Ext.define("Ext.ux.AwesomeUploader",{
                 this.dragAndDropUploadStart(fileInfo);
             }
         }
-    },
+    }
+    ,
     doFormUpload : function(fileInfo){ //o, extraPostData, url){ //based off of Ext.Ajax.doFormUpload
         var id = Ext.id(),
         doc = document,
@@ -411,6 +488,11 @@ Ext.define("Ext.ux.AwesomeUploader",{
             action: form.action
         };
 
+        /*
+		 * Originally this behaviour was modified for Opera 10 to apply the secure URL after
+		 * the frame had been added to the document. It seems this has since been corrected in
+		 * Opera so the behaviour has been reverted, the URL will be set before being added.
+		 */
         Ext.fly(frame).set({
             id: id,
             name: id,
@@ -481,29 +563,33 @@ Ext.define("Ext.ux.AwesomeUploader",{
         Ext.each(hiddens, function(h){
             Ext.removeNode(h);
         });
-    },
+    }
+    ,
     standardUploadStart:function(fileInfo){
         this.doFormUpload(fileInfo);
         fileInfo.status = 'started';
         this.fireEvent('uploadstart', this, Ext.apply({}, fileInfo));
-    },
+    }
+    ,
     standardUploadFail:function(form, action){
         this.uploaderAlert('<BR>'+form.fileInfo.name+'<BR><b>'+action.result+'</b><BR>');
         form.fileInfo.status = 'error';
         this.fireEvent('uploaderror', this, Ext.apply({}, form.fileInfo), action.result, action.response.responseText);
-    },
+    }
+    ,
     standardUploadFailAbort:function(fileInfo){
         this.uploaderAlert('<BR>'+ fileInfo.name + this.i18n[this.locale].uploadAbortedMessage);
         form.fileInfo.status = 'error';
         this.fireEvent('uploaderror', this, Ext.apply({}, fileInfo), 'aborted');
-    },
+    }
+    ,
     processUploadResult:function(fileInfo, serverData){
 
         var uploadCompleteData = {};
         if(false !== this.fireEvent('uploadcomplete', this, Ext.apply({},fileInfo), serverData, uploadCompleteData ) ){
             fileInfo.status = 'completed';
         }else{
-            var obj = Ext.decode(serverData);
+            var obj = Ext.util.JSON.decode(serverData);
             this.uploaderAlert('<BR>'+obj.error+'<BR>');
             fileInfo.status = 'error';
             this.fireEvent('uploaderror', this, Ext.apply({}, fileInfo), serverData, uploadCompleteData);
@@ -511,3 +597,5 @@ Ext.define("Ext.ux.AwesomeUploader",{
 
     }
 });
+
+Ext.reg('awesomeuploader', Ext.ux.AwesomeUploader);

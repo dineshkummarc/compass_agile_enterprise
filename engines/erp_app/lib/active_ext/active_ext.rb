@@ -53,14 +53,13 @@ module ActiveExt
 
       module_eval do
         def setup
-          columns, fields, validations = ActiveExt::ExtHelpers::TableBuilder.generate_columns_and_fields(active_ext_core)
+          columns, fields = ActiveExt::ExtHelpers::TableBuilder.generate_columns_and_fields(active_ext_core)
           result = {
             :success => true,
             :use_ext_forms => active_ext_core.options[:use_ext_forms].nil? ? false : active_ext_core.options[:use_ext_forms],
             :inline_edit => active_ext_core.options[:inline_edit].nil? ? false : active_ext_core.options[:inline_edit],
             :columns => columns,
-            :fields => fields,
-            :validations => validations
+            :fields => fields
           }
           render :inline => result.to_json
         end
@@ -219,7 +218,7 @@ module ActiveExt
               # get the name of the model
               @singular_name = active_ext_core.model_id
               # get the form parameters by model name
-              model_params=params[@singular_name.underscore];
+              model_params=params[@singular_name];
               Rails.logger.debug("Model_params:#{model_params }")
               # get the model id
               id = model_params[:id]
@@ -241,17 +240,7 @@ module ActiveExt
               flash[:error]=ex
             end
             flash[:notice]="#{@model.class} updated"
-            #setup for edit this needs to be pulled out to another method for re-use
-            @options = active_ext_core.options
-            @attributes = @model.attributes
-            @fields=active_ext_core.columns.collect(&:name)
-            if(@fields==nil)
-              # if no fields are specified use all from the model
-              @fields=@model.attributes
-            end
-            @disabled_fields=active_ext_core.options[:disabled]
-            @labels =active_ext_core.options[:labels]
-            render :action => :edit
+            render :partial => 'edit', :object => @model
           end
         end
 

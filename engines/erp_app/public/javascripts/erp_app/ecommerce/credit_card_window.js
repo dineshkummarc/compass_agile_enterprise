@@ -1,6 +1,7 @@
-Ext.define("Compass.ErpApp.Ecommerce.CreditCardWindow",{
-    extend:"Ext.window.Window",
-    alias:'widget.creditcardwindow',
+Ext.ns("Compass.ErpApp.Ecommerce");
+
+Compass.ErpApp.Ecommerce.CreditCardWindow = Ext.extend(Ext.Window, {
+
     visaPattern : '^4[0-9]{12}(?:[0-9]{3})?$',
     mastercardPattern : '^5[1-5][0-9]{14}$',
     amexPattern : '^3[47][0-9]{13}$',
@@ -316,6 +317,8 @@ Ext.define("Compass.ErpApp.Ecommerce.CreditCardWindow",{
     }
     
 });
+
+Ext.reg('creditcardwindow', Compass.ErpApp.Ecommerce.CreditCardWindow);
 
 window.showCreditCardPayment = function(params){
     

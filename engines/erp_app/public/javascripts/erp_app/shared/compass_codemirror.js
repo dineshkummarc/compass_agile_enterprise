@@ -51,10 +51,7 @@ Ext.apply(Compass.ErpApp.Shared.CodeMirrorConfig, {
     }
 });
 
-Ext.define("Compass.ErpApp.Shared.CodeMirror",{
-    extend:"Ext.Panel",
-    requires:["Ext.form.field.TextArea"],
-    alias:'widget.codemirror',
+Compass.ErpApp.Shared.CodeMirror = Ext.extend(Ext.Panel, {
     codeMirrorInstance : null,
 
     initComponent: function() {
@@ -74,50 +71,45 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
     constructor : function(config){
         var tbarItems = [];
 
-        if(!config['disableSave']){
+		if(!config['disableSave']){
             tbarItems.push({
                 text: 'Save',
-                iconCls:'icon-save',
                 handler: this.save,
                 scope: this
             });
         }
-
-
-        tbarItems = tbarItems.concat([{
-            text: 'Undo',
-            iconCls:'icon-undo',
-            handler: function() {
-                this.codeMirrorInstance.undo();
-            },
-            scope: this
-        }, {
-            text: 'Redo',
-            iconCls:'icon-redo',
-            handler: function() {
-                this.codeMirrorInstance.redo();
-            },
-            scope: this
-        }, {
-            text: 'Indent',
-            iconCls:'icon-arrow-right-blue',
-            handler: function() {
-                this.codeMirrorInstance.reindent();
-            },
-            scope: this
-        }]);
+		
+		tbarItems = tbarItems.concat([{
+                text: 'Undo',
+                handler: function() {
+                    this.codeMirrorInstance.undo();
+                },
+                scope: this
+            }, {
+                text: 'Redo',
+                handler: function() {
+                    this.codeMirrorInstance.redo();
+                },
+                scope: this
+            }, {
+                text: 'Indent',
+                handler: function() {
+                    this.codeMirrorInstance.reindent();
+                },
+                scope: this
+            }]);
 
         if(!Compass.ErpApp.Utility.isBlank(config['tbarItems'])){
             tbarItems = tbarItems.concat(config['tbarItems']);
         }
 
         if(Compass.ErpApp.Utility.isBlank(config['disableToolbar']) || !config['disableToolbar']){
-            config['tbar'] = tbarItems
+           config['tbar'] = tbarItems
         }
 
         config = Ext.apply({
             items: [{
-                xtype: 'textareafield',
+                xtype: 'textarea',
                 readOnly: false,
                 hidden: true,
                 value: config['sourceCode']
@@ -134,7 +126,7 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
     },
 
     setupCodeMirror : function(){
-        var textAreaComp = this.query('textareafield')[0];
+        var textAreaComp = this.findByType('textarea')[0];
         var self = this;
         this.initialConfig.codeMirrorConfig = Ext.apply({
             content:textAreaComp.getValue(),
@@ -179,3 +171,4 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
         this.codeMirrorInstance.setCode(currentCode + value);
     }
 });
+Ext.reg('codemirror', Compass.ErpApp.Shared.CodeMirror);

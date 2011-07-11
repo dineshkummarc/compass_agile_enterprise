@@ -11,19 +11,6 @@ Compass.ErpApp.Utility.promptReload = function(){
     });
 };
 
-Compass.ErpApp.Utility.handleFormFailure = function(action){
-    switch (action.failureType) {
-        case Ext.form.action.Action.CLIENT_INVALID:
-            Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
-            break;
-        case Ext.form.action.Action.CONNECT_FAILURE:
-            Ext.Msg.alert('Failure', 'Ajax communication failed');
-            break;
-        case Ext.form.action.Action.SERVER_INVALID:
-            Ext.Msg.alert('Failure', action.result.msg);
-    }
-};
-
 Compass.ErpApp.Utility.getRootUrl = function(){
     var url_pieces = location.href.split("/");
     var root_url = url_pieces[0] + url_pieces[1] + "//" + url_pieces[2] + "/"
@@ -111,6 +98,25 @@ Compass.ErpApp.Utility.isBlank = function(value) {
     return result;
 };
 
+
+Compass.ErpApp.Utility.Data.TypeJsonStore = Ext.extend(Ext.data.JsonStore, {
+    constructor : function(config) {
+        config = Ext.apply({
+            root: config["root"] || 'types',
+            idProperty: 'id',
+            fields: [
+            {
+                name: 'description'
+            },
+            {
+                name: 'id'
+            }
+            ]
+        }, config);
+        Compass.ErpApp.Utility.Data.TypeJsonStore.superclass.constructor.call(this, config);
+    }
+});
+
 Compass.ErpApp.Utility.removeDublicates = function(arrayName) {
     var newArray = new Array();
         label:for (var i = 0; i < arrayName.length; i++)
@@ -125,7 +131,7 @@ Compass.ErpApp.Utility.removeDublicates = function(arrayName) {
     return newArray;
 };
 
-
+Ext.reg('typejsonstore', Compass.ErpApp.Utility.Data.TypeJsonStore);
 
 Array.prototype.contains = function (element) {
     for (var i = 0; i < this.length; i++) {
@@ -167,15 +173,6 @@ Array.prototype.select = function (find_statement) {
         return null;
     }
     return sub_array;
-};
-
-Array.prototype.first = function(){
-    if(this[0] == undefined){
-        return null;
-    }
-    else{
-        return this[0];
-    }
 };
 
 String.prototype.underscore = function (){

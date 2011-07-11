@@ -1,39 +1,33 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel",{
-    extend:"Ext.Panel",
-    alias:'widget.railsdbadmin_tablestreemenu',
+Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         var self = this;
-        this.store = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './rails_db_admin/base/tables'
-            },
-            root: {
-                text: 'Tables',
-                expanded: true,
-                draggable:false,
-                iconCls:'icon-content'
-            },
-            fields:[
-                {name:'leaf'},
-                {name:'iconCls'},
-                {name:'text'},
-                {name:'id'},
-                {name:'isTable'}
-            ]
+        var menuRoot = new Ext.tree.AsyncTreeNode({
+            text: 'Tables',
+            draggable:false,
+            iconCls:'icon-content'
         });
 
         var menuTree = new Ext.tree.TreePanel({
-            store:this.store,
             animate:true,
             autoScroll:false,
-            frame:false,
-            height:650,
+            frame:true,
+            autoLoad : false,
+            enableDD:false,
+            containerScroll: true,
             border: false,
+            width: "auto",
+            height: "auto",
+            loader:{
+                dataUrl:'./rails_db_admin/base/tables',
+                timeout:65000,
+                baseParams:{
+                    "database":null
+                }
+            },
             listeners:{
-                'itemcontextmenu':function(view, record, item, index, e){
+                'contextmenu':function(node, e){
                     e.stopEvent();
-                    if(!record.data['isTable']){
+                    if(node.parentNode == null || node.parentNode.parentNode != null){
                         return false;
                     }
                     else{
@@ -43,9 +37,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel
                                 text:"Select Top 50",
                                 iconCls:'icon-settings',
                                 listeners:{
-                                    scope:record,
+                                    scope:node,
                                     'click':function(){
-                                        self.initialConfig.module.selectTopFifty(this.data.id);
+                                        self.initialConfig.module.selectTopFifty(this.id);
                                     }
                                 }
                             },
@@ -53,9 +47,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel
                                 text:"Edit Table Data",
                                 iconCls:'icon-edit',
                                 listeners:{
-                                    scope:record,
+                                    scope:node,
                                     'click':function(){
-                                        self.initialConfig.module.getTableData(this.data.id);
+                                        self.initialConfig.module.getTableData(this.id);
                                     }
                                 }
                             }
@@ -68,7 +62,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel
         });
 
         this.treePanel = menuTree;
+        menuTree.setRootNode(menuRoot);
         this.items = [menuTree];
+        menuRoot.expand();
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel.superclass.initComponent.call(this, arguments);
     },
 
@@ -80,3 +76,5 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('railsdbadmin_tablestreemenu', Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel);

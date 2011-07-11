@@ -1,5 +1,6 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit",{
-    extend:"Ext.ux.desktop.Module",
+Ext.ns("Compass.ErpApp.Desktop.Applications");
+
+Compass.ErpApp.Desktop.Applications.Knitkit = Ext.extend(Ext.app.Module, {
     id:'knitkit-win',
     init : function(){
         this.launcher = {
@@ -26,18 +27,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit",{
                 animCollapse:false,
                 constrainHeader:true,
                 layout: 'border',
-                items:[
-                this.centerRegion,
-                {
+                items:[this.centerRegion,{
                     xtype:'knitkit_eastregion',
                     module:this
-                },
-                {
+                },{
                     xtype:'knitkit_westregion',
                     centerRegion:this.centerRegion,
                     module:this
-                }
-            ]
+                }]
             });
         }
         win.show();

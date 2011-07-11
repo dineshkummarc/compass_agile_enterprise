@@ -4,7 +4,6 @@ class Desktop < ActiveRecord::Base
   BACKGROUND_FILE_PATH = "#{RAILS_ROOT}/vendor/plugins/erp_app/public/images/wallpaper"
 
   def setup_default_preferences
-    #setup desktop background
     desktop_backgroud_pt = PreferenceType.iid('desktop_background')
     desktop_backgroud_pt.preferenced_records << self
 
@@ -18,20 +17,6 @@ class Desktop < ActiveRecord::Base
       :preference => pref
     )
 
-    #setup desktop theme
-    desktop_theme_pt = PreferenceType.iid('desktop_theme')
-    desktop_theme_pt.preferenced_records << self
-
-    pref = Preference.create(
-      :preference_type => desktop_theme_pt,
-      :preference_option => PreferenceOption.iid('blue_desktop_theme')
-    )
-
-    self.user_preferences << UserPreference.create(
-      :user => self.user,
-      :preference => pref
-    )
-    
     self.save
   end
 

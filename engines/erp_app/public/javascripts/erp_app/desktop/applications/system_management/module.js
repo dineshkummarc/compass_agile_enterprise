@@ -1,5 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement",{
-    extend:"Ext.ux.desktop.Module",
+Compass.ErpApp.Desktop.Applications.SystemManagement = Ext.extend(Ext.app.Module, {
     id:'system_management-win',
     init : function(){
         this.launcher = {

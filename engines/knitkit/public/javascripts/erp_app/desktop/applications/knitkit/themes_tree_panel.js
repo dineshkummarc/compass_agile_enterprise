@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
-    extend:"Compass.ErpApp.Shared.FileManagerTree",
-    alias:'widget.knitkit_themestreepanel',
+Compass.ErpApp.Desktop.Applications.ThemesTreePanel = Ext.extend(Compass.ErpApp.Shared.FileManagerTree, {
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.ThemesTreePanel.superclass.initComponent.call(this, arguments);
     },
@@ -18,10 +16,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                 active:active
             },
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().load({node:self.getRootNode()});
+                    self.getRootNode().reload();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error updating status');
@@ -46,10 +44,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                 id:themeId
             },
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().load({node:self.getRootNode()});
+                    self.getRootNode().reload();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error deleting theme');
@@ -71,15 +69,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
     },
   
     constructor : function(config) {
-        var sitesJsonStore = Ext.create("Ext.data.Store",{
-            proxy:{
-                url:'./knitkit/site/index',
-                type:'ajax',
-                reader:{
-                    type:'json',
-                    root:'sites'
-                }
-            },
+        var sitesJsonStore = new Ext.data.JsonStore({
+            url:'./knitkit/site/index',
+            root: 'sites',
             fields: [
             {
                 name:'name'
@@ -90,8 +82,23 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
             ]
         });
 
-        var self = this;
+        var themesJsonStore = new Ext.data.JsonStore({
+            url:'./knitkit/theme/available_themes',
+            root: 'themes',
+            fields: [
+            {
+                name:'name'
+            },
+            {
+                name:'id'
+            }
+            ],
+            baseParams:{
+                site_id:null
+            }
+        });
 
+        var self = this;
         config = Ext.apply({
             title:'Themes',
             controllerPath:'./knitkit/theme',
@@ -101,32 +108,24 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
             rootVisible:false,
             standardUploadUrl:'./knitkit/theme/upload_file',
             xhrUploadUrl:'./knitkit/theme/upload_file',
-            url:'./knitkit/theme/index',
-            fields:[
-                {name:'isTheme'},
-                {name:'isActive'},
-                {name:'siteId'},
-                {name:'text'},
-                {name:'id'},
-                {name:'leaf'},
-                {name:'handleContextMenu'},
-                {name:'contextMenuDisabled'}
-            ],
+            loader: new Ext.tree.TreeLoader({
+                dataUrl:'./knitkit/theme/index'
+            }),
             containerScroll: true,
             listeners:{
                 'contentLoaded':function(fileManager, node, content){
                     self.initialConfig['centerRegion'].editTemplateFile(node, content, []);
                 },
                 'handleContextMenu':function(fileManager, node, e){
-                    if(node.data['isTheme']){
+                    if(node.attributes['isTheme']){
                         var items = [];
-                        if(node.data['isActive']){
+                        if(node.attributes['isActive']){
                             items.push({
                                 text:'Deactivate',
                                 iconCls:'icon-delete',
                                 listeners:{
                                     'click':function(){
-                                        self.updateThemeActiveStatus(node.data.id, node.data['siteId'], false);
+                                        self.updateThemeActiveStatus(node.id, node.attributes['siteId'], false);
                                     }
                                 }
                             });
@@ -137,7 +136,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                                 iconCls:'icon-add',
                                 listeners:{
                                     'click':function(){
-                                        self.updateThemeActiveStatus(node.data.id, node.data['siteId'], true);
+                                        self.updateThemeActiveStatus(node.id, node.attributes['siteId'], true);
                                     }
                                 }
                             });
@@ -147,7 +146,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                             iconCls:'icon-delete',
                             listeners:{
                                 'click':function(){
-                                    self.deleteTheme(node.data.id);
+                                    self.deleteTheme(node.id);
                                 }
                             }
                         });
@@ -156,7 +155,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                             iconCls:'icon-document_out',
                             listeners:{
                                 'click':function(){
-                                    self.exportTheme(node.data.id);
+                                    self.exportTheme(node.id);
                                 }
                             }
                         });
@@ -250,15 +249,15 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                                 listeners:{
                                     'click':function(button){
                                         var window = button.findParentByType('window');
-                                        var formPanel = window.query('form')[0];
+                                        var formPanel = window.findByType('form')[0];
                                         self.initialConfig['centerRegion'].setWindowStatus('Creating theme...');
                                         formPanel.getForm().submit({
                                             reset:true,
                                             success:function(form, action){
                                                 self.initialConfig['centerRegion'].clearWindowStatus();
-                                                var obj =  Ext.decode(action.response.responseText);
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
                                                 if(obj.success){
-                                                    self.getStore().load({node:self.getRootNode()});
+                                                    self.getRootNode().reload();
                                                 }
                                             },
                                             failure:function(form, action){
@@ -299,7 +298,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                                     width: 225
                                 },
                                 items: [
-                                {
+                                 {
                                     xtype:'combo',
                                     hiddenName:'site_id',
                                     name:'site_id',
@@ -330,17 +329,16 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                                 listeners:{
                                     'click':function(button){
                                         var window = button.findParentByType('window');
-                                        var formPanel = window.query('form')[0];
+                                        var formPanel = window.findByType('form')[0];
                                         self.initialConfig['centerRegion'].setWindowStatus('Creating theme...');
                                         formPanel.getForm().submit({
                                             reset:true,
                                             success:function(form, action){
                                                 self.initialConfig['centerRegion'].clearWindowStatus();
-                                                var obj =  Ext.decode(action.response.responseText);
+                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
                                                 if(obj.success){
-                                                    self.getStore().load({node:self.getRootNode()});
+                                                    self.getRootNode().reload();
                                                 }
-                                                uploadThemeWindow.close();
                                             },
                                             failure:function(form, action){
                                                 self.initialConfig['centerRegion'].clearWindowStatus();
@@ -366,3 +364,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
         Compass.ErpApp.Desktop.Applications.ThemesTreePanel.superclass.constructor.call(this, config);
     }
 });
+
+//uncomment and give an xtype if you want this class to use an xtype
+Ext.reg('knitkit_themestreepanel', Compass.ErpApp.Desktop.Applications.ThemesTreePanel);

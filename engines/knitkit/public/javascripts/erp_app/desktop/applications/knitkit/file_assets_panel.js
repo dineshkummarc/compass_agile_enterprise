@@ -2,7 +2,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
     var self = this;
     self.module = module;
 	
-    this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
+    this.fileTreePanel = new Compass.ErpApp.Shared.FileManagerTree({
         autoDestroy:true,
         allowDownload:false,
         addViewContentsToContextMenu:false,
@@ -10,7 +10,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         controllerPath:'./knitkit/file_assets',
         standardUploadUrl:'./knitkit/file_assets/upload_file',
         xhrUploadUrl:'./knitkit/file_assets/upload_file',
-        url:'./knitkit/file_assets/expand_directory',
+        loader: new Ext.tree.TreeLoader({
+            dataUrl:'./knitkit/file_assets/expand_directory'
+        }),
         containerScroll: true,
         additionalContextMenuItems:[
         {
@@ -33,9 +35,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         height:200,
         title:'Files',
         listeners:{
-            'itemclick':function(view, record, item, index, e){
-                e.stopEvent();
-                return false;
+            'click':function(node){
             },
             'fileDeleted':function(fileTreePanel, node){
             },
@@ -49,7 +49,12 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         layout: 'fit',
         autoDestroy:true,
         title:'File Assets',
-        items: [this.fileTreePanel]
+        items: [this.fileTreePanel],
+        listeners:{
+            'activate':function(){
+                self.fileTreePanel.getRootNode().reload();
+            }
+        }
     });
 }
 

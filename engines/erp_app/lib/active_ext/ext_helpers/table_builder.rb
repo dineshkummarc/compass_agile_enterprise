@@ -1,11 +1,10 @@
 module ActiveExt::ExtHelpers::TableBuilder
 
   def self.generate_columns_and_fields(core)
-    columns     = self.build_columns(core)
-    fields      = self.build_fields(core)
-    validations = self.build_validations(core)
+    columns = self.build_columns(core)
+    fields  = self.build_fields(core)
 
-    return columns, fields, validations
+    return columns, fields
   end
 
   private
@@ -52,22 +51,6 @@ module ActiveExt::ExtHelpers::TableBuilder
     end
 
     fields
-  end
-
-  def self.build_validations(core)
-    validations = []
-
-    #build ext fields
-    core.columns.each do |column|
-      next if column.name.to_s =~ /(^created_at|updated_at)$/  || core.columns.exclude_column?(column.name)
-      if column.association.nil?
-        if column.options[:required]
-          validations << {:type => 'presence', :field => column.name}
-        end
-      end
-    end
-
-    validations
   end
 
 end

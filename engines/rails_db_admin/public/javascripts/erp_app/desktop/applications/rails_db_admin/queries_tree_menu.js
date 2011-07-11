@@ -1,47 +1,43 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePanel",{
-    extend:"Ext.Panel",
-    alias:'widget.railsdbadmin_queriestreemenu',
+Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         var self = this;
-        this.store = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './rails_db_admin/queries/saved_queries_tree'
-            },
-            root: {
-                text: 'Queries',
-                expanded: true,
-                draggable:false,
-                iconCls:'icon-content'
-            }
+        var menuRoot = new Ext.tree.AsyncTreeNode({
+            text: 'Queries',
+            draggable:false,
+            iconCls:'icon-content'
         });
 
         var menuTree = new Ext.tree.TreePanel({
-            store:this.store,
             animate:true,
-            frame:false,
-            height:650,
+            autoScroll:false,
+            frame:true,
+            autoLoad : false,
+            enableDD:false,
+            containerScroll: true,
             border: false,
+            width: "auto",
+            height: "auto",
+            loader:{
+                dataUrl:'./rails_db_admin/queries/saved_queries_tree',
+                timeout:65000,
+                baseParams:{
+                    "database":null
+                }
+            },
             listeners:{
-                'itemclick':function(view, record, item, index, e){
-                    e.stopEvent();
-                    if(record.data.leaf){
-                        self.initialConfig.module.displayAndExecuteQuery(record.data.id);
-                    }
-                },
-                'itemcontextmenu':function(view, record, item, index, e){
+                'contextmenu':function(node, e){
                     e.stopEvent();
                     var contextMenu = null;
-                    if(record.data.leaf){
+                    if(node.isLeaf()){
                         contextMenu = new Ext.menu.Menu({
                             items:[
                             {
                                 text:"Execute",
                                 iconCls:'icon-settings',
                                 listeners:{
-                                    scope:record,
+                                    scope:node,
                                     'click':function(){
-                                        self.initialConfig.module.displayAndExecuteQuery(record.data.id);
+                                        self.initialConfig.module.displayAndExecuteQuery(this.id);
                                     }
                                 }
                             },
@@ -49,9 +45,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePane
                                 text:"Delete",
                                 iconCls:'icon-delete',
                                 listeners:{
-                                    scope:record,
+                                    scope:node,
                                     'click':function(){
-                                        self.initialConfig.module.deleteQuery(record.data.id);
+                                        self.initialConfig.module.deleteQuery(this.id);
                                     }
                                 }
                             }
@@ -79,7 +75,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePane
         });
 
         this.treePanel = menuTree;
+        menuTree.setRootNode(menuRoot);
         this.items = [menuTree];
+        menuRoot.expand();
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePanel.superclass.initComponent.call(this, arguments);
     },
 
@@ -91,3 +89,5 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePane
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('railsdbadmin_queriestreemenu', Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePanel);

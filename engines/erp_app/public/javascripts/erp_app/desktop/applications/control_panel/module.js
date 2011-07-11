@@ -1,7 +1,5 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel",{
-    extend:"Ext.ux.desktop.Module",
-    requires:["Ext.window.MessageBox","Ext.tab.Panel"],
-    id:"control-panel-win",
+Compass.ErpApp.Desktop.Applications.ControlPanel = Ext.extend(Ext.app.Module, {
+    id:'control-panel-win',
     init : function(){
         this.launcher = {
             text: 'Control Panel',
@@ -14,7 +12,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel",{
         var desktop = this.app.getDesktop();
         var win = desktop.getWindow('control_panel');
         if(!win){
-            var tabPanel = Ext.create('Ext.tab.Panel',{
+            var tabPanel = new Ext.TabPanel({
                 items:[
                 {
                     xtype:'controlpanel_desktopmanagementpanel',
@@ -42,13 +40,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel",{
                 animCollapse:false,
                 constrainHeader:true,
                 layout:'fit',
-                items:[tabPanel]
+                items:[
+                tabPanel
+                ]
             });
 
             tabPanel.setActiveTab(0);
         }
         win.show();
-        return win;
     }
 });
 

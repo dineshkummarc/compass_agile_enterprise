@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid",{
-    extend:"Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",
-    alias:'widget.<%=file_name%>_activeextgrid',
+Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid = Ext.extend(Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel, {
     constructor : function(config){
         config = Ext.apply({
             title:'<%=class_name %>',
@@ -14,3 +12,5 @@ Ext.define("Compass.ErpApp.<%= container_class_name %>.Applications.<%= applicat
         Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('<%=file_name%>_activeextgrid', Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid);

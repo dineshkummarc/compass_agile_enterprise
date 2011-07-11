@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel",{
-    extend:"Ext.Panel",
-    alias:"widget.controlpanel_profilemanagementpanel",
+Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel = Ext.extend(Ext.Panel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -94,6 +92,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPa
         Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('controlpanel_profilemanagementpanel', Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel);
 
 
 

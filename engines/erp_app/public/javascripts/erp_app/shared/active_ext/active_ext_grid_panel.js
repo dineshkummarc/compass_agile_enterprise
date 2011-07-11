@@ -1,6 +1,6 @@
-Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",{
-    extend:"Ext.Panel",
-    alias:'widget.activeextgridpanel',
+Ext.ns("Compass.ErpApp.Shared.ActiveExt");
+
+Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel = Ext.extend(Ext.Panel, {
     setupGrid: function(){
         var self = this;
         var config = this.initialConfig;
@@ -14,7 +14,7 @@ Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",{
             method: 'POST',
             params:config['params'],
             success: function(responseObject) {
-                var response =  Ext.decode(responseObject.responseText);
+                var response =  Ext.util.JSON.decode(responseObject.responseText);
                 if(response.success){
                     self.add({
                         windowTitle:config['title'],
@@ -28,8 +28,7 @@ Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",{
                         emptyMsg:config['emptyMsg'],
                         xtype:'activeextgrid',
                         columns:response.columns,
-                        fields:response.fields,
-                        validations:response.validations
+                        fields:response.fields
                     });
                     self.getLayout().setActiveItem(0);
                 }
@@ -59,6 +58,10 @@ Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",{
         Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('activeextgridpanel', Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel);
+
+
 
 
 

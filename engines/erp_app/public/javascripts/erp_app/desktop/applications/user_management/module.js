@@ -1,5 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement",{
-    extend:"Ext.ux.desktop.Module",
+Compass.ErpApp.Desktop.Applications.UserManagement = Ext.extend(Ext.app.Module, {
     id:'user-management-win',
     init : function(){
         this.launcher = {
@@ -29,7 +28,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement",{
                 items:[{
                     xtype:'usermanagement_usersgrid',
                     tabPanel:tabPanel,
-                    widget_roles:this.widget_roles
+                    widget_roles:this.initialConfig['widget_roles']
                 },tabPanel]
             });
         }
@@ -37,9 +36,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement",{
     }
 });
 
-Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
-    extend:"Ext.grid.GridPanel",
-    alias:'widget.usermanagement_usersgrid',
+Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid = Ext.extend(Ext.grid.GridPanel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -56,10 +53,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             url: './user_management/users/delete/' + rec.get("id"),
             method: 'POST',
             success: function(response) {
-                var obj =  Ext.decode(response.responseText);
+                var obj =  Ext.util.JSON.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
-                    self.getStore().load();
+                    self.getStore().reload();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error deleting user.');
@@ -157,10 +154,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             url: 'user_management/users/get_details/' + userId,
             params:{},
             success: function(responseObject) {
-                var response = Ext.decode(responseObject.responseText);
-                self.tabPanel.removeAll();
+                var response =  Ext.util.JSON.decode(responseObject.responseText);
+                self.initialConfig.tabPanel.removeAll(true);
 
-                var hasAccess = ErpApp.Authentication.RoleManager.hasAccessToWidget(self.widget_roles, "usermanagement_personalinfopanel");
+                var hasAccess = ErpApp.Authentication.RoleManager.hasAccessToWidget(self.initialConfig['widget_roles'], "usermanagement_personalinfopanel");
                 if(hasAccess)
                 {
                     self.initialConfig.tabPanel.add(
@@ -171,30 +168,45 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                     });
                 }
 
-                if(ErpApp.Authentication.RoleManager.hasAccessToWidget(self.widget_roles, "usermanagement_rolemanagementpanel"))
+                if(ErpApp.Authentication.RoleManager.hasAccessToWidget(self.initialConfig['widget_roles'], "usermanagement_rolemanagementpanel"))
                 {
                     self.initialConfig.tabPanel.add(
                     {
                         xtype:'usermanagement_rolemanagementpanel',
-                        userId:userId
+                        userId:userId,
+                        listeners:{
+                            'activate':function(){
+                                this.loadTrees();
+                            }
+                        }
                     });
                 }
 
-                if(ErpApp.Authentication.RoleManager.hasAccessToWidget(self.widget_roles, "controlpanel_userapplicationmgtpanel"))
+                if(ErpApp.Authentication.RoleManager.hasAccessToWidget(self.initialConfig['widget_roles'], "controlpanel_userapplicationmgtpanel"))
                 {
                     self.initialConfig.tabPanel.add(
                     {
                         xtype:'controlpanel_userapplicationmgtpanel',
                         userId:userId,
                         title:'Desktop Applications',
-                        appContainerType:'Desktop'
+                        appContainerType:'Desktop',
+                        listeners:{
+                            'activate':function(){
+                                this.loadTrees();
+                            }
+                        }
                     });
                     self.initialConfig.tabPanel.add(
                     {
                         xtype:'controlpanel_userapplicationmgtpanel',
                         userId:userId,
                         appContainerType:'Organizer',
-                        title:'Organizer Applications'
+                        title:'Organizer Applications',
+                        listeners:{
+                            'activate':function(){
+                                this.loadTrees();
+                            }
+                        }
                     });
                 }
                 self.initialConfig.tabPanel.setActiveTab(0);
@@ -209,37 +221,29 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
 
     initComponent: function() {
         this.store.load();
+
         Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid.superclass.initComponent.call(this, arguments);
     },
 
     constructor : function(config) {
         var self = this;
-
-        var users_store = Ext.create('Ext.data.Store', {
-            proxy: {
-                type: 'ajax',
-                url : 'user_management/users/',
-                reader: {
-                    type: 'json',
-                    root: 'data'
-                }
+        var users_store = new Ext.data.JsonStore({
+            root:'data',
+            url:'user_management/users/',
+            baseParams:{
+                login:null
             },
             fields:[
             {
-                name: 'id',
-                type: 'int'
-            },
-            {
-                name: 'login',
-                type: 'string'
-            },
-            {
-                name: 'email',
-                type: 'string'
+                name:'id'
+            },{
+                name:'login'
+            },{
+                name:'email'
             }
             ]
         });
-         
+
         var columns = [{
             header:'Login',
             dataIndex:'login',
@@ -310,26 +314,26 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                 handler:function(){
                     var addUserWindow = new Ext.Window({
                         layout:'fit',
-                        width:325,
+                        width:375,
                         title:'New User',
                         height:270,
                         plain: true,
                         buttonAlign:'center',
                         items: new Ext.FormPanel({
+                            labelWidth: 110,
                             frame:false,
-                            layout:'',
                             bodyStyle:'padding:5px 5px 0',
                             url:'./user_management/users/new',
                             defaults: {
-                                width: 225,
-                                labelWidth: 100
+                                width: 225
                             },
                             items: [
                             {
-                                emptyText:'Select Gender...',
+                                width: 50,
                                 xtype: 'combo',
+                                labelWidth:140,
                                 forceSelection:true,
-                                store: [['m','Male'],['f','Female']],
+                                store: [['m','m'],['f','f']],
                                 fieldLabel: 'Gender',
                                 name: 'gender',
                                 allowBlank: false,
@@ -381,15 +385,15 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                             listeners:{
                                 'click':function(button){
                                     var window = button.findParentByType('window');
-                                    var formPanel = window.query('.form')[0];
+                                    var formPanel = window.findByType('form')[0];
                                     self.setWindowStatus('Creating user...');
                                     formPanel.getForm().submit({
                                         reset:true,
                                         success:function(form, action){
                                             self.clearWindowStatus();
-                                            var obj =  Ext.decode(action.response.responseText);
+                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
                                             if(obj.success){
-                                                self.getStore().load();
+                                                self.getStore().reload();
                                             }
                                             else{
                                                 Ext.Msg.alert("Error", obj.message);
@@ -397,12 +401,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                                         },
                                         failure:function(form, action){
                                             self.clearWindowStatus();
-                                            if(action.response !== undefined){
-                                                var obj =  Ext.decode(action.response.responseText);
-                                                Ext.Msg.alert("Error", obj.message);
+                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                            if(Compass.ErpApp.Utility.isBlank(obj.message)){
+                                                Ext.Msg.alert("Error", 'Error adding user.');
                                             }
                                             else{
-                                                Ext.Msg.alert("Error", 'Error adding user.');
+                                                Ext.Msg.alert("Error", obj.message);
                                             }
                                         }
                                     });
@@ -430,18 +434,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             iconCls: 'icon-search',
             handler: function(button) {
                 var login = Ext.getCmp('user_search_field').getValue();
-                users_store.setProxy({
-                    type: 'ajax',
-                    url: './user_management/users/',
-                    reader: {
-                        type: 'json',
-                        root: 'data'
-                    },
-                    extraParams:{
-                        login:login
-                    }
-                });
-
+                users_store.setBaseParam('login',login);
                 users_store.load();
             }
         });
@@ -450,7 +443,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             width:460,
             region:'west',
             store:users_store,
-            loadMask:false,
+            loadMask:true,
             columns:columns,
             tbar:{
                 items:toolBarItems
@@ -467,3 +460,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
         Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('usermanagement_usersgrid', Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid);
+
+

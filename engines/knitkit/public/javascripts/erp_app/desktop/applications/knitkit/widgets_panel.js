@@ -1,12 +1,12 @@
 Compass.ErpApp.Desktop.Applications.Knitkit.WidgetsPanel = function() {
-    var widgetsStore = Ext.create('Ext.data.Store',{
-        autoDestroy: true,
+    var widgetsStore = new Ext.data.JsonStore({
         fields:['name', 'iconUrl', 'onClick'],
         data:Compass.ErpApp.Widgets.AvailableWidgets
     });
 
-    this.widgetsDataView = Ext.create("Ext.view.View",{
+    this.widgetsDataView = new Ext.DataView({
         autoDestroy:true,
+        itemSelector: 'div.thumb-wrap',
         style:'overflow:auto',
         store:widgetsStore,
         tpl: new Ext.XTemplate(

@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Shared.StatusWindow",{
-    extend:"Ext.window.Window",
-    alias:"widget.statuswindow",
+Compass.ErpApp.Shared.StatusWindow = Ext.extend(Ext.Window, {
     setStatus : function(newStatus){
         this.statusLabel.update(newStatus);
     },
@@ -13,8 +11,10 @@ Ext.define("Compass.ErpApp.Shared.StatusWindow",{
         this.statusLabel = Ext.get(document.createElement('span'));
         var divElement = Ext.get(document.createElement('div').appendChild(this.statusLabel.dom));
         divElement.applyStyles('float:right;padding-right:5px;');
-        //this.header.add(divElement);
-
+        this.header.appendChild(divElement);
+        
         Compass.ErpApp.Shared.StatusWindow.superclass.afterRender.call(this);
     }
 });
+
+Ext.reg('statuswindow', Compass.ErpApp.Shared.StatusWindow);

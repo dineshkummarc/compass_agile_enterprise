@@ -1,6 +1,5 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel",{
-    extend:"Ext.Panel",
-    alias:'widget.systemmanagement_applicationrolemanagement',
+Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel = Ext.extend(Ext.Panel, {
+
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -11,45 +10,35 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
 
     selectWidget :function(id){
         this.widgetId = id;
-
-        this.availableRolesTreeStore.setProxy({
-                type: 'ajax',
-                url: './system_management/application_role_management/available_roles',
-                extraParams:{
-                    id:id
-                }
-        });
-        this.availableRolesTreeStore.load();
-        this.availableRolesTree.getRootNode().expand();
-
-        this.currentRolesTreeStore.setProxy({
-                type: 'ajax',
-                url: './system_management/application_role_management/current_roles',
-                extraParams:{
-                    id:id
-                }
-        });
-        this.currentRolesTreeStore.load();
-        this.availableRolesTree.getRootNode().expand();
+        this.available_roles_tree.getLoader().baseParams.id = id;
+        this.available_roles_tree.getRootNode().reload();
+        this.current_roles_tree.getLoader().baseParams.id = id;
+        this.current_roles_tree.getRootNode().reload();
     },
 
     addAllAvailableRoles : function(){
-        var availableRolesRoot = this.availableRolesTree.getRootNode();
-        var currentRolesRoot = this.currentRolesTree.getRootNode();
+        var availableRolesRoot = this.available_roles_tree.getRootNode();
+        var currentRolesRoot = this.current_roles_tree.getRootNode();
 
         availableRolesRoot.eachChild(function(node) {
-            currentRolesRoot.appendChild(node.copy());
+            var atts = node.attributes;
+            atts.id = node.id;
+            atts.text = node.text;
+            currentRolesRoot.appendChild(new Ext.tree.TreeNode(Ext.apply({}, atts)));
         });
 
         availableRolesRoot.removeAll(true);
     },
 
     removeAllCurrentRoles : function(){
-        var availableRolesRoot = this.availableRolesTree.getRootNode();
-        var currentRolesRoot = this.currentRolesTree.getRootNode();
+        var availableRolesRoot = this.available_roles_tree.getRootNode();
+        var currentRolesRoot = this.current_roles_tree.getRootNode();
 
         currentRolesRoot.eachChild(function(node) {
-            availableRolesRoot.appendChild(node.copy());
+            var atts = node.attributes;
+            atts.id = node.id;
+            atts.text = node.text;
+            availableRolesRoot.appendChild(new Ext.tree.TreeNode(Ext.apply({}, atts)));
         });
 
         currentRolesRoot.removeAll(true);
@@ -58,11 +47,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
     saveRoles : function(){
         if(!Compass.ErpApp.Utility.isBlank(this.widgetId)){
             var roleIds = []
-            var treeRoot = this.currentRolesTree.getRootNode();
+            var treePanel = this.current_roles_tree;
+            var treeRoot = treePanel.getRootNode();
             this.setWindowStatus('Saving...');
 
             treeRoot.eachChild(function(node) {
-                roleIds.push(node.data.role_id);
+                roleIds.push(node.id);
             });
 
             var rolesJson = {
@@ -92,80 +82,53 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
     },
 
     constructor : function(config) {
-        var applicationsTreeStore = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './system_management/application_role_management/applications'
-            },
-            root: {
-                text: 'Applications',
-                expanded: true,
-                draggable:false
-            },
-            fields:[
-                {name:'text'},
-                {name:'iconCls'},
-                {name:'widget_id'},
-                {name:'leaf'}
-            ]
-        });
-        
-        var applicationsTree = new Ext.tree.TreePanel({
-            store:applicationsTreeStore,
+        var applications_tree = new Ext.tree.TreePanel({
             animate:false,
             autoScroll:true,
             region:'west',
+            loader: new Ext.tree.TreeLoader({
+                dataUrl:'./system_management/application_role_management/applications'
+            }),
+            enableDD:true,
             containerScroll: true,
             border: false,
             width: 250,
             height: 300,
             frame:true,
+            enableDrop:false,
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Applications',
+                draggable:false
+            }),
             listeners:{
                 scope:this,
-                'itemclick':function(view, record){
-                    if(record.data.leaf)
+                'click':function(node){
+                    if(node.attributes['leaf'])
                     {
-                        this.selectWidget(record.data.widget_id);
+                        this.selectWidget(node.attributes.widget_id);
                     }
                 }
             }
         });
 
-        this.availableRolesTreeStore = Ext.create('Ext.data.TreeStore', {
-            autoLoad:false,
-            proxy: {
-                type: 'ajax',
-                url: './system_management/application_role_management/available_roles'
-            },
-            root: {
-                text: 'Available Roles',
-                draggable:false
-            },
-            fields:[
-                {name:'text'},
-                {name:'iconCls'},
-                {name:'role_id'},
-                {name:'leaf'}
-            ]
-
-        });
-
-        this.availableRolesTree = new Ext.tree.TreePanel({
-            store:this.availableRolesTreeStore,
+        this.available_roles_tree = new Ext.tree.TreePanel({
             id:'app_roles_mgt_available_roles',
             animate:false,
             autoScroll:true,
+            loader: new Ext.tree.TreeLoader({
+                baseParams:{
+                    id:0
+                },
+                dataUrl:'./system_management/application_role_management/available_roles'
+            }),
             region:'west',
+            enableDD:true,
             containerScroll: true,
             border: false,
             width: 250,
             height: 300,
             frame:true,
-            viewConfig: {
-                plugins: {
-                    ptype: 'treeviewdragdrop'
-                }
-            },
+            enableDrop:false,
             tbar:{
                 items:[
                 {
@@ -177,32 +140,28 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
                     }
                 }
                 ]
-            }
-        });
-
-        this.currentRolesTreeStore = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './system_management/application_role_management/current_roles'
             },
-            root: {
-                text: 'Current Roles',
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Available Roles',
                 draggable:false
-            },
-            fields:[
-                {name:'text'},
-                {name:'iconCls'},
-                {name:'role_id'},
-                {name:'leaf'}
-            ]
+            })
         });
 
-        this.currentRolesTree = new Ext.tree.TreePanel({
-            store:this.currentRolesTreeStore,
+        this.current_roles_tree = new Ext.tree.TreePanel({
             id:'app_roles_mgt_current_roles',
             region:'center',
             animate:false,
             autoScroll:true,
+            loader: new Ext.tree.TreeLoader({
+                baseParams:{
+                    id:0
+                },
+                dataUrl:'./system_management/application_role_management/current_roles'
+            }),
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Current Roles',
+                draggable:false
+            }),
             tbar:{
                 items:[
                 {
@@ -223,11 +182,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
                 }
                 ]
             },
-            viewConfig: {
-                plugins: {
-                    ptype: 'treeviewdragdrop'
-                }
-            },
+            enableDD:true,
             containerScroll: true,
             border: false,
             frame:true,
@@ -237,17 +192,21 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
 
         var rolesPanel = new Ext.Panel({
             layout:'border',
-            items:[this.availableRolesTree, this.currentRolesTree],
+            items:[this.available_roles_tree, this.current_roles_tree],
             region:'center'
         })
 
         config = Ext.apply({
             layout:'border',
             title:'Applications',
-            items:[applicationsTree,rolesPanel]
+            items:[applications_tree,rolesPanel]
         }, config);
 
         Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('systemmanagement_applicationrolemanagement', Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel);
+
+
 

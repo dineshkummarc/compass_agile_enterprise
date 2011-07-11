@@ -1,6 +1,4 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel",{
-    extend:"Ext.Panel",
-    alias:'widget.controlpanel_userapplicationmgtpanel',
+Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel = Ext.extend(Ext.Panel, {
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -9,12 +7,22 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
         this.findParentByType('statuswindow').clearStatus();
     },
 
+    loadTrees :function(){
+        var treePanels = this.findByType('treepanel');
+        Ext.each(treePanels, function(tree){
+            tree.getRootNode().reload();
+        });
+    },
+
     addAllAvailableApplications : function(){
         var availableRolesRoot = this.available_applications_tree.getRootNode();
         var currentRolesRoot = this.current_applications_tree.getRootNode();
 
         availableRolesRoot.eachChild(function(node) {
-            currentRolesRoot.appendChild(node.copy());
+            var atts = node.attributes;
+            atts.id = node.id;
+            atts.text = node.text;
+            currentRolesRoot.appendChild(new Ext.tree.TreeNode(Ext.apply({}, atts)));
         });
 
         availableRolesRoot.removeAll(true);
@@ -25,7 +33,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
         var currentRolesRoot = this.current_applications_tree.getRootNode();
 
         currentRolesRoot.eachChild(function(node) {
-            availableRolesRoot.appendChild(node.copy());
+            var atts = node.attributes;
+            atts.id = node.id;
+            atts.text = node.text;
+            availableRolesRoot.appendChild(new Ext.tree.TreeNode(Ext.apply({}, atts)));
         });
 
         currentRolesRoot.removeAll(true);
@@ -35,13 +46,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
         var appIds = []
         var treePanel = this.current_applications_tree;
         var treeRoot = treePanel.getRootNode();
+        var savingLabel = Ext.get('user_managment_saving_label');
         this.setWindowStatus('Saving...');
 
         treeRoot.eachChild(function(node) {
-            appIds.push(node.data.app_id);
+            appIds.push(node.id);
         });
 
-        var appsJson = {
+        var rolesJson = {
             "app_ids":appIds,
             "app_container_type":this.initialConfig['appContainerType'],
             "user_id":this.initialConfig['userId']
@@ -52,7 +64,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
         conn.request({
             url: './user_management/application_management/save_applications',
             method: 'PUT',
-            jsonData:appsJson,
+            jsonData:rolesJson,
             success: function(responseObject) {
                 self.clearWindowStatus();
                 Compass.ErpApp.Utility.promptReload();
@@ -69,52 +81,24 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
     },
 
     constructor : function(config) {
-        var availableApplicationsStore = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './user_management/application_management/available_applications',
-                extraParams:{
-                    user_id:config['userId'],
-                    app_container_type:config['appContainerType']
-                }
-            },
-            root: {
-                text: 'Available Applications',
-                expanded: true
-            },
-            fields:[
-            {
-                name:'app_id'
-            },
-            {
-                name:'text'
-            },
-            {
-                name:'icon_cls'
-            },
-            {
-                name:'is_leaf'
-            }
-            ]
-        });
-
         this.available_applications_tree = new Ext.tree.TreePanel({
-            store:availableApplicationsStore,
             animate:false,
             autoScroll:true,
-            autoDestroy:true,
             region:'west',
-            viewConfig: {
-                loadMask:false,
-                plugins: {
-                    ptype: 'treeviewdragdrop',
-                    appendOnly: true
-                }
-            },
+            loader: new Ext.tree.TreeLoader({
+                dataUrl:'./user_management/application_management/available_applications',
+                baseParams:{
+                    user_id:config['userId'],
+                    app_container_type:config['appContainerType']
+                    }
+            }),
+            enableDD:true,
             containerScroll: true,
             border: false,
             width: 250,
+            height: 300,
             frame:true,
+            enableDrop:false,
             tbar:{
                 items:[
                 {
@@ -126,49 +110,32 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
                     }
                 }
                 ]
-            }
-        });
-
-        var currentApplicationsStore = Ext.create('Ext.data.TreeStore', {
-            proxy: {
-                type: 'ajax',
-                url: './user_management/application_management/current_applications',
-                extraParams:{
-                    user_id:config['userId'],
-                    app_container_type:config['appContainerType']
-                }
             },
-            root: {
-                text: 'Current Applications',
-                expanded: true
-            },
-            fields:[
-            {
-                name:'app_id'
-            },
-            {
-                name:'text'
-            },
-            {
-                name:'icon_cls'
-            },
-            {
-                name:'is_leaf'
-            }
-            ]
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Available Applications',
+                draggable:false
+            })
         });
 
         this.current_applications_tree = new Ext.tree.TreePanel({
-            store:currentApplicationsStore,
             animate:false,
-            autoDestroy:true,
             region:'center',
             autoScroll:true,
+            loader: new Ext.tree.TreeLoader({
+                dataUrl:'./user_management/application_management/current_applications',
+                baseParams:{
+                    user_id:config['userId'],
+                    app_container_type:config['appContainerType']
+                    }
+            }),
+            root:new Ext.tree.AsyncTreeNode({
+                text: 'Current Applications',
+                draggable:false
+            }),
             tbar:{
                 items:[
                 {
                     text:'Remove All',
-                    loadMask:false,
                     iconCls:'icon-delete',
                     scope:this,
                     handler:function(){
@@ -177,38 +144,33 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
                 }
                 ]
             },
-            viewConfig: {
-                plugins: {
-                    ptype: 'treeviewdragdrop',
-                    appendOnly: true
-                }
-            },
+            enableDD:true,
             containerScroll: true,
             border: false,
             frame:true,
-            width: 250
-        });
-
-        config = Ext.apply({
-            layout:'border',
-            items:[this.available_applications_tree,this.current_applications_tree],
-            buttonAlign:'left',
-            autoDestroy:true,
+            width: 250,
+            height: 300,
             buttons:[
             {
-                text:'Save',
+                text:'save',
                 scope:this,
-                iconCls:'icon-save',
                 handler:function(){
                     this.saveApplications();
                 }
             }
             ]
+        });
+
+        config = Ext.apply({
+            layout:'border',
+            items:[this.available_applications_tree,this.current_applications_tree]
         }, config);
 
         Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel.superclass.constructor.call(this, config);
     }
 });
+
+Ext.reg('controlpanel_userapplicationmgtpanel', Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel);
 
 
 

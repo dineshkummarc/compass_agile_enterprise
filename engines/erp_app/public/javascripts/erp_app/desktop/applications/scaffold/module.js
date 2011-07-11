@@ -1,6 +1,8 @@
-Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold",{
-    extend:"Ext.ux.desktop.Module",
+Ext.ns("Compass.ErpApp.Desktop.Applications");
+
+Compass.ErpApp.Desktop.Applications.Scaffold = Ext.extend(Ext.app.Module, {
     id:'scaffold-win',
+    
     loadModel : function(modelName){
         //check if we are already showing this model
         var tab = null;

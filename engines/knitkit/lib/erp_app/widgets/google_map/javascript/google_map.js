@@ -36,7 +36,7 @@ Compass.ErpApp.Widgets.GoogleMap = {
                 listeners:{
                     'click':function(button){
                         var window = button.findParentByType('window');
-                        var formPanel = window.query('form')[0];
+                        var formPanel = window.findByType('form')[0];
                         var basicForm = formPanel.getForm();
                         var title = basicForm.findField('googleMapWidgetTitle').getValue();
                         var address = basicForm.findField('googleMapWidgetAddress').getValue();
