@@ -1,10 +1,18 @@
-Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox = Ext.extend(Ext.form.ComboBox, {
+Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox",{
+    extend:"Ext.form.field.ComboBox",
+    alias:'widget.railsdbadmin_databasecombo',
     initComponent: function() {
 		
-        var databaseJsonStore = new Ext.data.JsonStore({
+        var databaseJsonStore = new Ext.data.Store({
             timeout:60000,
-            root:'databases',
-            url:'./rails_db_admin/base/databases',
+            proxy: {
+                type: 'ajax',
+                url :'./rails_db_admin/base/databases',
+                reader: {
+                    type: 'json',
+                    root: 'databases'
+                }
+            },
             fields: [{
                 name:'value'
             },{
@@ -20,7 +28,6 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox = Ext.extend(E
     },
     
     constructor : function(config) {
-        var self = this;
         config = Ext.apply({
             id:'databaseCombo',
             valueField:'value',
@@ -38,7 +45,4 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox = Ext.extend(E
         }, config);
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox.superclass.constructor.call(this, config);
     }
-	
 });
-
-Ext.reg('railsdbadmin_databasecombo', Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox);

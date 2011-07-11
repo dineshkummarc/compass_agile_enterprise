@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel = Ext.extend(Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel",{
+    extend:"Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel",
+    alias:'widget.knitkit_inquiriesgridpanel',
     deleteInquiry : function(rec){
         var self = this;
         Ext.getCmp('knitkitCenterRegion').setWindowStatus('Deleting inquiry...');
@@ -42,5 +44,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel = Ext.extend(Comp
         Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('knitkit_inquiriesgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel);

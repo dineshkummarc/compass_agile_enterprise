@@ -1,6 +1,5 @@
-Ext.ns("Compass.ErpApp.Desktop.Applications");
-
-Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
+Ext.define("Compass.ErpApp.Desktop.Applications.FileManager",{
+    extend:"Ext.ux.desktop.Module",
     id:'file_manager-win',
 
     setWindowStatus : function(status){
@@ -34,14 +33,10 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
             })
 			
             var fileTreePanel = new Compass.ErpApp.Shared.FileManagerTree({
-                xtype:'compassshared_filemanager',
                 allowDownload:true,
                 addViewContentsToContextMenu:true,
                 region:'west',
                 rootVisible:true,
-                loader: new Ext.tree.TreeLoader({
-                    dataUrl:'./file_manager/base/expand_directory'
-                }),
                 containerScroll: true,
                 standardUploadUrl:'./file_manager/base/upload_file',
                 xhrUploadUrl:'./file_manager/base/upload_file',
@@ -50,8 +45,8 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
                 height: 300,
                 frame:true,
                 listeners:{
-                    'contentLoaded':function(fileManager, node, content){
-                        var path = node.id;
+                    'contentLoaded':function(fileManager, record, content){
+                        var path = record.data.id;
                         var fileType = path.split('.').pop();
                         contentCardPanel.removeAll(true);
                         contentCardPanel.add({
@@ -113,6 +108,6 @@ Compass.ErpApp.Desktop.Applications.FileManager  = Ext.extend(Ext.app.Module, {
             this.win = win;
         }
         win.show();
-        fileTreePanel.root.expand();
+        return win;
     }
 });

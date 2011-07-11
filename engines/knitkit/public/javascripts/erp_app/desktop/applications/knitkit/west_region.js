@@ -1,10 +1,16 @@
-Ext.override(Ext.data.Node, {
-    setLeaf: function(value){
-        this.leaf = value;
-    }
-}); 
+Ext.tree.Panel.updateNodeIcon = function(htmlItem, oldCssCls, newCssCls){
+    var nodeIconEl = Ext.get(htmlItem.children[0].children[0].children[3]);
+    nodeIconEl.removeCls(oldCssCls);
+    nodeIconEl.addCls(newCssCls);
+};
 
-Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel, {
+Ext.tree.Panel.updateNodeText = function(htmlItem, oldText, newText){
+    htmlItem.innerHTML = htmlItem.innerHTML.replace(oldText, newText);
+};
+
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
+    extend:"Ext.tab.Panel",
+    alias:'widget.knitkit_westregion',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -28,11 +34,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     url: './knitkit/section/delete',
                     method: 'POST',
                     params:{
-                        id:node.id.split('_')[1]
+                        id:node.data.id.split('_')[1]
                     },
                     success: function(response) {
                         self.clearWindowStatus();
-                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        var obj =  Ext.decode(response.responseText);
                         if(obj.success){
                             node.remove(true);
                         }
@@ -71,11 +77,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     url: './knitkit/site/delete',
                     method: 'POST',
                     params:{
-                        id:node.id.split('_')[1]
+                        id:node.data.id.split('_')[1]
                     },
                     success: function(response) {
                         self.clearWindowStatus();
-                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        var obj =  Ext.decode(response.responseText);
                         if(obj.success){
                             node.remove(true);
                         }
@@ -144,17 +150,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 if(btn == 'ok'){
                                     codeMirror.setValue(codeMirror.getValue() + '<%=render_content_area(:'+text+')%>');
                                 }
-                            });
-                        }
-                    },
-                    {
-                        text: 'Insert Content',
-                        handler: function(btn){
-                            var codeMirror = btn.findParentByType('codemirror');
-                            Ext.MessageBox.prompt('New File', 'Please enter permalink:', function(btn, text){
-                                if(btn == 'ok'){
-                                    codeMirror.setValue(codeMirror.getValue() + '<%=render_content(:'+text+')%>');
-                                }
+
                             });
                         }
                     }]);
@@ -167,7 +163,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         });
     },
 
-    changeSecurityOnSection : function(node, secure){
+    changeSecurityOnSection : function(node, secure, htmlItem){
         var self = this;
         self.setWindowStatus('Loading securing section...');
         var conn = new Ext.data.Connection();
@@ -175,21 +171,21 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
             url: './knitkit/section/update_security',
             method: 'POST',
             params:{
-                id:node.id.split('_')[1],
-                site_id:node.attributes.siteId,
+                id:node.data.id.split('_')[1],
+                site_id:node.data.siteId,
                 secure:secure
             },
             success: function(response) {
-                var obj = Ext.util.JSON.decode(response.responseText);
+                var obj = Ext.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     if(secure){
-                        node.getUI().getIconEl().className = "x-tree-node-icon icon-document_lock";
+                        Ext.tree.Panel.updateNodeIcon(htmlItem, 'icon-document', 'icon-document_lock');
                     }
                     else{
-                        node.getUI().getIconEl().className = "x-tree-node-icon icon-document";
+                        Ext.tree.Panel.updateNodeIcon(htmlItem, 'icon-document_lock', 'icon-document');
                     }
-                    node.attributes.isSecured = secure;
+                    node.data.isSecured = secure;
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error securing section');
@@ -204,11 +200,119 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
 
     initComponent: function() {
         var self = this;
-        this.sitesTree = new Ext.tree.TreePanel({
-            dataUrl:'./knitkit/websites',
-            root:{
-                nodeType: 'async'
+        
+        var store = Ext.create('Ext.data.TreeStore', {
+            proxy:{
+                type: 'ajax',
+                url: './knitkit/websites'
             },
+            root: {
+                text: 'Websites',
+                expanded: true
+            },
+            fields:[
+            {
+                name:'isWebsiteNavItem'
+            },
+            {
+                name:'text'
+            },
+            {
+                name:'iconCls'
+            },
+            {
+                name:'leaf'
+            },
+            {
+                name:'isSection'
+            },
+            {
+                name:'isHost'
+            },
+            {
+                name:'isSecured'
+            },
+            {
+                name:'url'
+            },
+            {
+                name:'inMenu'
+            },
+            {
+                name:'isBlog'
+            },
+            {
+                name:'hasLayout'
+            },
+            {
+                name:'siteId'
+            },
+            {
+                name:'type'
+            },
+            {
+                name:'isWebsite'
+            },
+            {
+                name:'name'
+            },
+            {
+                name:'tilte'
+            },
+            {
+                name:'subtitle'
+            },
+            {
+                name:'email'
+            },
+            {
+                name:'autoActivatePublication'
+            },
+            {
+                name:'emailInquiries'
+            },
+            {
+                name:'isHostRoot'
+            },
+            {
+                name:'websiteHostId'
+            },
+            {
+                name:'host'
+            },
+            {
+                name:'websiteId'
+            },
+            {
+                name:'isSectionRoot'
+            },
+            {
+                name:'isWebsiteNav'
+            },
+            {
+                name:'isMenuRoot'
+            },
+            {
+                name:'linkToType'
+            },
+            {
+                name:'linkToId'
+            },
+            {
+                name:'websiteNavItemId'
+            },
+            {
+                name:'type'
+            },
+            {
+                name:'siteName'
+            }
+            ]
+        });
+
+        this.sitesTree = new Ext.tree.TreePanel({
+            store:store,
+            dataUrl:'./knitkit/websites',
             region: 'center',
             rootVisible:false,
             enableDD :true,
@@ -268,51 +372,52 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                     });
 
                 },
-                'click':function(node, e){
-                    if(node.attributes['isSection']){
-                        self.getArticles(node);
+                'itemclick':function(view, record, item, index, e){
+                    e.stopEvent();
+                    if(record.data['isSection']){
+                        self.getArticles(record);
                     }
                     else
-                    if(node.attributes['isHost']){
-                        var webNavigator = CompassDesktop.getModules().find("id == 'web-navigator-win'");
-                        webNavigator.createWindow(node.attributes['url']);
+                    if(record.data['isHost']){
+                        var webNavigator = window.compassDesktop.getModule('web-navigator-win');
+                        webNavigator.createWindow(record.data['url']);
                     }
                 },
-                'contextmenu':function(node, e){
+                'itemcontextmenu':function(view, record, htmlItem, index, e){
                     e.stopEvent();
                     var items = [];
 
-                    if(!Compass.ErpApp.Utility.isBlank(node.attributes['url'])){
+                    if(!Compass.ErpApp.Utility.isBlank(record.data['url'])){
                         items.push({
                             text:'View In Web Navigator',
                             iconCls:'icon-globe',
                             listeners:{
                                 'click':function(){
-                                    var webNavigator = CompassDesktop.getModules().find("id == 'web-navigator-win'");
-                                    webNavigator.createWindow(node.attributes['url']);
+                                    var webNavigator = window.compassDesktop.getModule('web-navigator-win');
+                                    webNavigator.createWindow(record.data['url']);
                                 }
                             }
                         });
                     }
 
-                    if(node.attributes['isSection']){
+                    if(record.data['isSection']){
                         items.push({
                             text:'View Articles',
                             iconCls:'icon-document',
                             listeners:{
                                 'click':function(){
-                                    self.getArticles(node);
+                                    self.getArticles(record);
                                 }
                             }
                         });
 
-                        if(node.attributes.isSecured){
+                        if(record.data.isSecured){
                             items.push({
                                 text:'Unsecure',
                                 iconCls:'icon-document',
                                 listeners:{
                                     'click':function(){
-                                        self.changeSecurityOnSection(node, false);
+                                        self.changeSecurityOnSection(record, false, htmlItem);
                                     }
                                 }
                             });
@@ -323,7 +428,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 iconCls:'icon-document_lock',
                                 listeners:{
                                     'click':function(){
-                                        self.changeSecurityOnSection(node, true);
+                                        self.changeSecurityOnSection(record, true, htmlItem);
                                     }
                                 }
                             });
@@ -337,7 +442,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                     var addSectionWindow = new Ext.Window({
                                         layout:'fit',
                                         width:375,
-                                        title:'New Section',
+                                        title:'Add Section',
                                         height:150,
                                         plain: true,
                                         buttonAlign:'center',
@@ -357,7 +462,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 name:'title'
                                             },
                                             {
-                                                width: 100,
                                                 xtype: 'combo',
                                                 forceSelection:true,
                                                 store: [
@@ -374,7 +478,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 xtype:'radiogroup',
                                                 fieldLabel:'Display in menu?',
                                                 name:'in_menu',
-                                                width:100,
                                                 columns:2,
                                                 items:[
                                                 {
@@ -393,7 +496,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             {
                                                 xtype:'hidden',
                                                 name:'website_section_id',
-                                                value:node.attributes.id.split('_')[1]
+                                                value:record.data.id.split('_')[1]
                                             }
                                             ]
                                         }),
@@ -402,16 +505,15 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             listeners:{
                                                 'click':function(button){
                                                     var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
+                                                    var formPanel = window.query('.form')[0];
                                                     self.setWindowStatus('Creating section...');
                                                     formPanel.getForm().submit({
                                                         reset:true,
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj = Ext.decode(action.response.responseText);
                                                             if(obj.success){
-                                                                node.setLeaf(false);
-                                                                node.appendChild(obj.node);
+                                                                record.appendChild(obj.node);
                                                             }
                                                             else{
                                                                 Ext.Msg.alert("Error", obj.msg);
@@ -419,7 +521,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         },
                                                         failure:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj =  Ext.decode(action.response.responseText);
                                                             Ext.Msg.alert("Error", obj.msg);
                                                         }
                                                     });
@@ -462,7 +564,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 xtype:'textfield',
                                                 fieldLabel:'Title',
                                                 id:'knitkitUpdateWebsiteSectionTitle',
-                                                value:node.attributes.text,
+                                                value:record.data.text,
                                                 name:'title'
                                             },
                                             {
@@ -470,27 +572,26 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 fieldLabel:'Display in menu?',
                                                 id:'knitkitUpdateSectionDisplayInMenu',
                                                 name:'in_menu',
-                                                width:100,
                                                 columns:2,
                                                 items:[
                                                 {
                                                     boxLabel:'Yes',
                                                     name:'in_menu',
                                                     inputValue: 'yes',
-                                                    checked:node.attributes.inMenu
+                                                    checked:record.data.inMenu
                                                 },
 
                                                 {
                                                     boxLabel:'No',
                                                     name:'in_menu',
                                                     inputValue: 'no',
-                                                    checked:!node.attributes.inMenu
+                                                    checked:!record.data.inMenu
                                                 }]
                                             },
                                             {
                                                 xtype:'hidden',
                                                 name:'id',
-                                                value:node.attributes.id.split('_')[1]
+                                                value:record.data.id.split('_')[1]
                                             }
                                             ]
                                         }),
@@ -499,19 +600,20 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             listeners:{
                                                 'click':function(button){
                                                     var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
+                                                    var formPanel = window.query('.form')[0];
                                                     self.setWindowStatus('Updating section...');
                                                     formPanel.getForm().submit({
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
                                                             var newSectionTitle = Ext.getCmp('knitkitUpdateWebsiteSectionTitle').getValue();
-                                                            node.setText(newSectionTitle);
-                                                            node.attributes.inMenu = Ext.getCmp('knitkitUpdateSectionDisplayInMenu').getValue() == 'yes';
+                                                            Ext.tree.Panel.updateNodeText(htmlItem, record.data.text, newSectionTitle);
+                                                            record.data.text = newSectionTitle;
+                                                            record.data.inMenu = Ext.getCmp('knitkitUpdateSectionDisplayInMenu').getValue() == 'yes';
                                                             updateSectionWindow.close();
                                                         },
                                                         failure:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj =  Ext.decode(action.response.responseText);
                                                             Ext.Msg.alert("Error", obj.msg);
                                                         }
                                                     });
@@ -530,25 +632,25 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
 
                         //no layouts for blogs.
-                        if(Compass.ErpApp.Utility.isBlank(node.attributes['isBlog']) && node.attributes['hasLayout']){
+                        if(Compass.ErpApp.Utility.isBlank(record.data['isBlog']) && record.data['hasLayout']){
                             items.push({
                                 text:'Edit Layout',
                                 iconCls:'icon-edit',
                                 listeners:{
                                     'click':function(){
-                                        self.editSectionLayout(node.text, node.id.split('_')[1], node.attributes.siteId);
+                                        self.editSectionLayout(record.data.text, record.data.id.split('_')[1], record.data.siteId);
                                     }
                                 }
                             });
                         }
                         else
-                        if(Compass.ErpApp.Utility.isBlank(node.attributes['isBlog'])){
+                        if(Compass.ErpApp.Utility.isBlank(record.data['isBlog'])){
                             items.push({
                                 text:'Add Layout',
                                 iconCls:'icon-add',
                                 listeners:{
                                     'click':function(){
-                                        var sectionId = node.id.split('_')[1];
+                                        var sectionId = record.data.id.split('_')[1];
                                         var conn = new Ext.data.Connection();
                                         conn.request({
                                             url: './knitkit/section/add_layout',
@@ -558,10 +660,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             },
                                             success: function(response) {
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                                var obj =  Ext.decode(response.responseText);
                                                 if(obj.success){
-                                                    node.attributes.hasLayout = true;
-                                                    self.editSectionLayout(node.text, sectionId, node.attributes.siteId);
+                                                    record.data.hasLayout = true;
+                                                    self.editSectionLayout(record.data.text, sectionId, record.data.siteId);
                                                 }
                                                 else
                                                 {
@@ -579,24 +681,24 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         }
 
                         items.push({
-                            text:'Delete ' + node.attributes["type"],
+                            text:'Delete ' + record.data["type"],
                             iconCls:'icon-delete',
                             listeners:{
                                 'click':function(){
-                                    self.deleteSection(node);
+                                    self.deleteSection(record);
                                 }
                             }
                         });
                     }
                     else
-                    if(node.attributes['isWebsite']){
+                    if(record.data['isWebsite']){
                         if(ErpApp.Authentication.RoleManager.hasRole(['admin','publisher'])){
                             items.push({
                                 text:'Publish',
                                 iconCls:'icon-document_up',
                                 listeners:{
                                     'click':function(){
-                                        self.publish(node);
+                                        self.publish(record);
                                     }
                                 }
                             });
@@ -607,7 +709,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             iconCls:'icon-documents',
                             listeners:{
                                 'click':function(){
-                                    self.getPublications(node);
+                                    self.getPublications(record);
                                 }
                             }
                         });
@@ -617,7 +719,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             iconCls:'icon-document',
                             listeners:{
                                 'click':function(){
-                                    self.initialConfig['centerRegion'].viewWebsiteInquiries(node.attributes.id.split('_')[1], node.attributes.title);
+                                    self.initialConfig['centerRegion'].viewWebsiteInquiries(record.data.id.split('_')[1], record.data.title);
                                 }
                             }
                         });
@@ -648,7 +750,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 fieldLabel:'Name',
                                                 allowBlank:false,
                                                 name:'name',
-                                                value:node.attributes['name']
+                                                value:record.data['name']
                                             },
                                             {
                                                 xtype:'textfield',
@@ -656,14 +758,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 id:'knitkitUpdateSiteTitle',
                                                 allowBlank:false,
                                                 name:'title',
-                                                value:node.attributes['title']
+                                                value:record.data['title']
                                             },
                                             {
                                                 xtype:'textfield',
                                                 fieldLabel:'Sub Title',
                                                 allowBlank:true,
                                                 name:'subtitle',
-                                                value:node.attributes['subtitle']
+                                                value:record.data['subtitle']
 
                                             },
                                             {
@@ -671,7 +773,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 fieldLabel:'Email',
                                                 allowBlank:false,
                                                 name:'email',
-                                                value:node.attributes['email']
+                                                value:record.data['email']
                                             },
                                             {
                                                 xtype:'radiogroup',
@@ -685,13 +787,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     boxLabel:'Yes',
                                                     name:'auto_activate_publication',
                                                     inputValue: 'yes',
-                                                    checked:node.attributes['autoActivatePublication']
+                                                    checked:record.data['autoActivatePublication']
                                                 },
                                                 {
                                                     boxLabel:'No',
                                                     name:'auto_activate_publication',
                                                     inputValue: 'no',
-                                                    checked:!node.attributes['autoActivatePublication']
+                                                    checked:!record.data['autoActivatePublication']
                                                 }]
                                             },
                                             {
@@ -706,7 +808,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     boxLabel:'Yes',
                                                     name:'email_inquiries',
                                                     inputValue: 'yes',
-                                                    checked:node.attributes['emailInquiries'],
+                                                    checked:record.data['emailInquiries'],
                                                     listeners:{
                                                         scope:this,
                                                         'check':function(checkbox, checked){
@@ -722,13 +824,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     boxLabel:'No',
                                                     name:'email_inquiries',
                                                     inputValue: 'no',
-                                                    checked:!node.attributes['emailInquiries']
+                                                    checked:!record.data['emailInquiries']
                                                 }]
                                             },
                                             {
                                                 xtype:'hidden',
                                                 name:'id',
-                                                value:node.attributes.id.split('_')[1]
+                                                value:record.data.id.split('_')[1]
                                             }
                                             ]
                                         }),
@@ -742,13 +844,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     formPanel.getForm().submit({
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            node.attributes['name'] = form.findField('name').getValue();
-                                                            node.attributes['title'] = form.findField('title').getValue();
-                                                            node.attributes['subtitle'] = form.findField('subtitle').getValue();
-                                                            node.attributes['email'] = form.findField('email').getValue();
-                                                            node.setText(node.attributes['title']);
-                                                            node.attributes.emailInquiries = form.findField('knitkitEmailInquiries').getValue().inputValue == 'yes';
-                                                            node.attributes.autoActivatePublication = form.findField('knitkitAutoActivatePublication').getValue().inputValue == 'yes';
+                                                            record.data['name'] = form.findField('name').getValue();
+                                                            record.data['title'] = form.findField('title').getValue();
+                                                            record.data['subtitle'] = form.findField('subtitle').getValue();
+                                                            record.data['email'] = form.findField('email').getValue();
+                                                            //node.setText(node.attributes['title']);
+                                                            record.data.emailInquiries = form.findField('knitkitEmailInquiries').getValue().inputValue == 'yes';
+                                                            record.data.autoActivatePublication = form.findField('knitkitAutoActivatePublication').getValue().inputValue == 'yes';
                                                             editWebsiteWindow.close();
                                                         },
                                                         failure:function(form, action){
@@ -775,7 +877,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             iconCls:'icon-delete',
                             listeners:{
                                 'click':function(){
-                                    self.deleteSite(node);
+                                    self.deleteSite(record);
                                 }
                             }
                         });
@@ -785,13 +887,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             iconCls:'icon-document_out',
                             listeners:{
                                 'click':function(){
-                                    self.exportSite(node.id.split('_')[1]);
+                                    self.exportSite(record.data.id.split('_')[1]);
                                 }
                             }
                         });
                     }
                     else
-                    if(node.attributes['isHostRoot']){
+                    if(record.data['isHostRoot']){
                         items.push({
                             text:'Add Host',
                             iconCls:'icon-add',
@@ -823,7 +925,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             {
                                                 xtype:'hidden',
                                                 name:'id',
-                                                value:node.attributes.websiteId
+                                                value:record.data.websiteId
                                             }
                                             ]
                                         }),
@@ -838,10 +940,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         reset:true,
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj =  Ext.decode(action.response.responseText);
                                                             if(obj.success){
                                                                 addHostWindow.close();
-                                                                node.appendChild(obj.node);
+                                                                record.appendChild(obj.node);
                                                             }
                                                             else{
                                                                 Ext.Msg.alert("Error", obj.msg);
@@ -867,7 +969,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
                     }
                     else
-                    if(node.attributes['isHost']){
+                    if(record.data['isHost']){
                         items.push({
                             text:'Update',
                             iconCls:'icon-edit',
@@ -895,13 +997,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 fieldLabel:'Host',
                                                 id:'knitkitUpdateWebsiteHostHost',
                                                 name:'host',
-                                                value:node.attributes.host,
+                                                value:record.data.host,
                                                 allowBlank:false
                                             },
                                             {
                                                 xtype:'hidden',
                                                 name:'id',
-                                                value:node.attributes.websiteHostId
+                                                value:record.data.websiteHostId
                                             }
                                             ]
                                         }),
@@ -916,11 +1018,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         reset:false,
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj =  Ext.decode(action.response.responseText);
                                                             if(obj.success){
                                                                 var newHost = Ext.getCmp('knitkitUpdateWebsiteHostHost').getValue();
-                                                                node.attributes.host = newHost;
-                                                                node.setText(newHost);
+                                                                record.data.host = newHost;
+                                                                //node.setText(newHost);
                                                                 updateHostWindow.close();
                                                             }
                                                             else{
@@ -964,13 +1066,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 url: './knitkit/site/delete_host',
                                                 method: 'POST',
                                                 params:{
-                                                    id:node.attributes.websiteHostId
+                                                    id:record.data.websiteHostId
                                                 },
                                                 success: function(response) {
                                                     self.clearWindowStatus();
-                                                    var obj =  Ext.util.JSON.decode(response.responseText);
+                                                    var obj = Ext.decode(response.responseText);
                                                     if(obj.success){
-                                                        node.remove(true);
+                                                        record.remove(true);
                                                     }
                                                     else{
                                                         Ext.Msg.alert('Error', 'Error deleting Host');
@@ -987,7 +1089,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                             }
                         });
                     }
-                    else if(node.attributes['isSectionRoot']){
+                    else if(record.data['isSectionRoot']){
                         items.push({
                             text:'Add Section',
                             iconCls:'icon-add',
@@ -1052,7 +1154,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             {
                                                 xtype:'hidden',
                                                 name:'websiteId',
-                                                value:node.attributes.websiteId
+                                                value:record.data.websiteId
                                             }
                                             ]
                                         }),
@@ -1067,9 +1169,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         reset:true,
                                                         success:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj = Ext.decode(action.response.responseText);
                                                             if(obj.success){
-                                                                node.appendChild(obj.node);
+                                                                record.appendChild(obj.node);
                                                             }
                                                             else{
                                                                 Ext.Msg.alert("Error", obj.msg);
@@ -1077,7 +1179,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                         },
                                                         failure:function(form, action){
                                                             self.clearWindowStatus();
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj = Ext.decode(action.response.responseText);
                                                             Ext.Msg.alert("Error", obj.msg);
                                                         }
                                                     });
@@ -1096,7 +1198,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
                     }
                     else
-                    if(node.attributes['isMenuRoot']){
+                    if(record.data['isMenuRoot']){
                         items.push({
                             text:'Add Menu',
                             iconCls:'icon-add',
@@ -1126,7 +1228,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         {
                                             xtype:'hidden',
                                             name:'website_id',
-                                            value:node.attributes.websiteId
+                                            value:record.data.websiteId
                                         }
                                         ]
                                     }),
@@ -1141,9 +1243,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     reset:true,
                                                     success:function(form, action){
                                                         self.clearWindowStatus();
-                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        var obj = Ext.decode(action.response.responseText);
                                                         if(obj.success){
-                                                            node.appendChild(obj.node);
+                                                            record.appendChild(obj.node);
                                                         }
                                                         else{
                                                             Ext.Msg.alert("Error", obj.msg);
@@ -1151,7 +1253,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     },
                                                     failure:function(form, action){
                                                         self.clearWindowStatus();
-                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        var obj = Ext.decode(action.response.responseText);
                                                         Ext.Msg.alert("Error", obj.msg);
                                                     }
                                                 });
@@ -1169,7 +1271,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
                     }
                     else
-                    if(node.attributes['isWebsiteNav']){
+                    if(record.data['isWebsiteNav']){
                         items.push({
                             text:'Add Menu Item',
                             iconCls:'icon-add',
@@ -1240,7 +1342,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 xtype:'jsonstore',
                                                 autoLoad:true,
                                                 baseParams:{
-                                                    website_id:node.attributes.websiteId
+                                                    website_id:record.data.websiteId
                                                 },
                                                 url:'./knitkit/section/existing_sections',
                                                 fields:[
@@ -1273,7 +1375,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         {
                                             xtype:'hidden',
                                             name:'website_nav_id',
-                                            value:node.attributes.websiteNavId
+                                            value:record.data.websiteNavId
                                         }
                                         ]
                                     }),
@@ -1288,9 +1390,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     reset:true,
                                                     success:function(form, action){
                                                         self.clearWindowStatus();
-                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        var obj = Ext.decode(action.response.responseText);
                                                         if(obj.success){
-                                                            node.appendChild(obj.node);
+                                                            record.appendChild(obj.node);
                                                         }
                                                         else{
                                                             Ext.Msg.alert("Error", obj.msg);
@@ -1302,7 +1404,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                             Ext.Msg.alert("Error", 'Could not create menu item');
                                                         }
                                                         else{
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj = Ext.decode(action.response.responseText);
                                                             Ext.Msg.alert("Error", obj.msg);
                                                         }
                                                        
@@ -1344,7 +1446,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         {
                                             xtype:'textfield',
                                             fieldLabel:'Name',
-                                            value:node.text,
+                                            value:record.data.text,
                                             id:'knitkit_website_nav_update_name',
                                             allowBlank:false,
                                             name:'name'
@@ -1352,7 +1454,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         {
                                             xtype:'hidden',
                                             name:'website_nav_id',
-                                            value:node.attributes.websiteNavId
+                                            value:record.data.websiteNavId
                                         }
                                         ]
                                     }),
@@ -1367,10 +1469,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     reset:false,
                                                     success:function(form, action){
                                                         self.clearWindowStatus();
-                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        var obj = Ext.decode(action.response.responseText);
                                                         if(obj.success){
                                                             var newText = Ext.getCmp('knitkit_website_nav_update_name').getValue();
-                                                            node.getUI().getTextEl().innerHTML = newText;
+                                                        //node.getUI().getTextEl().innerHTML = newText;
                                                         }
                                                         else{
                                                             Ext.Msg.alert("Error", obj.msg);
@@ -1378,7 +1480,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     },
                                                     failure:function(form, action){
                                                         self.clearWindowStatus();
-                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        var obj = Ext.decode(action.response.responseText);
                                                         Ext.Msg.alert("Error", obj.msg);
                                                     }
                                                 });
@@ -1412,13 +1514,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             url: './knitkit/website_nav/delete',
                                             method: 'POST',
                                             params:{
-                                                id:node.attributes.websiteNavId
+                                                id:record.data.websiteNavId
                                             },
                                             success: function(response) {
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                                var obj = Ext.decode(response.responseText);
                                                 if(obj.success){
-                                                    node.remove(true);
+                                                    record.remove(true);
                                                 }
                                                 else{
                                                     Ext.Msg.alert('Error', 'Error deleting menu');
@@ -1435,7 +1537,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                         });
                     }
                     else
-                    if(node.attributes['isWebsiteNavItem'])
+                    if(record.data['isWebsiteNavItem'])
                     {
                         items.push({
                             text:'Update Menu Item',
@@ -1460,7 +1562,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         {
                                             xtype:'textfield',
                                             fieldLabel:'Title',
-                                            value:node.text,
+                                            value:record.data.text,
                                             allowBlank:false,
                                             name:'title'
                                         },
@@ -1482,7 +1584,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             //['article','Article'],
                                             ['url','Url']
                                             ],
-                                            value:node.attributes.linkToType,
+                                            value:record.data.linkToType,
                                             listeners:{
                                                 'change':function(combo, newValue, oldValue){
                                                     switch(newValue){
@@ -1509,14 +1611,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             xtype:'combo',
                                             id:'knitkit_website_nav_item_article',
                                             hiddenName:'article_id',
-                                            hidden:(node.attributes.linkToType == 'website_section' || node.attributes.linkToType == 'url'),
+                                            hidden:(record.data.linkToType == 'website_section' || record.data.linkToType == 'url'),
                                             name:'article_id',
                                             loadingText:'Retrieving Articles...',
                                             store:{
                                                 xtype:'jsonstore',
                                                 autoLoad:true,
                                                 baseParams:{
-                                                    website_id:node.attributes.websiteId
+                                                    website_id:record.data.websiteId
                                                 },
                                                 url:'./knitkit/articles/existing_articles',
                                                 fields:[
@@ -1530,7 +1632,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 ],
                                                 listeners:{
                                                     'load':function(store, records, options){
-                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(node.attributes.linkedToId);
+                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(record.data.linkedToId);
                                                     }
                                                 }
                                             },
@@ -1548,14 +1650,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             xtype:'combo',
                                             id:'knitkit_website_nav_item_section',
                                             hiddenName:'website_section_id',
-                                            hidden:(node.attributes.linkToType == 'url' || node.attributes.linkToType == 'article'),
+                                            hidden:(record.data.linkToType == 'url' || record.data.linkToType == 'article'),
                                             name:'website_section_id',
                                             loadingText:'Retrieving Sections...',
                                             store:{
                                                 xtype:'jsonstore',
                                                 autoLoad:true,
                                                 baseParams:{
-                                                    website_id:node.attributes.websiteId
+                                                    website_id:record.data.websiteId
                                                 },
                                                 url:'./knitkit/section/existing_sections',
                                                 fields:[
@@ -1569,7 +1671,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                 ],
                                                 listeners:{
                                                     'load':function(store, records, options){
-                                                        Ext.getCmp('knitkit_website_nav_item_section').setValue(node.attributes.linkedToId);
+                                                        Ext.getCmp('knitkit_website_nav_item_section').setValue(record.data.linkedToId);
                                                     }
                                                 }
                                             },
@@ -1586,15 +1688,15 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         {
                                             xtype:'textfield',
                                             fieldLabel:'Url',
-                                            value:node.attributes.url,
+                                            value:record.data.url,
                                             id:'knitkit_website_nav_item_url',
-                                            hidden:(node.attributes.linkToType == 'website_section' || node.attributes.linkToType == 'article'),
+                                            hidden:(record.data.linkToType == 'website_section' || record.data.linkToType == 'article'),
                                             name:'url'
                                         },
                                         {
                                             xtype:'hidden',
                                             name:'website_nav_item_id',
-                                            value:node.attributes.websiteNavItemId
+                                            value:record.data.websiteNavItemId
                                         }
                                         ]
                                     }),
@@ -1609,12 +1711,12 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                     reset:false,
                                                     success:function(form, action){
                                                         self.clearWindowStatus();
-                                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                        var obj = Ext.decode(action.response.responseText);
                                                         if(obj.success){
-                                                            node.attributes.linkedToId = obj.linkedToId;
-                                                            node.attributes.linkToType = obj.linkToType;
-                                                            node.attributes.url = obj.url;
-                                                            node.getUI().getTextEl().innerHTML = obj.title;
+                                                            record.data.linkedToId = obj.linkedToId;
+                                                            record.data.linkToType = obj.linkToType;
+                                                            record.data.url = obj.url;
+                                                        //node.getUI().getTextEl().innerHTML = obj.title;
                                                         }
                                                         else{
                                                             Ext.Msg.alert("Error", obj.msg);
@@ -1626,7 +1728,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                                             Ext.Msg.alert("Error", 'Could not create menu item');
                                                         }
                                                         else{
-                                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                            var obj = Ext.decode(action.response.responseText);
                                                             Ext.Msg.alert("Error", obj.msg);
                                                         }
                                                        
@@ -1662,13 +1764,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             url: './knitkit/website_nav/delete_menu_item',
                                             method: 'POST',
                                             params:{
-                                                id:node.websiteNavItemId
+                                                id:record.data.websiteNavItemId
                                             },
                                             success: function(response) {
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                                var obj = Ext.decode(response.responseText);
                                                 if(obj.success){
-                                                    node.remove(true);
+                                                    record.remove(true);
                                                 }
                                                 else{
                                                     Ext.Msg.alert('Error', 'Error deleting menu item');
@@ -1762,7 +1864,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                     xtype:'radiogroup',
                                     fieldLabel:'Auto Activate Publication?',
                                     name:'auto_activate_publication',
-                                    width:100,
                                     columns:2,
                                     items:[
                                     {
@@ -1781,7 +1882,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                     xtype:'radiogroup',
                                     fieldLabel:'Email Inquiries',
                                     name:'email_inquiries',
-                                    width:100,
                                     columns:2,
                                     items:[
                                     {
@@ -1814,14 +1914,14 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                 listeners:{
                                     'click':function(button){
                                         var window = button.findParentByType('window');
-                                        var formPanel = window.findByType('form')[0];
+                                        var formPanel = window.query('.form')[0];
                                         self.setWindowStatus('Creating website...');
                                         formPanel.getForm().submit({
                                             success:function(form, action){
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                var obj = Ext.decode(action.response.responseText);
                                                 if(obj.success){
-                                                    self.sitesTree.getRootNode().reload();
+                                                    self.sitesTree.getStore().load();
                                                     addWebsiteWindow.close();
                                                 }
                                             },
@@ -1883,7 +1983,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                         formPanel.getForm().submit({
                                             success:function(form, action){
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                var obj =  Ext.decode(action.response.responseText);
                                                 if(obj.success){
                                                     self.sitesTree.getRootNode().reload();
                                                     importWebsiteWindow.close();
@@ -1894,7 +1994,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             },
                                             failure:function(form, action){
                                                 self.clearWindowStatus();
-                                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                                var obj =  Ext.decode(action.response.responseText);
                                                 if(obj != null){
                                                     Ext.Msg.alert("Error", obj.message);
                                                 }
@@ -1931,13 +2031,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
 
     getArticles : function(node){
         this.contentsCardPanel.removeAll(true);
-        var xtype = 'knitkit_'+node.attributes.type.toLowerCase()+'articlesgridpanel';
+        var xtype = 'knitkit_'+node.data.type.toLowerCase()+'articlesgridpanel';
         this.contentsCardPanel.add({
             xtype:xtype,
-            title:node.attributes.siteName + ' - ' + node.attributes.text + ' - Articles',
+            title:node.data.siteName + ' - ' + node.data.text + ' - Articles',
             sectionId:node.id.split('_')[1],
             centerRegion:this.initialConfig['module'].centerRegion,
-            siteId:node.attributes.siteId
+            siteId:node.data.siteId
         });
         this.contentsCardPanel.getLayout().setActiveItem(this.contentsCardPanel.items.length - 1);
     },
@@ -1946,8 +2046,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         this.contentsCardPanel.removeAll(true);
         this.contentsCardPanel.add({
             xtype:'knitkit_publishedgridpanel',
-            title:node.attributes.siteName + ' Publications',
-            siteId:node.id.split('_')[1],
+            title:node.data.siteName + ' Publications',
+            siteId:node.data.id.split('_')[1],
             centerRegion:this.initialConfig['module'].centerRegion
         });
         this.contentsCardPanel.getLayout().setActiveItem(this.contentsCardPanel.items.length - 1);
@@ -1964,5 +2064,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
         Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('knitkit_westregion', Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion);

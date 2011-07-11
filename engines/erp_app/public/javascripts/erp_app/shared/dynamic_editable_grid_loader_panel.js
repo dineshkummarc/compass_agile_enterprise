@@ -1,6 +1,6 @@
-Ext.ns("Compass.ErpApp.Shared");
-
-Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel",{
+    extend:"Ext.Panel",
+    alias:'widget.shared_dynamiceditablegridloaderpanel',
     setupGrid: function(){
         var self = this;
         var config = this.initialConfig;
@@ -10,7 +10,7 @@ Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel = Ext.extend(Ext.Panel, {
             method: 'POST',
             params:config['params'],
             success: function(responseObject) {
-                var response =  Ext.util.JSON.decode(responseObject.responseText);
+                var response =  Ext.decode(responseObject.responseText);
                 if(response.success){
                     self.add({
                         editable:config['editable'],
@@ -21,7 +21,9 @@ Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel = Ext.extend(Ext.Panel, {
                         emptyMsg:config['emptyMsg'],
                         xtype:'shared_dynamiceditablegrid',
                         columns:response.columns,
-                        fields:response.fields
+                        fields:response.fields,
+                        model:response.model,
+                        validations:response.validations
                     });
                     self.getLayout().setActiveItem(0);
                 }
@@ -51,8 +53,6 @@ Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel = Ext.extend(Ext.Panel, {
         Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('shared_dynamiceditablegridloaderpanel', Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel);
 
 
 

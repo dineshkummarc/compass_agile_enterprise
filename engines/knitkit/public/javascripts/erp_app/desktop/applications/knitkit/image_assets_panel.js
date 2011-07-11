@@ -1,22 +1,18 @@
 Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     var self = this;
-    this.imageAssetsDataView = new Ext.DataView({
+    this.imageAssetsDataView = Ext.create("Ext.view.View",{
         id:'images',
         autoDestroy:true,
-        itemSelector: 'div.thumb-wrap',
         style:'overflow:auto',
-        multiSelect: true,
-        plugins: new Ext.DataView.DragSelector({
-            dragSafe:true
-        }),
-        store: new Ext.data.JsonStore({
-            url: './knitkit/image_assets/get_images',
-            autoLoad: false,
-            baseParams:{
-                directory:null
+        store: Ext.create('Ext.data.Store', {
+            proxy: {
+                type: 'ajax',
+                url: './knitkit/image_assets/get_images',
+                reader: {
+                    type: 'json',
+                    root: 'images'
+                }
             },
-            root: 'images',
-            id:'name',
             fields:['name', 'url','shortName']
         }),
         tpl: new Ext.XTemplate(
@@ -28,39 +24,50 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
             )
     });
 
-    this.fileTreePanel = new Compass.ErpApp.Shared.FileManagerTree({
+    this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
         autoDestroy:true,
-        xtype:'compassshared_filemanager',
-        collapsible:true,
         allowDownload:false,
-        standardUploadUrl:'./knitkit/image_assets/upload_file',
-        xhrUploadUrl:'./knitkit/image_assets/upload_file',
         addViewContentsToContextMenu:false,
         rootVisible:true,
-        loader: new Ext.tree.TreeLoader({
-            dataUrl:'./knitkit/image_assets/expand_directory'
-        }),
-        containerScroll: true,
         controllerPath:'./knitkit/image_assets',
-        region:'north',
+        standardUploadUrl:'./knitkit/image_assets/upload_file',
+        xhrUploadUrl:'./knitkit/image_assets/upload_file',
+        url:'./knitkit/image_assets/expand_directory',
+        containerScroll: true,
         height:200,
         title:'Images',
+        collapsible:true,
+        region:'north',
         listeners:{
-            'click':function(node){
-                if(!node.attributes["leaf"])
+            'itemclick':function(view, record, item, index, e){
+                e.stopEvent();
+                if(!record.data["leaf"])
                 {
                     var store = self.imageAssetsDataView.getStore();
-                    store.setBaseParam('directory', node.id);
-                    store.reload();
+                    store.setProxy({
+                        type: 'ajax',
+                        url: './knitkit/image_assets/get_images',
+                        reader: {
+                            type: 'json',
+                            root: 'images'
+                        },
+                        extraParams:{
+                            directory:record.data.id
+                        }
+                    });
+                    store.load();
+                }
+                else{
+                    return false;
                 }
             },
             'fileDeleted':function(fileTreePanel, node){
                 var store = self.imageAssetsDataView.getStore();
-                store.reload();
+                store.load();
             },
             'fileUploaded':function(fileTreePanel, node){
                 var store = self.imageAssetsDataView.getStore();
-                store.reload();
+                store.load();
             }
         }
     });
@@ -79,12 +86,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
         layout: 'border',
         autoDestroy:true,
         title:'Image Assets',
-        items: [this.fileTreePanel, imagesPanel],
-        listeners:{
-            'activate':function(){
-                self.fileTreePanel.getRootNode().reload();
-            }
-        }
+        items: [this.fileTreePanel, imagesPanel]
     });
 }
 

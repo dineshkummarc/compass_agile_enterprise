@@ -35,7 +35,7 @@ class ErpApp::Desktop::UserManagement::RoleManagementController < ErpApp::Deskto
   def roles_to_node_hashes(roles)
     node_hashes = []
     roles.each do |role|
-      node_hashes << {:text => role.description, :icon_cls => 'icon-user', :is_leaf => true, :id => role.id}
+      node_hashes << {:text => role.description, :icon_cls => 'icon-user', :is_leaf => true, :attributes => {:role_id => role.id}}
     end
 
     node_hashes

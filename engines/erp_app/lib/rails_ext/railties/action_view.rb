@@ -5,31 +5,29 @@ ActionView::Base.class_eval do
     resources << javascript_include_tag("/javascripts/erp_app/shared/file_upload/Ext.ux.AwesomeUploader.js",
       "/javascripts/erp_app/shared/file_upload/Ext.ux.AwesomeUploaderLocalization.js",
       "/javascripts/erp_app/shared/file_upload/Ext.ux.XHRUpload.js",
-      "/javascripts/erp_app/shared/file_upload/Ext.ux.form.FileUploadField.js",
       "/javascripts/erp_app/shared/file_upload/upload_window.js"
     )
 
-    resources << stylesheet_link_tag("/stylesheets/erp_app/shared/file_upload/fileuploadfield.css",
-      "/stylesheets/erp_app/shared/file_upload/AwesomeUploader.css")
+    resources << stylesheet_link_tag("/stylesheets/erp_app/shared/file_upload/AwesomeUploader.css")
 
     resources
   end
 
-  def include_extjs(version='ext', theme=nil)
+  def include_extjs(theme=nil, debug=false)
     resources = ''
 
-    if Rails.env == 'development' or Rails.env == 'adam'
-      resources << javascript_include_tag("/javascripts/#{version}/adapter/ext/ext-base-debug.js","#{version}/ext-all-debug.js")
+    if(debug)
+      resources << javascript_include_tag("ext_4_0_2/ext-all-debug.js")
     else
-      resources << javascript_include_tag("/javascripts/#{version}/adapter/ext/ext-base.js","#{version}/ext-all.js")
+      resources << javascript_include_tag("ext_4_0_2/ext-all.js")
     end
 
-    resources << stylesheet_link_tag("/stylesheets/#{version}/resources/css/ext-all.css")
-
-    unless theme.nil?
-      resources << stylesheet_link_tag('/stylesheets/ext/resources/css/xtheme-slate.css')
+    if theme
+      resources << stylesheet_link_tag("/stylesheets/ext_4_0_2/resources/css/#{theme}")
+    else
+      resources << stylesheet_link_tag("/stylesheets/ext_4_0_2/resources/css/ext-all.css")
     end
-
+    
     resources
   end
   

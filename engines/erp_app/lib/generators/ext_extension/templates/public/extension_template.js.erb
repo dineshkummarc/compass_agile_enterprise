@@ -1,4 +1,7 @@
-<%=javascript_class_name %> = Ext.extend(<%=ext_extension_class %>, {
+Ext.define("<%=javascript_class_name %>",{
+  extend:"<%=ext_extension_class %>",
+  //uncomment and give an xtype if you want this class to use an xtype
+  //alias:'widget.widget_name',
   initComponent: function() {
     <%=javascript_class_name %>.superclass.initComponent.call(this, arguments);
   },
@@ -9,6 +12,3 @@
     <%=javascript_class_name %>.superclass.constructor.call(this, config);
   }
 });
-
-//uncomment and give an xtype if you want this class to use an xtype
-//Ext.reg('xtype', <%=javascript_class_name %>);

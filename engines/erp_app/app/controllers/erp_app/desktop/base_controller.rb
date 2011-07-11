@@ -8,6 +8,8 @@ class ErpApp::Desktop::BaseController < ErpApp::ApplicationController
   def index
     @user     = current_user
     @desktop  = ::Desktop.find_by_user(@user)
+
+
   end
 
   protected

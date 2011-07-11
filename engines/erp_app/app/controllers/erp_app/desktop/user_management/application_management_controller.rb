@@ -56,7 +56,7 @@ class ErpApp::Desktop::UserManagement::ApplicationManagementController < ErpApp:
   def applications_to_node_hashes(applications)
     node_hashes = []
     applications.each do |application|
-      node_hashes << {:text => application.description, :icon_cls => application.icon, :is_leaf => true, :id => application.id}
+      node_hashes << {:text => application.description, :attributes => {:app_id => application.id}, :icon_cls => application.icon, :is_leaf => true}
     end
 
     node_hashes

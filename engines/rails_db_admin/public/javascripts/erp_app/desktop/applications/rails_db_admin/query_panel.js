@@ -1,10 +1,30 @@
-Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
+    extend:"Ext.Panel",
+    alias:'widget.railsdbadmin_querypanel',
     gridContainer : null,
-
     initComponent: function() {
         var self = this;
         var messageBox = null;
-		
+
+        var savedQueriesJsonStore = Ext.create('Ext.data.Store', {
+            proxy: {
+                type: 'ajax',
+                url: './rails_db_admin/queries/saved_queries',
+                reader: {
+                    type: 'json',
+                    root: 'data'
+                }
+            },
+            fields:[
+            {
+                name:'value'
+            },
+            {
+                name:'display'
+            }
+            ]
+        });
+
         var savedQueriesJsonStore = new Ext.data.JsonStore({
             url:'./rails_db_admin/queries/saved_queries',
             root:'data',
@@ -22,7 +42,17 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
             listeners:{
                 'beforeload':function(store){
                     var database = self.module.getDatabase();
-                    store.setBaseParam('database', database);
+                    store.setProxy({
+                        type: 'ajax',
+                        url: './rails_db_admin/queries/saved_queries',
+                        reader: {
+                            type: 'json',
+                            root: 'data'
+                        },
+                        extraParams:{
+                            database:database
+                        }
+                    })
                 }
             }
         });
@@ -47,7 +77,7 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
             {
                 xtype:'codemirror',
                 parser:'sql',
-                sourceCode:this.initialConfig['query'],
+                sourceCode:this.initialConfig['sqlQuery'],
                 disableSave:true
             }
             ]
@@ -59,7 +89,7 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
                 text: 'Execute',
                 iconCls: 'icon-settings',
                 handler: function(button) {
-                    var textarea = self.findByType('codemirror')[0];
+                    var textarea = self.query('.codemirror')[0];
                     var sql = textarea.getValue();
                     var database = self.module.getDatabase();
 					
@@ -76,7 +106,7 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
                         success: function(responseObject) {
 
                             messageBox.hide();
-                            var response =  Ext.util.JSON.decode(responseObject.responseText);
+                            var response =  Ext.decode(responseObject.responseText);
 
                             if(response.success)
                             {
@@ -111,7 +141,7 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
                 text: 'Save',
                 iconCls: 'icon-save',
                 handler:function(){
-                    var textarea = self.findByType('textarea')[0];
+                    var textarea = self.query('.codemirror')[0];
                     var save_window = new Ext.Window({
                         layout:'fit',
                         width:375,
@@ -150,16 +180,22 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
                         buttons: [{
                             text: 'Save',
                             handler: function(){
-                                var fp = this.findParentByType('window').findByType('form')[0];
+                                var fp = this.findParentByType('window').query('.form')[0];
                                 if(fp.getForm().isValid()){
                                     fp.getForm().submit({
                                         url: './rails_db_admin/queries/save_query',
                                         waitMsg: 'Saving Query...',
                                         success: function(fp, o){
                                             Ext.Msg.alert('Success', 'Saved Query');
-                                            var queryTreePanel = self.module.queriesTreePanel();
-                                            queryTreePanel.treePanel.getLoader().baseParams.database = self.module.getDatabase();
-                                            queryTreePanel.treePanel.getRootNode().reload();
+                                            var database = self.module.getDatabase();
+                                            self.module.queriesTreePanel().store.setProxy({
+                                                type: 'ajax',
+                                                url: './rails_db_admin/queries/saved_queries_tree',
+                                                extraParams:{
+                                                    database:database
+                                                }
+                                            });
+                                            self.module.queriesTreePanel().store.load();
                                             save_window.hide();
                                         }
                                     });
@@ -195,5 +231,3 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel = Ext.extend(Ext.Pan
     }
 	
 });
-
-Ext.reg('railsdbadmin_querypanel',Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel);

@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid = Ext.extend(Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid",{
+    extend:"Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",
+    alias:'widget.role_activeextgrid',
     constructor : function(config){
         config = Ext.apply({
             title:'Role',
@@ -12,5 +14,3 @@ Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid = Ext.extend(Comp
         Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('role_activeextgrid', Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid);

@@ -78,18 +78,26 @@ class ErpApp::Setup::Data
     #######################################
     #create preference types
     desktop_backgroud_pt = PreferenceType.create(:description => 'Desktop Background', :internal_identifier => 'desktop_background')
+    desktop_theme_pt = PreferenceType.create(:description => 'Desktop Theme', :internal_identifier => 'desktop_theme')
     desktop_shortcut_pt = PreferenceType.create(:description => 'Desktop Shortcut', :internal_identifier => 'desktop_shortcut')
     auto_load_app_pt = PreferenceType.create(:description => 'Autoload Application', :internal_identifier => 'autoload_application')
 
     #create preference options
+    #yes no options
     yes_po = PreferenceOption.create(:description => 'Yes', :internal_identifier => 'yes', :value => 'yes')
     no_po = PreferenceOption.create(:description => 'No', :internal_identifier => 'no', :value => 'no')
+
+    #desktop background options
     blue_background_po = PreferenceOption.create(:description => 'Blue', :internal_identifier => 'blue_desktop_background', :value => 'blue.gif')
     gradient_background_po = PreferenceOption.create(:description => 'Grey Gradient', :internal_identifier => 'grey_gradient_desktop_background', :value => 'gradient.png')
     purple_background_po = PreferenceOption.create(:description => 'Purple', :internal_identifier => 'purple_desktop_background', :value => 'purple.jpg')
     planet_background_po = PreferenceOption.create(:description => 'Planet', :internal_identifier => 'purple_desktop_background', :value => 'planet.jpg')
     portablemind_background_po = PreferenceOption.create(:description => 'Portablemind', :internal_identifier => 'portablemind_desktop_background', :value => 'portablemind.png')
 
+    #desktop theme options
+    access_desktop_theme_po = PreferenceOption.create(:description => 'Access', :internal_identifier => 'access_desktop_theme', :value => 'ext-all-access.css')
+    gray_desktop_theme_po = PreferenceOption.create(:description => 'Gray', :internal_identifier => 'gray_desktop_theme', :value => 'ext-all-gray.css')
+    blue_desktop_theme_po = PreferenceOption.create(:description => 'Blue', :internal_identifier => 'blue_desktop_theme', :value => 'ext-all.css')
 
     #associate options
     desktop_shortcut_pt.preference_options << yes_po
@@ -109,6 +117,13 @@ class ErpApp::Setup::Data
     desktop_backgroud_pt.preference_options << portablemind_background_po
     desktop_backgroud_pt.default_preference_option = portablemind_background_po
     desktop_backgroud_pt.save
+
+    desktop_theme_pt.preference_options << access_desktop_theme_po
+    desktop_theme_pt.preference_options << gray_desktop_theme_po
+    desktop_theme_pt.preference_options << blue_desktop_theme_po
+    desktop_theme_pt.default_preference_option = blue_desktop_theme_po
+    desktop_backgroud_pt.save
+
 
     #create widgets and assign roles
     app_mgr = ::Widget.create(
@@ -163,11 +178,23 @@ class ErpApp::Setup::Data
       desktop = Desktop.create
       desktop.user = user
       desktop_backgroud_pt.preferenced_records << desktop
+      desktop_theme_pt.preferenced_records << desktop
 
-
+      #setup desktop background
       pref = Preference.create(
         :preference_type => desktop_backgroud_pt,
         :preference_option => portablemind_background_po
+      )
+
+      desktop.user_preferences << UserPreference.create(
+        :user => user,
+        :preference => pref
+      )
+
+      #setup desktop theme
+      pref = Preference.create(
+        :preference_type => desktop_theme_pt,
+        :preference_option => blue_desktop_theme_po
       )
 
       desktop.user_preferences << UserPreference.create(
