@@ -1,0 +1,2 @@
+class SupportEffort < WorkEffort
+end

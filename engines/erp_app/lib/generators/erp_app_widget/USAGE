@@ -1,0 +1,22 @@
+###########################################
+## ErpApp Widget Generator             ####
+## Version 1.0                         ####
+###########################################
+
+script/generate erp_app_widget [widget_name] [description] [icon_url] (optional fields) [plugin to create in]
+
+  Icons live in erp_app/public/images/icons
+  icon_url value should be /images/icons/[icon_set]/[icon]_48x48.png
+
+What will be created
+
+1. Folder structure [plugin]/lib/widgets/[widget_name]
+
+2. javascript folder with default widget setup
+
+3. views folder with index.html.erb
+
+4. ErpApp::Widgets::[widget_name]::Base class that extends from ErpApp::Widgets::Base
+
+
+

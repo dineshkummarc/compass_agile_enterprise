@@ -1,0 +1,294 @@
+class BaseTxnsAndAccts < ActiveRecord::Migration
+  def self.up
+    
+    unless table_exists?(:biz_txn_events)
+      create_table :biz_txn_events do |t|
+	      t.column  :description,  			    :string
+	      t.column	:biz_txn_acct_root_id, 	:integer
+		  	t.column	:biz_txn_type_id,       :integer
+		  	t.column 	:entered_date,          :datetime
+		  	t.column 	:post_date,             :datetime
+	      t.column  :biz_txn_record_id,    	:integer
+	      t.column  :biz_txn_record_type,  	:string
+		  	t.column 	:external_identifier, 	:string
+		  	t.column 	:external_id_source, 	  :string
+	      t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_event_descs)
+      create_table :biz_txn_event_descs do |t|
+		    t.column		:biz_txn_event_id,  :integer
+		    t.column		:language_id,       :integer
+		    t.column		:locale_id,		      :integer
+		    t.column		:priority,      		:integer		
+		    t.column		:sequence,      		:integer		
+		    t.column		:short_description, :string
+		    t.column		:long_description,  :string
+        t.timestamps
+      end  
+    end
+    
+    unless table_exists?(:biz_txn_types)
+      create_table :biz_txn_types do |t|
+      	t.column  :parent_id,    :integer
+      	t.column  :lft,          :integer
+      	t.column  :rgt,          :integer
+
+      #custom columns go here   
+      	t.column  :description,         :string
+      	t.column  :comments,            :string
+		    t.column 	:internal_identifier, :string
+		    t.column 	:external_identifier, :string
+		    t.column 	:external_id_source, 	:string
+      	t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_relationships)
+      create_table :biz_txn_relationships do |t|
+        t.column  :biz_txn_rel_type_id, :integer
+        t.column  :description,         :string 
+        t.column  :txn_event_id_from,   :integer
+        t.column  :txn_event_id_to,     :integer
+        t.column  :status_type_id,      :integer
+        t.column  :from_date,           :date
+        t.column  :thru_date,           :date 
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_rel_types)
+      create_table :biz_txn_rel_types do |t|
+      	t.column  	:parent_id,    :integer
+      	t.column  	:lft,          :integer
+      	t.column  	:rgt,          :integer
+        #custom columns go here   
+      	t.column  :description,         :string
+      	t.column  :comments,            :string
+		    t.column 	:internal_identifier, :string
+		    t.column 	:external_identifier, :string
+		    t.column 	:external_id_source, 	:string
+      	t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_statuses)
+      create_table :biz_txn_statuses do |t|
+        t.column  :description, :string
+        t.column  :comments,    :string
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_tasks)
+      create_table :biz_txn_tasks do |t|
+        t.column  :description, :string
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_task_types)
+      create_table :biz_txn_task_types do |t|
+        t.column  :parent_id,    :integer
+        t.column  :lft,          :integer
+        t.column  :rgt,          :integer
+        #custom columns go here   
+        t.column  :description, :string
+        t.column  :comments,    :string
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_party_roles)
+      create_table :biz_txn_party_roles do |t|
+      	t.column  :biz_txn_event_id, 	         :integer
+    	  t.column  :party_id, 			             :integer
+      	t.column  :biz_txn_party_role_type_id, :integer    	
+      	t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_party_role_types)
+      create_table :biz_txn_party_role_types do |t|
+        t.column  :parent_id,    :integer
+        t.column  :lft,          :integer
+        t.column  :rgt,          :integer
+        #custom columns go here   
+        t.column  :description,         :string
+        t.column  :comments,            :string
+        t.column  :internal_identifier, :string
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_acct_roots)
+      create_table :biz_txn_acct_roots do |t|
+		    t.column 	:description,			    :string
+		    t.column 	:status, 				      :integer
+      	t.column  :biz_txn_acct_id,    	:integer
+      	t.column  :biz_txn_acct_type,  	:string
+		    t.column 	:external_identifier, :string
+		    t.column 	:external_id_source, 	:string
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_acct_status_types)
+      create_table :biz_txn_acct_status_types do |t|
+        t.timestamps
+      end
+    end
+  
+    unless table_exists?(:biz_txn_acct_types)
+      create_table :biz_txn_acct_types do |t|
+        t.column  	:parent_id,    			:integer
+        t.column  	:lft,          			:integer
+        t.column  	:rgt,          			:integer
+        #custom columns go here   
+        t.column  :description,         :string
+        t.column  :comments,            :string
+		    t.column 	:internal_identifier, :string
+		    t.column 	:external_identifier, :string
+		    t.column 	:external_id_source, 	:string
+        t.timestamps
+      end  
+    end
+    
+    unless table_exists?(:biz_txn_acct_statuses)
+      create_table :biz_txn_acct_statuses do |t|
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_acct_rel_types)
+      create_table :biz_txn_acct_rel_types do |t|
+      	t.column  	:parent_id,    :integer
+      	t.column  	:lft,          :integer
+      	t.column  	:rgt,          :integer
+        #custom columns go here   
+      	t.column  :description,         :string
+      	t.column  :comments,            :string
+		    t.column 	:internal_identifier, :string
+		    t.column 	:external_identifier, :string
+		    t.column 	:external_id_source, 	:string
+      	t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_acct_relationships)
+      create_table :biz_txn_acct_relationships do |t|
+        t.column  :biz_txn_acct_rel_type_id,  :integer
+        t.column  :description,               :string
+        t.column  :biz_txn_acct_root_id_from, :integer
+        t.column  :biz_txn_acct_root_id_to,   :integer
+        t.column  :status_type_id,            :integer
+        t.column  :from_date,                 :date
+        t.column  :thru_date,                 :date 
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_acct_party_roles)
+      create_table :biz_txn_acct_party_roles do |t|
+        t.column  :description,               		:string
+        t.column  :biz_txn_acct_root_id,      		:integer
+        t.column  :party_id,                  		:integer
+        t.column  :biz_txn_acct_pty_rtype_id, 		:integer
+        t.column  :is_default_billing_acct_flag,  :integer
+        t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_txn_acct_pty_rtypes)
+      create_table :biz_txn_acct_pty_rtypes do |t|
+      	t.column  	:parent_id,    :integer
+      	t.column  	:lft,          :integer
+      	t.column  	:rgt,          :integer
+        #custom columns go here   
+      	t.column  :description,         :string
+      	t.column  :comments,            :string
+		    t.column 	:internal_identifier, :string
+		    t.column 	:external_identifier, :string
+		    t.column 	:external_id_source, 	:string
+      	t.timestamps
+      end
+    end
+    
+    unless table_exists?(:biz_acct_txn_tasks)
+      create_table :biz_acct_txn_tasks do |t|
+		    t.column  :biz_txn_task_id,     :integer
+		    t.column  :biz_txn_account_id,  :integer
+		    t.column  :description, 		    :string
+		    t.column  :comments,            :string
+		    t.column  :entered_date,      	:datetime
+		    t.column  :requested_date,     	:datetime
+        t.timestamps
+      end
+    end
+
+    unless table_exists?(:biz_txn_agreement_role_types)
+      create_table :biz_txn_agreement_role_types do |t|
+        t.column  :parent_id,    :integer
+        t.column  :lft,          :integer
+        t.column  :rgt,          :integer
+        #custom columns go here
+        t.column  :description,         :string
+        t.column  :comments,            :string
+        t.column  :internal_identifier, :string
+        t.timestamps
+      end  
+    end
+    
+    unless table_exists?(:biz_txn_agreement_roles)
+      create_table :biz_txn_agreement_roles do |t|
+        t.references  :biz_txn_event,                   :polymorphic => true
+        t.column      :agreement_id,                    :integer
+        t.column      :biz_txn_agreement_role_type_id,  :integer
+        t.timestamps
+      end  
+    end
+    
+    unless table_exists?(:financial_txns)
+      create_table :financial_txns do |t|
+         t.integer :money_id, :integer
+         t.integer :payment_id, :integer
+        
+        t.timestamps
+      end  
+    end
+    
+    unless table_exists?(:financial_txn_accounts)
+      create_table :financial_txn_accounts do |t|
+        t.column :description,    :string
+        t.column :account_number, :string
+        t.column :agreement_id,   :integer
+        t.column :balance_id,     :integer
+        t.column :payment_due_id, :integer
+        t.column :due_date,       :datetime
+        
+        #polymorphic tables 
+        t.references  :financial_account, :polymorphic => true
+        
+        t.timestamps
+      end  
+    end
+    
+  end
+
+  def self.down
+    [ 
+      :biz_txn_agreement_roles, :biz_txn_agreement_role_types, :biz_acct_txn_tasks, 
+      :biz_txn_acct_pty_rtypes, :biz_txn_acct_party_roles, :biz_txn_acct_relationships, 
+      :biz_txn_acct_rel_types, :biz_txn_acct_statuses, :biz_txn_acct_types, 
+      :biz_txn_acct_status_types, :biz_txn_acct_roots, :biz_txn_party_role_types, 
+      :biz_txn_party_roles, :biz_txn_task_types, :biz_txn_tasks, 
+      :biz_txn_statuses, :biz_txn_rel_types, :biz_txn_relationships, 
+      :biz_txn_types, :biz_txn_event_descs, :biz_txn_events,:financial_txn_accounts,:financial_txns
+    ].each do |tbl|
+      if table_exists?(tbl)
+        drop_table tbl
+      end
+    end
+  end
+end

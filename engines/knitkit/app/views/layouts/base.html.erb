@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml2/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="generator" content="Knitkit - Compass AE Open source content management platform" />
+    
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="copyright" content="&copy;" />
+    <meta name="robots" content="ALL" />
+    <meta name="language" content="English"> 
+    
+    <title><%= @website.title %></title>
+    <%= javascript_include_tag 'prototype' %>
+    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
+    <%= stylesheet_link_tag('knitkit/style.css') %>
+    <%= javascript_include_tag('erp_app/utility.js') %>
+    <%= javascript_include_tag('erp_app/widgets.js') %>
+    <%= javascript_include_tag('erp_app/shared/ajax_pagination.js') %>
+    <%= yield :head %>
+  </head>
+  <body>
+    <div id="main">
+      <div id="header">
+        <div id="logo">
+          <%=render_version_viewing%>
+          <%= render_widget :login,
+                            :action => :login_header,
+                            :params => {:login_url => '/login',
+                            :signup_url => '/sign-up'}%>
+          <div id="logo_text">
+            <!-- class="logo_color", allows you to change the color of the text -->
+            <h1><a href="/"><%= @website.title %></a></h1>
+            <h2><%= @website.subtitle %></h2>
+          </div>
+        </div>
+        <%= 
+        #render_menu(@contents, {:name => 'my_menu'})
+        render_menu(@contents)
+      %>
+      </div>
+      <div id="site_content">
+        <div id="content">
+          <%= yield %>
+        </div>
+      </div>
+      <div id="content_footer"></div>
+      <%= yield :footer or render :partial => 'shared/footer' %>
+      <%= yield :foot %>
+    </div>
+  </body>
+</html>

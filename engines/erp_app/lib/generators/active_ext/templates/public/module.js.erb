@@ -1,0 +1,16 @@
+Ext.define("Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid",{
+    extend:"Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",
+    alias:'widget.<%=file_name%>_activeextgrid',
+    constructor : function(config){
+        config = Ext.apply({
+            title:'<%=class_name %>',
+            modelUrl:'./<%= application_file_name %>/<%=file_name %>/',
+            editable:true,
+            page:true,
+            pageSize:30,
+            displayMsg:'Displaying {0} - {1} of {2}',
+            emptyMsg:'Empty'
+        }, config);
+        Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid.superclass.constructor.call(this, config);
+    }
+});

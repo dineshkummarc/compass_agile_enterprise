@@ -1,0 +1,5 @@
+var ErpBaseErpSvcs = function() {
+    return {
+
+    };
+ }();

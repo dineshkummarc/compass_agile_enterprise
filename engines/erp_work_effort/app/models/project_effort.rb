@@ -1,0 +1,2 @@
+class ProjectEffort < WorkEffort
+end

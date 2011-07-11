@@ -1,0 +1,84 @@
+<div id="<%=widget_result_id%>">
+  <h2>What you're buying...</h2>
+  <table id="products-view">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @order.order_line_items.each do |order_line_item| %>
+        <tr class="product-wrap">
+          <td>
+            <div><img src="<%=order_line_item.product_type.images.empty? ? '/images/img_blank.png' : order_line_item.product_type.images.first.url%>" alt="Product Image" /></div>
+            <div>
+              <span><%= order_line_item.product_type.description %></span><br/>
+            </div>
+          </td>
+          <td><%=order_line_item.product_type.descriptions.find_by_internal_identifier('long_description').description%></td>
+          <td>1</td>
+          <td><%=link_to_remote 'Remove',:url => build_widget_url(:remove_from_cart, order_line_item.id)%></td>
+          <td><span><%=order_line_item.product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : order_line_item.product_type.get_current_simple_amount_with_currency%></span></td>
+        </tr>
+      <%end%>
+    </tbody>
+  </table>
+  <hr/>
+  <div style="text-align:right;"><h2>Total <%=@price%></h2></div>
+  <hr/>
+  <% form_remote_tag :url => build_widget_url(:checkout_finalize) do %>
+    <div class="form_settings">
+      <h2>Step 3 of 3 Pay for it...</h2>
+      <div id="errors" style="color:red">
+        <%=@message%>
+      </div>
+      <br/>
+      <p>
+        <span>First Name</span>
+        <%= text_field_tag :first_name, params[:first_name] %>
+      </p>
+      <p>
+        <span>Last Name</span>
+        <%= text_field_tag :last_name, params[:last_name] %>
+      </p>
+      <p>
+        <span>Credit Card Number</span>
+        <%= text_field_tag :card_number, params[:card_number] %>
+      </p>
+      <p>
+        <span>Expiration Month</span>
+        <%= select_tag(:exp_month,  
+          options_for_select([["1 - January", 1],
+                              ["2 - Febuary", 2],
+                              ["3 - March",3],
+                              ["4 - April",4],
+                              ["5 - May",5],
+                              ["6 - June",6],
+                              ["7 - July",7],
+                              ["8 - August",8],
+                              ["9 - September",9],
+                              ["10 - October",10],
+                              ["11 - November",11],
+                              ["12 - December",12]],  params[:exp_month])) %>
+      </p>
+      <p>
+        <span>Expiration Year</span>
+        <%= select_tag(:exp_year,  options_for_select((0..30).collect{|addition| Date.today.year + addition},  params[:exp_year])) %>
+      </p>
+      <p>
+        <span>Card Security Code</span>
+        <%= text_field_tag :cvvs, params[:cvvs] %>
+      </p>
+      <p style="padding-top: 15px">
+        <%=  submit_tag "Purchase", :disable_with => "Please wait...", :class => "submit", :style => 'margin:0px;' %> | <a href="<%=@products_url%>">Back to store</a>
+      </p>
+    </div>
+  <%end%>
+</div>
+<script type="text/javascript">
+  Compass.ErpApp.Widgets.refreshWidget('shopping_cart', 'price_summary');
+</script>
