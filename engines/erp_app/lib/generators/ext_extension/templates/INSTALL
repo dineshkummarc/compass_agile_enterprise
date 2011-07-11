@@ -1,7 +1,0 @@
-###########################################
-##### Extjs Class Extension Generator #####
-###########################################
-
-Used to generate template for ExtJS Extension Class
-
-script/generate ext_extension file_name file_dir javascript_class_name extended_class_name

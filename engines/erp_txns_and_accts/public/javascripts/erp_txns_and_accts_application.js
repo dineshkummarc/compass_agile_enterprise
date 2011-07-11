@@ -1,5 +1,0 @@
-var ErpTxnsAndAccts = function() {
-    return {
-
-    };
- }();

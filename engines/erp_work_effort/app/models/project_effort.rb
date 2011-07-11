@@ -1,2 +1,0 @@
-class ProjectEffort < WorkEffort
-end

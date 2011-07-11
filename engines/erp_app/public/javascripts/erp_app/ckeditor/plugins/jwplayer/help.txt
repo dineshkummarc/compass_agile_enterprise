@@ -1,2 +1,0 @@
-1.Copy "jwplayer" folder to plugin folder of ckeditor
-2.Copy config.js to Overwrite config.js of ckeditor for full toolbar (custom config toolbar)

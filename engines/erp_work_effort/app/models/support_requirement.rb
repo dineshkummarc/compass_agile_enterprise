@@ -1,2 +1,0 @@
-class SupportRequirement < WorkRequirement
-end

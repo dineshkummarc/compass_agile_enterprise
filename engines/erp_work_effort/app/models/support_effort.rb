@@ -1,2 +1,0 @@
-class SupportEffort < WorkEffort
-end
