@@ -257,7 +257,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                 name:'name'
             },
             {
-                name:'tilte'
+                name:'title'
             },
             {
                 name:'subtitle'
@@ -306,72 +306,78 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
             },
             {
                 name:'siteName'
+            },
+            {
+                name:'websiteNavId'
             }
             ]
         });
 
         this.sitesTree = new Ext.tree.TreePanel({
+            viewConfig: {
+                //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+                loadMask: false,
+                plugins: {
+                    ptype: 'treeviewdragdrop'
+                },
+                listeners:{
+                    'beforedrop':function(node, data, overModel, dropPosition,dropFunction,options){
+                        if(overModel.data['isWebsiteNavItem'] || overModel.data['isSection']){
+                            if((overModel.parentNode.data['isSectionRoot'])){
+                                return true;
+                            }
+                        }
+                        return false;
+                    },
+                    'drop':function(node, data, overModel, dropPosition, options){
+                        var positionArray = [];
+                        var counter = 0;
+                        var dropNode = data.records[0];
+
+                        if(dropNode.data['isWebsiteNavItem']){
+                            overModel.parentNode.eachChild(function(node){
+                                positionArray.push({
+                                    id:node.data.websiteNavItemId,
+                                    position:counter,
+                                    klass:'WebsiteNavItem'
+                                });
+                                counter++;
+                            });
+                        }
+                        else{
+                            overModel.parentNode.eachChild(function(node){
+                                positionArray.push({
+                                    id:node.data.id.split('_')[1],
+                                    position:counter,
+                                    klass:'WebsiteSection'
+                                });
+                                counter++;
+                            });
+                        }
+
+                        var conn = new Ext.data.Connection();
+                        conn.request({
+                            url:'./knitkit/position/update',
+                            method: 'PUT',
+                            jsonData:{
+                                position_array:positionArray
+                            },
+                            success: function(response) {
+
+                            },
+                            failure: function(response) {
+                                Ext.Msg.alert('Error', 'Error saving positions.');
+                            }
+                        });
+                    }
+                }
+            },
             store:store,
             dataUrl:'./knitkit/websites',
             region: 'center',
             rootVisible:false,
             enableDD :true,
             listeners:{
-                'nodedragover':function(dragOverEvent){
-                    var targetNode = dragOverEvent.target;
-                    var dropNode = dragOverEvent.dropNode;
-
-                    if(dropNode.attributes['isWebsiteNavItem'] || dropNode.attributes['isSection']){
-                        if((targetNode.parentNode == dropNode.parentNode)){
-                            return true;
-                        }
-                    }
-
-                    return false
-                },
-                'nodedrop':function(dropEvent){
-                    var positionArray = [];
-                    var counter = 0;
-                    var parent = dropEvent.target.parentNode;
-                    var dropNode = dropEvent.dropNode;
-
-                    if(dropNode.attributes['isWebsiteNavItem']){
-                        parent.eachChild(function(node){
-                            positionArray.push({
-                                id:node.attributes.websiteNavItemId,
-                                position:counter,
-                                klass:'WebsiteNavItem'
-                            });
-                            counter++;
-                        });
-                    }
-                    else{
-                        parent.eachChild(function(node){
-                            positionArray.push({
-                                id:node.id.split('_')[1],
-                                position:counter,
-                                klass:'WebsiteSection'
-                            });
-                            counter++;
-                        });
-                    }
-
-                    var conn = new Ext.data.Connection();
-                    conn.request({
-                        url:'./knitkit/position/update',
-                        method: 'PUT',
-                        jsonData:{
-                            position_array:positionArray
-                        },
-                        success: function(response) {
-                            
-                        },
-                        failure: function(response) {
-                            Ext.Msg.alert('Error', 'Error saving positions.');
-                        }
-                    });
-
-                },
                 'itemclick':function(view, record, item, index, e){
                     e.stopEvent();
                     if(record.data['isSection']){
@@ -839,7 +845,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             listeners:{
                                                 'click':function(button){
                                                     var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
+                                                    var formPanel = window.query('form')[0];
                                                     self.setWindowStatus('Updating website...');
                                                     formPanel.getForm().submit({
                                                         success:function(form, action){
@@ -934,7 +940,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             listeners:{
                                                 'click':function(button){
                                                     var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
+                                                    var formPanel = window.query('form')[0];
                                                     self.setWindowStatus('Adding Host...');
                                                     formPanel.getForm().submit({
                                                         reset:true,
@@ -1012,7 +1018,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             listeners:{
                                                 'click':function(button){
                                                     var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
+                                                    var formPanel = window.query('form')[0];
                                                     self.setWindowStatus('Updating Host...');
                                                     formPanel.getForm().submit({
                                                         reset:false,
@@ -1022,7 +1028,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                             if(obj.success){
                                                                 var newHost = Ext.getCmp('knitkitUpdateWebsiteHostHost').getValue();
                                                                 record.data.host = newHost;
-                                                                //node.setText(newHost);
+                                                                Ext.tree.Panel.updateNodeText(htmlItem, record.data.text, newHost);
+                                                                record.data.text = newHost;
                                                                 updateHostWindow.close();
                                                             }
                                                             else{
@@ -1163,7 +1170,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             listeners:{
                                                 'click':function(button){
                                                     var window = button.findParentByType('window');
-                                                    var formPanel = window.findByType('form')[0];
+                                                    var formPanel = window.query('form')[0];
                                                     self.setWindowStatus('Creating section...');
                                                     formPanel.getForm().submit({
                                                         reset:true,
@@ -1237,7 +1244,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                         listeners:{
                                             'click':function(button){
                                                 var window = button.findParentByType('window');
-                                                var formPanel = window.findByType('form')[0];
+                                                var formPanel = window.query('form')[0];
                                                 self.setWindowStatus('Creating menu...');
                                                 formPanel.getForm().submit({
                                                     reset:true,
@@ -1304,7 +1311,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             name:'link_to',
                                             id:'knitkit_nav_item_link_to',
                                             allowBlank:false,
-                                            width:100,
                                             forceSelection:true,
                                             editable:false,
                                             autoSelect:true,
@@ -1331,20 +1337,24 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 }
                                             }
                                         },
-                                       
                                         {
                                             xtype:'combo',
                                             id:'knitkit_create_website_nav_item_section',
                                             hiddenName:'website_section_id',
                                             name:'website_section_id',
                                             loadingText:'Retrieving Sections...',
-                                            store:{
-                                                xtype:'jsonstore',
-                                                autoLoad:true,
-                                                baseParams:{
-                                                    website_id:record.data.websiteId
+                                            store:Ext.create("Ext.data.Store",{
+                                                proxy:{
+                                                    type:'ajax',
+                                                    url:'./knitkit/section/existing_sections',
+                                                    reader:{
+                                                        type:'json'
+                                                    },
+                                                    extraParams:{
+                                                        website_id:record.data.websiteId
+                                                    }
                                                 },
-                                                url:'./knitkit/section/existing_sections',
+                                                autoLoad:true,
                                                 fields:[
                                                 {
                                                     name:'id'
@@ -1354,7 +1364,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 
                                                 }
                                                 ]
-                                            },
+                                            }),
                                             forceSelection:true,
                                             editable:false,
                                             fieldLabel:'Section',
@@ -1384,7 +1394,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                         listeners:{
                                             'click':function(button){
                                                 var window = button.findParentByType('window');
-                                                var formPanel = window.findByType('form')[0];
+                                                var formPanel = window.query('form')[0];
                                                 self.setWindowStatus('Creating menu item...');
                                                 formPanel.getForm().submit({
                                                     reset:true,
@@ -1463,7 +1473,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                         listeners:{
                                             'click':function(button){
                                                 var window = button.findParentByType('window');
-                                                var formPanel = window.findByType('form')[0];
+                                                var formPanel = window.query('form')[0];
                                                 self.setWindowStatus('Creating menu...');
                                                 formPanel.getForm().submit({
                                                     reset:false,
@@ -1572,7 +1582,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             name:'link_to',
                                             id:'knitkit_nav_item_link_to',
                                             allowBlank:false,
-                                            width:100,
                                             forceSelection:true,
                                             editable:false,
                                             autoSelect:true,
@@ -1590,76 +1599,80 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                     switch(newValue){
                                                         case 'website_section':
                                                             Ext.getCmp('knitkit_website_nav_item_section').show();
-                                                            Ext.getCmp('knitkit_website_nav_item_article').hide();
+                                                            //Ext.getCmp('knitkit_website_nav_item_article').hide();
                                                             Ext.getCmp('knitkit_website_nav_item_url').hide();
                                                             break;
                                                         case 'article':
                                                             Ext.getCmp('knitkit_website_nav_item_section').hide();
-                                                            Ext.getCmp('knitkit_website_nav_item_article').show();
+                                                            //Ext.getCmp('knitkit_website_nav_item_article').show();
                                                             Ext.getCmp('knitkit_website_nav_item_url').hide();
                                                             break;
                                                         case 'url':
                                                             Ext.getCmp('knitkit_website_nav_item_section').hide();
-                                                            Ext.getCmp('knitkit_website_nav_item_article').hide();
+                                                            //Ext.getCmp('knitkit_website_nav_item_article').hide();
                                                             Ext.getCmp('knitkit_website_nav_item_url').show();
                                                             break;
                                                     }
                                                 }
                                             }
                                         },
-                                        {
-                                            xtype:'combo',
-                                            id:'knitkit_website_nav_item_article',
-                                            hiddenName:'article_id',
-                                            hidden:(record.data.linkToType == 'website_section' || record.data.linkToType == 'url'),
-                                            name:'article_id',
-                                            loadingText:'Retrieving Articles...',
-                                            store:{
-                                                xtype:'jsonstore',
-                                                autoLoad:true,
-                                                baseParams:{
-                                                    website_id:record.data.websiteId
-                                                },
-                                                url:'./knitkit/articles/existing_articles',
-                                                fields:[
-                                                {
-                                                    name:'id'
-                                                },
-                                                {
-                                                    name:'title'
-
-                                                }
-                                                ],
-                                                listeners:{
-                                                    'load':function(store, records, options){
-                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(record.data.linkedToId);
-                                                    }
-                                                }
-                                            },
-                                            forceSelection:true,
-                                            editable:false,
-                                            fieldLabel:'Article',
-                                            autoSelect:true,
-                                            typeAhead: false,
-                                            mode: 'local',
-                                            displayField:'title',
-                                            valueField:'id',
-                                            triggerAction: 'all'
-                                        },
+                                        //                                        {
+                                        //                                            xtype:'combo',
+                                        //                                            id:'knitkit_website_nav_item_article',
+                                        //                                            hiddenName:'article_id',
+                                        //                                            hidden:(record.data.linkToType == 'website_section' || record.data.linkToType == 'url'),
+                                        //                                            name:'article_id',
+                                        //                                            loadingText:'Retrieving Articles...',
+                                        //                                            store:{
+                                        //                                                xtype:'jsonstore',
+                                        //                                                autoLoad:true,
+                                        //                                                baseParams:{
+                                        //                                                    website_id:record.data.websiteId
+                                        //                                                },
+                                        //                                                url:'./knitkit/articles/existing_articles',
+                                        //                                                fields:[
+                                        //                                                {
+                                        //                                                    name:'id'
+                                        //                                                },
+                                        //                                                {
+                                        //                                                    name:'title'
+                                        //
+                                        //                                                }
+                                        //                                                ],
+                                        //                                                listeners:{
+                                        //                                                    'load':function(store, records, options){
+                                        //                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(record.data.linkedToId);
+                                        //                                                    }
+                                        //                                                }
+                                        //                                            },
+                                        //                                            forceSelection:true,
+                                        //                                            editable:false,
+                                        //                                            fieldLabel:'Article',
+                                        //                                            autoSelect:true,
+                                        //                                            typeAhead: false,
+                                        //                                            mode: 'local',
+                                        //                                            displayField:'title',
+                                        //                                            valueField:'id',
+                                        //                                            triggerAction: 'all'
+                                        //                                        },
                                         {
                                             xtype:'combo',
                                             id:'knitkit_website_nav_item_section',
                                             hiddenName:'website_section_id',
-                                            hidden:(record.data.linkToType == 'url' || record.data.linkToType == 'article'),
                                             name:'website_section_id',
                                             loadingText:'Retrieving Sections...',
-                                            store:{
-                                                xtype:'jsonstore',
-                                                autoLoad:true,
-                                                baseParams:{
-                                                    website_id:record.data.websiteId
+                                            store:Ext.create("Ext.data.Store",{
+                                                proxy:{
+                                                    type:'ajax',
+                                                    url:'./knitkit/section/existing_sections',
+                                                    reader:{
+                                                        type:'json'
+                                                    },
+                                                    extraParams:{
+                                                        website_id:record.data.websiteId
+                                                    }
                                                 },
-                                                url:'./knitkit/section/existing_sections',
+                                                autoLoad:true,
                                                 fields:[
                                                 {
                                                     name:'id'
@@ -1674,7 +1687,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                         Ext.getCmp('knitkit_website_nav_item_section').setValue(record.data.linkedToId);
                                                     }
                                                 }
-                                            },
+                                            }),
                                             forceSelection:true,
                                             editable:false,
                                             fieldLabel:'Section',
@@ -1705,7 +1718,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                         listeners:{
                                             'click':function(button){
                                                 var window = button.findParentByType('window');
-                                                var formPanel = window.findByType('form')[0];
+                                                var formPanel = window.query('form')[0];
                                                 self.setWindowStatus('Updating menu item...');
                                                 formPanel.getForm().submit({
                                                     reset:false,
@@ -1978,7 +1991,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                 listeners:{
                                     'click':function(button){
                                         var window = button.findParentByType('window');
-                                        var formPanel = window.findByType('form')[0];
+                                        var formPanel = window.query('form')[0];
                                         self.setWindowStatus('Importing website...');
                                         formPanel.getForm().submit({
                                             success:function(form, action){

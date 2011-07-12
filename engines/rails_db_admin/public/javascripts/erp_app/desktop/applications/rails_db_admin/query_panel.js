@@ -25,38 +25,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
             ]
         });
 
-        var savedQueriesJsonStore = new Ext.data.JsonStore({
-            url:'./rails_db_admin/queries/saved_queries',
-            root:'data',
-            baseParams:{
-                database:null
-            },
-            fields:[
-            {
-                name:'value'
-            },
-            {
-                name:'display'
-            }
-            ],
-            listeners:{
-                'beforeload':function(store){
-                    var database = self.module.getDatabase();
-                    store.setProxy({
-                        type: 'ajax',
-                        url: './rails_db_admin/queries/saved_queries',
-                        reader: {
-                            type: 'json',
-                            root: 'data'
-                        },
-                        extraParams:{
-                            database:database
-                        }
-                    })
-                }
-            }
-        });
-
         var tableGridContainer = new Ext.Panel({
             layout:'card',
             region : 'center',

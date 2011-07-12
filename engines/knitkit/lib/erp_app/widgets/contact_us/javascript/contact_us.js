@@ -1,6 +1,6 @@
 Compass.ErpApp.Widgets.ContactUs = {
     addContactUs:function(){
-        Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror('<%= render_widget :contact_us %>'); 
+        Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror('<%= render_widget :contact_us, :params => {:use_dynamic_form => false} %>');
     }
 }
 

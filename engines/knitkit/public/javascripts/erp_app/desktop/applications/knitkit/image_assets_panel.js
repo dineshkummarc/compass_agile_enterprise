@@ -25,6 +25,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     });
 
     this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
+        //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+        viewConfig:{
+            loadMask: false
+        },
         autoDestroy:true,
         allowDownload:false,
         addViewContentsToContextMenu:false,

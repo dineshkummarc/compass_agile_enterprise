@@ -21,7 +21,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                 var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().load({node:self.getRootNode()});
+                    self.getStore().load({
+                        node:self.getRootNode()
+                        });
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error updating status');
@@ -49,7 +51,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                 var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().load({node:self.getRootNode()});
+                    self.getStore().load({
+                        node:self.getRootNode()
+                        });
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error deleting theme');
@@ -103,14 +107,37 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
             xhrUploadUrl:'./knitkit/theme/upload_file',
             url:'./knitkit/theme/index',
             fields:[
-                {name:'isTheme'},
-                {name:'isActive'},
-                {name:'siteId'},
-                {name:'text'},
-                {name:'id'},
-                {name:'leaf'},
-                {name:'handleContextMenu'},
-                {name:'contextMenuDisabled'}
+            {
+                name:'isTheme'
+            },
+
+            {
+                name:'isActive'
+            },
+
+            {
+                name:'siteId'
+            },
+
+            {
+                name:'text'
+            },
+
+            {
+                name:'id'
+            },
+
+            {
+                name:'leaf'
+            },
+
+            {
+                name:'handleContextMenu'
+            },
+
+            {
+                name:'contextMenuDisabled'
+            }
             ],
             containerScroll: true,
             listeners:{
@@ -258,7 +285,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                                                 self.initialConfig['centerRegion'].clearWindowStatus();
                                                 var obj =  Ext.decode(action.response.responseText);
                                                 if(obj.success){
-                                                    self.getStore().load({node:self.getRootNode()});
+                                                    self.getStore().load({
+                                                        node:self.getRootNode()
+                                                        });
                                                 }
                                             },
                                             failure:function(form, action){
@@ -338,7 +367,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                                                 self.initialConfig['centerRegion'].clearWindowStatus();
                                                 var obj =  Ext.decode(action.response.responseText);
                                                 if(obj.success){
-                                                    self.getStore().load({node:self.getRootNode()});
+                                                    self.getStore().load({
+                                                        node:self.getRootNode()
+                                                        });
                                                 }
                                                 uploadThemeWindow.close();
                                             },

@@ -38,7 +38,7 @@ Compass.ErpApp.Widgets.DynamicForms = {
                         var tpl = null;
                         var content = null;
                         var window = button.findParentByType('window');
-                        var formPanel = window.findByType('form')[0];
+                        var formPanel = window.query('form')[0];
                         var basicForm = formPanel.getForm();
 
                         var WidgetDynamicFormModelName = basicForm.findField('WidgetDynamicFormModelName');

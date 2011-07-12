@@ -50,7 +50,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     url = params[:url]
     if(params[:link_to] != 'url')
       #user wants to see Section so this is needed
-      params[:link_to] = 'WebsiteSection' if params[:link_to] == 'Section'
+      params[:link_to] = 'WebsiteSection' if params[:link_to] == 'website_section'
 
       #get link to item can be Article or Section
       linked_to_id = params["#{params[:link_to].underscore}_id".to_sym]
@@ -83,7 +83,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     linked_to_id = nil
     if(params[:link_to] != 'url')
       #user wants to see Section so this is needed
-      params[:link_to] = 'WebsiteSection' if params[:link_to] == 'Section'
+      params[:link_to] = 'WebsiteSection' if params[:link_to] == 'website_section'
 
       #get link to item can be Article or Section
       linked_to_id = params["#{params[:link_to].underscore}_id".to_sym]

@@ -90,7 +90,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
     },
 
     connectToDatatbase : function(){
-        var database = Ext.get('databaseCombo').getRawValue();
+        var database = Ext.getCmp('databaseCombo').getValue();
         var tablestreePanelStore = this.accordion.query('.railsdbadmin_tablestreemenu')[0].store;
         var queriesTreePanelStore = this.accordion.query('.railsdbadmin_queriestreemenu')[0].store;
 

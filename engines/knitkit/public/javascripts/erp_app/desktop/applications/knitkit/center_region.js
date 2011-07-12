@@ -55,7 +55,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     editSectionLayout : function(sectionName, websiteId, websiteSectionId, content, tbarItems){
         var self = this;
 
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.Panel",{
             layout:'border',
             title:sectionName,
             closable:true,
@@ -179,7 +179,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     editExcerpt : function(title, id, content, siteId){
         var self = this;
-        var ckEditor = new Compass.ErpApp.Shared.CKeditor({
+        var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             value:content,
             ckEditorConfig:{
@@ -209,7 +209,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             }
         });
 
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -269,7 +269,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     viewContent : function(title, content){
-        var ckEditor = new Compass.ErpApp.Shared.CKeditor({
+        var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             value:content,
             ckEditorConfig:{
@@ -291,7 +291,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     editContent : function(title, id, content, siteId, contentType){
         var self = this;
-        var ckEditor = new Compass.ErpApp.Shared.CKeditor({
+        var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             //value:content,
             ckEditorConfig:{
@@ -323,7 +323,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
         ckEditor.setValue(content);
 
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -346,7 +346,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 siteId:siteId
             }
             ]
-        })
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);
@@ -367,7 +367,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     viewContentComments : function(contentId, title){
         var self = this;
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -389,7 +389,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self
             }
             ]
-        })
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);
@@ -397,9 +397,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     viewWebsiteInquiries : function(websiteId, title){
         var self = this;
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.Panel",{
             layout:'border',
-            title:title,
+            title:title + " Inquiries",
             closable:true,
             items:[
             {
@@ -419,7 +419,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self
             }
             ]
-        })
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);

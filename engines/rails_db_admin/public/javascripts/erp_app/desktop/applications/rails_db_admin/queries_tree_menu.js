@@ -21,6 +21,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePane
             animate:true,
             frame:false,
             height:650,
+            //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+            viewConfig:{
+                loadMask: false
+            },
             border: false,
             listeners:{
                 'itemclick':function(view, record, item, index, e){

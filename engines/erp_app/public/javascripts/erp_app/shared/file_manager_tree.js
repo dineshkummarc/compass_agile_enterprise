@@ -56,7 +56,17 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
          * @param {Ext.data.model} model that represents tree node
          * @param (Event) event for this click
          */
-            'handleContextMenu'
+            'handleContextMenu',
+            /**
+         * @event beforedrop_view
+         * call through for beforedrop view event.
+         */
+            'beforedrop_view',
+            /**
+         * @event drop_view
+         * call through for drop view event.
+         */
+            'drop_view'
             );
     },
 
@@ -75,16 +85,27 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                 id:'root_node',
                 expanded: true
             },
-            fields:config['fields'] || [{name:'text'},{name:'id'},{name:'leaf'}]
+            fields:config['fields'] || [{
+                name:'text'
+            },{
+                name:'id'
+            },{
+                name:'leaf'
+            }]
         });
 
         var defaultListeners = {
             scope:this,
-            'movenode':function(tree, node, oldParent, newParent, index){
+            'itemmove':function(node, oldParent, newParent, index, options){
                 Ext.MessageBox.confirm('Confirm', 'Are you sure you want to move this file?', function(btn){
                     if(btn == 'no'){
-                        oldParent.reload();
-                        newParent.reload();
+                        store.load({
+                            node:oldParent
+                        });
+
+                        store.load({
+                            node:newParent
+                        });
                         return false;
                     }
                     else
@@ -96,18 +117,18 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                             url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/save_move',
                             method: 'POST',
                             params:{
-                                node:node.id,
-                                parent_node:newParent.id
+                                node:node.data.id,
+                                parent_node:newParent.data.id
                             },
                             success: function(response) {
-                                var responseObj =  Ext.util.JSON.decode(response.responseText);
+                                var responseObj =  Ext.decode(response.responseText);
                                 msg.hide();
-                                newParent.reload();
+                            //newParent.reload();
                             //Ext.Msg.alert('Status', responseObj.msg);
 
                             },
                             failure: function(response) {
-                                var responseObj =  Ext.util.JSON.decode(response.responseText);
+                                var responseObj =  Ext.decode(response.responseText);
                                 msg.hide();
                                 Ext.Msg.alert('Status', responseObj.msg);
                             }
@@ -260,9 +281,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                             var responseObj =  Ext.decode(response.responseText);
                                             msg.hide();
                                             if(responseObj.success){
-                                                store.load({
-                                                    node:parentNode
-                                                });
+                                                record.remove(true);
                                                 self.fireEvent('fileDeleted', this, record);
                                             }
                                             else{
@@ -308,7 +327,9 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                         listeners:{
                             scope:this,
                             'click':function(){
-                                store.load({node:record});
+                                store.load({
+                                    node:record
+                                });
                             }
                         }
                     });
@@ -329,7 +350,9 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                     },
                                     listeners:{
                                         'fileuploaded':function(){
-                                            store.load({node:record});
+                                            store.load({
+                                                node:record
+                                            });
                                             self.fireEvent('fileUploaded', this, record);
                                         }
                                     }
@@ -473,7 +496,22 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
             autoDestroy:true,
             split:true,
             autoScroll:true,
-            margins: '5 0 5 5'
+            margins: '5 0 5 5',
+            viewConfig: {
+                //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+                loadMask: false,
+                plugins: {
+                    ptype: 'treeviewdragdrop'
+                },
+                listeners:{
+                    'beforedrop':function(node, data, overModel, dropPosition,dropFunction,options){
+                        self.fireEvent('beforedrop_view', node, data, overModel, dropPosition,dropFunction,options);
+                    },
+                    'drop':function(node, data, overModel, dropPosition, options){
+                        self.fireEvent('drop_view', node, data, overModel, dropPosition, options);
+                    }
+                }
+            }
         }, config);
 		
         Compass.ErpApp.Shared.FileManagerTree.superclass.constructor.call(this, config);

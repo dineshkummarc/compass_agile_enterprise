@@ -1,5 +1,5 @@
 Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
-    extend:"Ext.grid.GridPanel",
+    extend:"Ext.grid.Panel",
     alias:'widget.shared_dynamiceditablegrid',
     initComponent: function() {
         var config = this.initialConfig;
@@ -54,15 +54,14 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
             clicksToMoveEditor: 1
         });
 
-        var Model = Ext.define(config.model,{
-            extend:'Ext.data.Model',
-            fields:config.fields,
-            validations:config.validations
-        });
-
         var plugins = [];
         var tbar = {}
         if(config['editable']){
+            var Model = Ext.define(config.model,{
+                extend:'Ext.data.Model',
+                fields:config.fields,
+                validations:config.validations
+            });
             plugins.push(this.editing);
             tbar = {
                 items:[{

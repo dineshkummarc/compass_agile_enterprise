@@ -23,14 +23,30 @@ Ext.define("Compass.ErpApp.Login.Window",{
             fieldLabel:'Username',
             allowBlank:false,
             id:'login',
-            name:'login'
+            name:'login',
+            listeners: {
+                'specialkey': function(field, e){
+                    if (e.getKey() == e.ENTER) {
+                        var window = field.findParentByType('window');
+                        window.submitForm();
+                    }
+                }
+            }
         },
         {
             xtype:'textfield',
             fieldLabel:'Password',
             inputType: 'password',
             allowBlank:false,
-            name:'password'
+            name:'password',
+            listeners: {
+                'specialkey': function(field, e){
+                    if (e.getKey() == e.ENTER) {
+                        var window = field.findParentByType('window');
+                        window.submitForm();
+                    }
+                }
+            }
         },
         {
             xtype:'hidden',
@@ -41,14 +57,6 @@ Ext.define("Compass.ErpApp.Login.Window",{
             xtype:'label',
             cls:'error_message',
             text:this.message
-        }
-        ],
-        keys: [
-        {
-            key: [Ext.EventObject.ENTER],
-            handler: function() {
-                alert(this);
-            }
         }
         ]
     }),

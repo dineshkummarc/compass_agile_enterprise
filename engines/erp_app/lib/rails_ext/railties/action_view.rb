@@ -13,17 +13,19 @@ ActionView::Base.class_eval do
     resources
   end
 
-  def include_extjs(theme=nil, debug=false)
+  def include_extjs(opt={})
     resources = ''
 
-    if(debug)
+    if(opt[:debug])
       resources << javascript_include_tag("ext_4_0_2/ext-all-debug.js")
     else
       resources << javascript_include_tag("ext_4_0_2/ext-all.js")
     end
 
-    if theme
-      resources << stylesheet_link_tag("/stylesheets/ext_4_0_2/resources/css/#{theme}")
+    if opt[:theme] === false
+      #do nothing not theme loaded.
+    elsif opt[:theme]
+      resources << stylesheet_link_tag("/stylesheets/ext_4_0_2/resources/css/#{opt[:theme]}")
     else
       resources << stylesheet_link_tag("/stylesheets/ext_4_0_2/resources/css/ext-all.css")
     end

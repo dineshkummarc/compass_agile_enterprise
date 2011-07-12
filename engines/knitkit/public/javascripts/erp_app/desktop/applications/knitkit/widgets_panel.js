@@ -6,6 +6,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WidgetsPanel = function() {
     });
 
     this.widgetsDataView = Ext.create("Ext.view.View",{
+        //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+        loadMask: false,
         autoDestroy:true,
         style:'overflow:auto',
         store:widgetsStore,

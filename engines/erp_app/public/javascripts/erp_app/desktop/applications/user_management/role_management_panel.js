@@ -106,6 +106,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
             autoScroll:true,
             region:'west',
             viewConfig: {
+                //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+                loadMask: false,
                 plugins: {
                     ptype: 'treeviewdragdrop',
                     appendOnly: true
@@ -182,6 +184,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
             border: false,
             frame:true,
             viewConfig: {
+                //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+                loadMask: false,
                 plugins: {
                     ptype: 'treeviewdragdrop',
                     appendOnly: true

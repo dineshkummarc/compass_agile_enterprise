@@ -12,10 +12,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel",{
                 id:rec.get("id")
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     Ext.getCmp('knitkitCenterRegion').clearWindowStatus();
-                    Ext.getCmp('DynamicEditableGrid').getStore().reload();
+                    self.query('shared_dynamiceditablegrid')[0].store.load();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error deleting inquiry');

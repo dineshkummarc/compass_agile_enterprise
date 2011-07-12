@@ -33,6 +33,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox",{
             valueField:'value',
             displayField:'display',
             triggerAction:'all',
+            editable:false,
             forceSelection:true,
             mode:'local',
             value:'development',

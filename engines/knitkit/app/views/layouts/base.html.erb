@@ -8,11 +8,11 @@
     <meta name="keywords" content="" />
     <meta name="copyright" content="&copy;" />
     <meta name="robots" content="ALL" />
-    <meta name="language" content="English"> 
+    <meta name="language" content="English" />
     
     <title><%= @website.title %></title>
     <%= javascript_include_tag 'prototype' %>
-    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
+    <%= include_extjs :theme => false %>
     <%= stylesheet_link_tag('knitkit/style.css') %>
     <%= javascript_include_tag('erp_app/utility.js') %>
     <%= javascript_include_tag('erp_app/widgets.js') %>
