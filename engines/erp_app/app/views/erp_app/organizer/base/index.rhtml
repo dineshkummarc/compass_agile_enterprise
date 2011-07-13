@@ -3,9 +3,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Organizer</title>
-    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
-    <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css') %>
-    <%= javascript_include_tag("ext_3_3_0/RowEditor.js","erp_app/utility.js","erp_app/organizer/layout.js","erp_app/organizer/default_menu_tree_panel.js") %>
+    <%= include_extjs :debug => true %>
+    <%= stylesheet_link_tag('erp_app/compass-ext-all.css') %>
+    <%= javascript_include_tag("erp_app/utility.js","erp_app/organizer/layout.js","erp_app/organizer/default_menu_tree_panel.js") %>
     <%=setup_role_manager(@user)%>
     <%@organizer.applications.each do |application|%><%=application.load_resources%><%end%>
   </head>
@@ -13,13 +13,12 @@
 
     <script type="text/javascript">
       Ext.onReady(function() {
-        var organizerLayout = new Compass.ErpApp.Organizer.Layout({logout_url:'../logout'});
+        var organizerLayout = Ext.create("Compass.ErpApp.Organizer.Layout",{logout_url:'../logout'});
 
 <%
 @organizer.applications.each do |application|
 %>
-      var app = new Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base(
-      {
+      var app = Ext.create("Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base",{
         organizerLayout:organizerLayout,
   <%=application.build_widget_roles_js%>
       });

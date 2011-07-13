@@ -1,72 +1,47 @@
-Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.contactmechanismgrid',
     initComponent: function() {
-        var messageBox = null;
-
-        var proxy = new Ext.data.HttpProxy({
-            url:this.initialConfig['url'] || './crm/contact_mechanism'
-        });
-
-        proxy.addListener('exception', function(proxy, type, action, options, res) {
-            var message = 'Error in processing request';
-            if(!Compass.ErpApp.Utility.isBlank(res.message))
-                message = res.message;
-            Ext.Msg.alert('Error', message);
-        });
-
-        proxy.addListener('beforewrite', function(proxy, action) {
-            if(messageBox != null)
-                messageBox.hide();
-
-            var messageBox = Ext.Msg.wait('Status', 'Sending request...');
-        });
-
-        proxy.addListener('write', function(dataProxy, action, data, response, rs, options) {
-            var message = "Request processed"
-
-            if(messageBox != null)
-                messageBox.hide();
-
-            rs.dirty = false;
-            rs.commit();
-
-            if(!Compass.ErpApp.Utility.isBlank(response.message))
-                message = response.message;
-
-            Ext.Msg.alert('Status', message);
-        });
-
-        var reader = new Ext.data.JsonReader({
-            successProperty: 'success',
-            totalProperty:'totalCount',
-            idProperty: 'id',
-            root: 'data',
-            messageProperty: 'message'
-        },
-        this.initialConfig['fields']);
-
-        var writer = new Ext.data.JsonWriter({
-            encode: false
-        });
-
-        var store = new Ext.data.Store({
-            restful: true,
-            proxy: proxy,
-            reader: reader,
-            writer: writer,
-            baseParams:{
-                party_id:null,
-                contact_type:this.initialConfig['contactMechanism']
-            },
-            listeners:{
-                'exception':function(){
-                    Ext.Msg.alert("Error", arguments[5]);
+        var config = this.initialConfig;
+        var store = Ext.create('Ext.data.Store', {
+            fields:config['fields'],
+            autoLoad: false,
+            autoSync: true,
+            proxy: {
+                type: 'rest',
+                url:config['url'] || './crm/contact_mechanism',
+                extraParams:{
+                    party_id:null,
+                    contact_type:config['contactMechanism']
+                },
+                reader: {
+                    type: 'json',
+                    successProperty: 'success',
+                    idProperty: 'id',
+                    root: 'data',
+                    totalProperty:'totalCount',
+                    messageProperty: 'message'
+                },
+                writer: {
+                    type: 'json',
+                    writeAllFields:true,
+                    root: 'data'
+                },
+                listeners: {
+                    exception: function(proxy, response, operation){
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                        });
+                    }
                 }
             }
         });
         
         this.store = store;
 
-        
         Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.superclass.initComponent.call(this, arguments);
     },
     constructor : function(config) {
@@ -126,8 +101,12 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
             }
         });
 
-        var Record = Ext.data.Record.create(config.fields);
-        
+        var Model = Ext.define(config.title,{
+            extend:'Ext.data.Model',
+            fields:config.fields
+            //validations:config.validations
+        });
+
         config.fields = config.fields.concat([
         {
             name:'contact_purpose_id'
@@ -140,16 +119,8 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
         }
         ])
 
-        var editor = new Ext.ux.grid.RowEditor({
-            saveText: 'Update',
-            buttonAlign:'center',
-            errorSummary: false,
-            RowEditor:true,
-            listeners:{
-                'validateedit':function(rowEditor, changes, record, rowIndex){
-                    
-                }
-            }
+        this.editing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1
         });
 
         config = Ext.apply({
@@ -157,30 +128,30 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
             frame: false,
             region:'center',
             loadMask:true,
-            plugins:[editor],
+            plugins:[this.editing],
             tbar:{
                 items:[{
                     text: 'Add',
+                    xtype:'button',
                     iconCls: 'icon-add',
                     handler: function(button) {
                         var grid = button.findParentByType('contactmechanismgrid');
-                        var u = new Record();
-                        editor.stopEditing();
-                        grid.store.insert(0, u);
-                        editor.startEditing(0);
+                        var edit = grid.editing;
+                        grid.store.insert(0, new Model());
+                        edit.startEdit(0,0);
                     }
                 },
                 '-',
                 {
                     text: 'Delete',
+                    type:'button',
                     iconCls: 'icon-delete',
                     handler: function(button) {
                         var grid = button.findParentByType('contactmechanismgrid');
-                        var rec = grid.getSelectionModel().getSelected();
-                        if (!rec) {
-                            return false;
+                        var selection = grid.getView().getSelectionModel().getSelection()[0];
+                        if (selection) {
+                            grid.store.remove(selection);
                         }
-                        grid.store.remove(rec);
                     }
                 }]
             }
@@ -188,6 +159,3 @@ Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid = Ext.extend(Ext.
         Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('contactmechanismgrid', Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid);
-

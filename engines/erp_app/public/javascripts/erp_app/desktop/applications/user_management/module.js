@@ -38,7 +38,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement",{
 });
 
 Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
-    extend:"Ext.grid.GridPanel",
+    extend:"Ext.grid.Panel",
     alias:'widget.usermanagement_usersgrid',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
@@ -215,7 +215,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
     constructor : function(config) {
         var self = this;
 
-        var users_store = Ext.create('Ext.data.Store', {
+        var usersStore = Ext.create('Ext.data.Store', {
             proxy: {
                 type: 'ajax',
                 url : 'user_management/users/',
@@ -430,7 +430,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             iconCls: 'icon-search',
             handler: function(button) {
                 var login = Ext.getCmp('user_search_field').getValue();
-                users_store.setProxy({
+                usersStore.setProxy({
                     type: 'ajax',
                     url: './user_management/users/',
                     reader: {
@@ -442,22 +442,22 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                     }
                 });
 
-                users_store.load();
+                usersStore.load();
             }
         });
 
         config = Ext.apply({
             width:460,
             region:'west',
-            store:users_store,
+            store:usersStore,
             loadMask:false,
             columns:columns,
             tbar:{
                 items:toolBarItems
             },
-            bbar:new Ext.PagingToolbar({
+            bbar: Ext.create("Ext.PagingToolbar",{
                 pageSize: 30,
-                store: users_store,
+                store: usersStore,
                 displayInfo: true,
                 displayMsg: 'Displaying {0} - {1} of {2}',
                 emptyMsg: "No Users"

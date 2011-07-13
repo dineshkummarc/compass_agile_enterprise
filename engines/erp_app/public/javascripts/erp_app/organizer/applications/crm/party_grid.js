@@ -1,5 +1,6 @@
-
-Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.partygrid',
     initComponent: function() {
         this.addEvents(
             /**
@@ -9,73 +10,48 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
              * @param {Compass.ErpApp.PartyGrid} grid reference to the PartyGrid.
              */
             'addpartybtnclick'
-         );
+            );
 
         var grid = this;
-        var messageBox = null;
-
-        var proxy = new Ext.data.HttpProxy({
-            url:this.initialConfig['url'] || './crm/parties'
-        });
-
-        proxy.addListener('exception', function(proxy, type, action, options, res) {
-            var message = 'Error in processing request';
-
-            if(res.message != null)
-                message = res.message;
-
-            Ext.Msg.alert('Error', message);
-        });
-
-        proxy.addListener('beforewrite', function(proxy, action) {
-            if(messageBox != null)
-                messageBox.hide();
-
-            var messageBox = Ext.Msg.wait('Status', 'Sending request...');
-        });
-
-        proxy.addListener('write', function(dataProxy, action, data, response, rs, options) {
-            if(messageBox != null)
-                messageBox.hide();
-
-            rs.dirty = false;
-            rs.commit();
-            grid.getStore().reload();
-            Ext.Msg.alert('Status', response.message);
-        });
-
-        var reader = new Ext.data.JsonReader({
-            successProperty: 'success',
-            idProperty: 'business_party.id',
-            root: 'data',
-            totalProperty:'totalCount',
-            messageProperty: 'message'
-        },
-        this.initialConfig['fields']);
-
-        var writer = new Ext.data.JsonWriter({
-            encode: false
-        });
-
-        var store = new Ext.data.Store({
-            restful: true,
-            proxy: proxy,
-            reader: reader,
-            writer: writer,
-            baseParams:{
-                party_name:null,
-                party_type:this.initialConfig['partyType']
-            },
-            listeners:{
-                'exception':function(){
-                    Ext.Msg.alert("Error", arguments[5]);
+        var config = this.initialConfig;
+        var store = Ext.create('Ext.data.Store', {
+            fields:config['fields'],
+            autoLoad: true,
+            autoSync: true,
+            proxy: {
+                type: 'rest',
+                url:config['url'] || './crm/parties',
+                extraParams:{
+                    party_name:null,
+                    party_type:config['partyType']
+                },
+                reader: {
+                    type: 'json',
+                    successProperty: 'success',
+                    idProperty: 'business_party.id',
+                    root: 'data',
+                    totalProperty:'totalCount',
+                    messageProperty: 'message'
+                },
+                writer: {
+                    type: 'json',
+                    writeAllFields:true,
+                    root: 'data'
+                },
+                listeners: {
+                    exception: function(proxy, response, operation){
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                        });
+                    }
                 }
             }
         });
-
-        this.store = store;
-        
-        var toolBar = new Ext.Toolbar({
+ 
+        var toolBar = Ext.create("Ext.toolbar.Toolbar",{
             items:[
             '<span style="color:white;font-weight:bold;">'+ this.initialConfig['partyType'] +' Name:</span>',
             {
@@ -83,7 +59,7 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
                 width:150
             },
             {
-                xtype:'tbbutton',
+                xtype:'button',
                 text:'Search',
                 iconCls:'icon-search',
                 listeners:{
@@ -101,6 +77,7 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
             '|',
             {
                 text: 'Add',
+                xtype:'button',
                 iconCls: 'icon-add',
                 handler: function(button) {
                     grid.fireEvent('addpartybtnclick', this, grid);
@@ -109,6 +86,7 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
             '|',
             {
                 text: 'Delete',
+                xtype:'button',
                 iconCls: 'icon-delete',
                 handler: function(button) {
                     var grid = button.findParentByType('partygrid');
@@ -120,19 +98,18 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
                 }
             }
             ]
-        })
+        });
 
+        this.store = store;
         this.tbar = toolBar;
 
-        this.bbar = new Ext.PagingToolbar({
+        this.bbar = Ext.create("Ext.PagingToolbar",{
             pageSize: 30,
             store: store,
             displayInfo: true,
             displayMsg: 'Displaying {0} - {1} of {2}',
             emptyMsg: "No Parties"
         });
-
-        this.store.load();
 
         Compass.ErpApp.Organizer.Applications.Crm.PartyGrid.superclass.initComponent.call(this, arguments);
     },
@@ -411,11 +388,8 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
         }
         ]);
 
-        var editor = new Ext.ux.grid.RowEditor({
-            saveText: 'Update',
-            buttonAlign:'center',
-            RowEditor:true,
-            errorSummary:false
+        this.editing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1
         });
 
         config = Ext.apply({
@@ -425,13 +399,11 @@ Compass.ErpApp.Organizer.Applications.Crm.PartyGrid = Ext.extend(Ext.grid.GridPa
             frame: false,
             autoScroll:true,
             region:'center',
-            plugins:[editor],
+            plugins:[this.editing],
             loadMask:true
         }, config);
         Compass.ErpApp.Organizer.Applications.Crm.PartyGrid.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('partygrid', Compass.ErpApp.Organizer.Applications.Crm.PartyGrid);
 
 

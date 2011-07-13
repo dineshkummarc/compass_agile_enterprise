@@ -5,6 +5,9 @@ Ext.tree.Panel.updateNodeIcon = function(htmlItem, oldCssCls, newCssCls){
 };
 
 Ext.tree.Panel.updateNodeText = function(htmlItem, oldText, newText){
+    var stringFinder = "</div></td>";
+    oldText = oldText + stringFinder;
+    newText = newText + stringFinder;
     htmlItem.innerHTML = htmlItem.innerHTML.replace(oldText, newText);
 };
 
@@ -1482,7 +1485,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                         var obj = Ext.decode(action.response.responseText);
                                                         if(obj.success){
                                                             var newText = Ext.getCmp('knitkit_website_nav_update_name').getValue();
-                                                        //node.getUI().getTextEl().innerHTML = newText;
+                                                            Ext.tree.Panel.updateNodeText(htmlItem, record.data.text, newText);
+                                                            record.data.text = newText;
                                                         }
                                                         else{
                                                             Ext.Msg.alert("Error", obj.msg);
@@ -1696,7 +1700,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                             mode: 'local',
                                             displayField:'title',
                                             valueField:'id',
-                                            triggerAction: 'all'
+                                            triggerAction: 'all',
+                                            hidden:(record.data.linkToType != 'website_section' && record.data.linkToType != 'article')
                                         },
                                         {
                                             xtype:'textfield',

@@ -1,4 +1,3 @@
-Ext.ns("Compass.ErpApp.Organizer");
 Ext.ns("Compass.ErpApp.Organizer.Applications");
 
 Compass.ErpApp.Organizer.Layout = function(config){
@@ -8,7 +7,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
     //used to build accordion menu
     var accordionMenuItems = []
 
-    var toolbar =  new Ext.Toolbar({
+    var toolbar = Ext.create("Ext.toolbar.Toolbar",{
         items: []
     });
 
@@ -22,9 +21,9 @@ Compass.ErpApp.Organizer.Layout = function(config){
         toolbar.add("->");
         toolbar.add({
             text: 'Logout',
+            xtype:'button',
             iconCls:"icon-exit",
             defaultAlign : "right",
-            enableToggle : false,
             'listeners': {
                 scope:this,
                 'click':function() {
@@ -41,7 +40,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
         });
     };
 
-    this.CenterPanel = new Ext.Panel({
+    this.CenterPanel = Ext.create("Ext.Panel",{
         id:'erp_app_viewport_center',
         region : 'center',
         margins : '0 0 0 0',
@@ -51,7 +50,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
         items : []
     });
 
-    this.NorthPanel = new Ext.Panel({
+    this.NorthPanel = Ext.create("Ext.Panel",{
         region : 'north',
         height:29,
         layout: 'anchor',
@@ -62,20 +61,20 @@ Compass.ErpApp.Organizer.Layout = function(config){
         ]
     });
 
-    this.EastPanel = new Ext.Panel({
+    this.EastPanel = Ext.create("Ext.Panel",{
         region : 'east',
         hidden : true
     });
 
-    var southToolbar = new Ext.Toolbar({
+    var southToolbar = Ext.create("Ext.toolbar.Toolbar",{
         items:[
         {
-            xtype:'tbitem',
+            xtype:'tbtext',
             html:"Version 1.0"
         },
         "->",
         {
-            xtype:'tbitem',
+            xtype:'tbtext',
             html:"<img style='height:35px !important; margin-top:-8px !important;' src='/images/erp_app/organizer/compass-footer-logo-rounded.png' />"
         }
         ]
@@ -83,7 +82,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
 
     this.SouthToolBar = southToolbar;
 
-    this.SouthPanel = new Ext.Panel({
+    this.SouthPanel = Ext.create("Ext.Panel",{
         region : 'south',
         height:29,
         layout: 'anchor',
@@ -102,7 +101,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
     };
 
     this.setup = function(){
-        this.WestPanel = new Ext.Panel({
+        this.WestPanel = Ext.create("Ext.Panel",{
             region : 'west',
             margins : '0 0 0 0',
             cmargins : '0 0 0 0',
@@ -112,7 +111,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
             items:accordionMenuItems
         });
 
-        this.Viewport = new Ext.Viewport({
+        this.viewPort = Ext.create('Ext.container.Viewport', {
             layout : 'border',
             border : false,
             items :

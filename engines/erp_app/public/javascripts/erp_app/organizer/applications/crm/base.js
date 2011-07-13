@@ -1,78 +1,74 @@
 Ext.ns("Compass.ErpApp.Organizer.Applications.Crm");
 
-Compass.ErpApp.Organizer.Applications.Crm.Layout = Ext.extend(Ext.Panel, (function() {
+Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
+    extend:"Ext.panel.Panel",
+    alias:'widget.contactslayout',
     //private member partyId
-    var partyId = null;
+    partyId:null,
+    constructor : function(config) {
+        var southPanel = new Ext.Panel({
+            layout:'fit',
+            region:'south',
+            height:300,
+            collapsible:true,
+            border:false,
+            items:[config['southComponent']]
+        });
 
-    return{
-        constructor : function(config) {
-            var southPanel = new Ext.Panel({
-                layout:'fit',
-                region:'south',
-                height:300,
-                collapsible:true,
-                border:false,
-                items:[config['southComponent']]
-            });
+        var centerPanel = new Ext.Panel({
+            layout:'fit',
+            region:'center',
+            autoScroll:true,
+            items:[config['centerComponent']]
+        })
 
-            var centerPanel = new Ext.Panel({
-                layout:'fit',
-                region:'center',
-                autoScroll:true,
-                items:[config['centerComponent']]
-            })
+        config = Ext.apply({
+            layout:'border',
+            frame: false,
+            autoScroll:true,
+            region:'center',
+            items:[
+            centerPanel,
+            southPanel
+            ]
 
-            config = Ext.apply({
-                layout:'border',
-                frame: false,
-                autoScroll:true,
-                region:'center',
-                items:[
-                centerPanel,
-                southPanel
-                ]
+        }, config);
+        Compass.ErpApp.Organizer.Applications.Crm.Layout.superclass.constructor.call(this, config);
+    },
 
-            }, config);
-            Compass.ErpApp.Organizer.Applications.Crm.Layout.superclass.constructor.call(this, config);
-        },
+    /**
+     * set the private member partyId
+     * @param {Integer} partyId id to set member partyId to
+     */
+    setPartyId : function(partyId){
+        this.partyId = partyId;
+    },
 
-        /**
-         * set the private member partyId
-         * @param {Integer} partyId id to set member partyId to
-         */
-        setPartyId : function(partyId){
-            this.partyId = partyId;
-        },
-
-        /**
-         * load emails for member partyId
-         */
-        loadContactMechanisms : function(){
-            if(this.partyId == null){
-                Ext.Msg.alert('Error', 'Member partyId not set');
-            }
-            else{
-                var contactMechanismGrids = this.findByType('tabpanel')[0].findByType('contactmechanismgrid');
-                var numGrids = contactMechanismGrids.length;
-                for(var i=0;i<numGrids;i++){
-                    var store = contactMechanismGrids[i].getStore();
-                    store.setBaseParam('party_id', this.partyId);
-                    store.load();
-                }
-                this.findByType('tabpanel')[0].setActiveTab(0);
-            }
+    /**
+     * load emails for member partyId
+     */
+    loadContactMechanisms : function(){
+        if(this.partyId == null){
+            Ext.Msg.alert('Error', 'Member partyId not set');
         }
-    };
-}())
-    );
+        else{
+            var contactMechanismGrids = this.query('tabpanel')[0].query('contactmechanismgrid');
+            var numGrids = contactMechanismGrids.length;
+            for(var i=0;i<numGrids;i++){
+                var store = contactMechanismGrids[i].getStore();
+                store.proxy.extraParams.party_id = this.partyId;
+                store.load();
+            }
+            this.query('tabpanel')[0].setActiveTab(0);
+        }
+    }
 
-
-Ext.reg('contactslayout', Compass.ErpApp.Organizer.Applications.Crm.Layout);
+});
 
 
 Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     
-    var addIndividualWindow = new Ext.Window({
+    var addIndividualWindow = Ext.create("Ext.window.Window",{
         layout:'fit',
         width:375,
         title:'New Individual',
@@ -180,7 +176,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             listeners:{
                 'click':function(button){
                     var window = button.findParentByType('window');
-                    var formPanel = window.findByType('form')[0];
+                    var formPanel = window.query('form')[0];
                     formPanel.getForm().submit({
                         reset:true,
                         params:{
@@ -188,7 +184,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                         },
                         waitMsg:'Creating Individual',
                         success:function(form, action){
-                            var response =  Ext.util.JSON.decode(action.response.responseText);
+                            var response =  Ext.decode(action.response.responseText);
                             Ext.Msg.alert("Status", response.message);
                             if(response.success){
                                 var individualName = response.individualName;
@@ -202,7 +198,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                         failure:function(form, action){
                             var message = 'Error adding individual'
                             if(action.response != null){
-                                var response =  Ext.util.JSON.decode(action.response.responseText);
+                                var response =  Ext.decode(action.response.responseText);
                                 message = response.message;
                             }
                             Ext.Msg.alert("Status", message);
@@ -218,7 +214,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         }]
     });
 
-    var addOrganizationWindow = new Ext.Window({
+    var addOrganizationWindow = Ext.create("Ext.window.Window",{
         layout:'fit',
         width:375,
         title:'New Organization',
@@ -260,7 +256,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             listeners:{
                 'click':function(button){
                     var window = button.findParentByType('window');
-                    var formPanel = window.findByType('form')[0];
+                    var formPanel = window.query('form')[0];
                     formPanel.getForm().submit({
                         reset:true,
                         waitMsg:'Creating Organization',
@@ -268,7 +264,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                             party_type:'Organization'
                         },
                         success:function(form, action){
-                            var response =  Ext.util.JSON.decode(action.response.responseText);
+                            var response =  Ext.decode(action.response.responseText);
                             Ext.Msg.alert("Status", response.message);
                             if(response.success){
                                 var organizationName = response.organizationName;
@@ -282,7 +278,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                         failure:function(form, action){
                             var message = "Error adding organization"
                             if(action.response != null){
-                                var response =  Ext.util.JSON.decode(action.response.responseText);
+                                var response =  Ext.decode(action.response.responseText);
                                 message = response.message;
                             }
                             Ext.Msg.alert("Status", message);
@@ -298,15 +294,23 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         }]
     });
 
+    var treeMenuStore = Ext.create('Ext.data.TreeStore', {
+        proxy: {
+            type: 'ajax',
+            url: './crm/menu'
+        },
+        root: {
+            text: 'Customers',
+            expanded: true,
+            iconCls:'icon-content'
+        }
+    });
+
     var menuTreePanel = {
         xtype:'defaultmenutree',
         title:'CRM',
-        menuRootIconCls:'icon-content',
-        rootNodeTitle:'Customers',
         treeConfig:{
-            loader:{
-                dataUrl:'./crm/menu'
-            },
+            store:treeMenuStore,
             listeners:{
                 scope:this,
                 'contextmenu':function(node, e){
@@ -354,19 +358,15 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         id:'individualSearchGrid',
         xtype:'partygrid',
         partyType:'Individual',
-        selModel:new Ext.grid.RowSelectionModel({
-            listeners:{
-                'rowselect':function(selModel, rowIndex, record){
-                    var id = record.get("id");
-                    var contactsLayoutPanel = selModel.grid.findParentByType('contactslayout');
-                    contactsLayoutPanel.setPartyId(id);
-                    contactsLayoutPanel.loadContactMechanisms();
-                }
-            }
-        }),
         listeners:{
             'addpartybtnclick':function(btn, grid){
                 addIndividualWindow.show();
+            },
+            'itemclick':function(view, record, item, index, e, options){
+                var id = record.get("id");
+                var contactsLayoutPanel = view.findParentByType('contactslayout');
+                contactsLayoutPanel.setPartyId(id);
+                contactsLayoutPanel.loadContactMechanisms();
             }
         }
     };
@@ -375,26 +375,37 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         id:'organizationSearchGrid',
         xtype:'partygrid',
         partyType:'Organization',
-        selModel:new Ext.grid.RowSelectionModel({
-            listeners:{
-                'rowselect':function(selModel, rowIndex, record){
-                    var id = record.get("id");
-                    var contactsLayoutPanel = selModel.grid.findParentByType('contactslayout');
-                    contactsLayoutPanel.setPartyId(id);
-                    contactsLayoutPanel.loadContactMechanisms();
-                }
-            }
-        }),
         listeners:{
             'addpartybtnclick':function(btn, grid){
                 addOrganizationWindow.show();
+            },
+            'itemclick':function(view, record, item, index, e, options){
+                var id = record.get("id");
+                var contactsLayoutPanel = view.findParentByType('contactslayout');
+                contactsLayoutPanel.setPartyId(id);
+                contactsLayoutPanel.loadContactMechanisms();
             }
         }
     };
 
-    var contactPurposeStore = new Compass.ErpApp.Utility.Data.TypeJsonStore({
-        url: './crm/contact_purposes',
-        xtype:'combobox'
+    var contactPurposeStore = Ext.create('Ext.data.Store', {
+        proxy: {
+            type: 'ajax',
+            url : './crm/contact_purposes',
+            reader: {
+                type: 'json',
+                root: 'data'
+            },
+            autoLoad:true
+        },
+        fields:[
+        {
+            name: 'description'
+        },
+        {
+            name: 'id'
+        }
+        ]
     });
 
     var individualsPanel = {
@@ -545,7 +556,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             items:[
             {
                 xtype:'contactmechanismgrid',
-                'title':'Email Addresses',
+                title:'Email Addresses',
                 contactMechanism:'EmailAddress',
                 columns:[
                 {
@@ -567,7 +578,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             },
             {
                 xtype:'contactmechanismgrid',
-                'title':'Phone Numbers',
+                title:'Phone Numbers',
                 contactMechanism:'PhoneNumber',
                 columns:[
                 {
@@ -589,7 +600,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             },
             {
                 xtype:'contactmechanismgrid',
-                'title':'Postal Addresses',
+                title:'Postal Addresses',
                 contactMechanism:'PostalAddress',
                 columns:[
                 {
@@ -677,8 +688,6 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         },
         centerComponent:organizationsGrid
     };
-
-    contactPurposeStore.load();
 
     this.setup = function(){
         config['organizerLayout'].addApplication(menuTreePanel, [individualsPanel, organizationsPanel]);
