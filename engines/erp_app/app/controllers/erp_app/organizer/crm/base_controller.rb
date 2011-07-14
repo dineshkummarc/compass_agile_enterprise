@@ -2,8 +2,8 @@ class ErpApp::Organizer::Crm::BaseController < ErpApp::Organizer::BaseController
   def menu
     menu = []
 
-    menu << {:text => 'Individuals', :id => 'individualsNode', :leaf => true, :iconCls => 'icon-user', :href => "javascript:void(\'\');Compass.Component.UserApp.Util.setActiveCenterItem(\'individuals_search_grid\');"}
-    menu << {:text => 'Organizations', :id => 'organizationNode', :leaf => true, :iconCls => 'icon-user', :href => "javascript:void(\'\');Compass.Component.UserApp.Util.setActiveCenterItem(\'organizations_search_grid\');"}
+    menu << {:text => 'Individuals', :businessPartType => 'individual', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "individuals_search_grid"}
+    menu << {:text => 'Organizations',:businessPartType => 'organization', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "organizations_search_grid"}
 
     render :inline => menu.to_json
   end
@@ -79,9 +79,10 @@ class ErpApp::Organizer::Crm::BaseController < ErpApp::Organizer::BaseController
   def update_party(json_text)
     party_type = params[:party_type]
     business_party_data = params[:data]
-    businesss_party_id = business_party_data['business_party.id']
+    businesss_party_id = business_party_data['business_party_id']
     enterprise_identifier = business_party_data[:enterprise_identifier]
     business_party_data.delete(:id)
+    business_party_data.delete(:business_party_id)
     business_party_data.delete(:enterprise_identifier)
 
     klass = party_type.constantize
@@ -153,15 +154,9 @@ class ErpApp::Organizer::Crm::BaseController < ErpApp::Organizer::BaseController
   end
 
   def delete_party(json_text)
-    businesss_party_id = params[:id]
     party_type = params[:party_type]
-
-    klass = party_type.constantize
-    business_party = klass.find(businesss_party_id)
-    party = business_party.party
-
-    party.destroy
-
+    Party.destroy(params[:id])
+ 
     json_text += "[],message:\"#{party_type} deleted\"}"
 
     json_text

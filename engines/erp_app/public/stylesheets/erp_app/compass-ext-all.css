@@ -298,6 +298,11 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/arrow_right_blue/arrow_right_blue_16x16.png', sizingMethod='crop');
 }
 
+.icon-eye {
+   background-image:url( /images/icons/eye/eye_16x16.png ) !important;
+   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/eye/eye_16x16.png', sizingMethod='crop');
+}
+
 
 
 

@@ -1,26 +1,73 @@
+Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreeStore",{
+    extend:"Ext.data.TreeStore",
+    alias:'widget.defaultmenutreestore',
+
+    constructor: function(config){
+        var fields = [{
+            name:'text'
+        },{
+            name:'leaf'
+        },{
+            name:'iconCls'
+        },{
+            name:'applicationCardId'
+        }];
+    
+        if(config['additionalFields']){
+            fields = fields.concat(config['additionalFields']);
+        }
+
+        config = Ext.apply({
+            proxy: {
+                type: 'ajax',
+                url: config['url']
+            },
+            root: {
+                text: config['rootText'],
+                expanded: true,
+                iconCls:config['rootIconCls']
+            },
+            fields:fields
+        }, config);
+        Compass.ErpApp.Organizer.DefaultMenuTreeStore.superclass.constructor.call(this, config);
+    }
+});
+
+
 Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
     extend:"Ext.panel.Panel",
-    id:'file_manager-win',
     alias:'widget.defaultmenutree',
     treePanel: null,
-    initComponent: function() {
+    
+    constructor: function(config) {
+        var setActiveCenterItemFn = function(view, record, item, index, e){
+            Compass.ErpApp.Organizer.Layout.setActiveCenterItem(record.data.applicationCardId);
+        };
+
+        if(!config['treeConfig']['listeners'])
+            config['treeConfig']['listeners'] = {};
+
+        config['treeConfig'].listeners['itemclick'] = setActiveCenterItemFn;
+       
+		
         var menuTreeConfig = Ext.apply({
             animate:true,
             autoScroll:false,
-            frame:true,
-            autoLoad : false,
-            containerScroll: true,
-            border: false,
-            width: "auto",
-            height: "auto"
-        }, this.initialConfig['treeConfig']);
+            frame:false,
+            autoLoad:false,
+            containerScroll:true,
+            height:300,
+            border:false
+        }, config['treeConfig']);
         
-        var menuTree = new Ext.tree.TreePanel(menuTreeConfig);
+        var menuTree = Ext.create("Ext.tree.Panel",menuTreeConfig);
         this.treePanel = menuTree;
 
-        this.items = [menuTree];
-
-        Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.initComponent.call(this, arguments);
+        config = Ext.apply({
+            items:[menuTree]
+        }, config);
+        
+        Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.constructor.call(this, config);
     }
 });
 

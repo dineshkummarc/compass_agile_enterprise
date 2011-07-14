@@ -42,7 +42,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                     exception: function(proxy, response, operation){
                         Ext.MessageBox.show({
                             title: 'REMOTE EXCEPTION',
-                            msg: operation.getError(),
+                            msg: 'Error Saving ' + config['partyType'],
                             icon: Ext.MessageBox.ERROR,
                             buttons: Ext.Msg.OK
                         });
@@ -53,7 +53,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
  
         var toolBar = Ext.create("Ext.toolbar.Toolbar",{
             items:[
-            '<span style="color:white;font-weight:bold;">'+ this.initialConfig['partyType'] +' Name:</span>',
+            '<span class="x-btn-inner">'+ this.initialConfig['partyType'] +' Name:</span>',
             {
                 xtype:'textfield',
                 width:150
@@ -65,13 +65,26 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                 listeners:{
                     'click':function(){
                         var tbar = this.findParentByType('toolbar');
-                        var textField = tbar.findByType('textfield')[0];
+                        var textField = tbar.query('textfield')[0];
                         var searchValue = textField.getValue();
                         if(searchValue != ''){
-                            store.setBaseParam("party_name", searchValue);
-                            store.load();
+                            store.proxy.extraParams.party_name = searchValue;
                         }
+                        else{
+                            store.proxy.extraParams.party_name = null;
+                        }
+                        store.load();
                     }
+                }
+            },
+            '|',
+            {
+                text: 'All',
+                xtype:'button',
+                iconCls: 'icon-eye',
+                handler: function(button) {
+                    store.proxy.extraParams.party_name = null;
+                    store.load();
                 }
             },
             '|',
@@ -90,7 +103,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                 iconCls: 'icon-delete',
                 handler: function(button) {
                     var grid = button.findParentByType('partygrid');
-                    var rec = grid.getSelectionModel().getSelected();
+                    var rec = grid.getSelectionModel().selected.items[0];
                     if (!rec) {
                         return false;
                     }
@@ -182,7 +195,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             columns = columns.concat([
             {
                 header: 'Suffix',
-                dataIndex: 'suffix',
+                dataIndex: 'current_suffix',
                 editor: {
                     xtype:'textfield'
                 },
@@ -190,7 +203,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Title',
-                dataIndex: 'title',
+                dataIndex: 'current_personal_title',
                 editor: {
                     xtype:'textfield'
                 },
@@ -198,7 +211,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'First Name',
-                dataIndex: 'firstName',
+                dataIndex: 'current_first_name',
                 editor: {
                     xtype:'textfield'
                 },
@@ -207,7 +220,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Middle Name',
-                dataIndex: 'middleName',
+                dataIndex: 'current_middle_name',
                 editor: {
                     xtype:'textfield'
                 },
@@ -215,7 +228,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Last Name',
-                dataIndex: 'lastName',
+                dataIndex: 'current_last_name',
                 editor: {
                     xtype:'textfield'
                 },
@@ -224,7 +237,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Nickname',
-                dataIndex: 'nickname',
+                dataIndex: 'current_nickname',
                 editor: {
                     xtype:'textfield'
                 },
@@ -232,7 +245,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Passport Number',
-                dataIndex: 'passportNumber',
+                dataIndex: 'current_passport_number',
                 editor: {
                     xtype:'textfield'
                 },
@@ -240,7 +253,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Passport Expiration Date',
-                dataIndex: 'passportExpirationDate',
+                dataIndex: 'current_passport_expire_date',
                 renderer: Ext.util.Format.dateRenderer('n/j/Y'),
                 editor: {
                     xtype: 'datefield',
@@ -250,7 +263,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'DOB',
-                dataIndex: 'dob',
+                dataIndex: 'birth_date',
                 renderer: Ext.util.Format.dateRenderer('n/j/Y'),
                 editor: {
                     xtype: 'datefield',
@@ -270,7 +283,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header: 'Total Yrs Work Exp',
-                dataIndex:'totalYearsWorkExperience',
+                dataIndex:'total_years_work_experience',
                 editor: {
                     xtype:'textfield'
                 },
@@ -278,7 +291,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
             {
                 header:'Martial Status',
-                dataIndex:'maritalStatus',
+                dataIndex:'marital_status',
                 editor: {
                     xtype:'textfield'
                 },
@@ -293,53 +306,53 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
 
             fields = fields.concat([
             {
-                name:'firstName',
+                name:'current_first_name',
                 mapping:'business_party.current_first_name',
                 allowBlank:false
             },
 
             {
-                name:'lastName',
+                name:'current_last_name',
                 mapping:'business_party.current_last_name',
                 allowBlank:false
             },
 
 
             {
-                name:'middleName',
+                name:'current_middle_name',
                 mapping:'business_party.current_middle_name',
                 allowBlank:true
             },
 
 
             {
-                name:'title',
+                name:'current_personal_title',
                 mapping:'business_party.current_personal_title',
                 allowBlank:true
             },
 
             {
-                name:'nickname',
+                name:'current_nickname',
                 mapping:'business_party.current_nickname',
                 allowBlank:true
             },
 
 
             {
-                name:'suffix',
+                name:'current_suffix',
                 mapping:'business_party.current_suffix',
                 allowBlank:true
             },
 
             {
-                name:'passportNumber',
+                name:'current_passport_number',
                 mapping:'business_party.current_passport_number',
                 allowBlank:true
             },
 
 
             {
-                name:'passportExpirationDate',
+                name:'current_passport_expire_date',
                 mapping:'business_party.current_passport_expire_date',
                 type: 'date',
                 allowBlank:true
@@ -351,19 +364,19 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             },
 
             {
-                name:'dob',
+                name:'birth_date',
                 mapping:'business_party.birth_date',
                 type: 'date',
                 allowBlank:false
             },
 
             {
-                name:'totalYearsWorkExperience',
+                name:'total_years_work_experience',
                 mapping:'business_party.total_years_work_experience',
                 allowBlank:true
             },
             {
-                name:'maritalStatus',
+                name:'marital_status',
                 mapping:'business_party.marital_status',
                 allowBlank:true
             },

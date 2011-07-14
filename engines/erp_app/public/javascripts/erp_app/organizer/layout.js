@@ -71,12 +71,12 @@ Compass.ErpApp.Organizer.Layout = function(config){
         {
             xtype:'tbtext',
             html:"Version 1.0"
-        },
-        "->",
-        {
-            xtype:'tbtext',
-            html:"<img style='height:35px !important; margin-top:-8px !important;' src='/images/erp_app/organizer/compass-footer-logo-rounded.png' />"
         }
+//        "->",
+//        {
+//            xtype:'tbtext',
+//            html:"<img style='height:35px !important; margin-top:-8px !important;' src='/images/erp_app/organizer/compass-footer-logo-rounded.png' />"
+//        }
         ]
     });
 
@@ -126,8 +126,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
     };
 };
 
-Ext.ns('Compass.Component.UserApp.Util');
-Compass.Component.UserApp.Util.setActiveCenterItem = function(id, loadRemoteData){
+Compass.ErpApp.Organizer.Layout.setActiveCenterItem = function(id, loadRemoteData){
     Ext.ComponentMgr.get('erp_app_viewport_center').layout.setActiveItem(id);
     var activeItem = Ext.ComponentMgr.get(id);
     

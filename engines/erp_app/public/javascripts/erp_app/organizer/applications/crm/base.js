@@ -73,8 +73,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         width:375,
         title:'New Individual',
         height:500,
-        closeAction:'hide',
-        plain: true,
+        buttonAlign:'center',
         items: new Ext.FormPanel({
             labelWidth: 110,
             frame:false,
@@ -190,9 +189,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                                 var individualName = response.individualName;
                                 addIndividualWindow.hide();
                                 var individualsSearchGrid = Ext.ComponentMgr.get('individualSearchGrid');
-                                var store = individualsSearchGrid.getStore();
-                                store.setBaseParam("party_name", individualName);
-                                store.load();
+                                individualsSearchGrid.store.proxy.extraParams.party_name = individualName;
+                                individualsSearchGrid.store.load();
                             }
                         },
                         failure:function(form, action){
@@ -219,8 +217,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         width:375,
         title:'New Organization',
         height:160,
-        closeAction:'hide',
-        plain: true,
+        buttonAlign:'center',
         items: new Ext.FormPanel({
             labelWidth: 110,
             frame:false,
@@ -270,9 +267,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                                 var organizationName = response.organizationName;
                                 addOrganizationWindow.hide();
                                 var organizationSearchGrid = Ext.ComponentMgr.get('organizationSearchGrid');
-                                var store = organizationSearchGrid.getStore();
-                                store.setBaseParam("party_name", organizationName);
-                                store.load();
+                                organizationSearchGrid.store.proxy.extraParams.party_name = organizationName;
+                                organizationSearchGrid.store.load();
                             }
                         },
                         failure:function(form, action){
@@ -294,16 +290,15 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         }]
     });
 
-    var treeMenuStore = Ext.create('Ext.data.TreeStore', {
-        proxy: {
-            type: 'ajax',
-            url: './crm/menu'
-        },
-        root: {
-            text: 'Customers',
-            expanded: true,
-            iconCls:'icon-content'
-        }
+    var treeMenuStore = Ext.create('Compass.ErpApp.Organizer.DefaultMenuTreeStore', {
+        url:'./crm/menu',
+        rootText:'Customers',
+        rootIconCls:'icon-content',
+        additionalFields:[
+            {
+                name:'businessPartType'
+            }
+        ]
     });
 
     var menuTreePanel = {
@@ -313,10 +308,11 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             store:treeMenuStore,
             listeners:{
                 scope:this,
-                'contextmenu':function(node, e){
-                    if(node.isLeaf()){
+                'itemcontextmenu':function(view, record, htmlItem, index, e){
+                    e.stopEvent();
+                    if(record.isLeaf()){
                         var contextMenu = null;
-                        if(node.id == "individualsNode"){
+                        if(record.data.businessPartType == "individual"){
                             contextMenu = new Ext.menu.Menu({
                                 items:[
                                 {
@@ -332,7 +328,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                             });
                         }
                         else 
-                        if(node.id == "organizationNode"){
+                        if(record.data.businessPartType == "organization"){
                             contextMenu = new Ext.menu.Menu({
                                 items:[
                                 {
@@ -389,14 +385,14 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     };
 
     var contactPurposeStore = Ext.create('Ext.data.Store', {
+        autoLoad:true,
         proxy: {
             type: 'ajax',
             url : './crm/contact_purposes',
             reader: {
                 type: 'json',
-                root: 'data'
-            },
-            autoLoad:true
+                root: 'types'
+            }
         },
         fields:[
         {
@@ -574,6 +570,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     allowBlank: false
                 }
                 ],
+                validations:[
+                   {type: 'presence',  field: 'email_address'}
+
+                ],
                 contactPurposeStore:contactPurposeStore
             },
             {
@@ -595,6 +595,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     name:'phone_number',
                     allowBlank: false
                 }
+                ],
+                validations:[
+                   {type: 'presence',  field: 'phone_number'}
+
                 ],
                 contactPurposeStore:contactPurposeStore
             },
@@ -681,6 +685,14 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     name: 'country',
                     allowBlank: false
                 }
+                ],
+                validations:[
+                   {type: 'presence',  field: 'address_line_1'},
+                   {type: 'presence',  field: 'city'},
+                   {type: 'presence',  field: 'state'},
+                   {type: 'presence',  field: 'zip'},
+                   {type: 'presence',  field: 'country'}
+
                 ],
                 contactPurposeStore:contactPurposeStore
             }

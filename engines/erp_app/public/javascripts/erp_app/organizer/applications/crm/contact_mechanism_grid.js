@@ -31,7 +31,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
                     exception: function(proxy, response, operation){
                         Ext.MessageBox.show({
                             title: 'REMOTE EXCEPTION',
-                            msg: operation.getError(),
+                            msg: 'Error Saving ' + config.title,
                             icon: Ext.MessageBox.ERROR,
                             buttons: Ext.Msg.OK
                         });
@@ -47,12 +47,25 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
     constructor : function(config) {
         if(config['contactPurposeStore'] == null)
         {
-            var contactPurposeStore = new Compass.ErpApp.Utility.Data.TypeJsonStore({
-                xtype:'combobox',
-                url: './crm/contact_purposes'
+            config['contactPurposeStore'] = Ext.create('Ext.data.Store', {
+                proxy: {
+                    type: 'ajax',
+                    url : './crm/contact_purposes',
+                    reader: {
+                        type: 'json',
+                        root: 'types'
+                    },
+                    autoLoad:true
+                },
+                fields:[
+                {
+                    name: 'description'
+                },
+                {
+                    name: 'id'
+                }
+                ]
             });
-            config['contactPurposeStore'] = contactPurposeStore
-            contactPurposeStore.load();
         }
 
         config.columns = config.columns.concat([
@@ -68,7 +81,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
                     return '';
                 }
             },
-            editor: new Ext.form.ComboBox({
+            editor:{
+                xtype:'combo',
                 forceSelection:true,
                 typeAhead: true,
                 mode: 'local',
@@ -77,7 +91,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
                 triggerAction: 'all',
                 store: config['contactPurposeStore'],
                 selectOnFocus:true
-            }),
+            },
             width:200
         },
         {
@@ -94,17 +108,14 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
         }
         ]);
 
-        //undefined gets in this array some how this removes it
-        Ext.each(config.fields, function(field){
-            if(field == undefined || field.name == undefined || field.name == 'undefined'){
-                config.fields.remove(field);
-            }
-        });
+        if(!config.validations)
+            config.validations = [];
+        config.validations = config.validations.concat({type: 'presence',  field: 'contact_purpose_id'});
 
         var Model = Ext.define(config.title,{
             extend:'Ext.data.Model',
-            fields:config.fields
-            //validations:config.validations
+            fields:config.fields,
+            validations:config.validations
         });
 
         config.fields = config.fields.concat([
