@@ -56,7 +56,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
       linked_to_id = params["#{params[:link_to].underscore}_id".to_sym]
       link_to_item = params[:link_to].constantize.find(linked_to_id)
       #setup link
-      website_nav_item.url = link_to_item.permalink
+      website_nav_item.url = '/' + link_to_item.permalink
       website_nav_item.linked_to_item = link_to_item
       url = "http://#{website_nav.website.hosts.first.host}/" + link_to_item.permalink
     else
@@ -89,7 +89,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
       linked_to_id = params["#{params[:link_to].underscore}_id".to_sym]
       link_to_item = params[:link_to].constantize.find(linked_to_id)
       #setup link
-      website_nav_item.url = link_to_item.permalink
+      website_nav_item.url = '/' + link_to_item.permalink
       website_nav_item.linked_to_item = link_to_item
       url = "http://#{website_nav_item.website_nav.website.hosts.first.host}/" + link_to_item.permalink
     else
