@@ -1662,7 +1662,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion = Ext.extend(Ext.TabPanel
                                             url: './knitkit/website_nav/delete_menu_item',
                                             method: 'POST',
                                             params:{
-                                                id:node.websiteNavItemId
+                                                id:node.attributes.websiteNavItemId
                                             },
                                             success: function(response) {
                                                 self.clearWindowStatus();

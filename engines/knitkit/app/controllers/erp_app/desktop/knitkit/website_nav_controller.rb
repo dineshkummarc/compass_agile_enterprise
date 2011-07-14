@@ -81,7 +81,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
 
     url = params[:url]
     linked_to_id = nil
-    if(params[:link_to] != 'url')
+    if(params[:link_to] != 'Url')
       #user wants to see Section so this is needed
       params[:link_to] = 'WebsiteSection' if params[:link_to] == 'Section'
 
