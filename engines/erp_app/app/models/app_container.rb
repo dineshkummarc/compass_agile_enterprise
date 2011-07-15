@@ -16,4 +16,8 @@ class AppContainer < ActiveRecord::Base
   def set_preference(preference_type_iid, preference_option_iid)
     set_user_preference(self.user, preference_type_iid, preference_option_iid)
   end
+
+  def setup_default_preferences
+    #template method
+  end
 end
