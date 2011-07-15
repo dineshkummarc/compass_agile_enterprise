@@ -66,7 +66,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.FileManager",{
                                             content:content
                                         },
                                         success: function(response) {
-                                            var obj =  Ext.util.JSON.decode(response.responseText);
+                                            var obj = Ext.decode(response.responseText);
                                             if(obj.success){
                                                 self.clearWindowStatus();
                                             }

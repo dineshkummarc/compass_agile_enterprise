@@ -1804,7 +1804,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             }
                         });
                     }
-                    var contextMenu = new Ext.menu.Menu({
+                    var contextMenu = Ext.create("Ext.menu.Menu",{
                         items:items
                     });
                     contextMenu.showAt(e.xy);

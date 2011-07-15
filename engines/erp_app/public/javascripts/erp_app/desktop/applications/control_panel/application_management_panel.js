@@ -48,8 +48,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
                     else{
                         Ext.Msg.alert('Status', 'Error updating application settings.');
                     }
-                    //self.clearWindowStatus();
-                    //return false;
                 }
             }
         });

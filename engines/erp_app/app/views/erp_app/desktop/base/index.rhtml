@@ -120,8 +120,8 @@
             shortcuts:Ext.create("Ext.data.Store",{
               model:"Ext.ux.desktop.ShortcutModel",
               data:[
-                {name:"Control Panel",iconCls:"control-panel-win-shortcut",module:"control-panel-win"},
-                {name:"Web Navigator",iconCls:"web-navigator-win-shortcut",module:"web-navigator-win"},
+                {applicationId:0,name:"Control Panel",iconCls:"control-panel-win-shortcut",module:"control-panel-win",autoLoad:'na'},
+                {applicationId:0,name:"Web Navigator",iconCls:"web-navigator-win-shortcut",module:"web-navigator-win",autoLoad:'na'},
                 <%=@desktop.shortcuts.collect{|app| "{name:'#{app.description}',iconCls:'#{app.shortcut_id}-shortcut',module:'#{app.shortcut_id}'}"}.join(",").to_s%>
               ]
             }),

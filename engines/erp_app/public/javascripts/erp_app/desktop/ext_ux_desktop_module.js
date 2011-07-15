@@ -123,7 +123,13 @@ Ext.define("Ext.ux.desktop.Desktop",{
             trackOver:true,
             itemSelector:a.shortcutItemSelector,
             store:a.shortcuts,
-            tpl:new Ext.XTemplate(a.shortcutTpl)
+            tpl:new Ext.XTemplate(a.shortcutTpl),
+            listeners:{
+                scope:this,
+                'itemcontextmenu':function(view, record, htmlItem, index, e, options){
+                    e.stopEvent();
+                }
+            }
         }
     },
     addShortcut:function(shortcut){
