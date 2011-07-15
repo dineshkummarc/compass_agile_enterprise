@@ -33,6 +33,7 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
             });
         }
     }],
+
     setWindowStatus : function(status){
         if(this.findParentByType('statuswindow')){
             this.findParentByType('statuswindow').setStatus(status);
@@ -52,7 +53,12 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
     },
 
     clearWindowStatus : function(){
-        this.wait.hide();
+        if(this.findParentByType('statuswindow')){
+            this.findParentByType('statuswindow').clearStatus();
+        }
+        else{
+            this.wait.hide();
+        }
     },
 
     setup: function(){
