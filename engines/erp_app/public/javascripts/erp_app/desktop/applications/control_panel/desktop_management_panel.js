@@ -110,6 +110,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                     var preference = preferences.find("preference_type.internal_identifier == 'desktop_background'");
                     compassDesktop.getDesktop().setWallpaper("../../images/wallpaper/" + preference.preference_option.value, true);
                     Compass.ErpApp.Utility.promptReload();
+                    return false;
                 }
             }
         });
