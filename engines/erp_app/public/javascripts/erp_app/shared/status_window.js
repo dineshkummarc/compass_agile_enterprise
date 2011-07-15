@@ -3,7 +3,7 @@ Ext.define("Compass.ErpApp.Shared.StatusWindow",{
     alias:"widget.statuswindow",
     setStatus : function(newStatus){
         this.wait = Ext.MessageBox.show({
-           msg: 'Processing your request, please wait...',
+           msg: newStatus || 'Processing your request, please wait...',
            progressText: 'Working...',
            width:300,
            wait:true,

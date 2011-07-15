@@ -18,13 +18,13 @@ class Desktop < ActiveRecord::Base
       :preference => pref
     )
 
-    #setup desktop theme
-    desktop_theme_pt = PreferenceType.iid('desktop_theme')
-    desktop_theme_pt.preferenced_records << self
+    #setup theme
+    theme_pt = PreferenceType.iid('extjs_theme')
+    theme_pt.preferenced_records << self
 
     pref = Preference.create(
-      :preference_type => desktop_theme_pt,
-      :preference_option => PreferenceOption.iid('blue_desktop_theme')
+      :preference_type => theme_pt,
+      :preference_option => PreferenceOption.iid('blue_extjs_theme')
     )
 
     self.user_preferences << UserPreference.create(

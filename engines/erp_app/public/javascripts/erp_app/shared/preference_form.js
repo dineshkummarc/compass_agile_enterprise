@@ -16,32 +16,43 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
         text:'Update',
         handler:function(button){
             var self = button.findParentByType('preferences_form');
-            //self.disable();
             self.setWindowStatus('Updating Preferences...');
             self.getForm().submit({
                 reset:false,
                 success:function(form, action){
                     var response = Ext.decode(action.response.responseText);
-                    self.setPreferences(response.preferences);
-                    self.fireEvent('afterUpdate', self, response.preferences, action.response);
-                    //self.enable();
-                    self.clearWindowStatus();
+                    var result = self.fireEvent('afterUpdate', self, response.preferences, action.response)
+                    if(result !== false)
+                        self.setPreferences(response.preferences);
                 },
                 failure:function(form, action){
                     var message = 'Error Saving Preferences'
                     Ext.Msg.alert("Status", message);
-                    //self.enable();
                     self.clearWindowStatus();
                 }
             });
         }
     }],
     setWindowStatus : function(status){
-        this.findParentByType('statuswindow').setStatus(status);
+        if(this.findParentByType('statuswindow')){
+            this.findParentByType('statuswindow').setStatus(status);
+        }
+        else{
+            this.wait = Ext.MessageBox.show({
+                msg: 'Processing your request, please wait...',
+                progressText: 'Working...',
+                width:300,
+                wait:true,
+                waitConfig: {
+                    interval:200
+                },
+                iconCls:'icon-gear'
+            });
+        }
     },
 
     clearWindowStatus : function(){
-        this.findParentByType('statuswindow').clearStatus();
+        this.wait.hide();
     },
 
     setup: function(){
@@ -52,7 +63,7 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
         conn.request({
             url: self.initialConfig.setupPreferencesUrl,
             success: function(responseObject) {
-                var response =  Ext.decode(responseObject.responseText);
+                var response = Ext.decode(responseObject.responseText);
                 self.buildPreferenceForm(response.preference_types)
             },
             failure: function() {
@@ -107,7 +118,7 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
     setPreferences: function(preferences){
         var self = this;
         var result = this.fireEvent('beforeSetPreferences', self, preferences);
-        if(result != false)
+        if(result !== false)
         {
             Ext.each(preferences,function(preference){
                 var id = "#"+preference.preference_type.internal_identifier + '_id';
@@ -115,8 +126,8 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
             });
         }
         this.fireEvent('afterSetPreferences', self, preferences);
-        this.clearWindowStatus();
-        this.enable();
+        self.enable();
+        self.clearWindowStatus();
     },
 
     initComponent: function() {

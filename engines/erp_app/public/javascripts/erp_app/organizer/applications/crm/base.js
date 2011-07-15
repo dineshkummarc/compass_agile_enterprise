@@ -5,12 +5,18 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
     alias:'widget.contactslayout',
     //private member partyId
     partyId:null,
+    
+    expandContacts : function(){
+        this.southPanel.expand(true);
+    },
+
     constructor : function(config) {
-        var southPanel = new Ext.Panel({
+        this.southPanel = new Ext.Panel({
             layout:'fit',
             region:'south',
             height:300,
             collapsible:true,
+            collapsed:true,
             border:false,
             items:[config['southComponent']]
         });
@@ -29,7 +35,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
             region:'center',
             items:[
             centerPanel,
-            southPanel
+            this.southPanel
             ]
 
         }, config);
@@ -55,9 +61,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
             var contactMechanismGrids = this.query('tabpanel')[0].query('contactmechanismgrid');
             var numGrids = contactMechanismGrids.length;
             for(var i=0;i<numGrids;i++){
-                var store = contactMechanismGrids[i].getStore();
-                store.proxy.extraParams.party_id = this.partyId;
-                store.load();
+                contactMechanismGrids[i].store.proxy.extraParams.party_id = this.partyId;
+                contactMechanismGrids[i].store.load();
             }
             this.query('tabpanel')[0].setActiveTab(0);
         }
@@ -361,6 +366,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             'itemclick':function(view, record, item, index, e, options){
                 var id = record.get("id");
                 var contactsLayoutPanel = view.findParentByType('contactslayout');
+                contactsLayoutPanel.expandContacts();
                 contactsLayoutPanel.setPartyId(id);
                 contactsLayoutPanel.loadContactMechanisms();
             }
@@ -378,6 +384,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             'itemclick':function(view, record, item, index, e, options){
                 var id = record.get("id");
                 var contactsLayoutPanel = view.findParentByType('contactslayout');
+                contactsLayoutPanel.expandContacts();
                 contactsLayoutPanel.setPartyId(id);
                 contactsLayoutPanel.loadContactMechanisms();
             }
@@ -413,145 +420,6 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
             items:[
             {
                 xtype:'contactmechanismgrid',
-                'title':'Email Addresses',
-                contactMechanism:'EmailAddress',
-                columns:[
-                {
-                    header: 'Email Address',
-                    dataIndex: 'email_address',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name:'email_address',
-                    allowBlank: false
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            },
-            {
-                xtype:'contactmechanismgrid',
-                'title':'Phone Numbers',
-                contactMechanism:'PhoneNumber',
-                columns:[
-                {
-                    header: 'Phone Number',
-                    dataIndex: 'phone_number',
-                    width:200,
-                    editor: {
-                        xtype:'textfield'
-                    }
-                }
-                ],
-                fields:[
-                {
-                    name:'phone_number',
-                    allowBlank: false
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            },
-            {
-                xtype:'contactmechanismgrid',
-                'title':'Postal Addresses',
-                contactMechanism:'PostalAddress',
-                columns:[
-                {
-                    header: 'Address Line 1',
-                    dataIndex: 'address_line_1',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    allowBlank: false,
-                    width:200
-                },
-                {
-                    header: 'Address Line 2',
-                    dataIndex: 'address_line_2',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'City',
-                    dataIndex: 'city',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    allowBlank: false,
-                    width:200
-                },
-                {
-                    header: 'State',
-                    dataIndex: 'state',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    allowBlank: false,
-                    width:200
-                }
-                ,
-                {
-                    header: 'Zip',
-                    dataIndex: 'zip',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    allowBlank: false,
-                    width:200
-                }
-                ,
-                {
-                    header: 'Country',
-                    dataIndex: 'country',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    allowBlank: false,
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name: 'address_line_1'
-                },
-                {
-                    name: 'address_line_2'
-                },
-                {
-                    name: 'city'
-                },
-                {
-                    name: 'state'
-                },
-                {
-                    name: 'zip'
-                },
-                {
-                    name: 'country'
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            }
-            ]
-        },
-        centerComponent:individualsGrid
-    };
-
-    var organizationsPanel = {
-        xtype:'contactslayout',
-        id:'organizations_search_grid',
-        southComponent:{
-            xtype:'tabpanel',
-            id:'organizationTabPanel',
-            items:[
-            {
-                xtype:'contactmechanismgrid',
                 title:'Email Addresses',
                 contactMechanism:'EmailAddress',
                 columns:[
@@ -566,13 +434,11 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 ],
                 fields:[
                 {
-                    name:'email_address',
-                    allowBlank: false
+                    name:'email_address'
                 }
                 ],
                 validations:[
                    {type: 'presence',  field: 'email_address'}
-
                 ],
                 contactPurposeStore:contactPurposeStore
             },
@@ -584,21 +450,19 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 {
                     header: 'Phone Number',
                     dataIndex: 'phone_number',
+                    width:200,
                     editor: {
                         xtype:'textfield'
-                    },
-                    width:200
+                    }
                 }
                 ],
                 fields:[
                 {
-                    name:'phone_number',
-                    allowBlank: false
+                    name:'phone_number'
                 }
                 ],
                 validations:[
                    {type: 'presence',  field: 'phone_number'}
-
                 ],
                 contactPurposeStore:contactPurposeStore
             },
@@ -638,8 +502,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                         xtype:'textfield'
                     },
                     width:200
-                }
-                ,
+                },
                 {
                     header: 'Zip',
                     dataIndex: 'zip',
@@ -647,8 +510,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                         xtype:'textfield'
                     },
                     width:200
-                }
-                ,
+                },
                 {
                     header: 'Country',
                     dataIndex: 'country',
@@ -660,30 +522,22 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 ],
                 fields:[
                 {
-                    name: 'address_line_1',
-                    allowBlank: false
+                    name: 'address_line_1'
                 },
                 {
-                    name: 'address_line_2',
-                    allowBlank: true
+                    name: 'address_line_2'
                 },
                 {
-                    name: 'city',
-                    allowBlank: false
+                    name: 'city'
                 },
                 {
-                    name: 'state',
-                    allowBlank: false
-                }
-                ,
+                    name: 'state'
+                },
                 {
-                    name: 'zip',
-                    allowBlank: false
-                }
-                ,
+                    name: 'zip'
+                },
                 {
-                    name: 'country',
-                    allowBlank: false
+                    name: 'country'
                 }
                 ],
                 validations:[
@@ -692,7 +546,150 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                    {type: 'presence',  field: 'state'},
                    {type: 'presence',  field: 'zip'},
                    {type: 'presence',  field: 'country'}
+                ],
+                contactPurposeStore:contactPurposeStore
+            }
+            ]
+        },
+        centerComponent:individualsGrid
+    };
 
+    var organizationsPanel = {
+        xtype:'contactslayout',
+        id:'organizations_search_grid',
+        southComponent:{
+            xtype:'tabpanel',
+            id:'organizationTabPanel',
+            items:[
+            {
+                xtype:'contactmechanismgrid',
+                title:'Email Addresses',
+                contactMechanism:'EmailAddress',
+                columns:[
+                {
+                    header: 'Email Address',
+                    dataIndex: 'email_address',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                }
+                ],
+                fields:[
+                {
+                    name:'email_address'
+                }
+                ],
+                validations:[
+                   {type: 'presence',  field: 'email_address'}
+
+                ],
+                contactPurposeStore:contactPurposeStore
+            },
+            {
+                xtype:'contactmechanismgrid',
+                title:'Phone Numbers',
+                contactMechanism:'PhoneNumber',
+                columns:[
+                {
+                    header: 'Phone Number',
+                    dataIndex: 'phone_number',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                }
+                ],
+                fields:[
+                {
+                    name:'phone_number'
+                }
+                ],
+                validations:[
+                   {type: 'presence',  field: 'phone_number'}
+                ],
+                contactPurposeStore:contactPurposeStore
+            },
+            {
+                xtype:'contactmechanismgrid',
+                title:'Postal Addresses',
+                contactMechanism:'PostalAddress',
+                columns:[
+                {
+                    header: 'Address Line 1',
+                    dataIndex: 'address_line_1',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                },
+                {
+                    header: 'Address Line 2',
+                    dataIndex: 'address_line_2',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                },
+                {
+                    header: 'City',
+                    dataIndex: 'city',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                },
+                {
+                    header: 'State',
+                    dataIndex: 'state',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                },
+                {
+                    header: 'Zip',
+                    dataIndex: 'zip',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                },
+                {
+                    header: 'Country',
+                    dataIndex: 'country',
+                    editor: {
+                        xtype:'textfield'
+                    },
+                    width:200
+                }
+                ],
+                fields:[
+                {
+                    name: 'address_line_1'
+                },
+                {
+                    name: 'address_line_2'
+                },
+                {
+                    name: 'city'
+                },
+                {
+                    name: 'state'
+                },
+                {
+                    name: 'zip'
+                },
+                {
+                    name: 'country'
+                }
+                ],
+                validations:[
+                   {type: 'presence',  field: 'address_line_1'},
+                   {type: 'presence',  field: 'city'},
+                   {type: 'presence',  field: 'state'},
+                   {type: 'presence',  field: 'zip'},
+                   {type: 'presence',  field: 'country'}
                 ],
                 contactPurposeStore:contactPurposeStore
             }

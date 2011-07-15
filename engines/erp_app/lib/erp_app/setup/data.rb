@@ -78,7 +78,7 @@ class ErpApp::Setup::Data
     #######################################
     #create preference types
     desktop_backgroud_pt = PreferenceType.create(:description => 'Desktop Background', :internal_identifier => 'desktop_background')
-    desktop_theme_pt = PreferenceType.create(:description => 'Desktop Theme', :internal_identifier => 'desktop_theme')
+    extjs_theme_pt = PreferenceType.create(:description => 'Theme', :internal_identifier => 'extjs_theme')
     desktop_shortcut_pt = PreferenceType.create(:description => 'Desktop Shortcut', :internal_identifier => 'desktop_shortcut')
     auto_load_app_pt = PreferenceType.create(:description => 'Autoload Application', :internal_identifier => 'autoload_application')
 
@@ -95,9 +95,9 @@ class ErpApp::Setup::Data
     portablemind_background_po = PreferenceOption.create(:description => 'Portablemind', :internal_identifier => 'portablemind_desktop_background', :value => 'portablemind.png')
 
     #desktop theme options
-    access_desktop_theme_po = PreferenceOption.create(:description => 'Access', :internal_identifier => 'access_desktop_theme', :value => 'ext-all-access.css')
-    gray_desktop_theme_po = PreferenceOption.create(:description => 'Gray', :internal_identifier => 'gray_desktop_theme', :value => 'ext-all-gray.css')
-    blue_desktop_theme_po = PreferenceOption.create(:description => 'Blue', :internal_identifier => 'blue_desktop_theme', :value => 'ext-all.css')
+    access_extjs_theme_po = PreferenceOption.create(:description => 'Access', :internal_identifier => 'access_extjs_theme', :value => 'ext-all-access.css')
+    gray_extjs_theme_po = PreferenceOption.create(:description => 'Gray', :internal_identifier => 'gray_extjs_theme', :value => 'ext-all-gray.css')
+    blue_extjs_theme_po = PreferenceOption.create(:description => 'Blue', :internal_identifier => 'blue_extjs_theme', :value => 'ext-all.css')
 
     #associate options
     desktop_shortcut_pt.preference_options << yes_po
@@ -118,11 +118,11 @@ class ErpApp::Setup::Data
     desktop_backgroud_pt.default_preference_option = portablemind_background_po
     desktop_backgroud_pt.save
 
-    desktop_theme_pt.preference_options << access_desktop_theme_po
-    desktop_theme_pt.preference_options << gray_desktop_theme_po
-    desktop_theme_pt.preference_options << blue_desktop_theme_po
-    desktop_theme_pt.default_preference_option = blue_desktop_theme_po
-    desktop_backgroud_pt.save
+    extjs_theme_pt.preference_options << access_extjs_theme_po
+    extjs_theme_pt.preference_options << gray_extjs_theme_po
+    extjs_theme_pt.preference_options << blue_extjs_theme_po
+    extjs_theme_pt.default_preference_option = blue_extjs_theme_po
+    extjs_theme_pt.save
 
 
     #create widgets and assign roles
@@ -178,7 +178,7 @@ class ErpApp::Setup::Data
       desktop = Desktop.create
       desktop.user = user
       desktop_backgroud_pt.preferenced_records << desktop
-      desktop_theme_pt.preferenced_records << desktop
+      extjs_theme_pt.preferenced_records << desktop
 
       #setup desktop background
       pref = Preference.create(
@@ -193,8 +193,8 @@ class ErpApp::Setup::Data
 
       #setup desktop theme
       pref = Preference.create(
-        :preference_type => desktop_theme_pt,
-        :preference_option => blue_desktop_theme_po
+        :preference_type => extjs_theme_pt,
+        :preference_option => blue_extjs_theme_po
       )
 
       desktop.user_preferences << UserPreference.create(
@@ -240,6 +240,7 @@ class ErpApp::Setup::Data
     #######################################
     #organizer setup
     #######################################
+    
     party_contact_mgm_widget = ::Widget.create(
       :description => 'Party Contact Management',
       :icon => 'icon-grid',
@@ -276,6 +277,18 @@ class ErpApp::Setup::Data
     User.all.each do |user|
       organizer = Organizer.create
       organizer.user = user
+      extjs_theme_pt.preferenced_records << organizer
+
+      #setup organizer theme
+      pref = Preference.create(
+        :preference_type => extjs_theme_pt,
+        :preference_option => blue_extjs_theme_po
+      )
+
+      organizer.user_preferences << UserPreference.create(
+        :user => user,
+        :preference => pref
+      )
 
       organizer.applications << crm_app
       organizer.save

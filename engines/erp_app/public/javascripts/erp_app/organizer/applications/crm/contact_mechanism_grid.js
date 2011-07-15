@@ -42,20 +42,28 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
         
         this.store = store;
 
+        this.bbar = Ext.create("Ext.PagingToolbar",{
+            pageSize: 30,
+            store: store,
+            displayInfo: true,
+            displayMsg: 'Displaying {0} - {1} of {2}',
+            emptyMsg: "No " + config.title
+        });
+
         Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.superclass.initComponent.call(this, arguments);
     },
     constructor : function(config) {
         if(config['contactPurposeStore'] == null)
         {
             config['contactPurposeStore'] = Ext.create('Ext.data.Store', {
+                autoLoad:true,
                 proxy: {
                     type: 'ajax',
                     url : './crm/contact_purposes',
                     reader: {
                         type: 'json',
                         root: 'types'
-                    },
-                    autoLoad:true
+                    }
                 },
                 fields:[
                 {
@@ -110,12 +118,9 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
 
         if(!config.validations)
             config.validations = [];
-        config.validations = config.validations.concat({type: 'presence',  field: 'contact_purpose_id'});
-
-        var Model = Ext.define(config.title,{
-            extend:'Ext.data.Model',
-            fields:config.fields,
-            validations:config.validations
+        config.validations = config.validations.concat({
+            type: 'presence',
+            field: 'contact_purpose_id'
         });
 
         config.fields = config.fields.concat([
@@ -127,8 +132,17 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
         },
         {
             name:'updated_at'
+        },
+        {
+            name:'id'
         }
-        ])
+        ]);
+
+        var Model = Ext.define(config.title,{
+            extend:'Ext.data.Model',
+            fields:config.fields,
+            validations:config.validations
+        });
 
         this.editing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1
