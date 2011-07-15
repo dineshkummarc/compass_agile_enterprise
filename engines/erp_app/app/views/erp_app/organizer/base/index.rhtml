@@ -14,26 +14,19 @@
     <%@organizer.applications.each do |application|%><%=application.load_resources%><%end%>
   </head>
   <body scroll="no">
-
     <script type="text/javascript">
       Ext.onReady(function() {
         var organizerLayout = Ext.create("Compass.ErpApp.Organizer.Layout",{logout_url:'../logout'});
 
-<%
-@organizer.applications.each do |application|
-%>
-      var app = Ext.create("Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base",{
-        organizerLayout:organizerLayout,
-  <%=application.build_widget_roles_js%>
+        <%@organizer.applications.each do |application|%>
+
+        var <%=application.internal_identifier.camelize%> = Ext.create("Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base",{organizerLayout:organizerLayout,<%=application.build_widget_roles_js%>});
+        <%=application.internal_identifier.camelize%>.setup();
+
+        <%end%>
+          organizerLayout.setupLogoutButton();
+          organizerLayout.setup();
       });
-      app.setup();
-<%
-end
-%>
-        
-    organizerLayout.setupLogoutButton();
-    organizerLayout.setup();
-  });
     </script>
   </body>
 </html>

@@ -18,6 +18,7 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreeStore",{
         }
 
         config = Ext.apply({
+            autoLoad:true,
             proxy: {
                 type: 'ajax',
                 url: config['url']
@@ -54,7 +55,6 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
             animate:true,
             autoScroll:false,
             frame:false,
-            autoLoad:false,
             containerScroll:true,
             height:300,
             border:false
@@ -64,7 +64,12 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
         this.treePanel = menuTree;
 
         config = Ext.apply({
-            items:[menuTree]
+            items:[menuTree],
+            listeners:{
+                'activate':function(comp){
+                    menuTree.getStore().load({node:menuTree.getRootNode});
+                }
+            }
         }, config);
         
         Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.constructor.call(this, config);
