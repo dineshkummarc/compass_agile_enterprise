@@ -126,6 +126,19 @@ Ext.define("Ext.ux.desktop.Desktop",{
             tpl:new Ext.XTemplate(a.shortcutTpl)
         }
     },
+    addShortcut:function(shortcut){
+        var a=this;
+        if(a.shortcuts.findExact("module", shortcut.data.module) == -1){
+            a.shortcuts.add(shortcut);
+        }
+    },
+    removeShortcut:function(shortcut){
+        var a=this;
+        var index = a.shortcuts.findExact("module", shortcut.data.module)
+        if(index != -1){
+            a.shortcuts.removeAt(index);
+        }
+    },
     createDesktopMenu:function(){
         var b=this,a={
             items:b.contextMenuItems||[]
@@ -407,8 +420,8 @@ Ext.define("Ext.ux.desktop.App",{
             b.initModules(b.modules)
         }
         a=b.getDesktopConfig();
-        b.desktop=new Ext.ux.desktop.Desktop(a);
-        b.viewport=new Ext.container.Viewport({
+        b.desktop = new Ext.ux.desktop.Desktop(a);
+        b.viewport = Ext.create("Ext.container.Viewport",{
             layout:"fit",
             items:[b.desktop]
         });
@@ -655,7 +668,7 @@ Ext.define("Ext.ux.desktop.TaskBar",{
             menu:a.startMenu,
             menuAlign:"bl-tl",
             text:a.startBtnText
-            },a.quickStart,{
+        },a.quickStart,{
             xtype:"splitter",
             html:"&#160;",
             height:14,
@@ -663,12 +676,12 @@ Ext.define("Ext.ux.desktop.TaskBar",{
             cls:"x-toolbar-separator x-toolbar-separator-horizontal"
         },a.windowBar,"-",a.tray];
         a.callParent()
-        },
+    },
     afterLayout:function(){
         var a=this;
         a.callParent();
         a.windowBar.el.on("contextmenu",a.onButtonContextMenu,a)
-        },
+    },
     getQuickStart:function(){
         var b=this,a={
             minWidth:20,
@@ -689,18 +702,18 @@ Ext.define("Ext.ux.desktop.TaskBar",{
                 handler:b.onQuickStartClick,
                 scope:b
             })
-            });
+        });
         return a
-        },
+    },
     getTrayConfig:function(){
         var a={
             width:80,
             items:this.trayItems
-            };
+        };
 
         delete this.trayItems;
         return a
-        },
+    },
     getWindowBarConfig:function(){
         return{
             flex:1,
@@ -711,78 +724,78 @@ Ext.define("Ext.ux.desktop.TaskBar",{
             }
         }
     },
-getWindowBtnFromEl:function(a){
-    var b=this.windowBar.getChildByElement(a);
-    return b||null
+    getWindowBtnFromEl:function(a){
+        var b=this.windowBar.getChildByElement(a);
+        return b||null
     },
-onQuickStartClick:function(b){
-    var a=this.app.getModule(b.module);
-    if(a){
-        a.createWindow()
+    onQuickStartClick:function(b){
+        var a=this.app.getModule(b.module);
+        if(a){
+            a.createWindow()
         }
     },
-onButtonContextMenu:function(d){
-    var c=this,b=d.getTarget(),a=c.getWindowBtnFromEl(b);
-    if(a){
-        d.stopEvent();
-        c.windowMenu.theWin=a.win;
-        c.windowMenu.showBy(b)
+    onButtonContextMenu:function(d){
+        var c=this,b=d.getTarget(),a=c.getWindowBtnFromEl(b);
+        if(a){
+            d.stopEvent();
+            c.windowMenu.theWin=a.win;
+            c.windowMenu.showBy(b)
         }
     },
-onWindowBtnClick:function(a){
-    var b=a.win;
-    if(b.minimized||b.hidden){
-        b.show()
+    onWindowBtnClick:function(a){
+        var b=a.win;
+        if(b.minimized||b.hidden){
+            b.show()
         }else{
-        if(b.active){
-            b.minimize()
+            if(b.active){
+                b.minimize()
             }else{
-            b.toFront()
+                b.toFront()
             }
         }
-},
-addTaskButton:function(c){
-    var a={
-        iconCls:c.iconCls,
-        enableToggle:true,
-        toggleGroup:"all",
-        width:140,
-        text:Ext.util.Format.ellipsis(c.title,20),
-        listeners:{
-            click:this.onWindowBtnClick,
-            scope:this
-        },
-        win:c
-    };
-
-    var b=this.windowBar.add(a);
-    b.toggle(true);
-    return b
     },
-removeTaskButton:function(a){
-    var c,b=this;
-    b.windowBar.items.each(function(d){
-        if(d===a){
-            c=d
+    addTaskButton:function(c){
+        var a={
+            iconCls:c.iconCls,
+            enableToggle:true,
+            toggleGroup:"all",
+            width:140,
+            text:Ext.util.Format.ellipsis(c.title,20),
+            listeners:{
+                click:this.onWindowBtnClick,
+                scope:this
+            },
+            win:c
+        };
+
+        var b=this.windowBar.add(a);
+        b.toggle(true);
+        return b
+    },
+    removeTaskButton:function(a){
+        var c,b=this;
+        b.windowBar.items.each(function(d){
+            if(d===a){
+                c=d
             }
             return !c
         });
-    if(c){
-        b.windowBar.remove(c)
+        if(c){
+            b.windowBar.remove(c)
         }
         return c
     },
-setActiveButton:function(a){
-    if(a){
-        a.toggle(true)
+    setActiveButton:function(a){
+        if(a){
+            a.toggle(true)
         }else{
-        this.windowBar.items.each(function(b){
-            if(b.isButton){
-                b.toggle(false)
+            this.windowBar.items.each(function(b){
+                if(b.isButton){
+                    b.toggle(false)
                 }
             })
+        }
     }
-}
 });
 
 /*

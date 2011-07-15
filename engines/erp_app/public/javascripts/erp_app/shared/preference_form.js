@@ -3,13 +3,13 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
     alias:"widget.preferences_form",
     autoScroll:true,
     layout: {
-        type: 'vbox',
-        align: 'stretch'
+        type: 'vbox'
     },
     fieldDefaults: {
         labelAlign: 'top'
     },
     frame:true,
+    buttonAlign:'left',
     items:[],
     buttons:[
     {

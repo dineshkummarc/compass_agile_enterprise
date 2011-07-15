@@ -86,7 +86,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
             width:150,
             xtype:'panel',
             region:'east',
-            html:'<div style="padding:5px;text-align:center"><span>Preview</span><br/><img height=140 width=140 id="wallpaper_background_image" src="../../images/wallpaper/desktop.gif" /><br/></div>'
+            html:'<div style="padding:5px;text-align:center"><span>Preview</span><br/><img height=140 width=140 id="wallpaper_background_image" src="" /><br/></div>'
         }
 
         this.form = Ext.create('Compass.ErpApp.Shared.PreferenceForm',{

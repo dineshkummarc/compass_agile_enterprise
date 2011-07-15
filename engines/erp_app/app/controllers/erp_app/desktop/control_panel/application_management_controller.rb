@@ -50,7 +50,7 @@ class ErpApp::Desktop::ControlPanel::ApplicationManagementController < ErpApp::D
     application.save
     preferences = application.preferences(user)
     
-    ext_json = "{success:true, shortcutId:'#{application.shortcut_id}', shortcut:'#{application.get_user_preference(user, :desktop_shortcut)}', preferences:#{preferences.to_json(:include => [:preference_type, :preference_option])}}"
+    ext_json = "{success:true, description:'#{application.description}', shortcutId:'#{application.shortcut_id}', shortcut:'#{application.get_user_preference(user, :desktop_shortcut)}', preferences:#{preferences.to_json(:include => [:preference_type, :preference_option])}}"
 
     render :inline => ext_json
   end

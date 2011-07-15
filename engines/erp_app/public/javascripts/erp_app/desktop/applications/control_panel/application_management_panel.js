@@ -10,6 +10,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
     },
 
     selectApplication: function(applicationId){
+        var self = this;
         this.settingsCard.removeAll(true);
         var form = new Compass.ErpApp.Shared.PreferenceForm({
             url:"./control_panel/application_management/update/" + applicationId,
@@ -30,18 +31,25 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
                 'afterUpdate':function(form,preferences, response){
                     var responseObj = Ext.decode(response.responseText);
                     if(responseObj.success){
+                        var shortcut = Ext.create("Ext.ux.desktop.ShortcutModel",{
+                            name:responseObj.description,
+                            iconCls:responseObj.shortcutId + "-shortcut",
+                            module:responseObj.shortcutId
+                        });
                         if(responseObj.shortcut == 'yes')
                         {
-                            Ext.get(responseObj.shortcutId + '-shortcut').applyStyles('display:block');
+                            compassDesktop.getDesktop().addShortcut(shortcut);
                         }
                         else
                         {
-                            Ext.get(responseObj.shortcutId + '-shortcut').applyStyles('display:none');
+                            compassDesktop.getDesktop().removeShortcut(shortcut);
                         }
                     }
                     else{
                         Ext.Msg.alert('Status', 'Error updating application settings.');
                     }
+                    //self.clearWindowStatus();
+                    //return false;
                 }
             }
         });
