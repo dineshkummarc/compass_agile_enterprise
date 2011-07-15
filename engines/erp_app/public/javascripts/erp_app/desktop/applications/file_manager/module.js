@@ -1,7 +1,6 @@
 Ext.define("Compass.ErpApp.Desktop.Applications.FileManager",{
     extend:"Ext.ux.desktop.Module",
     id:'file_manager-win',
-
     setWindowStatus : function(status){
         this.win.setStatus(status);
     },

@@ -1,5 +1,3 @@
-Ext.ns("Compass.ErpApp.Organizer.Applications.Crm");
-
 Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
     extend:"Ext.panel.Panel",
     alias:'widget.contactslayout',

@@ -1,6 +1,8 @@
-Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.organizerordermanagement_orderlineitemsgridpanel',
     initComponent : function(){
-        this.bbar = new Ext.PagingToolbar({
+        this.bbar = Ext.create("Ext.PagingToolbar",{
             pageSize: 10,
             store:this.store,
             displayInfo: true,
@@ -12,15 +14,19 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel = 
     },
 
     constructor : function(config) {
-        var store = new Ext.data.JsonStore({
-            url: '/erp_app/desktop/order_manager/line_items',
-            root: 'lineItems',
+        var store = Ext.create("Ext.data.Store",{
+            proxy:{
+                type:'ajax',
+                url: '/erp_app/desktop/order_manager/line_items',
+                reader:{
+                    type:'json',
+                    root: 'lineItems'
+                }
+            },
             totalProperty: 'totalCount',
-            baseParam:{
+            extraParams:{
                 order_id:null
             },
-            remoteSort: false,
-            idProperty:'id',
             fields:[
             'product',
             'quantity',
@@ -81,7 +87,7 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel = 
                     var layout = grid.findParentByType('organizer_orderslayout');
                     if(!Compass.ErpApp.Utility.isBlank(layout.orderId)){
                         var store = grid.getStore();
-                        store.setBaseParam('order_id', layout.orderId);
+                        store.extraParams.order_id = layout.orderId;
                         store.load();
                     }
                 }
@@ -91,5 +97,3 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel = 
         Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('organizerordermanagement_orderlineitemsgridpanel', Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItemsGridPanel);

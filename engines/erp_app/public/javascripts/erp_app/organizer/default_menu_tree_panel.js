@@ -45,12 +45,14 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
             Compass.ErpApp.Organizer.Layout.setActiveCenterItem(record.data.applicationCardId);
         };
 
+        if(!config['treeConfig'])
+            config['treeConfig'] = {}
+
         if(!config['treeConfig']['listeners'])
             config['treeConfig']['listeners'] = {};
-
+            
         config['treeConfig'].listeners['itemclick'] = setActiveCenterItemFn;
-       
-		
+      	
         var menuTreeConfig = Ext.apply({
             animate:true,
             autoScroll:false,
@@ -67,7 +69,9 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
             items:[menuTree],
             listeners:{
                 'activate':function(comp){
-                    menuTree.getStore().load({node:menuTree.getRootNode});
+                    menuTree.getStore().load({
+                        node:menuTree.getRootNode
+                    });
                 }
             }
         }, config);

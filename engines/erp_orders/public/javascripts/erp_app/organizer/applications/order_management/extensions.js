@@ -67,7 +67,7 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.loadExtensions = function(
 
                             var ordersLayout = Ext.getCmp('orders_layout');
                             ordersLayout.loadOrderDetails(orderId);
-                            var ordersGridPanel = ordersLayout.findByType('ordermanager_ordersgridpanel')[0];
+                            var ordersGridPanel = ordersLayout.query('ordermanager_ordersgridpanel')[0];
                             ordersGridPanel.getStore().load({params:{order_id:orderId,start:1,limit:1}})
 
                             Compass.Component.UserApp.Util.setActiveCenterItem('orders_layout', false);
@@ -96,7 +96,7 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.loadExtensions = function(
                 var contactsLayout = grid.findParentByType('contactslayout');
                 if(!Compass.ErpApp.Utility.isBlank(contactsLayout.partyId)){
                     var store = grid.getStore();
-                    store.setBaseParam("party_id", contactsLayout.partyId);
+                    store.proxy.extraParams.party_id = contactsLayout.partyId;
                     store.load({params:{start:0,limit:10}})
                 }
             }

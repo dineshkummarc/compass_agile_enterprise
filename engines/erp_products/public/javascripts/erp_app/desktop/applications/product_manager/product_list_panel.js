@@ -1,7 +1,8 @@
-Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ext.Panel, {
-
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel",{
+    extend:"Ext.panel.Panel",
+    alias:'widget.productmanagement_productspanel',
     loadProducts : function(){
-        this.productsDataView.getStore().reload();
+        this.productsDataView.getStore().load();
     },
 
     deleteProduct : function(id){
@@ -16,9 +17,9 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ex
                 conn.request({
                     url: './product_manager/delete/'+id,
                     success: function(response) {
-                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        var obj =  Ext.decode(response.responseText);
                         if(obj.success){
-                            self.productsDataView.getStore().reload();
+                            self.productsDataView.getStore().load();
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting product.');
@@ -39,19 +40,20 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ex
     constructor : function(config) {
         var self = this;
 
-        this.productsDataView = new Ext.DataView({
+        this.productsDataView = Ext.create("Ext.view.View",{
             autoDestroy:true,
             itemSelector: 'tr.product-wrap',
             style:'overflow:auto',
-            multiSelect: true,
-            plugins: new Ext.DataView.DragSelector({
-                dragSafe:true
-            }),
-            store: new Ext.data.JsonStore({
-                url: './product_manager/',
+            store: Ext.create("Ext.data.Store",{
                 autoLoad: true,
-                root: 'products',
-                id:'id',
+                proxy:{
+                    type:'ajax',
+                    url: './product_manager/',
+                    reader:{
+                        root: 'products',
+                        type:'json'
+                    }
+                },
                 fields:['imageUrl', 'id', 'title', 'available', 'sold','price','sku']
             }),
             tpl: new Ext.XTemplate(
@@ -82,9 +84,9 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ex
                 '</table>'
                 ),
             listeners:{
-                'contextmenu':function(dataView, index, node, e){
+                'itemcontextmenu':function(view, record, htmlitem, index, e, options){
                     e.stopEvent();
-                    var contextMenu = new Ext.menu.Menu({
+                    var contextMenu = Ext.create("Ext.menu.Menu",{
                         items:[
                         {
                             text:'Delete',
@@ -98,10 +100,10 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ex
                     });
                     contextMenu.showAt(e.xy);
                 },
-                'click':function(dataView, index, node, e){
+                'itemclick':function(view, record, htmlitem, index, e, options){
                     e.stopEvent();
                     var id = self.productsDataView.getStore().getAt(index).get('id');
-                    var win = new Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow({
+                    var win = Ext.create("Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow",{
                         productTypeId:id
                     });
                     win.show();
@@ -123,7 +125,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ex
                     text:'Add Product',
                     iconCls:'icon-add',
                     handler:function(btn){
-                        var window = new Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow({
+                        var window = Ext.create("Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow",{
                             productListPanel:self
                         });
                         window.show();
@@ -137,5 +139,3 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel = Ext.extend(Ex
     }
 
 });
-
-Ext.reg('productmanagement_productspanel', Compass.ErpApp.Desktop.Applications.ProductManager.ProductsPanel);

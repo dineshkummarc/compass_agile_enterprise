@@ -1,9 +1,17 @@
-Compass.ErpApp.Organizer.Applications.OrderManagement.PaymentsGridPanel = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.PaymentsGridPanel",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.organizerordermanagement_paymentsgridpanel',
     constructor : function(config) {
-        var store = new Ext.data.JsonStore({
-            url: '/erp_app/desktop/order_manager/payments',
-            root: 'payments',
-            baseParam:{
+        var store = Ext.create("Ext.data.Store",{
+            proxy:{
+                type:'ajax',
+                url: '/erp_app/desktop/order_manager/payments',
+                reader:{
+                    type:'json',
+                    root: 'payments'
+                }
+            },
+            extraParam:{
                 order_id:null
             },
             fields:[
@@ -73,7 +81,7 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.PaymentsGridPanel = Ext.ex
                     var layout = grid.findParentByType('organizer_orderslayout');
                     if(!Compass.ErpApp.Utility.isBlank(layout.orderId)){
                         var store = grid.getStore();
-                        store.setBaseParam('order_id', layout.orderId);
+                        store.proxy.extraParams.order_id = layout.orderId;
                         store.load();
                     }
                 }
@@ -83,5 +91,3 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.PaymentsGridPanel = Ext.ex
         Compass.ErpApp.Organizer.Applications.OrderManagement.PaymentsGridPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('organizerordermanagement_paymentsgridpanel', Compass.ErpApp.Organizer.Applications.OrderManagement.PaymentsGridPanel);

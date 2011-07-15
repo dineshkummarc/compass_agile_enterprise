@@ -1,5 +1,6 @@
-
-Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.ordermanager_ordersgridpanel',
     deleteOrder : function(rec){
         var self = this;
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this order?', function(btn){
@@ -12,9 +13,9 @@ Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel = Ext.extend(Ex
                 conn.request({
                     url: './order_manager/delete/'+rec.get('id'),
                     success: function(response) {
-                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        var obj =  Ext.decode(response.responseText);
                         if(obj.success){
-                            self.getStore().reload();
+                            self.getStore().load();
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting order.');
@@ -29,7 +30,7 @@ Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel = Ext.extend(Ex
     },
 
     initComponent : function(){
-        this.bbar = new Ext.PagingToolbar({
+        this.bbar = Ext.create("Ext.PagingToolbar",{
             pageSize: this.initialConfig['pageSize'] || 50,
             store:this.store,
             displayInfo: true,
@@ -41,11 +42,20 @@ Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel = Ext.extend(Ex
     },
 
     constructor : function(config) {
-        var store = new Ext.data.JsonStore({
-            url: './order_manager',
+        var store = Ext.create("Ext.data.Store",{
             autoLoad: true,
-            root: 'orders',
-            id:'id',
+            proxy:{
+                type:'ajax',
+                url: './order_manager',
+                reader:{
+                    type:'json',
+                    root: 'orders'
+                }
+            },
+            extraParams:{
+                order_number:null
+            },
+            totalProperty: 'totalCount',
             fields:['total_price','order_number', 'status', 'first_name', 'last_name', 'email','phone','id','created_at']
         });
 
@@ -117,26 +127,33 @@ Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel = Ext.extend(Ex
             loadMask: true,
             autoScroll:true,
             stripeRows: true,
-            viewConfig:{
-                forceFit:true
-            },
             tbar:{
                 items:[
-                    '<span style="color:white;font-weight:bold;">Order Number:</span>',
-                    {
-                        xtype:'numberfield',
-                        hideLabel:true,
-                        id:'orderNumberSearchTextField'
-                    },
-                    {
-                        text:'Search',
-                        iconCls:'icon-search',
-                        handler:function(btn){
-                            var orderNumber = Ext.getCmp('orderNumberSearchTextField').getValue();
-                            var store = btn.findParentByType('ordermanager_ordersgridpanel').getStore();
-                            store.load({params:{order_number:orderNumber}});
-                        }
+                '<span class="x-btn-inner">Order Number:</span>',
+                {
+                    xtype:'numberfield',
+                    hideLabel:true,
+                    id:'orderNumberSearchTextField'
+                },
+                {
+                    text:'Search',
+                    iconCls:'icon-search',
+                    handler:function(btn){
+                        var orderNumber = Ext.getCmp('orderNumberSearchTextField').getValue();
+                        btn.findParentByType('ordermanager_ordersgridpanel').store.proxy.extraParams.order_number = orderNumber;
+                        btn.findParentByType('ordermanager_ordersgridpanel').store.load();
                     }
+                },
+                '|',
+                {
+                    text: 'All',
+                    xtype:'button',
+                    iconCls: 'icon-eye',
+                    handler: function(button) {
+                        btn.findParentByType('ordermanager_ordersgridpanel').store.proxy.extraParams.order_number = null;
+                        btn.findParentByType('ordermanager_ordersgridpanel').store.load();
+                    }
+                },
                 ]
             }
         }, config);
@@ -144,5 +161,3 @@ Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel = Ext.extend(Ex
         Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('ordermanager_ordersgridpanel', Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel);
