@@ -36,7 +36,7 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreeStore",{
 
 
 Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
-    extend:"Ext.panel.Panel",
+    extend:"Ext.tree.Panel",
     alias:'widget.defaultmenutree',
     treePanel: null,
     
@@ -45,35 +45,17 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
             Compass.ErpApp.Organizer.Layout.setActiveCenterItem(record.data.applicationCardId);
         };
 
-        if(!config['treeConfig'])
-            config['treeConfig'] = {}
+        if(!config['listeners'])
+            config['listeners'] = {}; 
+        config.listeners['itemclick'] = setActiveCenterItemFn;
 
-        if(!config['treeConfig']['listeners'])
-            config['treeConfig']['listeners'] = {};
-            
-        config['treeConfig'].listeners['itemclick'] = setActiveCenterItemFn;
-      	
-        var menuTreeConfig = Ext.apply({
+        config = Ext.apply({
             animate:true,
             autoScroll:false,
             frame:false,
             containerScroll:true,
             height:300,
             border:false
-        }, config['treeConfig']);
-        
-        var menuTree = Ext.create("Ext.tree.Panel",menuTreeConfig);
-        this.treePanel = menuTree;
-
-        config = Ext.apply({
-            items:[menuTree],
-            listeners:{
-                'activate':function(comp){
-                    menuTree.getStore().load({
-                        node:menuTree.getRootNode
-                    });
-                }
-            }
         }, config);
         
         Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.constructor.call(this, config);

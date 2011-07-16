@@ -8,16 +8,26 @@ Compass.ErpApp.Desktop.Applications.Knitkit.WidgetsPanel = function() {
     this.widgetsDataView = Ext.create("Ext.view.View",{
         //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
         loadMask: false,
-        autoDestroy:true,
         style:'overflow:auto',
+        itemSelector: 'div.thumb-wrap',
         store:widgetsStore,
-        tpl: new Ext.XTemplate(
-            '<tpl for=".">',
-            '<div class="thumb-wrap" id="{name}" onclick="{onClick}">',
-            '<div class="thumb"><img src="{iconUrl}" class="thumb-img"></div>',
-            '<span>{name}</span></div>',
-            '</tpl>'
-            )
+        tpl: [
+        '<tpl for=".">',
+        '<div class="thumb-wrap" id="{name}">',
+        '<div class="thumb"><img src="{iconUrl}" class="thumb-img"></div>',
+        '<span>{name}</span></div>',
+        '</tpl>',
+        '<div class="x-clear"></div>'
+        ],
+        listeners:{
+            'itemcontextmenu':function(view, record, htmlitem, index, e, options){
+                e.stopEvent();
+            },
+            'itemclick':function(view, record, htmlitem, index, e, options){
+                e.stopEvent();
+                record.data.onClick();
+            }
+        }
     });
 
     var widgetsPanel = new Ext.Panel({

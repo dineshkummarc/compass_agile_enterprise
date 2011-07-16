@@ -1,13 +1,13 @@
 Compass.ErpApp.Widgets.Login = {
     addLogin:function(){
-        var addLoginWidgetWindow = new Ext.Window({
+        var addLoginWidgetWindow = Ext.create("Ext.window.Window",{
             layout:'fit',
             width:375,
             title:'Add Login Widget',
             height:190,
             plain: true,
             buttonAlign:'center',
-            items: new Ext.FormPanel({
+            items: Ext.create("Ext.form.Panel",{
                 labelWidth: 100,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
@@ -138,7 +138,7 @@ Compass.ErpApp.Widgets.Login = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Login',
     iconUrl:'/images/icons/key/key_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.Login.addLogin();"
+    onClick:Compass.ErpApp.Widgets.Login.addLogin
 });
 
 

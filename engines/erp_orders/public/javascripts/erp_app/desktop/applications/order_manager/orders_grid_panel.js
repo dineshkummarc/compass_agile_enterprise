@@ -149,7 +149,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel",{
                     text: 'All',
                     xtype:'button',
                     iconCls: 'icon-eye',
-                    handler: function(button) {
+                    handler: function(btn) {
                         btn.findParentByType('ordermanager_ordersgridpanel').store.proxy.extraParams.order_number = null;
                         btn.findParentByType('ordermanager_ordersgridpanel').store.load();
                     }

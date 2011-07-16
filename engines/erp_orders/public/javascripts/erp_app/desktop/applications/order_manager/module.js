@@ -23,10 +23,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager",{
                     title:'Line Items',
                     listeners:{
                         activate:function(grid){
-                            var orderId = Ext.getCmp('orders_layout').query('ordermanager_ordersgridpanel')[0].orderId;
                             if(!Compass.ErpApp.Utility.isBlank(Compass.ErpApp.Desktop.Applications.OrderManager.orderId)){
                                 var store = grid.getStore();
-                                store.setBaseParam('order_id', Compass.ErpApp.Desktop.Applications.OrderManager.orderId);
+                                store.proxy.extraParams.order_id = Compass.ErpApp.Desktop.Applications.OrderManager.orderId;
                                 store.load();
                             }
                         }
@@ -36,10 +35,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager",{
                     title:'Payments',
                     listeners:{
                         activate:function(grid){
-                            var orderId = Ext.getCmp('orders_layout').query('ordermanager_ordersgridpanel')[0].orderId;
                             if(!Compass.ErpApp.Utility.isBlank(Compass.ErpApp.Desktop.Applications.OrderManager.orderId)){
                                 var store = grid.getStore();
-                                store.setBaseParam('order_id', Compass.ErpApp.Desktop.Applications.OrderManager.orderId);
+                                store.proxy.extraParams.order_id = Compass.ErpApp.Desktop.Applications.OrderManager.orderId;
                                 store.load();
                             }
                         }

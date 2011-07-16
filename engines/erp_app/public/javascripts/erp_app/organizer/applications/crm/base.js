@@ -298,56 +298,54 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         rootText:'Customers',
         rootIconCls:'icon-content',
         additionalFields:[
-            {
-                name:'businessPartType'
-            }
+        {
+            name:'businessPartType'
+        }
         ]
     });
 
     var menuTreePanel = {
         xtype:'defaultmenutree',
         title:'CRM',
-        treeConfig:{
-            store:treeMenuStore,
-            listeners:{
-                scope:this,
-                'itemcontextmenu':function(view, record, htmlItem, index, e){
-                    e.stopEvent();
-                    if(record.isLeaf()){
-                        var contextMenu = null;
-                        if(record.data.businessPartType == "individual"){
-                            contextMenu = new Ext.menu.Menu({
-                                items:[
-                                {
-                                    text:"Add Individual",
-                                    iconCls:'icon-add',
-                                    listeners:{
-                                        'click':function(){
-                                            addIndividualWindow.show();
-                                        }
+        store:treeMenuStore,
+        listeners:{
+            scope:this,
+            'itemcontextmenu':function(view, record, htmlItem, index, e){
+                e.stopEvent();
+                if(record.isLeaf()){
+                    var contextMenu = null;
+                    if(record.data.businessPartType == "individual"){
+                        contextMenu = new Ext.menu.Menu({
+                            items:[
+                            {
+                                text:"Add Individual",
+                                iconCls:'icon-add',
+                                listeners:{
+                                    'click':function(){
+                                        addIndividualWindow.show();
                                     }
                                 }
-                                ]
-                            });
-                        }
-                        else 
-                        if(record.data.businessPartType == "organization"){
-                            contextMenu = new Ext.menu.Menu({
-                                items:[
-                                {
-                                    text:"Add Organization",
-                                    iconCls:'icon-add',
-                                    listeners:{
-                                        'click':function(){
-                                            addOrganizationWindow.show();
-                                        }
-                                    }
-                                }
-                                ]
-                            });
-                        }
-                        contextMenu.showAt(e.xy);
+                            }
+                            ]
+                        });
                     }
+                    else
+                    if(record.data.businessPartType == "organization"){
+                        contextMenu = new Ext.menu.Menu({
+                            items:[
+                            {
+                                text:"Add Organization",
+                                iconCls:'icon-add',
+                                listeners:{
+                                    'click':function(){
+                                        addOrganizationWindow.show();
+                                    }
+                                }
+                            }
+                            ]
+                        });
+                    }
+                    contextMenu.showAt(e.xy);
                 }
             }
         }
@@ -436,7 +434,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 }
                 ],
                 validations:[
-                   {type: 'presence',  field: 'email_address'}
+                {
+                    type: 'presence',
+                    field: 'email_address'
+                }
                 ],
                 contactPurposeStore:contactPurposeStore
             },
@@ -460,7 +461,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 }
                 ],
                 validations:[
-                   {type: 'presence',  field: 'phone_number'}
+                {
+                    type: 'presence',
+                    field: 'phone_number'
+                }
                 ],
                 contactPurposeStore:contactPurposeStore
             },
@@ -539,11 +543,30 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 }
                 ],
                 validations:[
-                   {type: 'presence',  field: 'address_line_1'},
-                   {type: 'presence',  field: 'city'},
-                   {type: 'presence',  field: 'state'},
-                   {type: 'presence',  field: 'zip'},
-                   {type: 'presence',  field: 'country'}
+                {
+                    type: 'presence',
+                    field: 'address_line_1'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'city'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'state'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'zip'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'country'
+                }
                 ],
                 contactPurposeStore:contactPurposeStore
             }
@@ -579,7 +602,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 }
                 ],
                 validations:[
-                   {type: 'presence',  field: 'email_address'}
+                {
+                    type: 'presence',
+                    field: 'email_address'
+                }
 
                 ],
                 contactPurposeStore:contactPurposeStore
@@ -604,7 +630,10 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 }
                 ],
                 validations:[
-                   {type: 'presence',  field: 'phone_number'}
+                {
+                    type: 'presence',
+                    field: 'phone_number'
+                }
                 ],
                 contactPurposeStore:contactPurposeStore
             },
@@ -683,11 +712,30 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 }
                 ],
                 validations:[
-                   {type: 'presence',  field: 'address_line_1'},
-                   {type: 'presence',  field: 'city'},
-                   {type: 'presence',  field: 'state'},
-                   {type: 'presence',  field: 'zip'},
-                   {type: 'presence',  field: 'country'}
+                {
+                    type: 'presence',
+                    field: 'address_line_1'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'city'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'state'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'zip'
+                },
+
+                {
+                    type: 'presence',
+                    field: 'country'
+                }
                 ],
                 contactPurposeStore:contactPurposeStore
             }

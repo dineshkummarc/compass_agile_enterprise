@@ -1128,7 +1128,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 name:'title'
                                             },
                                             {
-                                                width: 100,
                                                 xtype: 'combo',
                                                 forceSelection:true,
                                                 store: [
@@ -1145,7 +1144,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 xtype:'radiogroup',
                                                 fieldLabel:'Display in menu?',
                                                 name:'in_menu',
-                                                width:100,
                                                 columns:2,
                                                 items:[
                                                 {

@@ -7,7 +7,7 @@ Compass.ErpApp.Widgets.Signup = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Signup',
     iconUrl:'/images/icons/user/user_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.Signup.addSignup();"
+    onClick:Compass.ErpApp.Widgets.Signup.addSignup
 });
 
 

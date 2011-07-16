@@ -1,6 +1,19 @@
 Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.PaymentsGridPanel",{
     extend:"Ext.grid.Panel",
     alias:'widget.desktopordermanagement_paymentsgridpanel',
+    
+    initComponent : function(){
+        this.bbar = new Ext.PagingToolbar({
+            pageSize: 10,
+            store:this.store,
+            displayInfo: true,
+            displayMsg: '{0} - {1} of {2}',
+            emptyMsg: "Empty"
+        });
+
+        Compass.ErpApp.Desktop.Applications.OrderManager.PaymentsGridPanel.superclass.initComponent.call(this, arguments);
+    },
+
     constructor : function(config) {
         var store = Ext.create("Ext.data.Store",{
             proxy:{

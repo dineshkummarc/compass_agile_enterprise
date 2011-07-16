@@ -7,7 +7,7 @@ Compass.ErpApp.Widgets.ContactUs = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Contact Us',
     iconUrl:'/images/icons/message/message_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.ContactUs.addContactUs();"
+    onClick:Compass.ErpApp.Widgets.ContactUs.addContactUs
 });
 
 

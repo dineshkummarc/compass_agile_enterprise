@@ -56,6 +56,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             '<span class="x-btn-inner">'+ this.initialConfig['partyType'] +' Name:</span>',
             {
                 xtype:'textfield',
+                hideLabel:true,
                 width:150
             },
             {

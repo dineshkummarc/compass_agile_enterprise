@@ -1,13 +1,13 @@
 Compass.ErpApp.Widgets.DynamicForms = {
     addDynamicForm:function(){
-        var addDynamicFormWidgetWindow = new Ext.Window({
+        var addDynamicFormWidgetWindow = Ext.create("Ext.window.Window",{
             layout:'fit',
             width:375,
             title:'Add DynamicForm Widget',
             height:190,
             plain: true,
             buttonAlign:'center',
-            items: new Ext.FormPanel({
+            items: Ext.create("Ext.form.Panel",{
                 labelWidth: 100,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
@@ -71,5 +71,5 @@ Compass.ErpApp.Widgets.DynamicForms = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Dynamic Forms',
     iconUrl:'/images/icons/document_text/document_text_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.DynamicForms.addDynamicForm();"
+    onClick:Compass.ErpApp.Widgets.DynamicForms.addDynamicForm
 });

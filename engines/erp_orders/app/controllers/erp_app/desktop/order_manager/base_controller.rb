@@ -25,7 +25,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       orders = OrderTxn.find(:all, :order => "#{sort} #{dir}", :limit => limit, :offset => start)
       result[:totalCount] = OrderTxn.all.count
     elsif !order_number.blank?
-      orders = [OrderTxn.find_by_order_number(order_number)]
+      orders = OrderTxn.find_by_order_number(order_number).nil? ? [] : [OrderTxn.find_by_order_number(order_number)]
       result[:totalCount] = orders.count
     elsif !order_id.blank?
       orders = [OrderTxn.find(order_id)]

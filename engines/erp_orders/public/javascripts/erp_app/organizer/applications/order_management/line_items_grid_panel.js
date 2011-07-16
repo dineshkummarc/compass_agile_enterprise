@@ -87,7 +87,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrderLineItems
                     var layout = grid.findParentByType('organizer_orderslayout');
                     if(!Compass.ErpApp.Utility.isBlank(layout.orderId)){
                         var store = grid.getStore();
-                        store.extraParams.order_id = layout.orderId;
+                        store.proxy.extraParams.order_id = layout.orderId;
                         store.load();
                     }
                 }

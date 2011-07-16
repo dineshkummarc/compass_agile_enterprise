@@ -44,12 +44,12 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrdersGridPane
     constructor : function(config) {
         var store = Ext.create("Ext.data.Store",{
             proxy:{
-               type:'ajax',
-               url: '/erp_app/desktop/order_manager',
-               reader:{
-                   type:'json',
-                   root: 'orders',
-               }
+                type:'ajax',
+                url: '/erp_app/desktop/order_manager',
+                reader:{
+                    type:'json',
+                    root: 'orders'
+                }
             },
             totalProperty: 'totalCount',
             idProperty: 'id',
@@ -68,7 +68,6 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrdersGridPane
         });
 
         config = Ext.apply({
-            layout:'fit',
             columns: [
             {
                 header:'Order Number',
@@ -138,8 +137,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrdersGridPane
 
                         var index = individualsGrid.getStore().find("id", buyerPartyId);
                         var record = individualsGrid.getStore().getAt(index);
-                        individualsGrid.getSelectionModel().selectRecords([record], false);
-                        Compass.Component.UserApp.Util.setActiveCenterItem('individuals_search_grid');
+                        individualsGrid.getSelectionModel().select([record], false);
+                        Compass.ErpApp.Organizer.Layout.setActiveCenterItem('individuals_search_grid');
                         var individualsTabPanel = Ext.getCmp('individualsTabPanel');
                         var ordersGridPanel = individualsTabPanel.query('ordermanager_ordersgridpanel')[0];
                         individualsTabPanel.setActiveTab(ordersGridPanel.id);
@@ -169,21 +168,34 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrdersGridPane
             store:store,
             tbar:{
                 items:[
-                    '<span style="color:white;font-weight:bold;">Order Number:</span>',
-                    {
-                        xtype:'numberfield',
-                        fieldLabel:'Order Number',
-                        id:'orderNumberSearchTextField'
-                    },
-                    {
-                        text:'Search',
-                        iconCls:'icon-search',
-                        handler:function(btn){
-                            var orderNumber = Ext.getCmp('orderNumberSearchTextField').getValue();
-                            var store = btn.findParentByType('ordermanager_ordersgridpanel').getStore();
-                            store.load({params:{order_number:orderNumber}});
-                        }
+                {
+                    xtype:'numberfield',
+                    hideLabel:true,
+                    emptyText:'Order Number'
+                },
+                {
+                    text:'Search',
+                    iconCls:'icon-search',
+                    handler:function(btn){
+                        var orderNumber = btn.findParentByType('toolbar').query('numberfield')[0].getValue();
+                        var store = btn.findParentByType('ordermanager_ordersgridpanel').getStore();
+                        store.load({
+                            params:{
+                                order_number:orderNumber
+                            }
+                        });
                     }
+                },
+                '|',
+                {
+                    text: 'All',
+                    xtype:'button',
+                    iconCls: 'icon-eye',
+                    handler: function(btn) {
+                        btn.findParentByType('ordermanager_ordersgridpanel').store.proxy.extraParams.order_number = null;
+                        btn.findParentByType('ordermanager_ordersgridpanel').store.load();
+                    }
+                },
                 ]
             }
         }, config);
