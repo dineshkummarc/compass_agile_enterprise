@@ -49,11 +49,6 @@ Ext.define("Compass.ErpApp.Login.Window",{
             }
         },
         {
-            xtype:'hidden',
-            name:'logout_to',
-            value:this.logout
-        },
-        {
             xtype:'label',
             cls:'error_message',
             text:this.message
@@ -75,6 +70,9 @@ Ext.define("Compass.ErpApp.Login.Window",{
         formPanel.getForm().submit({
             reset:false,
             waitMsg:'Authenticating...',
+            params:{
+                logout_to:self.initialConfig.logoutTo
+            },
             success:function(form, action){
                 window.location = self.initialConfig['redirectTo'];
             },
