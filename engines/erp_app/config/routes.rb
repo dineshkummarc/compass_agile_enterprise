@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
   #Organizer Application Routes
   #############################
   map.organizer_login '/erp_app/organizer/login', :controller => 'erp_app/organizer/login', :action => 'index'
-  map.connect '/erp_app/organizer', :controller => 'erp_app/organizer/base', :action => 'index'
+  map.connect '/erp_app/organizer/:action', :controller => 'erp_app/organizer/base', :action => 'index'
   
   #crm
   map.connect '/erp_app/organizer/crm/:action/:id', :controller => 'erp_app/organizer/crm/base'
@@ -31,6 +31,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/tenancy/:action', :controller => 'erp_app/desktop/tenancy/base'
 
   #scaffold
+  map.connect '/erp_app/desktop/scaffold/individual/:action', :controller => 'erp_app/desktop/scaffold/individual'
+  map.connect '/erp_app/desktop/scaffold/party/:action', :controller => 'erp_app/desktop/scaffold/party'
+  map.connect '/erp_app/desktop/scaffold/party/:action', :controller => 'erp_app/desktop/scaffold/party'
   map.connect '/erp_app/desktop/scaffold/role/:action', :controller => 'erp_app/desktop/scaffold/role'
   map.connect '/erp_app/desktop/scaffold/:action', :controller => 'erp_app/desktop/scaffold/base'
 

@@ -5,16 +5,17 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
   end
   
   def index
+    @use_dynamic_form = params[:use_dynamic_form]
+
     render
   end
 
   def new
     @website = Website.find_by_host(request.host_with_port)
-
     @website_inquiry = WebsiteInquiry.new
-    @website_inquiry.data.created_with_form_id = params[:dynamic_form_id]
     @website_inquiry.website_id = @website.id
-
+    @website_inquiry.data.created_with_form_id = params[:dynamic_form_id] if params[:is_html_form].blank?
+    
     params.each do |k,v|
       @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
     end

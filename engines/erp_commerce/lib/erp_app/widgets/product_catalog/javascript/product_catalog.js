@@ -1,13 +1,12 @@
 Compass.ErpApp.Widgets.ProductCatalog = {
     add:function(){
-        var addProductCatalogWidgetWindow = new Ext.Window({
+        var addProductCatalogWidgetWindow = Ext.create("Ext.window.Window",{
             layout:'fit',
             width:300,
             title:'Add Product Catalog Widget',
             height:100,
-            plain: true,
             buttonAlign:'center',
-            items: new Ext.FormPanel({
+            items: Ext.create("Ext.form.Panel",{
                 labelWidth: 100,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
@@ -17,7 +16,6 @@ Compass.ErpApp.Widgets.ProductCatalog = {
                 items: [
                 {
                     xtype:'textfield',
-                    width: 150,
                     fieldLabel:'Cart Items Url',
                     name:'cartItemsUrl',
                     hidden:false,
@@ -27,24 +25,25 @@ Compass.ErpApp.Widgets.ProductCatalog = {
             }),
             buttons: [{
                 text:'Submit',
-                listeners:{
-                    'click':function(button){
-                        var window = button.findParentByType('window');
-                        var formPanel = window.findByType('form')[0];
-                        var basicForm = formPanel.getForm();
-                        var cartItemsUrl = basicForm.findField('cartItemsUrl').getValue();
-                        var data = {cartItemsUrl:cartItemsUrl};
+                handler:function(button){
+                    var window = button.findParentByType('window');
+                    var formPanel = window.query('form')[0];
+                    var basicForm = formPanel.getForm();
+                    var cartItemsUrl = basicForm.findField('cartItemsUrl').getValue();
+                    var data = {
+                        cartItemsUrl:cartItemsUrl
+                    };
 
-                        var tpl = new Ext.XTemplate("<%= render_widget :product_catalog,\n",
-                                                    "   :action => :index,\n",
-                                                    "   :params => {:cart_items_url => '{cartItemsUrl}'} %>");
+                    var tpl = new Ext.XTemplate("<%= render_widget :product_catalog,\n",
+                        "   :action => :index,\n",
+                        "   :params => {:cart_items_url => '{cartItemsUrl}'} %>");
 
-                        //add rendered template to center region editor
-                        Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror(tpl.apply(data));
-                        addProductCatalogWidgetWindow.close();
-                    }
+                    //add rendered template to center region editor
+                    Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror(tpl.apply(data));
+                    addProductCatalogWidgetWindow.close();
                 }
-            },{
+            },
+            {
                 text: 'Close',
                 handler: function(){
                     addProductCatalogWidgetWindow.close();
@@ -59,5 +58,5 @@ Compass.ErpApp.Widgets.ProductCatalog = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Product Catalog',
     iconUrl:'/images/icons/product/product_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.ProductCatalog.add();"
+    onClick:Compass.ErpApp.Widgets.ProductCatalog.add
 });

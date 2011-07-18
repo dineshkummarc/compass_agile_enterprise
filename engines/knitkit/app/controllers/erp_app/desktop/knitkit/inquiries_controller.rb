@@ -21,6 +21,8 @@ class ErpApp::Desktop::Knitkit::InquiriesController < ErpApp::Desktop::Knitkit::
     
     result = "{
       \"success\": true,
+      \"model\": \"WebsiteInquiry\",
+      \"validations\": \"[]\",
       \"columns\": [#{columns.join(',')}],
       \"fields\": #{definition.to_json}
     }"    

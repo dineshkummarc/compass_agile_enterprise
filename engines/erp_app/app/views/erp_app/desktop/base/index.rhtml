@@ -1,39 +1,24 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <style>
-<%
-@desktop.applications.each do |application|
-%>
-        #<%=application.shortcut_id%>-shortcut img{
+    <style type="text/css">
+<%@desktop.applications.each do |application|%>
+        .<%=application.shortcut_id%>-shortcut{
           background-image:url("/images/icons/<%=application.icon.split('-')[1]%>/<%=application.icon.split('-')[1]%>_48x48.png");
-          background-repeat:no-repeat;
           height:48px;
           width:48px;
         }
-<%
-end
-%>
-      #control-panel-win-shortcut img{
+<%end%>
+      .control-panel-win-shortcut{
         background-image:url("/images/icons/control_panel/control_panel_48x48.png");
-        background-repeat:no-repeat;
         height:48px;
         width:48px;
       }
 
-      #web-navigator-win-shortcut img{
+      .web-navigator-win-shortcut{
         background-image:url("/images/icons/globe/globe_48x48.png");
         height:48px;
-        background-repeat:no-repeat;
         width:48px;
-      }
-
-      .taskbar_clock {
-        float:right;
-        padding-right:5px;
-        background-repeat:no-repeat;
-        color:white;
-        font-weight:bold;
       }
 
       #loading-mask {
@@ -65,84 +50,23 @@ end
         text-align: center;
         height:     auto;
       }
-
-
-      }
     </style>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>Compass Desktop</title>
-  </head>
-  <body scroll="no">
-    <div id="x-desktop" style="-moz-user-select: -moz-none;" onselectstart="return false;" unselectable="on">
-      <dl id="x-shortcuts" style="width:160px;height:100%;">
-        <dt id="control-panel-win-shortcut" style="visibility:visible">
-          <a href="#"><img src="/images/erp_app/desktop/s.gif" />
-            <div>Control Panel</div></a>
-        </dt>
-        <dt id="web-navigator-win-shortcut" style="visibility:visible">
-          <a href="#"><img src="/images/erp_app/desktop/s.gif" />
-            <div>Web Navigator</div></a>
-        </dt>
-        <%
-        @desktop.applications.each do |application|
-          visiblity = 'none'
-          if application.get_user_preference(@user, :desktop_shortcut) == 'yes'
-            visiblity = 'block'
-          end
-        %>
-          <dt id="<%=application.shortcut_id%>-shortcut" style="display:<%=visiblity%>">
-            <a href="#"><img src="/images/erp_app/desktop/s.gif" />
-              <div><%=application.description%></div></a>
-          </dt>
-        <%
-        end
-      %>
-      </dl>
-    </div>
-    <div id="ux-taskbar">
-      <div id="ux-taskbar-start"></div>
-      <div id="ux-taskbuttons-panel"></div>
-      <div id="ux-taskclock-panel"></div>
-      <div class="x-clear"></div>
-    </div>
-    <div style="position : absolute; left: 0; top: 0; z-index: -1;">
-      <div></div>
-      <img id="x-wallpaper" src="/images/wallpaper/<%=@desktop.get_preference(:desktop_background) %>" style="width : 0px; height : 0px;"/>
-      <!--<img id="x-watermark-logo" src="/images/art/tn-logo-watermark-2.png" style="position: absolute; left: 50%; top: 50%; margin-left: -300px; margin-top: -300px; width : 600px; height : 600px; opacity: 0.5;"/>
-      <img id="x-watermark-logo" src="/images/art/compass-logo-1-medium.png" style="position: absolute; left: 100%; top: 100%; margin-left: -260px; margin-top: -120px; width : 250; height : 89; opacity: 1.0;"/>-->
-    </div>
-    <div id="loading-mask"></div>
-    <div id="loading">
-      <div class="loading-indicator">
-        <p style='margin-left: -110px; margin-top: 30px;'>Loading Compass Desktop...</p>
-      </div>
-    </div>
-    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
-    <%= stylesheet_link_tag('ext/resources/css/RowEditor.css','erp_app/compass-ext-all.css','erp_app/desktop/main.css'
-    ) %>
 
-    <%=
-    javascript_include_tag("ext_3_3_0/RowEditor.js",
-      "ext_3_3_1/DataView-more.js",
-      "ext_3_3_1/RowExpander.js",
-      "erp_app/utility.js",
-      "erp_app/widgets.js") %>
+    <!--javascript-->
+    <%= include_extjs(:theme => @desktop.get_preference(:extjs_theme), :debug => true) %>
+
+    <%= javascript_include_tag("erp_app/utility.js")%>
+    <%= javascript_include_tag("erp_app/desktop/ext_ux_desktop_module.js")%>
 
     <%=include_widget_javascript%>
-    
-    <%=
-    javascript_include_tag("erp_app/shared/active_ext/active_ext_grid.js",
+
+    <%= javascript_include_tag(
       "erp_app/shared/status_window.js",
+      "erp_app/shared/preference_form.js",
       "erp_app/shared/active_ext/active_ext_grid_panel.js",
+      "erp_app/shared/active_ext/active_ext_grid.js",
       "erp_app/shared/dynamic_editable_grid_loader_panel.js",
       "erp_app/shared/dynamic_editable_grid.js",
-      "erp_app/shared/dynamic_editable_grid_loader_panel.js",
-      "erp_app/shared/preference_form.js",
-      "erp_app/desktop/App.js",
-      "erp_app/desktop/Module.js",
-      "erp_app/desktop/TaskBar.js",
-      "erp_app/desktop/StartMenu.js",
-      "erp_app/desktop/Desktop.js",
       "erp_app/desktop/applications/control_panel/module.js",
       "erp_app/desktop/applications/control_panel/desktop_management_panel.js",
       "erp_app/desktop/applications/control_panel/application_management_panel.js",
@@ -150,76 +74,135 @@ end
       "erp_app/desktop/applications/web_navigator/module.js",
       "erp_app/ckeditor/ckeditor.js",
       "erp_app/shared/compass_ckeditor.js",
-      "erp_app/shared/file_manager_tree.js",
-      "erp_app/shared/column_editors.js"
-    )
-  %>
+      "erp_app/shared/file_manager_tree.js"
+    )%>
+
+    <!--stylesheets-->
+    <%= stylesheet_link_tag('erp_app/compass-ext-all.css') %>
+    <%= stylesheet_link_tag('erp_app/desktop/base.css') %>
+
     <%=include_code_mirror%>
     <%=include_file_upload%>
     <%=setup_role_manager(@user)%>
     <%@desktop.applications.each do |application|%><%=application.load_resources%><%end%>
-    <script>
-      function fireResize(width, height) {
-        document.getElementById('x-wallpaper').style.width = width + "px";
-        document.getElementById('x-wallpaper').style.height = height + "px";
-      }
-      Ext.EventManager.onWindowResize(fireResize, document.getElementById('x-wallpaper'));
-      fireResize(Ext.lib.Dom.getViewWidth(), Ext.lib.Dom.getViewHeight());
-      var applications = [
-<%
-@desktop.applications.each do |application|
-%>
-      new <%=application.javascript_class_name%>({<%=application.build_widget_roles_js%>}),
-<%
-end
-%>
-    new Compass.ErpApp.Desktop.Applications.ControlPanel(),
-    new Compass.ErpApp.Desktop.Applications.WebNavigator({toolBarButtons:[]})
-  ];
 
-  CompassDesktop = new Ext.app.App({
-    id:'compass_desktop',
-    init :function(){
-      Ext.QuickTips.init();
-    },
-
-    getModules : function(){
-      return applications;
-    },
-
-    // config for the start menu
-    getStartConfig : function(){
-      return {
-        title: '<%=@user.party.description%>',
-        iconCls: 'icon-user',
-        toolItems: [{
-            text:'Logout',
-            iconCls:'logout',
-            scope:this,
-            handler:function(){
-              window.location = '../logout'
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Compass Desktop</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      Ext.define("MyDesktop.App",{
+        extend:"Ext.ux.desktop.App",
+        requires:["Ext.window.MessageBox",
+          "Ext.ux.desktop.ShortcutModel",
+          "Compass.ErpApp.Desktop.Applications.ControlPanel",
+          "Compass.ErpApp.Desktop.Applications.WebNavigator",
+          <%=@desktop.applications.collect(&:javascript_class_name).join(",").to_s%>],
+        init:function(){
+          this.callParent()
+        },
+        getModules:function(){
+          return[
+            new Compass.ErpApp.Desktop.Applications.ControlPanel(),
+            new Compass.ErpApp.Desktop.Applications.WebNavigator(),
+            <%=@desktop.applications.collect{|app| "new #{app.javascript_class_name}({#{app.build_widget_roles_js}})"}.join(",").to_s%>
+          ]
+        },
+        getDesktopConfig:function(){
+          var b=this,a=b.callParent();
+          return Ext.apply(a,{
+            contextMenuItems:[
+              {
+                text:"Control Panel",
+                handler:b.onControlPanel,
+                scope:b
+              }],
+            shortcuts:Ext.create("Ext.data.Store",{
+              model:"Ext.ux.desktop.ShortcutModel",
+              data:[
+                {applicationId:0,name:"Control Panel",iconCls:"control-panel-win-shortcut",module:"control-panel-win",autoLoad:'na'},
+                {applicationId:0,name:"Web Navigator",iconCls:"web-navigator-win-shortcut",module:"web-navigator-win",autoLoad:'na'},
+                <%=@desktop.shortcuts.collect{|app| "{name:'#{app.description}',iconCls:'#{app.shortcut_id}-shortcut',module:'#{app.shortcut_id}'}"}.join(",").to_s%>
+              ]
+            }),
+            wallpaper:"/images/wallpaper/<%=@desktop.get_preference(:desktop_background) %>",
+            wallpaperStretch:true
+          })
+        },
+        getStartConfig:function(){
+          var b=this,a=b.callParent();
+          return Ext.apply(a,{
+            title:'<%=@user.party.description%>',
+            iconCls:"icon-user",
+            height:300,
+            toolConfig:{
+              width:100,
+              items:[{
+                  text:"Logout",
+                  iconCls:"icon-key",
+                  handler:b.onLogout,
+                  scope:b
+                }]
             }
-          }]
-      };
-    }
-  });
-  Ext.onReady(function() {
-    setTimeout(function(){
-      Ext.get('loading').remove();
-      Ext.get('loading-mask').fadeOut({remove:true});
-    }, 250);
+          })
+        },
+        getTaskbarConfig:function(){
+          var a=this.callParent();
+          return Ext.apply(a,{
+            quickStart:[{
+                name:"Control Panel",
+                iconCls:"icon-control_panel",
+                module:"control-panel-win"
+              }],
+            trayItems:[{
+                xtype:"trayclock",
+                flex:1
+              }]
+          })
+        },
+        onLogout:function(){
+          Ext.Msg.confirm("Logout","Are you sure you want to logout?", function(btn, text){
+            if(btn == 'yes'){
+              window.location = '../logout';
+            }
+          })
+        },
+        onControlPanel:function(){
+          var controlPanel = window.compassDesktop.getModule('control-panel-win');
+          controlPanel.createWindow();
+        }
+      });
 
-<%
+      Ext.Loader.setPath({
+        'Ext.ux.desktop': 'js',
+        MyDesktop: ''
+      });
 
-@desktop.applications.each do |application|
-  if application.get_user_preference(@user, :autoload_application) == 'yes'
-  %>
-        CompassDesktop.getModule('<%=application.shortcut_id%>').createWindow();
-  <%
-  end
-end
-%>
-  });
+      Ext.require('MyDesktop.App');
+
+      var compassDesktop;
+      Ext.onReady(function () {
+        compassDesktop = new MyDesktop.App();
+            
+        setTimeout(function(){
+          Ext.get('loading').remove();
+          Ext.get('loading-mask').fadeOut({remove:true});
+          <%
+            @desktop.autoloads.each do |application|
+          %>
+            compassDesktop.getModule('<%=application.shortcut_id%>').createWindow();
+          <%
+            end
+          %>
+        }, 250);
+      });
+
     </script>
+    <div id="loading-mask"></div>
+    <div id="loading">
+      <div class="loading-indicator">
+        <p style='margin-left: -110px; margin-top: 30px;'>Loading Compass Desktop...</p>
+      </div>
+    </div>
   </body>
 </html>

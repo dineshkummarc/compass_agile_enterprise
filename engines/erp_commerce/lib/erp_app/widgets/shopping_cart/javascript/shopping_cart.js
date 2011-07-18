@@ -1,13 +1,12 @@
 Compass.ErpApp.Widgets.ShoppingCart = {
     addShoppingCart:function(){
-        var addShoppingCartWidget = new Ext.Window({
+        var addShoppingCartWidget = Ext.create("Ext.window.Window",{
             layout:'fit',
             width:300,
             title:'Add Shopping Cart Widget',
             height:130,
-            plain: true,
             buttonAlign:'center',
-            items: new Ext.FormPanel({
+            items: Ext.create("Ext.form.Panel",{
                 labelWidth: 100,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
@@ -16,7 +15,6 @@ Compass.ErpApp.Widgets.ShoppingCart = {
                 },
                 items: [
                 {
-                    width: 150,
                     xtype: 'combo',
                     forceSelection:true,
                     store: [
@@ -48,7 +46,6 @@ Compass.ErpApp.Widgets.ShoppingCart = {
                 },
                 {
                     xtype:'textfield',
-                    width: 150,
                     fieldLabel:'Cart Items Url',
                     name:'cartItemsUrl',
                     hidden:false,
@@ -56,7 +53,6 @@ Compass.ErpApp.Widgets.ShoppingCart = {
                 },
                 {
                     xtype:'textfield',
-                    width: 150,
                     fieldLabel:'Products Url',
                     name:'productsUrl',
                     value:'/products',
@@ -69,7 +65,7 @@ Compass.ErpApp.Widgets.ShoppingCart = {
                 listeners:{
                     'click':function(button){
                         var window = button.findParentByType('window');
-                        var formPanel = window.findByType('form')[0];
+                        var formPanel = window.query('form')[0];
                         var basicForm = formPanel.getForm();
                         var action = basicForm.findField('widgetLayout').getValue();
 
@@ -107,5 +103,5 @@ Compass.ErpApp.Widgets.ShoppingCart = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Shopping Cart',
     iconUrl:'/images/icons/shoppingcart/shoppingcart_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.ShoppingCart.addShoppingCart();"
+    onClick:Compass.ErpApp.Widgets.ShoppingCart.addShoppingCart
 });

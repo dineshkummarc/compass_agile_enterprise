@@ -4,8 +4,7 @@ class DynamicGridColumn
     field_hash.symbolize_keys!
     header = field_hash[:fieldLabel]
     type = DynamicGridColumn.convert_xtype_to_column_type(field_hash[:xtype])
-    dataIndex = field_hash[:name]
-    width = field_hash[:width].nil? ? '"auto"' : field_hash[:width]
+    data_index = field_hash[:name]
     
     if type == 'date'
       renderer = "Ext.util.Format.dateRenderer('m/d/Y')"
@@ -16,9 +15,12 @@ class DynamicGridColumn
     col = "{
         \"header\":\"#{header}\",
         \"type\":\"#{type}\",
-        \"dataIndex\":\"#{dataIndex}\",
-        \"width\":#{width}"
-        
+        \"dataIndex\":\"#{data_index}\""
+   
+    if options[:width]
+      col << ",\"width\":#{options[:width]}"
+    end
+
     col += ",
         \"renderer\": #{renderer}" if renderer != ''
 

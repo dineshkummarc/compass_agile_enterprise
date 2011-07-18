@@ -98,7 +98,7 @@ class DynamicForm < ActiveRecord::Base
       Ext.onReady(function(){
           Ext.QuickTips.init();
 
-          var dynamic_form = new Ext.FormPanel({
+          var dynamic_form = Ext.create('Ext.form.Panel',{
               id: 'dynamic_form_panel',
               url:'#{options[:url]}',
               title: '#{self.description}',
@@ -122,23 +122,14 @@ class DynamicForm < ActiveRecord::Base
                           formPanel.getForm().submit({
                               reset:true,
                               success:function(form, action){
-                                  var obj =  Ext.util.JSON.decode(action.response.responseText);
-                                  if(obj.success){
-                                    Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;
-                                    var scriptTags = Ext.get('#{options[:widget_result_id]}').dom.getElementsByTagName('script');
-                                    Ext.each(scriptTags, function(scriptTag){
-                                         eval(scriptTag.text);
-                                    });
-                                    
-                                  }else{
-                                      Ext.Msg.alert('Error', obj.msg);
-                                  }
+                                  Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;
+                                  var scriptTags = Ext.get('#{options[:widget_result_id]}').dom.getElementsByTagName('script');
+                                  Ext.each(scriptTags, function(scriptTag){
+                                        eval(scriptTag.text);
+                                  });
                               },
                               failure:function(form, action){
-                                if (!Compass.ErpApp.Utility.isBlank(action.response)){
-                                  var obj =  Ext.util.JSON.decode(response.responseText);
-                                  Ext.Msg.alert('Error', obj.msg);                                  
-                                }
+                                Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;
                               }
                           });
                       }

@@ -25,11 +25,8 @@ td.x-grid3-td-progress-cell div.x-grid3-cell-inner {
 }
 
 .ux-progress-cell-inner {
-    position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
     overflow: hidden;
 }
 
@@ -37,6 +34,15 @@ td.x-grid3-td-progress-cell div.x-grid3-cell-inner {
     background: #E0E8F3; /*url(../../resources/images/default/qtip/bg.gif) repeat-x scroll 0 -1px;*/
     white-space: nowrap;
 }
+
+.x-grid3-td-progress-cell-pending{
+    background: #E0E8F3;
+}
+
+.x-grid3-td-progress-cell-complete{
+    background: #9CBFEE;
+}
+
 .x-grid3-td-progress-cell .low {
     background: #11aa11;
 }

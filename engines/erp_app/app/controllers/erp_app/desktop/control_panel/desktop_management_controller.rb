@@ -15,8 +15,6 @@ class ErpApp::Desktop::ControlPanel::DesktopManagementController < ErpApp::Appli
   end
 
   def selected_desktop_preferences
-    ::Desktop.include_root_in_json = false
-
     user = current_user
     desktop = ::Desktop.find_by_user(user)
     preferences = desktop.preferences

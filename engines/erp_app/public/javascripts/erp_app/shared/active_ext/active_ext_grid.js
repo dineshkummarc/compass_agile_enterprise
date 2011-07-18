@@ -1,6 +1,6 @@
-Ext.ns("Compass.ErpApp.Shared.ActiveExt");
-
-Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid",{
+    extend:"Ext.grid.GridPanel",
+    alias:'widget.activeextgrid',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -38,7 +38,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
             },
             success: function(response) {
                 self.clearWindowStatus();
-                var formItems =  Ext.util.JSON.decode(response.responseText);
+                var formItems =  Ext.decode(response.responseText);
                 var buttons = [];
                 if(action != 'show'){
                     buttons = [{
@@ -46,16 +46,16 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         listeners:{
                             'click':function(button){
                                 var window = button.findParentByType('window');
-                                var formPanel = window.findByType('form')[0];
+                                var formPanel = window.query('.form')[0];
                                 self.setWindowStatus('Working');
                                 formPanel.getForm().submit({
                                     reset:true,
                                     success:function(form, action){
                                         self.clearWindowStatus();
-                                        var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                        var obj = Ext.decode(action.response.responseText);
                                         if(obj.success){
                                             activeExtFormWindow.close();
-                                            self.getStore().reload();
+                                            self.store.load();
                                         }
                                         else{
                                             Ext.Msg.alert("Error", "Error");
@@ -77,22 +77,20 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                 }
 
                 var activeExtFormWindow = new Ext.Window({
-                    layout:'fit',
                     width:320,
                     title:self.initialConfig.windowTitle,
                     height:300,
                     plain: true,
                     autoScroll:true,
                     buttonAlign:'center',
-                    items: new Ext.FormPanel({
+                    items: Ext.create('Ext.form.Panel',{
                         frame:false,
-                        autoScroll:true,
-                        bodyStyle:'padding:5px 5px 0',
-                        width: 425,
-                        url:self.initialConfig.modelUrl + '/' + formAction,
-                        defaults: {
-                            width: 225
+                        fieldDefaults: {
+                            width: 225,
+                            labelWidth: 100
                         },
+                        bodyStyle:'padding:5px 5px 0',
+                        url:self.initialConfig.modelUrl + '/' + formAction,
                         items:formItems
                     }),
                     buttons: buttons
@@ -108,70 +106,34 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
     },
     
     initComponent : function() {
-        var config = this.initialConfig
-        var messageBox = null;
-
-        var proxy = new Ext.data.HttpProxy({
-            url: this.initialConfig.modelUrl + '/data'
-        });
-
-        proxy.addListener('exception', function(proxy, type, action, options, res) {
-            var message = 'Error in processing request';
-            if(!Compass.ErpApp.Utility.isBlank(res.message)) message = res.message;
-            Ext.Msg.alert('Error', message);
-        });
-
-        proxy.addListener('beforewrite', function(proxy, action) {
-            if(messageBox != null)
-                messageBox.hide();
-
-            messageBox = Ext.Msg.wait('Status', 'Sending request...');
-        });
-
-        proxy.addListener('write', function(dataProxy, action, data, response, rs, options) {
-            if(messageBox != null)
-                messageBox.hide();
-
-            if(!Compass.ErpApp.Utility.isBlank(response.message)){
-                var message = response.message;
-                Ext.Msg.alert('Status', message);
-            }
-        });
-
-        var reader = new Ext.data.JsonReader({
-            successProperty: 'success',
-            totalProperty:'totalCount',
-            idProperty: 'id',
-            root: 'data',
-            messageProperty: 'message'
-        },this.initialConfig['fields']);
-
-        var writer = new Ext.data.JsonWriter({
-            encode: false
-        });
-
-        var store = new Ext.data.Store({
-            autoLoad:true,
-            autoSave:false,
-            restful: true,
-            proxy: proxy,
-            reader: reader,
-            baseParams:{
-                limit:config['pageSize']
-            },
-            writer: writer,
-            listeners:{
-                'exception':function(){
-                    var message = 'Error in processing request';
-
-                    if(!Compass.ErpApp.Utility.isBlank(arguments[5]))
-                        message = arguments[5];
-
-                    Ext.Msg.alert("Error", message);
+        var config = this.initialConfig;
+        var store = Ext.create('Ext.data.Store', {
+            fields:config['fields'],
+            autoLoad: true,
+            autoSync: true,
+            proxy: {
+                type: 'rest',
+                url:config.modelUrl + '/data',
+                reader: {
+                    type: 'json',
+                    successProperty: 'success',
+                    root: 'data',
+                    messageProperty: 'message'
                 },
-                'remove':function(store, record, index ){
-                    record.commit();
-                    store.save();
+                writer: {
+                    type: 'json',
+                    writeAllFields:true,
+                    root: 'data'
+                },
+                listeners: {
+                    exception: function(proxy, response, operation){
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                        });
+                    }
                 }
             }
         });
@@ -193,39 +155,31 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
 
     constructor : function(config) {
         var self = this;
-        var editor = new Ext.ux.grid.RowEditor({
-            saveText: 'Update',
-            buttonAlign:'center',
-            RowEditor:true,
-            errorSummary:true,
-            listeners:{
-                'afteredit':function(editor, changes, record){
-                    if(Compass.ErpApp.Utility.isBlank(record.get('id'))){
-                        record.set('id', 0);
-                    }
-                    record.store.save();
-                }
-            }
+
+        this.editing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1
         });
 
-        var Record = Ext.data.Record.create(config.fields);
-
+        var Model = Ext.define(config.windowTitle,{
+            extend:'Ext.data.Model',
+            fields:config.fields,
+            validations:config.validations
+        });
+        
         var plugins = [];
         var tbar = {};
         if(config.editable){
-           
             if(config.inlineEdit){
-                plugins.push(editor);
+                plugins.push(this.editing);
                 tbar = {
                     items:[{
                         text: 'Add',
                         iconCls: 'icon-add',
                         handler: function(button) {
                             var grid = button.findParentByType('activeextgrid');
-                            var r = new Record();
-                            editor.stopEditing();
-                            grid.store.insert(0, r);
-                            editor.startEditing(0);
+                            var edit = grid.editing;
+                            grid.store.insert(0, new Model());
+                            edit.startEdit(0,0);
                         }
                     },'-',
                     {
@@ -233,11 +187,10 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
                         iconCls: 'icon-delete',
                         handler: function(button){
                             var grid = button.findParentByType('activeextgrid');
-                            var rec = grid.getSelectionModel().getSelected();
-                            if (!rec) {
-                                return false;
+                            var selection = grid.getView().getSelectionModel().getSelection()[0];
+                            if (selection) {
+                                grid.store.remove(selection);
                             }
-                            grid.store.remove(rec);
                         }
                     }
                     ]
@@ -376,6 +329,7 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
         config = Ext.apply({
             layout:'fit',
             frame: false,
+            id:config.windowTitle+'_',
             autoScroll:true,
             loadMask:true,
             plugins:plugins,
@@ -384,17 +338,6 @@ Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid = Ext.extend(Ext.grid.GridPanel, {
         Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('activeextgrid', Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid);
-
-// refresh the active ext grid component
-Compass.ErpApp.Shared.ActiveExt.refreshGrid = function(){
-    // get a handle to the active_ext_grid component
-    var active_ext_grid=Ext.getCmp("active_ext_grid");
-    // reload the grid store
-    active_ext_grid.store.reload();
-
-}
 
 // close the window identified by the supplied id
 Compass.ErpApp.Shared.ActiveExt.closeWindow = function(windowId){

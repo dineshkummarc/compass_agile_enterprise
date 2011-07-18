@@ -11,13 +11,19 @@ Ext.ns("Compass.ErpApp.Organizer.Applications.<%= class_name %>");
  */
 Compass.ErpApp.Organizer.Applications.<%= class_name %>.Base = function(config){
 
+    var treeMenuStore = Ext.create('Compass.ErpApp.Organizer.DefaultMenuTreeStore', {
+        url:'./<%= file_name %>/menu',
+        rootText:'Menu',
+        rootIconCls:'icon-content'
+    });
+
    var menuTreePanel = {
         xtype:'defaultmenutree',
         title:'<%= class_name %>',
         menuRootIconCls:'icon-content',
         rootNodeTitle:'Menu',
         treeConfig:{
-            loader:{dataUrl:'./<%= file_name %>/menu'}
+            store:treeMenuStore
         }
     };
 

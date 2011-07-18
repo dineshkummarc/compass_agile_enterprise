@@ -57,19 +57,9 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/user/user_16x16.png', sizingMethod='crop');
 }
 
-.icon-grid {
-    background-image:url( /images/icons/grid/grid_16x16.png ) !important;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/grid/grid_16x16.png', sizingMethod='crop');
-}
-
 .icon-search {
     background-image:url( /images/icons/search/search_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/search/search_16x16.png', sizingMethod='crop');
-}
-
-.icon-globe {
-    background-image:url( /images/icons/globe/globe_16x16.png ) !important;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/globe/globe_16x16.png', sizingMethod='crop');
 }
 
 .icon-info {
@@ -145,6 +135,11 @@
 .icon-undo {
     background-image:url( /images/icons/undo/undo_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/undo/undo_16x16.png', sizingMethod='crop');
+}
+
+.icon-redo {
+    background-image:url( /images/icons/redo/redo_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/redo/redo_16x16.png', sizingMethod='crop');
 }
 
 .icon-grid {
@@ -296,6 +291,16 @@
 .icon-map{
     background-image:url( /images/icons/map/map_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/map/map_16x16.png', sizingMethod='crop');
+}
+
+.icon-arrow-right-blue {
+    background-image:url( /images/icons/arrow_right_blue/arrow_right_blue_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/arrow_right_blue/arrow_right_blue_16x16.png', sizingMethod='crop');
+}
+
+.icon-eye {
+   background-image:url( /images/icons/eye/eye_16x16.png ) !important;
+   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/eye/eye_16x16.png', sizingMethod='crop');
 }
 
 

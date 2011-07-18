@@ -34,7 +34,7 @@
     margin: 4px 0 4px 4px;
     padding: 5px;
     cursor: pointer;
-    width:50px;
+    width:60px;
     height:75px;
 }
 
@@ -100,6 +100,13 @@
 .view-col{
     background-image:url( /images/icons/document_view/document_view_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_view/document_view_16x16.png', sizingMethod='crop');
+    height: 16px;
+    width: 16px;
+}
+
+.info-col{
+    background-image:url( /images/icons/information/information_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/information/information_16x16.png', sizingMethod='crop');
     height: 16px;
     width: 16px;
 }

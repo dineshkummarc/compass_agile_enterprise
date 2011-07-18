@@ -4,18 +4,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Organizer Login</title>
 
-    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
+    <%= include_extjs %>
     <%= stylesheet_link_tag('erp_app/compass-ext-all.css','erp_app/login/main.css') %>
     <%= javascript_include_tag("erp_app/utility.js","erp_app/login/window.js")%>
     
   </head>
-  <body scroll="no" style="background-color:#336699;">
+  <body style="background-color:#336699;">
     <div style="text-align:center;width:100%;">
-      <img src="/images/art/truenorth-compass-combined-timeshare-navy-5.png" />
+      <img alt="Compass Agile Enterprise" src="/images/art/truenorth-compass-combined-timeshare-navy-5.png" />
    </div>
     <script type="text/javascript">
       Ext.onReady(function(){
-          var loginWindow = new Compass.ErpApp.Login.Window({applicationName:'Organizer', redirectTo:'../organizer/', logoutTo:'/erp_app/organizer/login', message:'<%=flash[:error]%>'});
+          var loginWindow = new Compass.ErpApp.Login.Window({title:'Organizer Login', redirectTo:'../organizer/', logoutTo:'/erp_app/organizer/login', message:'<%=flash[:error]%>'});
           loginWindow.show();
       });
     </script>

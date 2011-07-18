@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel",{
+    extend:"Ext.Panel",
+    alias:'widget.usermanagement_personalinfopanel',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -81,5 +83,3 @@ Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel = Ext.exten
         Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('usermanagement_personalinfopanel', Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel);

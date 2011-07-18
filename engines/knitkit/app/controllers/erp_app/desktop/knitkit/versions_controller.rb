@@ -104,6 +104,6 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     website_section.revert_to(version)
     website_section.save!
 
-    render :inline => {:success => true}.to_json
+    render :text => {:success => true, :body_html => website_section.layout}.to_json
   end
 end

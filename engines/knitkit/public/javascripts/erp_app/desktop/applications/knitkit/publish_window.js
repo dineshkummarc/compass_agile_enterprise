@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow = Ext.extend(Ext.Window, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow",{
+    extend:"Ext.window.Window",
+    alias:'widget.knikit_publishwindow',
     initComponent : function() {
 
         this.addEvents(
@@ -53,17 +55,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow = Ext.extend(Ext.Windo
                 listeners:{
                     'click':function(button){
                         var win = button.findParentByType('knikit_publishwindow');
-                        var formPanel = win.findByType('form')[0];
+                        var formPanel = win.query('form')[0];
                         formPanel.getForm().submit({
                             method:'POST',
                             waitMsg:'Publishing...',
                             success:function(form, action){
-                                var response =  Ext.util.JSON.decode(action.response.responseText);
+                                var response =  Ext.decode(action.response.responseText);
                                 win.fireEvent('publish_success', win, response);
                                 win.close();
                             },
                             failure:function(form, action){
-                                var response =  Ext.util.JSON.decode(action.response.responseText);
+                                var response =  Ext.decode(action.response.responseText);
                                 win.fireEvent('publish_failure', win, response);
                                 win.close();
                             }
@@ -76,7 +78,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow = Ext.extend(Ext.Windo
                 listeners:{
                     'click':function(button){
                         var win = button.findParentByType('knikit_publishwindow');
-                        var form = win.findByType('form')[0];
+                        var form = win.query('form')[0];
                         form.getForm().reset();
                         win.close();
                     }
@@ -88,5 +90,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow = Ext.extend(Ext.Windo
     }
     
 });
-
-Ext.reg('knikit_publishwindow', Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow);

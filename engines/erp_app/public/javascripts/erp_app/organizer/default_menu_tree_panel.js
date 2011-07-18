@@ -1,65 +1,66 @@
-Ext.tree.TreeLoader.override({
-    requestData : function(node, callback){
-        if(this.fireEvent("beforeload", this, node, callback) !== false){
-            this.transId = Ext.Ajax.request({
-                method:this.requestMethod,
-                url: this.dataUrl||this.url,
-                success: this.handleResponse,
-                failure: this.handleFailure,
-                timeout: this.timeout || 30000,
-                scope: this,
-                argument: {callback: callback, node: node},
-                params: this.getParams(node)
-            });
-        }else{
-            // if the load is cancelled, make sure we notify
-            // the node that we are done
-            if(typeof callback == "function"){
-                callback();
-            }
-        }
-    }
-}); 
+Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreeStore",{
+    extend:"Ext.data.TreeStore",
+    alias:'widget.defaultmenutreestore',
 
-Ext.ns("Compass.ErpApp.Organizer");
-
-Compass.ErpApp.Organizer.DefaultMenuTreePanel = Ext.extend(Ext.Panel, {
+    constructor: function(config){
+        var fields = [{
+            name:'text'
+        },{
+            name:'leaf'
+        },{
+            name:'iconCls'
+        },{
+            name:'applicationCardId'
+        }];
     
-    treePanel: null,
+        if(config['additionalFields']){
+            fields = fields.concat(config['additionalFields']);
+        }
 
-    initComponent: function() {
-        var menuRoot = new Ext.tree.AsyncTreeNode({
-            text: this.initialConfig['rootNodeTitle'],
-            draggable:false,
-            iconCls:this.initialConfig['menuRootIconCls']
-        });
-
-        var menuTreeConfig = Ext.apply({
-            animate:true,
-            autoScroll:false,
-            frame:true,
-            autoLoad : false,
-            enableDD:false,
-            containerScroll: true,
-            border: false,
-            width: "auto",
-            height: "auto"
-        }, this.initialConfig['treeConfig']);
-        
-        var menuTree = new Ext.tree.TreePanel(menuTreeConfig);
-        this.treePanel = menuTree;
-
-        menuTree.setRootNode(menuRoot);
-
-        this.items = [menuTree];
-
-        menuRoot.expand();
-
-        Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.initComponent.call(this, arguments);
+        config = Ext.apply({
+            autoLoad:true,
+            proxy: {
+                type: 'ajax',
+                url: config['url']
+            },
+            root: {
+                text: config['rootText'],
+                expanded: true,
+                iconCls:config['rootIconCls']
+            },
+            fields:fields
+        }, config);
+        Compass.ErpApp.Organizer.DefaultMenuTreeStore.superclass.constructor.call(this, config);
     }
 });
 
-Ext.reg('defaultmenutree', Compass.ErpApp.Organizer.DefaultMenuTreePanel);
+
+Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
+    extend:"Ext.tree.Panel",
+    alias:'widget.defaultmenutree',
+    treePanel: null,
+    
+    constructor: function(config) {
+        var setActiveCenterItemFn = function(view, record, item, index, e){
+            Compass.ErpApp.Organizer.Layout.setActiveCenterItem(record.data.applicationCardId);
+        };
+
+        if(!config['listeners'])
+            config['listeners'] = {}; 
+        config.listeners['itemclick'] = setActiveCenterItemFn;
+
+        config = Ext.apply({
+            animate:true,
+            autoScroll:false,
+            frame:false,
+            containerScroll:true,
+            height:300,
+            border:false
+        }, config);
+        
+        Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.constructor.call(this, config);
+    }
+});
 
 
 

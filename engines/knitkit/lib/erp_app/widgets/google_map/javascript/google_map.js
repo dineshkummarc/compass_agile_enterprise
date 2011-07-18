@@ -1,13 +1,13 @@
 Compass.ErpApp.Widgets.GoogleMap = {
     addGoogleMap:function(){
-        var addGoogleMapWidgetWindow = new Ext.Window({
+        var addGoogleMapWidgetWindow = Ext.create("Ext.window.Window",{
             layout:'fit',
             width:500,
             title:'Add Login Widget',
             height:130,
             plain: true,
             buttonAlign:'center',
-            items: new Ext.FormPanel({
+            items: Ext.create("Ext.form.Panel",{
                 labelWidth: 100,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
@@ -36,7 +36,7 @@ Compass.ErpApp.Widgets.GoogleMap = {
                 listeners:{
                     'click':function(button){
                         var window = button.findParentByType('window');
-                        var formPanel = window.findByType('form')[0];
+                        var formPanel = window.query('form')[0];
                         var basicForm = formPanel.getForm();
                         var title = basicForm.findField('googleMapWidgetTitle').getValue();
                         var address = basicForm.findField('googleMapWidgetAddress').getValue();
@@ -67,5 +67,5 @@ Compass.ErpApp.Widgets.GoogleMap = {
 Compass.ErpApp.Widgets.AvailableWidgets.push({
     name:'Google Map',
     iconUrl:'/images/icons/map/map_48x48.png',
-    onClick:"Compass.ErpApp.Widgets.GoogleMap.addGoogleMap();"
+    onClick:Compass.ErpApp.Widgets.GoogleMap.addGoogleMap
 });

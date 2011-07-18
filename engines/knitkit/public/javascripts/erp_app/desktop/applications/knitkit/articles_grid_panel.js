@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.grid.EditorGridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.knitkit_blogarticlesgridpanel',
     deleteArticle : function(id){
         var self = this;
         this.initialConfig['centerRegion'].setWindowStatus('Deleting...');
@@ -10,10 +12,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 id:id
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().reload();
+                    self.getStore().load();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error deleting Article');
@@ -60,46 +62,46 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 ]
             },
             listeners:{
-              'show':function(){
-                if (Ext.getCmp('record_id')){                  
-                  Ext.getCmp('record_id').setValue(record.get('id'));
+                'show':function(){
+                    if (Ext.getCmp('record_id')){
+                        Ext.getCmp('record_id').setValue(record.get('id'));
+                    }
+                    if (Ext.getCmp('tag_list')){
+                        Ext.getCmp('tag_list').setValue(record.get('tag_list'));
+                    }
+                    if (Ext.getCmp('content_area')){
+                        Ext.getCmp('content_area').setValue(record.get('content_area'));
+                    }
+                    if (Ext.getCmp('position')){
+                        Ext.getCmp('position').setValue(record.get('position'));
+                    }
                 }
-                if (Ext.getCmp('tag_list')){                  
-                  Ext.getCmp('tag_list').setValue(record.get('tag_list'));
-                }
-                if (Ext.getCmp('content_area')){                  
-                  Ext.getCmp('content_area').setValue(record.get('content_area'));
-                }
-                if (Ext.getCmp('position')){                  
-                  Ext.getCmp('position').setValue(record.get('position'));
-                }
-              }              
             },
             buttons: [{
                 text:'Submit',
                 listeners:{
                     'click':function(button){
                         var window = button.findParentByType('window');
-                        var formPanel = window.findByType('form')[0];
+                        var formPanel = window.query('form')[0];
                         self.initialConfig['centerRegion'].setWindowStatus('Updating article...');                        
                         formPanel.getForm().submit({
                             reset:false,
                             success:function(form, action){
                                 self.initialConfig['centerRegion'].clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj = Ext.decode(action.response.responseText);
                                 if(obj.success){
-                                    self.getStore().reload();
+                                    self.getStore().load();
                                     if(formPanel.getForm().findField('tag_list')){
-                                      tag_list = formPanel.getForm().findField('tag_list').getValue();                       
-                                      record.set('tag_list', tag_list);
+                                        tag_list = formPanel.getForm().findField('tag_list').getValue();
+                                        record.set('tag_list', tag_list);
                                     }
                                     if(formPanel.getForm().findField('content_area')){
-                                      content_area = formPanel.getForm().findField('content_area').getValue();
-                                      record.set('content_area', content_area);
+                                        content_area = formPanel.getForm().findField('content_area').getValue();
+                                        record.set('content_area', content_area);
                                     }
                                     if(formPanel.getForm().findField('position')){
-                                      position = formPanel.getForm().findField('position').getValue();
-                                      record.set('position', position);
+                                        position = formPanel.getForm().findField('position').getValue();
+                                        record.set('position', position);
                                     }                                    
                                     editArticleWindow.close();                                    
                                 }
@@ -135,12 +137,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
         var fm = Ext.form;
 
         // create the Data Store
-        var store = new Ext.data.JsonStore({
-            root: 'data',
-            totalProperty: 'totalCount',
-            idProperty: 'id',
+        var store = Ext.create('Ext.data.Store', {
+            proxy: {
+                type: 'ajax',
+                url:'./knitkit/articles/get/' + sectionId,
+                reader: {
+                    type: 'json',
+                    root: 'data'
+                }
+            },
             remoteSort: true,
-            fields: [
+            fields:[
             {
                 name:'id'
             },
@@ -162,8 +169,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
             {
                 name:'body_html'
             }
-            ],
-            url:'./knitkit/articles/get/' + sectionId
+            ]
         });
 
         var overiddenColumns = [{
@@ -182,22 +188,22 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
         }
 
         overiddenColumns = overiddenColumns.concat([
-          {
-              menuDisabled:true,
-              resizable:false,
-              xtype:'actioncolumn',
-              header:'Edit',
-              align:'center',
-              width:40,
-              items:[{
-                  icon:'/images/icons/edit/edit_16x16.png',
-                  tooltip:'Edit',
-                  handler :function(grid, rowIndex, colIndex){
-                      var rec = grid.getStore().getAt(rowIndex);
-                      self.editArticle(rec);
-                  }
-              }]
-          },
+        {
+            menuDisabled:true,
+            resizable:false,
+            xtype:'actioncolumn',
+            header:'Edit',
+            align:'center',
+            width:40,
+            items:[{
+                icon:'/images/icons/edit/edit_16x16.png',
+                tooltip:'Edit',
+                handler :function(grid, rowIndex, colIndex){
+                    var rec = grid.getStore().getAt(rowIndex);
+                    self.editArticle(rec);
+                }
+            }]
+        },
         {
             menuDisabled:true,
             resizable:false,
@@ -210,7 +216,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                 tooltip:'Edit',
                 handler :function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
-                    self.initialConfig['centerRegion'].editContent(rec.get('title'), rec.get('id'), rec.get('body_html'), grid.initialConfig.siteId, grid.initialConfig.contentType);
+                    self.initialConfig['centerRegion'].editContent(rec.get('title'), rec.get('id'), rec.get('body_html'), grid.ownerCt.initialConfig.siteId, grid.ownerCt.initialConfig.contentType);
                 }
             }]
         },
@@ -228,13 +234,13 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                     var rec = grid.getStore().getAt(rowIndex);
                     var id = rec.get('id');
                     var messageBox = Ext.MessageBox.confirm(
-                      'Confirm', 'Are you sure?', 
-                      function(btn){
-                        if (btn == 'yes'){ 
-                          self.deleteArticle(id);
+                        'Confirm', 'Are you sure?',
+                        function(btn){
+                            if (btn == 'yes'){
+                                self.deleteArticle(id);
+                            }
                         }
-                      }
-                    );
+                        );
                 }
             }]
         }
@@ -284,15 +290,15 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                             listeners:{
                                 'click':function(button){
                                     var window = button.findParentByType('window');
-                                    var formPanel = window.findByType('form')[0];
+                                    var formPanel = window.query('form')[0];
                                     self.initialConfig['centerRegion'].setWindowStatus('Creating article...');
                                     formPanel.getForm().submit({
                                         reset:true,
                                         success:function(form, action){
                                             self.initialConfig['centerRegion'].clearWindowStatus();
-                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                            var obj =  Ext.decode(action.response.responseText);
                                             if(obj.success){
-                                                self.getStore().reload();
+                                                self.getStore().load();
                                             }
                                             else{
                                                 Ext.Msg.alert("Error", obj.msg);
@@ -340,12 +346,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                                 hiddenName:'article_id',
                                 name:'article_id',
                                 loadingText:'Retrieving Articles...',
-                                store:{
-                                    xtype:'jsonstore',
-                                    baseParams:{
-                                        section_id:self.initialConfig['sectionId']
+                                store:Ext.create('Ext.data.Store',{
+                                    proxy:{
+                                      type:'ajax',
+                                      reader:{
+                                          type:'json'
+                                      },
+                                      extraParams:{
+                                         section_id:self.initialConfig['sectionId']
+                                      },
+                                      url:'./knitkit/section/available_articles'
                                     },
-                                    url:'./knitkit/section/available_articles',
                                     fields:[
                                     {
                                         name:'id'
@@ -355,7 +366,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
 
                                     }
                                     ]
-                                },
+                                }),
                                 forceSelection:true,
                                 editable:true,
                                 fieldLabel:'Article',
@@ -374,15 +385,15 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
                             listeners:{
                                 'click':function(button){
                                     var window = button.findParentByType('window');
-                                    var formPanel = window.findByType('form')[0];
+                                    var formPanel = window.query('form')[0];
                                     self.initialConfig['centerRegion'].setWindowStatus('Adding article...');
                                     formPanel.getForm().submit({
                                         reset:true,
                                         success:function(form, action){
                                             self.initialConfig['centerRegion'].clearWindowStatus();
-                                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                            var obj =  Ext.decode(action.response.responseText);
                                             if(obj.success){
-                                                self.getStore().reload();
+                                                self.getStore().load();
                                             }else{
                                                 Ext.Msg.alert("Error", "Error Adding article");
                                             }
@@ -417,7 +428,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel = Ext.extend(Ext.g
     }
 });
 
-Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel",{
+    extend:"Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",
+    alias:'widget.knitkit_pagearticlesgridpanel',
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel.superclass.initComponent.call(this, arguments);
     },
@@ -452,10 +465,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
             addFormHeight:160,
             addFormItems:[
             {
-                 xtype:'hidden',
-                 allowBlank:false,
-                 name:'id',
-                 id: 'record_id'
+                xtype:'hidden',
+                allowBlank:false,
+                name:'id',
+                id: 'record_id'
             },
             {
                 xtype:'textfield',
@@ -476,9 +489,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel = Ext.extend(C
     }
 });
 
-Ext.reg('knitkit_pagearticlesgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel);
-
-Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel = Ext.extend(Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
+    extend:"Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",
+    alias:'widget.knitkit_blogarticlesgridpanel',
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel.superclass.initComponent.call(this, arguments);
     },
@@ -488,19 +501,19 @@ Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel = Ext.extend(C
         config = Ext.apply({
             addFormHeight:200,
             addFormItems:[
-             {
-                  xtype:'hidden',
-                  allowBlank:false,
-                  name:'id',
-                  id: 'record_id'
-              },
-              {
-                  xtype:'textfield',
-                  fieldLabel:'Tags',
-                  allowBlank:true,
-                  name:'tags',
-                  id: 'tag_list'
-              }            
+            {
+                xtype:'hidden',
+                allowBlank:false,
+                name:'id',
+                id: 'record_id'
+            },
+            {
+                xtype:'textfield',
+                fieldLabel:'Tags',
+                allowBlank:true,
+                name:'tags',
+                id: 'tag_list'
+            }
             ],
             columns:[{
                 menuDisabled:true,
@@ -538,7 +551,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel = Ext.extend(C
         Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel.superclass.constructor.call(this, config);
     }
 });
-
-
-Ext.reg('knitkit_blogarticlesgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel);
-
