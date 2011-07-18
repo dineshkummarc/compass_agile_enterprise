@@ -3,7 +3,7 @@ Compass.ErpApp.Widgets.GoogleMap = {
         var addGoogleMapWidgetWindow = Ext.create("Ext.window.Window",{
             layout:'fit',
             width:500,
-            title:'Add Login Widget',
+            title:'Add Map Widget',
             height:130,
             plain: true,
             buttonAlign:'center',
