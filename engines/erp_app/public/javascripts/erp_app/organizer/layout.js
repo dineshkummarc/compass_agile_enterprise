@@ -8,17 +8,17 @@ Compass.ErpApp.Organizer.Layout = function(config){
     var accordionMenuItems = []
 
     var menu = Ext.create('Ext.menu.Menu', {
-                items:[
-                {
-                    text: 'Preferences',
-                    iconCls:'icon-gear',
-                    handler: function(){
-                        var win = Ext.create("Compass.ErpApp.Organizer.PreferencesWindow",{});
-                        win.show();
-                        win.setup();
-                    }
-                }]
-                });
+        items:[
+        {
+            text: 'Preferences',
+            iconCls:'icon-gear',
+            handler: function(){
+                var win = Ext.create("Compass.ErpApp.Organizer.PreferencesWindow",{});
+                win.show();
+                win.setup();
+            }
+        }]
+    });
 
     var toolbar = Ext.create("Ext.toolbar.Toolbar",{
         items: [
@@ -27,7 +27,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
             iconCls:'icon-info',
             menu:menu
         }]
-        });
+    });
 
     this.ToolBar = toolbar;
 
@@ -90,12 +90,11 @@ Compass.ErpApp.Organizer.Layout = function(config){
         {
             xtype:'tbtext',
             html:"Version 1.0"
+        },
+        "->",
+        {
+            xtype:"trayclock"
         }
-        //        "->",
-        //        {
-        //            xtype:'tbtext',
-        //            html:"<img style='height:35px !important; margin-top:-8px !important;' src='/images/erp_app/organizer/compass-footer-logo-rounded.png' />"
-        //        }
         ]
     });
 
