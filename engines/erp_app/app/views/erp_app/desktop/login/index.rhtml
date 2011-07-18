@@ -16,7 +16,7 @@
    </div>
     <script type="text/javascript">
       Ext.onReady(function(){
-          var loginWindow = new Compass.ErpApp.Login.Window({applicationName:'Desktop', redirectTo:'../desktop/', logoutTo:'/erp_app/desktop/login', message:'<%=flash[:error]%>'});
+          var loginWindow = new Compass.ErpApp.Login.Window({title:'Desktop Login', redirectTo:'../desktop/', logoutTo:'/erp_app/desktop/login', message:'<%=flash[:error]%>'});
           loginWindow.show();
       });
     </script>
