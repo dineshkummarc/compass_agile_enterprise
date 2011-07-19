@@ -2,7 +2,7 @@ class AddNewDesktopPreferences
   
   def self.up
     #insert data here
-    unless PreferenceType.find_by_internal_identifier('extjs_theme').nil?
+    if PreferenceType.find_by_internal_identifier('extjs_theme').nil?
     
       extjs_theme_pt = PreferenceType.create(:description => 'Theme', :internal_identifier => 'extjs_theme')
 
