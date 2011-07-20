@@ -94,7 +94,8 @@ class DynamicForm < ActiveRecord::Base
   def to_extjs(options={})
     options[:width] = "'auto'" if options[:width].nil?
 
-    javascript = "<script type=\"text/javascript\">
+    #NOTE: The random nbsp; forces IE to eval this javascript!
+    javascript = "&nbsp<script type=\"text/javascript\">
       Ext.onReady(function(){
           Ext.QuickTips.init();
 
@@ -104,7 +105,7 @@ class DynamicForm < ActiveRecord::Base
               title: '#{self.description}',
               width: #{options[:width]},
               frame: true,
-              bodyStyle:'padding: 5px 5px 0',
+              bodyStyle:'padding: 5px 5px 0;',
               renderTo: 'dynamic_form_target',
               baseParams: {
                 dynamic_form_id: #{self.id},
