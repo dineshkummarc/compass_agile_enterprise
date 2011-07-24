@@ -8,8 +8,13 @@ class CreateDesktopAppOrderManager
       :shortcut_id => 'order_manager-win'
     )
     
-    PreferenceType.iid('desktop_shortcut').preferenced_records << app
-    PreferenceType.iid('autoload_application').preferenced_records << app
+    pt = PreferenceType.iid('desktop_shortcut')
+    pt.preferenced_records << app
+    pt.save
+
+    pt = PreferenceType.iid('autoload_application')
+    pt.preferenced_records << app
+    pt.save
 
     app.save
   end

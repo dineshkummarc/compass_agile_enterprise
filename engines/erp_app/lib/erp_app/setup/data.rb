@@ -166,8 +166,11 @@ class ErpApp::Setup::Data
       :shortcut_id => 'user-management-win'
     )
 
-    desktop_shortcut_pt.preferenced_records << user_mgr_app
-    auto_load_app_pt.preferenced_records << user_mgr_app
+#    desktop_shortcut_pt.preferenced_records << user_mgr_app
+#    auto_load_app_pt.preferenced_records << user_mgr_app
+    user_mgr_app.preference_types << desktop_shortcut_pt
+    user_mgr_app.preference_types << auto_load_app_pt
+    
     user_mgr_app.widgets << role_mgr
     user_mgr_app.widgets << personal_info
     user_mgr_app.widgets << app_mgr
@@ -177,8 +180,10 @@ class ErpApp::Setup::Data
     User.all.each do |user|
       desktop = Desktop.create
       desktop.user = user
-      desktop_backgroud_pt.preferenced_records << desktop
-      extjs_theme_pt.preferenced_records << desktop
+      desktop.preference_types << desktop_backgroud_pt
+      desktop.preference_types << extjs_theme_pt
+#      desktop_backgroud_pt.preferenced_records << desktop
+#      extjs_theme_pt.preferenced_records << desktop
 
       #setup desktop background
       pref = Preference.create(
@@ -227,8 +232,11 @@ class ErpApp::Setup::Data
       :shortcut_id => 'system_management-win'
     )
 
-    desktop_shortcut_pt.preferenced_records << system_management_app
-    auto_load_app_pt.preferenced_records << system_management_app
+    #desktop_shortcut_pt.preferenced_records << system_management_app
+    #auto_load_app_pt.preferenced_records << system_management_app
+    system_management_app.preference_types << desktop_shortcut_pt
+    system_management_app.preference_types << auto_load_app_pt
+
     system_management_app.widgets << app_role_management
     system_management_app.save
 
@@ -240,7 +248,7 @@ class ErpApp::Setup::Data
     #######################################
     #organizer setup
     #######################################
-    
+
     party_contact_mgm_widget = ::Widget.create(
       :description => 'Party Contact Management',
       :icon => 'icon-grid',
@@ -277,7 +285,9 @@ class ErpApp::Setup::Data
     User.all.each do |user|
       organizer = Organizer.create
       organizer.user = user
-      extjs_theme_pt.preferenced_records << organizer
+
+      organizer.preference_types << extjs_theme_pt
+      #extjs_theme_pt.preferenced_records << organizer
 
       #setup organizer theme
       pref = Preference.create(
@@ -305,9 +315,10 @@ class ErpApp::Setup::Data
       :shortcut_id => 'file_manager-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << file_manager_app
-    PreferenceType.iid('autoload_application').preferenced_records << file_manager_app
-
+    #PreferenceType.iid('desktop_shortcut').preferenced_records << file_manager_app
+    #PreferenceType.iid('autoload_application').preferenced_records << file_manager_app
+    file_manager_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    file_manager_app.preference_types << PreferenceType.iid('autoload_application')
     file_manager_app.save
 
     admin = User.find_by_login('admin')
@@ -326,9 +337,10 @@ class ErpApp::Setup::Data
       :shortcut_id => 'scaffold-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << scaffold_app
-    PreferenceType.iid('autoload_application').preferenced_records << scaffold_app
-
+#    PreferenceType.iid('desktop_shortcut').preferenced_records << scaffold_app
+#    PreferenceType.iid('autoload_application').preferenced_records << scaffold_app
+    scaffold_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    scaffold_app.preference_types << PreferenceType.iid('autoload_application')
     scaffold_app.save
 
     admin = User.find_by_login('admin')
@@ -347,9 +359,10 @@ class ErpApp::Setup::Data
       :shortcut_id => 'knitkit-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << knikit_app
-    PreferenceType.iid('autoload_application').preferenced_records << knikit_app
-
+#    PreferenceType.iid('desktop_shortcut').preferenced_records << knikit_app
+#    PreferenceType.iid('autoload_application').preferenced_records << knikit_app
+    knikit_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    knikit_app.preference_types << PreferenceType.iid('autoload_application')
     knikit_app.save
 
     admin = User.find_by_login('admin')
@@ -370,8 +383,10 @@ class ErpApp::Setup::Data
       :shortcut_id => 'rails_db_admin-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << rails_db_admin_app
-    PreferenceType.iid('autoload_application').preferenced_records << rails_db_admin_app
+#    PreferenceType.iid('desktop_shortcut').preferenced_records << rails_db_admin_app
+#    PreferenceType.iid('autoload_application').preferenced_records << rails_db_admin_app
+    rails_db_admin_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    rails_db_admin_app.preference_types << PreferenceType.iid('autoload_application')
 
     rails_db_admin_app.save
 

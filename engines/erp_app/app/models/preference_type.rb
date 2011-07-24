@@ -1,7 +1,7 @@
 class PreferenceType < ActiveRecord::Base
-  has_many_polymorphs :preferenced_records,
-    :through => :valid_preference_types,
-    :from => [:app_containers, :desktops, :organizers, :applications]
+  has_morpheus :preferenced_records,
+               :through => :valid_preference_types,
+               :models => [:app_containers, :desktops, :organizers, :applications]
 
   has_many    :preferences
   belongs_to  :default_preference_option, :foreign_key => 'default_pref_option_id', :class_name => 'PreferenceOption'
