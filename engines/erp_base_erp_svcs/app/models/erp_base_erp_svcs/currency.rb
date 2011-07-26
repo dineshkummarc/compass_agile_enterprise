@@ -1,6 +1,6 @@
 class ErpBaseErpSvcs::Currency < ActiveRecord::Base
 
-  has_morpheus :locales,
+  has_many_polymorphic :locales,
                :through => :currencies_locale,
                :models => [:iso_country_codes]
           

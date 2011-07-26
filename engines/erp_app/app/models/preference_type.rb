@@ -1,5 +1,5 @@
 class PreferenceType < ActiveRecord::Base
-  has_morpheus :preferenced_records,
+  has_many_polymorphic :preferenced_records,
                :through => :valid_preference_types,
                :models => [:app_containers, :desktops, :organizers, :applications]
 
