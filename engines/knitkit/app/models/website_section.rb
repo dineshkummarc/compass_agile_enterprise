@@ -41,11 +41,11 @@ class WebsiteSection < ActiveRecord::Base
 
   def permalinks
     links = [self.permalink]
-    links | self.all_children.collect(&:permalink)
+    links | self.descendants.collect(&:permalink)
   end
 
   def child_by_permalink(path)
-    self.all_children.detect{|child| child.permalink == path}
+    self.descendants.detect{|child| child.permalink == path}
   end
   
   def type

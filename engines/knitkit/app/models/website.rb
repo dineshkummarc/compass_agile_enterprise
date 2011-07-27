@@ -41,7 +41,7 @@ class Website < ActiveRecord::Base
   def all_sections
     sections_array = sections
     sections_array.each do |section|
-      sections_array = sections_array | section.all_children
+      sections_array = sections_array | section.descendants
     end
     sections_array.flatten
   end
