@@ -182,8 +182,6 @@ class ErpApp::Setup::Data
       desktop.user = user
       desktop.preference_types << desktop_backgroud_pt
       desktop.preference_types << extjs_theme_pt
-#      desktop_backgroud_pt.preferenced_records << desktop
-#      extjs_theme_pt.preferenced_records << desktop
 
       #setup desktop background
       pref = Preference.create(
@@ -232,8 +230,6 @@ class ErpApp::Setup::Data
       :shortcut_id => 'system_management-win'
     )
 
-    #desktop_shortcut_pt.preferenced_records << system_management_app
-    #auto_load_app_pt.preferenced_records << system_management_app
     system_management_app.preference_types << desktop_shortcut_pt
     system_management_app.preference_types << auto_load_app_pt
 
@@ -315,8 +311,6 @@ class ErpApp::Setup::Data
       :shortcut_id => 'file_manager-win'
     )
 
-    #PreferenceType.iid('desktop_shortcut').preferenced_records << file_manager_app
-    #PreferenceType.iid('autoload_application').preferenced_records << file_manager_app
     file_manager_app.preference_types << PreferenceType.iid('desktop_shortcut')
     file_manager_app.preference_types << PreferenceType.iid('autoload_application')
     file_manager_app.save
@@ -337,8 +331,6 @@ class ErpApp::Setup::Data
       :shortcut_id => 'scaffold-win'
     )
 
-#    PreferenceType.iid('desktop_shortcut').preferenced_records << scaffold_app
-#    PreferenceType.iid('autoload_application').preferenced_records << scaffold_app
     scaffold_app.preference_types << PreferenceType.iid('desktop_shortcut')
     scaffold_app.preference_types << PreferenceType.iid('autoload_application')
     scaffold_app.save
@@ -359,8 +351,6 @@ class ErpApp::Setup::Data
       :shortcut_id => 'knitkit-win'
     )
 
-#    PreferenceType.iid('desktop_shortcut').preferenced_records << knikit_app
-#    PreferenceType.iid('autoload_application').preferenced_records << knikit_app
     knikit_app.preference_types << PreferenceType.iid('desktop_shortcut')
     knikit_app.preference_types << PreferenceType.iid('autoload_application')
     knikit_app.save
@@ -383,8 +373,6 @@ class ErpApp::Setup::Data
       :shortcut_id => 'rails_db_admin-win'
     )
 
-#    PreferenceType.iid('desktop_shortcut').preferenced_records << rails_db_admin_app
-#    PreferenceType.iid('autoload_application').preferenced_records << rails_db_admin_app
     rails_db_admin_app.preference_types << PreferenceType.iid('desktop_shortcut')
     rails_db_admin_app.preference_types << PreferenceType.iid('autoload_application')
 
