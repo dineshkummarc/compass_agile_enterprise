@@ -448,7 +448,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             iconCls:'icon-add',
                             listeners:{
                                 'click':function(){
-                                    var addSectionWindow = new Ext.Window({
+                                    var addSectionWindow = Ext.create("Ext.window.Window",{
                                         layout:'fit',
                                         width:375,
                                         title:'Add Section',
@@ -553,7 +553,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             iconCls:'icon-edit',
                             listeners:{
                                 'click':function(){
-                                    var updateSectionWindow = new Ext.Window({
+                                    var updateSectionWindow = Ext.create("Ext.window.Window",{
                                         layout:'fit',
                                         width:375,
                                         title:'Update Section',
@@ -738,14 +738,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             iconCls:'icon-edit',
                             listeners:{
                                 'click':function(){
-                                    var editWebsiteWindow = new Ext.Window({
+                                    var editWebsiteWindow = Ext.create("Ext.window.Window",{
                                         layout:'fit',
                                         width:375,
                                         title:'Update Website',
                                         height:250,
                                         plain: true,
                                         buttonAlign:'center',
-                                        items: new Ext.FormPanel({
+                                        items: Ext.create("Ext.form.Panel",{
                                             labelWidth: 110,
                                             frame:false,
                                             bodyStyle:'padding:5px 5px 0',
@@ -908,14 +908,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             iconCls:'icon-add',
                             listeners:{
                                 'click':function(){
-                                    var addHostWindow = new Ext.Window({
+                                    var addHostWindow = Ext.create("Ext.window.Window",{
                                         layout:'fit',
                                         width:310,
                                         title:'Add Host',
                                         height:100,
                                         plain: true,
                                         buttonAlign:'center',
-                                        items: new Ext.FormPanel({
+                                        items: Ext.create("Ext.form.Panel",{
                                             labelWidth: 50,
                                             frame:false,
                                             bodyStyle:'padding:5px 5px 0',
@@ -984,14 +984,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             iconCls:'icon-edit',
                             listeners:{
                                 'click':function(){
-                                    var updateHostWindow = new Ext.Window({
+                                    var updateHostWindow = Ext.create("Ext.window.Window",{
                                         layout:'fit',
                                         width:310,
                                         title:'Update Host',
                                         height:100,
                                         plain: true,
                                         buttonAlign:'center',
-                                        items: new Ext.FormPanel({
+                                        items: Ext.create("Ext.form.Panel",{
                                             labelWidth: 50,
                                             frame:false,
                                             bodyStyle:'padding:5px 5px 0',
@@ -1105,14 +1105,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             iconCls:'icon-add',
                             listeners:{
                                 'click':function(){
-                                    var addSectionWindow = new Ext.Window({
+                                    var addSectionWindow = Ext.create("Ext.window.Window",{
                                         layout:'fit',
                                         width:375,
                                         title:'New Section',
                                         height:150,
                                         plain: true,
                                         buttonAlign:'center',
-                                        items: new Ext.FormPanel({
+                                        items: Ext.create("Ext.form.Panel",{
                                             labelWidth: 110,
                                             frame:false,
                                             bodyStyle:'padding:5px 5px 0',
@@ -1211,14 +1211,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             text:'Add Menu',
                             iconCls:'icon-add',
                             handler:function(btn){
-                                var addMenuWindow = new Ext.Window({
+                                var addMenuWindow = Ext.create("Ext.window.Window",{
                                     layout:'fit',
                                     width:375,
                                     title:'New Menu',
                                     height:100,
                                     plain: true,
                                     buttonAlign:'center',
-                                    items: new Ext.FormPanel({
+                                    items: Ext.create("Ext.form.Panel",{
                                         labelWidth: 50,
                                         frame:false,
                                         bodyStyle:'padding:5px 5px 0',
@@ -1284,7 +1284,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             text:'Add Menu Item',
                             iconCls:'icon-add',
                             handler:function(btn){
-                                var addMenuItemWindow = new Ext.Window({
+                                var addMenuItemWindow = Ext.create("Ext.window.Window",{
                                     layout:'fit',
                                     width:375,
                                     title:'New Menu Item',
@@ -1438,7 +1438,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             text:'Update',
                             iconCls:'icon-edit',
                             handler:function(btn){
-                                var updateMenuWindow = new Ext.Window({
+                                var updateMenuWindow = Ext.create("Ext.window.Window",{
                                     layout:'fit',
                                     width:375,
                                     title:'Update Menu',
@@ -1555,7 +1555,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                             text:'Update Menu Item',
                             iconCls:'icon-edit',
                             handler:function(btn){
-                                var addMenuItemWindow = new Ext.Window({
+                                var addMenuItemWindow = Ext.create("Ext.window.Window",{
                                     layout:'fit',
                                     width:375,
                                     title:'Update Menu Item',
@@ -1830,7 +1830,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                     text:'New Website',
                     iconCls:'icon-add',
                     handler:function(btn){
-                        var addWebsiteWindow = new Ext.Window({
+                        var addWebsiteWindow = Ext.create("Ext.window.Window",{
                             layout:'fit',
                             width:375,
                             title:'New Website',
@@ -1962,7 +1962,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                     text:'Import Website',
                     iconCls:'icon-globe',
                     handler:function(btn){
-                        var importWebsiteWindow = new Ext.Window({
+                        var importWebsiteWindow = Ext.create("Ext.window.Window",{
                             layout:'fit',
                             width:375,
                             title:'Import Website',
