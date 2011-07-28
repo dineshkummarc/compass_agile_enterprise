@@ -108,20 +108,12 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       website_section_hash[:iconCls] = 'icon-blog'
       website_section_hash[:leaf] = true
     else
-      unless website_section.children.empty?
-        website_section_hash[:leaf] = false
-        website_section_hash[:children] = []
-        website_section.positioned_children.each do |child|
-          website_section_hash[:children] << build_section_hash(child, website)
-        end
-      else
-        website_section_hash[:leaf] = true
-      end
-      if website_section_hash[:isSecured]
-        website_section_hash[:iconCls] = 'icon-document_lock'
-      else
-        website_section_hash[:iconCls] = 'icon-document'
-      end
+      website_section_hash[:is_leaf] = false
+      website_section_hash[:children] = []
+      website_section.positioned_children.each do |child|
+        website_section_hash[:children] << build_section_hash(child, website)
+      end unless website_section.children.empty?
+      website_section_hash[:isSecured] ? website_section_hash[:iconCls] = 'icon-document_lock' : website_section_hash[:iconCls] = 'icon-document'
     end
 
     website_section_hash

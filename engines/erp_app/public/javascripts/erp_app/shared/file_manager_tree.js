@@ -12,17 +12,6 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
         the above variable will be set when the context menu is shown.
      */
 
-    findParentNode : function(record){
-        if(record.data.id.toString().indexOf("/") == -1)
-            return null;
-
-        var parentDirectory = ''
-        var paths = record.data.id.split("/");
-        paths.pop();
-        parentDirectory = paths.join('/')
-        return record.store.getAt(record.store.find("id", parentDirectory));
-    },
-
     initComponent: function() {
         Compass.ErpApp.Shared.FileManagerTree.superclass.initComponent.call(this, arguments);
 
@@ -121,14 +110,14 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                 parent_node:newParent.data.id
                             },
                             success: function(response) {
-                                var responseObj =  Ext.decode(response.responseText);
+                                var responseObj = Ext.decode(response.responseText);
                                 msg.hide();
                             //newParent.reload();
                             //Ext.Msg.alert('Status', responseObj.msg);
 
                             },
                             failure: function(response) {
-                                var responseObj =  Ext.decode(response.responseText);
+                                var responseObj = Ext.decode(response.responseText);
                                 msg.hide();
                                 Ext.Msg.alert('Status', responseObj.msg);
                             }
@@ -166,7 +155,6 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                     return false;
                 }
 
-                var parentNode = self.findParentNode(record);
                 self.selectedNode = record;
                 var menuItems = [
                 {
@@ -209,7 +197,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                                 success: function(form, action){
                                                     if(action.result.success){
                                                         store.load({
-                                                            node:parentNode
+                                                            node:record.parentNode
                                                         });
                                                         var window = renameForm.findParentByType('window')
                                                         window.close()

@@ -98,7 +98,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
             ]
         });
 
-        this.availableRolesTree = new Ext.tree.TreePanel({
+        this.availableRolesTree = Ext.create("Ext.tree.TreePanel",{
             store:availableApplicationsStore,
             id:'role_mgt_available_roles',
             animate:false,
@@ -161,7 +161,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
             ]
         });
         
-        this.currentRolesTree = new Ext.tree.TreePanel({
+        this.currentRolesTree = Ext.create("Ext.tree.TreePanel",{
             store:currentApplicationsStore,
             id:'role_mgt_current_roles',
             animate:false,

@@ -41,7 +41,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.FileManager",{
                 xhrUploadUrl:'./file_manager/base/upload_file',
                 border: false,
                 width: 250,
-                height: 300,
                 frame:true,
                 listeners:{
                     'contentLoaded':function(fileManager, record, content){
