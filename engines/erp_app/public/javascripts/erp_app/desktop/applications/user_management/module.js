@@ -113,13 +113,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                 listeners:{
                     'click':function(button){
                         var window = button.findParentByType('window');
-                        var formPanel = window.findByType('form')[0];
+                        var formPanel = window.query('form')[0];
                         self.setWindowStatus('Updating password ...');
                         formPanel.getForm().submit({
                             reset:true,
                             success:function(form, action){
                                 self.clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj =  Ext.decode(action.response.responseText);
                                 if(!obj.success){
                                     Ext.Msg.alert("Error", obj.msg);
                                 }
@@ -127,7 +127,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                             },
                             failure:function(form, action){
                                 self.clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj =  Ext.decode(action.response.responseText);
                                 if(Compass.ErpApp.Utility.isBlank(obj.message)){
                                     Ext.Msg.alert("Error", 'Error updating password.');
                                 }

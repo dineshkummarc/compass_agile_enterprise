@@ -60,7 +60,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPa
                             reset:true,
                             success:function(form, action){
                                 self.clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj =  Ext.decode(action.response.responseText);
                                 if(obj.success){
                                     Ext.Msg.alert("Success", 'Password changed.');
                                 }
@@ -70,7 +70,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPa
                             },
                             failure:function(form, action){
                                 self.clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj =  Ext.decode(action.response.responseText);
                                 if(Compass.ErpApp.Utility.isBlank(obj.message)){
                                     Ext.Msg.alert("Error", 'Error updating password.');
                                 }
