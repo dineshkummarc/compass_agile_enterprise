@@ -15,6 +15,6 @@ class CreateDesktopApp<%=class_name %>
   end
 
   def self.down
-    DesktopApplication.destroy_all(:conditions => ['internal_identifier = ?','hello_world'])
+    DesktopApplication.destroy_all(:conditions => ['internal_identifier = ?','<%=file_name %>'])
   end
 end
