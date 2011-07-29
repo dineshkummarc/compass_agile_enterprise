@@ -139,8 +139,8 @@ class ErpApp::Setup::Data
     notes_grid = ::Widget.create(
       :description => 'Notes',
       :icon => 'icon-documents',
-      :xtype => 'usermanagement_notesgrid',
-      :internal_identifier => 'user_management_notes_grid'
+      :xtype => 'shared_notesgrid',
+      :internal_identifier => 'shared_notes_grid'
     )
 
     notes_grid.roles << Role.iid('admin')
