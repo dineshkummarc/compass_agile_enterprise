@@ -10,6 +10,9 @@ class ErpApp::Setup::Data
     #Organization
     Organization.create(:description => 'TrueNorth')
 
+    #Note Types
+    NoteType.create(:description => 'Basic Note', :internal_identifier => 'basic_note')
+
     #######################################
     #contact purposes
     #######################################
