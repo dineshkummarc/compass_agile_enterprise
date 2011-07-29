@@ -49,14 +49,20 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
     },
 
     /**
-     * load emails for member partyId
+     * load details of party
      */
-    loadContactMechanisms : function(){
+    loadPartyDetails : function(){
         if(this.partyId == null){
             Ext.Msg.alert('Error', 'Member partyId not set');
         }
         else{
-            var contactMechanismGrids = this.query('tabpanel')[0].query('contactmechanismgrid');
+            var tabPanel = this.query('tabpanel')[0];
+
+            var notesGrid = tabPanel.query('shared_notesgrid');
+            if(notesGrid.length > 0)
+                notesGrid[0].updateParty(this.partyId);
+            
+            var contactMechanismGrids = tabPanel.query('contactmechanismgrid');
             var numGrids = contactMechanismGrids.length;
             for(var i=0;i<numGrids;i++){
                 contactMechanismGrids[i].store.proxy.extraParams.party_id = this.partyId;
@@ -364,7 +370,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 var contactsLayoutPanel = view.findParentByType('contactslayout');
                 contactsLayoutPanel.expandContacts();
                 contactsLayoutPanel.setPartyId(id);
-                contactsLayoutPanel.loadContactMechanisms();
+                contactsLayoutPanel.loadPartyDetails();
             }
         }
     };
@@ -382,7 +388,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 var contactsLayoutPanel = view.findParentByType('contactslayout');
                 contactsLayoutPanel.expandContacts();
                 contactsLayoutPanel.setPartyId(id);
-                contactsLayoutPanel.loadContactMechanisms();
+                contactsLayoutPanel.loadPartyDetails();
             }
         }
     };
@@ -407,173 +413,361 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         ]
     });
 
+    var individualsPanelSouthItems = [];
+    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "contactmechanismgrid"))
+    {
+        individualsPanelSouthItems = [
+        {
+            xtype:'contactmechanismgrid',
+            title:'Email Addresses',
+            contactMechanism:'EmailAddress',
+            columns:[
+            {
+                header: 'Email Address',
+                dataIndex: 'email_address',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ],
+            fields:[
+            {
+                name:'email_address'
+            }
+            ],
+            validations:[
+            {
+                type: 'presence',
+                field: 'email_address'
+            }
+            ],
+            contactPurposeStore:contactPurposeStore
+        },
+        {
+            xtype:'contactmechanismgrid',
+            title:'Phone Numbers',
+            contactMechanism:'PhoneNumber',
+            columns:[
+            {
+                header: 'Phone Number',
+                dataIndex: 'phone_number',
+                width:200,
+                editor: {
+                    xtype:'textfield'
+                }
+            }
+            ],
+            fields:[
+            {
+                name:'phone_number'
+            }
+            ],
+            validations:[
+            {
+                type: 'presence',
+                field: 'phone_number'
+            }
+            ],
+            contactPurposeStore:contactPurposeStore
+        },
+        {
+            xtype:'contactmechanismgrid',
+            title:'Postal Addresses',
+            contactMechanism:'PostalAddress',
+            columns:[
+            {
+                header: 'Address Line 1',
+                dataIndex: 'address_line_1',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Address Line 2',
+                dataIndex: 'address_line_2',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'City',
+                dataIndex: 'city',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'State',
+                dataIndex: 'state',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Zip',
+                dataIndex: 'zip',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Country',
+                dataIndex: 'country',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ],
+            fields:[
+            {
+                name: 'address_line_1'
+            },
+            {
+                name: 'address_line_2'
+            },
+            {
+                name: 'city'
+            },
+            {
+                name: 'state'
+            },
+            {
+                name: 'zip'
+            },
+            {
+                name: 'country'
+            }
+            ],
+            validations:[
+            {
+                type: 'presence',
+                field: 'address_line_1'
+            },
+
+            {
+                type: 'presence',
+                field: 'city'
+            },
+
+            {
+                type: 'presence',
+                field: 'state'
+            },
+
+            {
+                type: 'presence',
+                field: 'zip'
+            },
+
+            {
+                type: 'presence',
+                field: 'country'
+            }
+            ],
+            contactPurposeStore:contactPurposeStore
+        }
+        ]
+    }
+
+    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "shared_notesgrid"))
+    {
+        individualsPanelSouthItems.push({
+            xtype:'shared_notesgrid',
+            partyId:0,
+            title:'Notes'
+        });
+    }
+
     var individualsPanel = {
         xtype:'contactslayout',
         id:'individuals_search_grid',
         southComponent:{
             xtype:'tabpanel',
             id:'individualsTabPanel',
-            items:[
-            {
-                xtype:'contactmechanismgrid',
-                title:'Email Addresses',
-                contactMechanism:'EmailAddress',
-                columns:[
-                {
-                    header: 'Email Address',
-                    dataIndex: 'email_address',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name:'email_address'
-                }
-                ],
-                validations:[
-                {
-                    type: 'presence',
-                    field: 'email_address'
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            },
-            {
-                xtype:'contactmechanismgrid',
-                title:'Phone Numbers',
-                contactMechanism:'PhoneNumber',
-                columns:[
-                {
-                    header: 'Phone Number',
-                    dataIndex: 'phone_number',
-                    width:200,
-                    editor: {
-                        xtype:'textfield'
-                    }
-                }
-                ],
-                fields:[
-                {
-                    name:'phone_number'
-                }
-                ],
-                validations:[
-                {
-                    type: 'presence',
-                    field: 'phone_number'
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            },
-            {
-                xtype:'contactmechanismgrid',
-                title:'Postal Addresses',
-                contactMechanism:'PostalAddress',
-                columns:[
-                {
-                    header: 'Address Line 1',
-                    dataIndex: 'address_line_1',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'Address Line 2',
-                    dataIndex: 'address_line_2',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'City',
-                    dataIndex: 'city',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'State',
-                    dataIndex: 'state',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'Zip',
-                    dataIndex: 'zip',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'Country',
-                    dataIndex: 'country',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name: 'address_line_1'
-                },
-                {
-                    name: 'address_line_2'
-                },
-                {
-                    name: 'city'
-                },
-                {
-                    name: 'state'
-                },
-                {
-                    name: 'zip'
-                },
-                {
-                    name: 'country'
-                }
-                ],
-                validations:[
-                {
-                    type: 'presence',
-                    field: 'address_line_1'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'city'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'state'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'zip'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'country'
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            }
-            ]
+            items:individualsPanelSouthItems
         },
         centerComponent:individualsGrid
     };
+
+    var organizationsPanelSouthItems = [];
+    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "contactmechanismgrid"))
+    {
+        organizationsPanelSouthItems = [
+        {
+            xtype:'contactmechanismgrid',
+            title:'Email Addresses',
+            contactMechanism:'EmailAddress',
+            columns:[
+            {
+                header: 'Email Address',
+                dataIndex: 'email_address',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ],
+            fields:[
+            {
+                name:'email_address'
+            }
+            ],
+            validations:[
+            {
+                type: 'presence',
+                field: 'email_address'
+            }
+
+            ],
+            contactPurposeStore:contactPurposeStore
+        },
+        {
+            xtype:'contactmechanismgrid',
+            title:'Phone Numbers',
+            contactMechanism:'PhoneNumber',
+            columns:[
+            {
+                header: 'Phone Number',
+                dataIndex: 'phone_number',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ],
+            fields:[
+            {
+                name:'phone_number'
+            }
+            ],
+            validations:[
+            {
+                type: 'presence',
+                field: 'phone_number'
+            }
+            ],
+            contactPurposeStore:contactPurposeStore
+        },
+        {
+            xtype:'contactmechanismgrid',
+            title:'Postal Addresses',
+            contactMechanism:'PostalAddress',
+            columns:[
+            {
+                header: 'Address Line 1',
+                dataIndex: 'address_line_1',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Address Line 2',
+                dataIndex: 'address_line_2',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'City',
+                dataIndex: 'city',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'State',
+                dataIndex: 'state',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Zip',
+                dataIndex: 'zip',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Country',
+                dataIndex: 'country',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ],
+            fields:[
+            {
+                name: 'address_line_1'
+            },
+            {
+                name: 'address_line_2'
+            },
+            {
+                name: 'city'
+            },
+            {
+                name: 'state'
+            },
+            {
+                name: 'zip'
+            },
+            {
+                name: 'country'
+            }
+            ],
+            validations:[
+            {
+                type: 'presence',
+                field: 'address_line_1'
+            },
+
+            {
+                type: 'presence',
+                field: 'city'
+            },
+
+            {
+                type: 'presence',
+                field: 'state'
+            },
+
+            {
+                type: 'presence',
+                field: 'zip'
+            },
+
+            {
+                type: 'presence',
+                field: 'country'
+            }
+            ],
+            contactPurposeStore:contactPurposeStore
+        }
+        ];
+    }
+
+    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "shared_notesgrid"))
+    {
+        organizationsPanelSouthItems.push({
+            xtype:'shared_notesgrid',
+            partyId:0,
+            title:'Notes'
+        });
+    }
 
     var organizationsPanel = {
         xtype:'contactslayout',
@@ -581,165 +775,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         southComponent:{
             xtype:'tabpanel',
             id:'organizationTabPanel',
-            items:[
-            {
-                xtype:'contactmechanismgrid',
-                title:'Email Addresses',
-                contactMechanism:'EmailAddress',
-                columns:[
-                {
-                    header: 'Email Address',
-                    dataIndex: 'email_address',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name:'email_address'
-                }
-                ],
-                validations:[
-                {
-                    type: 'presence',
-                    field: 'email_address'
-                }
-
-                ],
-                contactPurposeStore:contactPurposeStore
-            },
-            {
-                xtype:'contactmechanismgrid',
-                title:'Phone Numbers',
-                contactMechanism:'PhoneNumber',
-                columns:[
-                {
-                    header: 'Phone Number',
-                    dataIndex: 'phone_number',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name:'phone_number'
-                }
-                ],
-                validations:[
-                {
-                    type: 'presence',
-                    field: 'phone_number'
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            },
-            {
-                xtype:'contactmechanismgrid',
-                title:'Postal Addresses',
-                contactMechanism:'PostalAddress',
-                columns:[
-                {
-                    header: 'Address Line 1',
-                    dataIndex: 'address_line_1',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'Address Line 2',
-                    dataIndex: 'address_line_2',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'City',
-                    dataIndex: 'city',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'State',
-                    dataIndex: 'state',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'Zip',
-                    dataIndex: 'zip',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                },
-                {
-                    header: 'Country',
-                    dataIndex: 'country',
-                    editor: {
-                        xtype:'textfield'
-                    },
-                    width:200
-                }
-                ],
-                fields:[
-                {
-                    name: 'address_line_1'
-                },
-                {
-                    name: 'address_line_2'
-                },
-                {
-                    name: 'city'
-                },
-                {
-                    name: 'state'
-                },
-                {
-                    name: 'zip'
-                },
-                {
-                    name: 'country'
-                }
-                ],
-                validations:[
-                {
-                    type: 'presence',
-                    field: 'address_line_1'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'city'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'state'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'zip'
-                },
-
-                {
-                    type: 'presence',
-                    field: 'country'
-                }
-                ],
-                contactPurposeStore:contactPurposeStore
-            }
-            ]
+            items:organizationsPanelSouthItems
         },
         centerComponent:organizationsGrid
     };

@@ -12,7 +12,7 @@ class ErpApp::Desktop::UserManagement::BaseController < ErpApp::Desktop::BaseCon
       users = User.find(:all, :conditions => ['login like ?', "%#{login}%"])
     end
 
-    ext_json = "{data:#{users.to_json(:only => [:id, :login, :email])}}"
+    ext_json = "{data:#{users.to_json(:only => [:id, :login, :email, :party_id])}}"
 
     render :inline => ext_json
   end

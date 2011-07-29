@@ -136,6 +136,17 @@ class ErpApp::Setup::Data
     app_mgr.roles << Role.iid('admin')
     app_mgr.save
 
+    notes_grid = ::Widget.create(
+      :description => 'Notes',
+      :icon => 'icon-documents',
+      :xtype => 'usermanagement_notesgrid',
+      :internal_identifier => 'user_management_notes_grid'
+    )
+
+    notes_grid.roles << Role.iid('admin')
+    notes_grid.roles << Role.iid('employee')
+    notes_grid.save
+
     role_mgr = ::Widget.create(
       :description => 'Role Management',
       :icon => 'icon-user',
@@ -166,14 +177,13 @@ class ErpApp::Setup::Data
       :shortcut_id => 'user-management-win'
     )
 
-#    desktop_shortcut_pt.preferenced_records << user_mgr_app
-#    auto_load_app_pt.preferenced_records << user_mgr_app
     user_mgr_app.preference_types << desktop_shortcut_pt
     user_mgr_app.preference_types << auto_load_app_pt
     
     user_mgr_app.widgets << role_mgr
     user_mgr_app.widgets << personal_info
     user_mgr_app.widgets << app_mgr
+    user_mgr_app.widgets << notes_grid
     user_mgr_app.save
 
     #created desktop app containers for users
@@ -276,6 +286,7 @@ class ErpApp::Setup::Data
 
     crm_app.widgets << party_contact_mgm_widget
     crm_app.widgets << party_mgm_widget
+    crm_app.widgets << notes_grid
     crm_app.save
 
     User.all.each do |user|
@@ -283,7 +294,6 @@ class ErpApp::Setup::Data
       organizer.user = user
 
       organizer.preference_types << extjs_theme_pt
-      #extjs_theme_pt.preferenced_records << organizer
 
       #setup organizer theme
       pref = Preference.create(

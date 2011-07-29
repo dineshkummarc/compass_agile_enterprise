@@ -393,11 +393,13 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
         {
             header: 'Created',
             dataIndex: 'created_at',
+            renderer: Ext.util.Format.dateRenderer('m/d/Y g:i a'),
             width:120
         },
         {
             header: 'Last Update',
             dataIndex: 'updated_at',
+            renderer: Ext.util.Format.dateRenderer('m/d/Y g:i a'),
             width:120
         }
         ]);

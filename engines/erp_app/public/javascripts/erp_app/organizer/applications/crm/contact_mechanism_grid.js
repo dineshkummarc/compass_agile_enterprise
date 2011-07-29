@@ -31,7 +31,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
                     exception: function(proxy, response, operation){
                         Ext.MessageBox.show({
                             title: 'REMOTE EXCEPTION',
-                            msg: 'Error Saving ' + config.title,
+                            msg: 'Make sure an Individual or Organization is selected' + config.title,
                             icon: Ext.MessageBox.ERROR,
                             buttons: Ext.Msg.OK
                         });
@@ -105,13 +105,13 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
         {
             header: 'Created',
             dataIndex: 'created_at',
-            renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
+            renderer: Ext.util.Format.dateRenderer('m/d/Y g:i a'),
             width:200
         },
         {
             header: 'Last Update',
             dataIndex: 'updated_at',
-            renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
+            renderer: Ext.util.Format.dateRenderer('m/d/Y g:i a'),
             width:200
         }
         ]);

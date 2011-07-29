@@ -46,14 +46,22 @@ Compass.ErpApp.Organizer.Layout = function(config){
             'listeners': {
                 scope:this,
                 'click':function() {
-                    var defaultLogoutUrl = Compass.ErpApp.Utility.getRootUrl() + 'erp_app/logout';
-                    if(Compass.ErpApp.Utility.isBlank(this.layoutConfig) || Compass.ErpApp.Utility.isBlank(this.layoutConfig["logout_url"])){
-                        window.location = defaultLogoutUrl;
-                    }
-                    else{
-                        window.location = this.layoutConfig["logout_url"];
-                    }
-                    
+                    Ext.MessageBox.confirm('Confirm', 'Are you sure you want to logout?', function(btn){
+                        if(btn == 'no'){
+                            return false;
+                        }
+                        else
+                        if(btn == 'yes')
+                        {
+                            var defaultLogoutUrl = Compass.ErpApp.Utility.getRootUrl() + 'erp_app/logout';
+                            if(Compass.ErpApp.Utility.isBlank(this.layoutConfig) || Compass.ErpApp.Utility.isBlank(this.layoutConfig["logout_url"])){
+                                window.location = defaultLogoutUrl;
+                            }
+                            else{
+                                window.location = this.layoutConfig["logout_url"];
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -65,6 +73,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
         margins : '0 0 0 0',
         layout: 'card',
         activeItem : 0,
+        frame:false,
         minsize : 300,
         items : []
     });

@@ -9,7 +9,7 @@ module TechServices::Utils::DefaultNestedSetMethods
     end
 
     def leaf
-        unknown? ||  children.size == 0
+      children.size == 0
     end
 
     def to_json_with_leaf(options = {})

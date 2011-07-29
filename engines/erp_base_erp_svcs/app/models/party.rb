@@ -9,6 +9,10 @@ class Party < ActiveRecord::Base
   #* End
   #************************************************************************************************
 
+  #add the has_notes mixin to party so a pary can have notes
+  has_notes
+
+  has_many :created_notes, :class_name => 'Note', :foreign_key => 'created_by_id'
 
   # business_party is an interface implemented by the class Party
   # that provides access to the person or organization that is

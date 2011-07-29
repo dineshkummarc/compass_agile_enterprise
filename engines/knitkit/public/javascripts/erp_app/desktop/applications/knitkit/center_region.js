@@ -197,7 +197,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 ['Link','Unlink','Anchor'],
                 ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
                 '/',
-                ['Styles','Format','Font','FontSize'],
                 ['TextColor','BGColor'],
                 ['Maximize', 'ShowBlocks','-','About']
                 ]
@@ -309,7 +308,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 ['Link','Unlink','Anchor'],
                 ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
                 '/',
-                ['Styles','Format','Font','FontSize'],
                 ['TextColor','BGColor'],
                 ['Maximize', 'ShowBlocks','-','About']
                 ]

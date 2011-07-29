@@ -160,14 +160,23 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                 var response = Ext.decode(responseObject.responseText);
                 self.tabPanel.removeAll();
 
-                var hasAccess = ErpApp.Authentication.RoleManager.hasAccessToWidget(self.widget_roles, "usermanagement_personalinfopanel");
-                if(hasAccess)
+                if(ErpApp.Authentication.RoleManager.hasAccessToWidget(self.widget_roles, "usermanagement_personalinfopanel"))
                 {
                     self.initialConfig.tabPanel.add(
                     {
                         xtype:'usermanagement_personalinfopanel',
                         entityInfo:response.entityInfo,
                         entityType:response.entityType
+                    });
+                }
+
+                if(ErpApp.Authentication.RoleManager.hasAccessToWidget(self.widget_roles, "shared_notesgrid"))
+                {
+                    self.initialConfig.tabPanel.add(
+                    {
+                        xtype:'shared_notesgrid',
+                        partyId:rec.get('party_id'),
+                        title:'Notes'
                     });
                 }
 
@@ -228,6 +237,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             {
                 name: 'id',
                 type: 'int'
+            },
+            {
+                name:'party_id',
+                type:'int'
             },
             {
                 name: 'login',
@@ -295,8 +308,17 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                     icon:'/images/icons/delete/delete_16x16.png',
                     tooltip:'Delete',
                     handler :function(grid, rowIndex, colIndex){
-                        var rec = grid.getStore().getAt(rowIndex);
-                        self.deleteUser(rec);
+                        Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this user?', function(btn){
+                            if(btn == 'no'){
+                                return false;
+                            }
+                            else
+                            if(btn == 'yes')
+                            {
+                                var rec = grid.getStore().getAt(rowIndex);
+                                self.deleteUser(rec);
+                            }
+                        });
                     }
                 }]
             });

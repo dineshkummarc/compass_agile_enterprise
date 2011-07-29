@@ -15,6 +15,7 @@ class Desktop < ActiveRecord::Base
     #setup desktop background
     desktop_backgroud_pt = PreferenceType.iid('desktop_background')
     desktop_backgroud_pt.preferenced_records << self
+    desktop_backgroud_pt.save
 
     pref = Preference.create(
       :preference_type => desktop_backgroud_pt,
@@ -29,6 +30,7 @@ class Desktop < ActiveRecord::Base
     #setup theme
     theme_pt = PreferenceType.iid('extjs_theme')
     theme_pt.preferenced_records << self
+    theme_pt.save
 
     pref = Preference.create(
       :preference_type => theme_pt,
