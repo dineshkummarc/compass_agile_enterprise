@@ -1,7 +1,7 @@
 class AddNotesWidget
   
   def self.up
-    if(::Widget.find_by_internal_identifier('user_management_notes_grid').nil?)
+    if(::Widget.find_by_internal_identifier('shared_notes_grid').nil?)
       #create basic Note Type
       NoteType.create(:description => 'Basic Note', :internal_identifier => 'basic_note')
 
