@@ -523,6 +523,48 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     xtype:'textfield'
                 },
                 width:200
+            },
+            {
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
+                header:'Map It',
+                align:'center',
+                width:60,
+                items:[{
+                    icon:'/images/icons/map/map_16x16.png',
+                    tooltip:'Revert',
+                    handler :function(grid, rowIndex, colIndex){
+                        var rec = grid.getStore().getAt(rowIndex);
+                        var addressLines;
+                        if(Compass.ErpApp.Utility.isBlank(rec.get('address_line_2'))){
+                            addressLines = rec.get('address_line_1');
+                        }
+                        else{
+                            addressLines = rec.get('address_line_1') + ' ,' + rec.get('address_line_2');
+                        }
+                        
+                        var fullAddress = addressLines + ' ,' + rec.get('city') + ' ,' + rec.get('state') + ' ,' + rec.get('zip') + ' ,' + rec.get('country')
+                        var mapwin = Ext.create('Ext.Window', {
+                            layout: 'fit',
+                            title: addressLines,
+                            width:450,
+                            height:450,
+                            border: false,
+                            items: {
+                                xtype: 'googlemappanel',
+                                zoomLevel: 17,
+                                mapType:'hybrid',
+                                dropPins: [{
+                                    address: fullAddress,
+                                    center:true,
+                                    title:addressLines
+                                }]
+                            }
+                        });
+                        mapwin.show();
+                    }
+                }]
             }
             ],
             fields:[
@@ -707,6 +749,48 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                     xtype:'textfield'
                 },
                 width:200
+            },
+            {
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
+                header:'Map It',
+                align:'center',
+                width:60,
+                items:[{
+                    icon:'/images/icons/map/map_16x16.png',
+                    tooltip:'Revert',
+                    handler :function(grid, rowIndex, colIndex){
+                        var rec = grid.getStore().getAt(rowIndex);
+                        var addressLines;
+                        if(Compass.ErpApp.Utility.isBlank(rec.get('address_line_2'))){
+                            addressLines = rec.get('address_line_1');
+                        }
+                        else{
+                            addressLines = rec.get('address_line_1') + ' ,' + rec.get('address_line_2');
+                        }
+
+                        var fullAddress = addressLines + ' ,' + rec.get('city') + ' ,' + rec.get('state') + ' ,' + rec.get('zip') + ' ,' + rec.get('country')
+                        var mapwin = Ext.create('Ext.Window', {
+                            layout: 'fit',
+                            title: addressLines,
+                            width:450,
+                            height:450,
+                            border: false,
+                            items: {
+                                xtype: 'googlemappanel',
+                                zoomLevel: 17,
+                                mapType:'hybrid',
+                                dropPins: [{
+                                    address: fullAddress,
+                                    center:true,
+                                    title:addressLines
+                                }]
+                            }
+                        });
+                        mapwin.show();
+                    }
+                }]
             }
             ],
             fields:[

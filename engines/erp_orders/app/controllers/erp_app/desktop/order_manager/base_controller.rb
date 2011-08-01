@@ -13,8 +13,9 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
     buyer_role = BizTxnPartyRoleType.find_by_internal_identifier('buyer')
     result = {:success => true, :orders => [], :totalCount => 0, :results => 0}
     
-    sort         = params[:sort] || 'created_at'
-    dir          = params[:dir] || 'DESC'
+    sort_hash     = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort         = sort_hash[:sort] || 'created_at'
+    dir          = sort_hash[:dir] || 'DESC'
     limit        = params[:limit] || 50
     start        = params[:start] || 0
     party_id     = params[:party_id]

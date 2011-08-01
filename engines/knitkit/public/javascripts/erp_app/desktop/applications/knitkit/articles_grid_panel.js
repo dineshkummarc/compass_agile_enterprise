@@ -497,6 +497,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
     },
 
     constructor : function(config) {
+        var self = this;
         config['contentType'] = 'blog';
         config = Ext.apply({
             addFormHeight:200,
@@ -527,7 +528,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
                     tooltip:'Comments',
                     handler :function(grid, rowIndex, colIndex){
                         var rec = grid.getStore().getAt(rowIndex);
-                        grid.initialConfig['centerRegion'].viewContentComments(rec.get('id'), rec.get('title') + ' - Comments');
+                        self.initialConfig['centerRegion'].viewContentComments(rec.get('id'), rec.get('title') + ' - Comments');
                     }
                 }]
             },{
@@ -542,7 +543,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
                     tooltip:'Edit',
                     handler :function(grid, rowIndex, colIndex){
                         var rec = grid.getStore().getAt(rowIndex);
-                        grid.initialConfig['centerRegion'].editExcerpt(rec.get('title') + ' - Excerpt', rec.get('id'), rec.get('excerpt_html'), grid.initialConfig.siteId);
+                        self.initialConfig['centerRegion'].editExcerpt(rec.get('title') + ' - Excerpt', rec.get('id'), rec.get('excerpt_html'), self.initialConfig.siteId);
                     }
                 }]
             }]

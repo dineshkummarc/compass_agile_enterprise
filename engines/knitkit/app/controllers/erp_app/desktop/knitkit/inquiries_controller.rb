@@ -34,9 +34,9 @@ class ErpApp::Desktop::Knitkit::InquiriesController < ErpApp::Desktop::Knitkit::
     WebsiteInquiry.include_root_in_json = false
 
     website = Website.find(params[:website_id])
-
-    sort  = params[:sort] || 'created_at'
-    dir   = params[:dir] || 'DESC'
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'created_at'
+    dir  = sort_hash[:direction] || 'DESC'
 
     WebsiteInquiry.class_eval do
       def username

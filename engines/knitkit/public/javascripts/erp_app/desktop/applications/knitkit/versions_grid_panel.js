@@ -112,7 +112,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",{
 
         config['columns'] = overiddenColumns;
         config = Ext.apply({
-            bbar: new Ext.PagingToolbar({
+            bbar: Ext.create("Ext.PagingToolbar",{
                 pageSize: 15,
                 store: config['store'],
                 displayInfo: true,

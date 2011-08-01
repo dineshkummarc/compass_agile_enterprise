@@ -1,5 +1,5 @@
 Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
-    extend:"Ext.Panel",
+    extend:"Ext.panel.Panel",
     alias:'widget.knitkit_centerregion',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
@@ -55,7 +55,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     editSectionLayout : function(sectionName, websiteId, websiteSectionId, content, tbarItems){
         var self = this;
 
-        var centerRegionLayout = Ext.create("Ext.Panel",{
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:sectionName,
             closable:true,
@@ -208,7 +208,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             }
         });
 
-        var centerRegionLayout = Ext.create("Ext.Panel",{
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -321,7 +321,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
         ckEditor.setValue(content);
 
-        var centerRegionLayout = Ext.create("Ext.Panel",{
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -365,7 +365,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     viewContentComments : function(contentId, title){
         var self = this;
-        var centerRegionLayout = Ext.create("Ext.Panel",{
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -395,7 +395,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     viewWebsiteInquiries : function(websiteId, title){
         var self = this;
-        var centerRegionLayout = Ext.create("Ext.Panel",{
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title + " Inquiries",
             closable:true,

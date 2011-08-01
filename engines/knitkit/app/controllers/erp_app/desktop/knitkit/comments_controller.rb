@@ -3,8 +3,9 @@ class ErpApp::Desktop::Knitkit::CommentsController < ErpApp::Desktop::Knitkit::B
     Comment.include_root_in_json = false
 
     content = Content.find(params[:content_id])
-    sort  = params[:sort] || 'created_at'
-    dir   = params[:dir] || 'DESC'
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'created_at'
+    dir  = sort_hash[:direction] || 'DESC'
     limit = params[:limit] || 10
     start = params[:start] || 0
 

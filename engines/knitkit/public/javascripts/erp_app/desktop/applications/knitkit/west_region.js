@@ -2051,7 +2051,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
         this.contentsCardPanel.add({
             xtype:xtype,
             title:node.data.siteName + ' - ' + node.data.text + ' - Articles',
-            sectionId:node.id.split('_')[1],
+            sectionId:node.data.id.split('_')[1],
             centerRegion:this.initialConfig['module'].centerRegion,
             siteId:node.data.siteId
         });
