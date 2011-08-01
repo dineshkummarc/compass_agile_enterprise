@@ -11,8 +11,10 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.
 	# Add identity_url if you want users to be able to update their OpenID identity
   attr_accessible :login, :email, :email_confirmation, :name, :first_name, :last_name, :password, :password_confirmation, :invitation_token, :activation_code, :activation_code_expires_at
-
+  
   belongs_to :party
+  validates_uniqueness_of :party_id
+  
   attr_accessible :roles
   has_and_belongs_to_many :roles
   
