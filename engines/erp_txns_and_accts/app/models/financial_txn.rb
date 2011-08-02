@@ -4,9 +4,11 @@ class FinancialTxn < ActiveRecord::Base
   has_many   :charge_line_payment_txns, :as => :payment_txn,  :dependent => :destroy
   has_many   :charge_lines, :through => :charge_line_payment_txns
   belongs_to :money, :class_name => "ErpBaseErpSvcs::Money"
+  has_many   :payments
   	
   def authorize(credit_card, gateway_wrapper, gateway_options={})
     credit_card[:charge_amount] = self.money.amount
+    gateway_options[:charge_lines] = self.charge_lines
     gateway_options[:debug] = true
 
     result = gateway_wrapper.authorize(credit_card, gateway_options)
@@ -23,6 +25,7 @@ class FinancialTxn < ActiveRecord::Base
 
   def purchase(credit_card, gateway_wrapper, gateway_options={})
     credit_card[:charge_amount] = self.money.amount
+    gateway_options[:charge_lines] = self.charge_lines
     gateway_options[:debug] = true
 
     result = gateway_wrapper.purchase(credit_card, gateway_options)
@@ -43,6 +46,7 @@ class FinancialTxn < ActiveRecord::Base
     #only capture this payment if it was authorized
     if !payment.nil? && payment.current_state.to_sym == :authorized
       credit_card[:charge_amount] = self.money.amount
+      gateway_options[:charge_lines] = self.charge_lines
       gateway_options[:debug] = true
 
       result = gateway_wrapper.capture(credit_card, payment, gateway_options)
@@ -56,6 +60,7 @@ class FinancialTxn < ActiveRecord::Base
     #only reverse this payment if it was authorized
     if !payment.nil? && payment.current_state.to_sym == :authorized
       credit_card[:charge_amount] = self.money.amount
+      gateway_options[:charge_lines] = self.charge_lines
       gateway_options[:debug] = true
 
       result = gateway_wrapper.full_reverse_of_authorization(credit_card, payment, gateway_options)

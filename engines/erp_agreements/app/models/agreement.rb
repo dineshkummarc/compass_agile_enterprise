@@ -1,9 +1,10 @@
 class Agreement < ActiveRecord::Base
 
-	belongs_to	:agreement_type
-	has_many 	:agreement_items
-	has_many 	:agreement_party_roles
-	has_many	:parties, :through => :agreement_party_roles
+	belongs_to :agreement_type
+	has_many 	 :agreement_items
+	has_many 	 :agreement_party_roles
+	has_many	 :parties, :through => :agreement_party_roles
+  belongs_to :agreement_record, :polymorphic => true, :dependent => :destroy
   
   def agreement_relationships
     AgreementRelationship.find(:all, :conditions => ['agreement_id_from = ? OR agreement_id_to = ?',id,id])
@@ -15,6 +16,10 @@ class Agreement < ActiveRecord::Base
  
   def to_label
       to_s
+  end
+
+  def find_parties_by_role(role)
+    self.parties.find(:all, :include => [:agreement_party_roles], :conditions => ["role_type_id = ?", role.id])
   end
 
   def get_item_by_item_type_internal_identifier(item_type_internal_identifier)
