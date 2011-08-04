@@ -13,7 +13,6 @@ class AddNotes < ActiveRecord::Migration
       add_index :notes, [:noted_record_id, :noted_record_type]
       add_index :notes, :note_type_id
       add_index :notes, :created_by_id
-      add_index :notes, :content
     end
 
     unless table_exists?(:note_types)
@@ -31,7 +30,7 @@ class AddNotes < ActiveRecord::Migration
         t.timestamps
       end
 
-      add_index :note_types, [:note_type_record_id, :note_type_record_type]
+      add_index :note_types, [:note_type_record_id, :note_type_record_type], :name => 'note_type_record_idx'
     end
   end
 
