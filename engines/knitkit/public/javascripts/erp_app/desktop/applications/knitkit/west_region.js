@@ -734,7 +734,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                         });
 
                         items.push({
-                            text:'Update Site',
+                            text:'Update Website',
                             iconCls:'icon-edit',
                             listeners:{
                                 'click':function(){
@@ -789,7 +789,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 fieldLabel:'Auto Activate Publication?',
                                                 name:'auto_activate_publication',
                                                 id:'knitkitAutoActivatePublication',
-                                                width:100,
                                                 columns:2,
                                                 items:[
                                                 {
