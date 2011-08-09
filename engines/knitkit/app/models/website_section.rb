@@ -1,4 +1,6 @@
 class WebsiteSection < ActiveRecord::Base
+  before_destroy :destroy_content # only destroy content that does not belong to another section, NOTE: this callback must be declared before the associations or it will not work
+
   acts_as_versioned
   self.non_versioned_columns =  self.non_versioned_columns | %w{parent_id lft rgt}
 
@@ -87,6 +89,19 @@ class WebsiteSection < ActiveRecord::Base
                   ORDER BY tags.name ASC"
 
     ActsAsTaggableOn::Tag.find_by_sql(sql)
+  end
+
+  # Before destroying a section look at content belonging to this section
+  # and destroy content that does NOT belong to any OTHER section
+  def destroy_content
+    self.contents.each do |c|
+      puts "ID: #{c.id}"
+      puts "count: #{c.website_sections.count}"
+      unless c.website_sections.count > 1
+        puts "destroying"
+        c.destroy 
+      end
+    end    
   end
 
   private
