@@ -1,5 +1,0 @@
-var ErpBaseErpSvcs = function() {
-    return {
-
-    };
- }();

@@ -1,3 +1,0 @@
-class DesktopApplication < Application
-  
-end
