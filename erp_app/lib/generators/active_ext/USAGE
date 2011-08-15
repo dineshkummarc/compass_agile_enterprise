@@ -1,0 +1,14 @@
+###########################################
+##### Active Ext Generator            #####
+###########################################
+
+script/generate active_ext [model_name], [container (desktop | organizer)], [application_name] (optional fields) [plugin to create in]
+
+Will create
+
+1. controller in application's folder
+2. javascript file in application's javascripts folder
+3. append to erp_app routes file
+
+
+

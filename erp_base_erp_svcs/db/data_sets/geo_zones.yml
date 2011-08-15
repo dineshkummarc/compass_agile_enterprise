@@ -1,0 +1,705 @@
+---
+- zone_code: AL
+  geo_country_id: "223"
+  zone_name: Alabama
+
+- zone_code: AK
+  geo_country_id: "223"
+  zone_name: Alaska
+
+- zone_code: AS
+  geo_country_id: "223"
+  zone_name: American Samoa
+
+- zone_code: AZ
+  geo_country_id: "223"
+  zone_name: Arizona
+
+- zone_code: AR
+  geo_country_id: "223"
+  zone_name: Arkansas
+
+- zone_code: AF
+  geo_country_id: "223"
+  zone_name: Armed Forces
+
+- zone_code: CA
+  geo_country_id: "223"
+  zone_name: California
+
+- zone_code: CO
+  geo_country_id: "223"
+  zone_name: Colorado
+
+- zone_code: CT
+  geo_country_id: "223"
+  zone_name: Connecticut
+
+- zone_code: DE
+  geo_country_id: "223"
+  zone_name: Delaware
+
+- zone_code: DC
+  geo_country_id: "223"
+  zone_name: District of Columbia
+
+- zone_code: FM
+  geo_country_id: "223"
+  zone_name: Federated States Of Micronesia
+
+- zone_code: FL
+  geo_country_id: "223"
+  zone_name: Florida
+
+- zone_code: GA
+  geo_country_id: "223"
+  zone_name: Georgia
+
+- zone_code: GU
+  geo_country_id: "223"
+  zone_name: Guam
+
+- zone_code: HI
+  geo_country_id: "223"
+  zone_name: Hawaii
+
+- zone_code: ID
+  geo_country_id: "223"
+  zone_name: Idaho
+
+- zone_code: IL
+  geo_country_id: "223"
+  zone_name: Illinois
+
+- zone_code: IN
+  geo_country_id: "223"
+  zone_name: Indiana
+
+- zone_code: IA
+  geo_country_id: "223"
+  zone_name: Iowa
+
+- zone_code: KS
+  geo_country_id: "223"
+  zone_name: Kansas
+
+- zone_code: KY
+  geo_country_id: "223"
+  zone_name: Kentucky
+
+- zone_code: LA
+  geo_country_id: "223"
+  zone_name: Louisiana
+
+- zone_code: ME
+  geo_country_id: "223"
+  zone_name: Maine
+
+- zone_code: MH
+  geo_country_id: "223"
+  zone_name: Marshall Islands
+
+- zone_code: MD
+  geo_country_id: "223"
+  zone_name: Maryland
+
+- zone_code: MA
+  geo_country_id: "223"
+  zone_name: Massachusetts
+
+- zone_code: MI
+  geo_country_id: "223"
+  zone_name: Michigan
+
+- zone_code: MN
+  geo_country_id: "223"
+  zone_name: Minnesota
+
+- zone_code: MS
+  geo_country_id: "223"
+  zone_name: Mississippi
+
+- zone_code: MO
+  geo_country_id: "223"
+  zone_name: Missouri
+
+- zone_code: MT
+  geo_country_id: "223"
+  zone_name: Montana
+
+- zone_code: NE
+  geo_country_id: "223"
+  zone_name: Nebraska
+
+- zone_code: NV
+  geo_country_id: "223"
+  zone_name: Nevada
+
+- zone_code: NH
+  geo_country_id: "223"
+  zone_name: New Hampshire
+
+- zone_code: NJ
+  geo_country_id: "223"
+  zone_name: New Jersey
+
+- zone_code: NM
+  geo_country_id: "223"
+  zone_name: New Mexico
+
+- zone_code: NY
+  geo_country_id: "223"
+  zone_name: New York
+
+- zone_code: NC
+  geo_country_id: "223"
+  zone_name: North Carolina
+
+- zone_code: ND
+  geo_country_id: "223"
+  zone_name: North Dakota
+
+- zone_code: MP
+  geo_country_id: "223"
+  zone_name: Northern Mariana Islands
+
+- zone_code: OH
+  geo_country_id: "223"
+  zone_name: Ohio
+
+- zone_code: OK
+  geo_country_id: "223"
+  zone_name: Oklahoma
+
+- zone_code: OR
+  geo_country_id: "223"
+  zone_name: Oregon
+
+- zone_code: PW
+  geo_country_id: "223"
+  zone_name: Palau
+
+- zone_code: PA
+  geo_country_id: "223"
+  zone_name: Pennsylvania
+
+- zone_code: PR
+  geo_country_id: "223"
+  zone_name: Puerto Rico
+
+- zone_code: RI
+  geo_country_id: "223"
+  zone_name: Rhode Island
+
+- zone_code: SC
+  geo_country_id: "223"
+  zone_name: South Carolina
+
+- zone_code: SD
+  geo_country_id: "223"
+  zone_name: South Dakota
+
+- zone_code: TN
+  geo_country_id: "223"
+  zone_name: Tennessee
+
+- zone_code: TX
+  geo_country_id: "223"
+  zone_name: Texas
+
+- zone_code: UT
+  geo_country_id: "223"
+  zone_name: Utah
+
+- zone_code: VT
+  geo_country_id: "223"
+  zone_name: Vermont
+
+- zone_code: VI
+  geo_country_id: "223"
+  zone_name: Virgin Islands
+
+- zone_code: VA
+  geo_country_id: "223"
+  zone_name: Virginia
+
+- zone_code: WA
+  geo_country_id: "223"
+  zone_name: Washington
+
+- zone_code: WV
+  geo_country_id: "223"
+  zone_name: West Virginia
+
+- zone_code: WI
+  geo_country_id: "223"
+  zone_name: Wisconsin
+
+- zone_code: WY
+  geo_country_id: "223"
+  zone_name: Wyoming
+
+- zone_code: AB
+  geo_country_id: "38"
+  zone_name: Alberta
+
+- zone_code: BC
+  geo_country_id: "38"
+  zone_name: British Columbia
+
+- zone_code: MB
+  geo_country_id: "38"
+  zone_name: Manitoba
+
+- zone_code: NF
+  geo_country_id: "38"
+  zone_name: Newfoundland
+
+- zone_code: NB
+  geo_country_id: "38"
+  zone_name: New Brunswick
+
+- zone_code: NS
+  geo_country_id: "38"
+  zone_name: Nova Scotia
+
+- zone_code: NT
+  geo_country_id: "38"
+  zone_name: Northwest Territories
+
+- zone_code: NU
+  geo_country_id: "38"
+  zone_name: Nunavut
+
+- zone_code: "ON"
+  geo_country_id: "38"
+  zone_name: Ontario
+
+- zone_code: PE
+  geo_country_id: "38"
+  zone_name: Prince Edward Island
+
+- zone_code: QC
+  geo_country_id: "38"
+  zone_name: Quebec
+
+- zone_code: SK
+  geo_country_id: "38"
+  zone_name: Saskatchewan
+
+- zone_code: YT
+  geo_country_id: "38"
+  zone_name: Yukon Territory
+
+- zone_code: NDS
+  geo_country_id: "81"
+  zone_name: Niedersachsen
+
+- zone_code: BAW
+  geo_country_id: "81"
+  zone_name: "Baden-W\xC3\xBCrttemberg"
+
+- zone_code: BAY
+  geo_country_id: "81"
+  zone_name: Bayern
+
+- zone_code: BER
+  geo_country_id: "81"
+  zone_name: Berlin
+
+- zone_code: BRG
+  geo_country_id: "81"
+  zone_name: Brandenburg
+
+- zone_code: BRE
+  geo_country_id: "81"
+  zone_name: Bremen
+
+- zone_code: HAM
+  geo_country_id: "81"
+  zone_name: Hamburg
+
+- zone_code: HES
+  geo_country_id: "81"
+  zone_name: Hessen
+
+- zone_code: MEC
+  geo_country_id: "81"
+  zone_name: Mecklenburg-Vorpommern
+
+- zone_code: NRW
+  geo_country_id: "81"
+  zone_name: Nordrhein-Westfalen
+
+- zone_code: RHE
+  geo_country_id: "81"
+  zone_name: Rheinland-Pfalz
+
+- zone_code: SAR
+  geo_country_id: "81"
+  zone_name: Saarland
+
+- zone_code: SAS
+  geo_country_id: "81"
+  zone_name: Sachsen
+
+- zone_code: SAC
+  geo_country_id: "81"
+  zone_name: Sachsen-Anhalt
+
+- zone_code: SCN
+  geo_country_id: "81"
+  zone_name: Schleswig-Holstein
+
+- zone_code: THE
+  geo_country_id: "81"
+  zone_name: "Th\xC3\xBCringen"
+
+- zone_code: WI
+  geo_country_id: "14"
+  zone_name: Wien
+
+- zone_code: "NO"
+  geo_country_id: "14"
+  zone_name: "Nieder\xC3\xB6sterreich"
+
+- zone_code: OO
+  geo_country_id: "14"
+  zone_name: "Ober\xC3\xB6sterreich"
+
+- zone_code: SB
+  geo_country_id: "14"
+  zone_name: Salzburg
+
+- zone_code: KN
+  geo_country_id: "14"
+  zone_name: "K\xC3\xA4rnten"
+
+- zone_code: ST
+  geo_country_id: "14"
+  zone_name: Steiermark
+
+- zone_code: TI
+  geo_country_id: "14"
+  zone_name: Tirol
+
+- zone_code: BL
+  geo_country_id: "14"
+  zone_name: Burgenland
+
+- zone_code: VB
+  geo_country_id: "14"
+  zone_name: Voralberg
+
+- zone_code: AG
+  geo_country_id: "204"
+  zone_name: Aargau
+
+- zone_code: AI
+  geo_country_id: "204"
+  zone_name: Appenzell Innerrhoden
+
+- zone_code: AR
+  geo_country_id: "204"
+  zone_name: Appenzell Ausserrhoden
+
+- zone_code: BE
+  geo_country_id: "204"
+  zone_name: Bern
+
+- zone_code: BL
+  geo_country_id: "204"
+  zone_name: Basel-Landschaft
+
+- zone_code: BS
+  geo_country_id: "204"
+  zone_name: Basel-Stadt
+
+- zone_code: FR
+  geo_country_id: "204"
+  zone_name: Freiburg
+
+- zone_code: GE
+  geo_country_id: "204"
+  zone_name: Genf
+
+- zone_code: GL
+  geo_country_id: "204"
+  zone_name: Glarus
+
+- zone_code: JU
+  geo_country_id: "204"
+  zone_name: "Graub\xC3\xBCnden"
+
+- zone_code: JU
+  geo_country_id: "204"
+  zone_name: Jura
+
+- zone_code: LU
+  geo_country_id: "204"
+  zone_name: Luzern
+
+- zone_code: NE
+  geo_country_id: "204"
+  zone_name: Neuenburg
+
+- zone_code: NW
+  geo_country_id: "204"
+  zone_name: Nidwalden
+
+- zone_code: OW
+  geo_country_id: "204"
+  zone_name: Obwalden
+
+- zone_code: SG
+  geo_country_id: "204"
+  zone_name: St. Gallen
+
+- zone_code: SH
+  geo_country_id: "204"
+  zone_name: Schaffhausen
+
+- zone_code: SO
+  geo_country_id: "204"
+  zone_name: Solothurn
+
+- zone_code: SZ
+  geo_country_id: "204"
+  zone_name: Schwyz
+
+- zone_code: TG
+  geo_country_id: "204"
+  zone_name: Thurgau
+
+- zone_code: TI
+  geo_country_id: "204"
+  zone_name: Tessin
+
+- zone_code: UR
+  geo_country_id: "204"
+  zone_name: Uri
+
+- zone_code: VD
+  geo_country_id: "204"
+  zone_name: Waadt
+
+- zone_code: VS
+  geo_country_id: "204"
+  zone_name: Wallis
+
+- zone_code: ZG
+  geo_country_id: "204"
+  zone_name: Zug
+
+- zone_code: ZH
+  geo_country_id: "204"
+  zone_name: "Z\xC3\xBCrich"
+
+- zone_code: "A Coru\xC3\xB1a"
+  geo_country_id: "195"
+  zone_name: "A Coru\xC3\xB1a"
+
+- zone_code: Alava
+  geo_country_id: "195"
+  zone_name: Alava
+
+- zone_code: Albacete
+  geo_country_id: "195"
+  zone_name: Albacete
+
+- zone_code: Alicante
+  geo_country_id: "195"
+  zone_name: Alicante
+
+- zone_code: Almeria
+  geo_country_id: "195"
+  zone_name: Almeria
+
+- zone_code: Asturias
+  geo_country_id: "195"
+  zone_name: Asturias
+
+- zone_code: Avila
+  geo_country_id: "195"
+  zone_name: Avila
+
+- zone_code: Badajoz
+  geo_country_id: "195"
+  zone_name: Badajoz
+
+- zone_code: Baleares
+  geo_country_id: "195"
+  zone_name: Baleares
+
+- zone_code: Barcelona
+  geo_country_id: "195"
+  zone_name: Barcelona
+
+- zone_code: Burgos
+  geo_country_id: "195"
+  zone_name: Burgos
+
+- zone_code: Caceres
+  geo_country_id: "195"
+  zone_name: Caceres
+
+- zone_code: Cadiz
+  geo_country_id: "195"
+  zone_name: Cadiz
+
+- zone_code: Cantabria
+  geo_country_id: "195"
+  zone_name: Cantabria
+
+- zone_code: Castellon
+  geo_country_id: "195"
+  zone_name: Castellon
+
+- zone_code: Ceuta
+  geo_country_id: "195"
+  zone_name: Ceuta
+
+- zone_code: Ciudad Real
+  geo_country_id: "195"
+  zone_name: Ciudad Real
+
+- zone_code: Cordoba
+  geo_country_id: "195"
+  zone_name: Cordoba
+
+- zone_code: Cuenca
+  geo_country_id: "195"
+  zone_name: Cuenca
+
+- zone_code: Girona
+  geo_country_id: "195"
+  zone_name: Girona
+
+- zone_code: Granada
+  geo_country_id: "195"
+  zone_name: Granada
+
+- zone_code: Guadalajara
+  geo_country_id: "195"
+  zone_name: Guadalajara
+
+- zone_code: Guipuzcoa
+  geo_country_id: "195"
+  zone_name: Guipuzcoa
+
+- zone_code: Huelva
+  geo_country_id: "195"
+  zone_name: Huelva
+
+- zone_code: Huesca
+  geo_country_id: "195"
+  zone_name: Huesca
+
+- zone_code: Jaen
+  geo_country_id: "195"
+  zone_name: Jaen
+
+- zone_code: La Rioja
+  geo_country_id: "195"
+  zone_name: La Rioja
+
+- zone_code: Las Palmas
+  geo_country_id: "195"
+  zone_name: Las Palmas
+
+- zone_code: Leon
+  geo_country_id: "195"
+  zone_name: Leon
+
+- zone_code: Lleida
+  geo_country_id: "195"
+  zone_name: Lleida
+
+- zone_code: Lugo
+  geo_country_id: "195"
+  zone_name: Lugo
+
+- zone_code: Madrid
+  geo_country_id: "195"
+  zone_name: Madrid
+
+- zone_code: Malaga
+  geo_country_id: "195"
+  zone_name: Malaga
+
+- zone_code: Melilla
+  geo_country_id: "195"
+  zone_name: Melilla
+
+- zone_code: Murcia
+  geo_country_id: "195"
+  zone_name: Murcia
+
+- zone_code: Navarra
+  geo_country_id: "195"
+  zone_name: Navarra
+
+- zone_code: Ourense
+  geo_country_id: "195"
+  zone_name: Ourense
+
+- zone_code: Palencia
+  geo_country_id: "195"
+  zone_name: Palencia
+
+- zone_code: Pontevedra
+  geo_country_id: "195"
+  zone_name: Pontevedra
+
+- zone_code: Salamanca
+  geo_country_id: "195"
+  zone_name: Salamanca
+
+- zone_code: Santa Cruz de Tenerife
+  geo_country_id: "195"
+  zone_name: Santa Cruz de Tenerife
+
+- zone_code: Segovia
+  geo_country_id: "195"
+  zone_name: Segovia
+
+- zone_code: Sevilla
+  geo_country_id: "195"
+  zone_name: Sevilla
+
+- zone_code: Soria
+  geo_country_id: "195"
+  zone_name: Soria
+
+- zone_code: Tarragona
+  geo_country_id: "195"
+  zone_name: Tarragona
+
+- zone_code: Teruel
+  geo_country_id: "195"
+  zone_name: Teruel
+
+- zone_code: Toledo
+  geo_country_id: "195"
+  zone_name: Toledo
+
+- zone_code: Valencia
+  geo_country_id: "195"
+  zone_name: Valencia
+
+- zone_code: Valladolid
+  geo_country_id: "195"
+  zone_name: Valladolid
+
+- zone_code: Vizcaya
+  geo_country_id: "195"
+  zone_name: Vizcaya
+
+- zone_code: Zamora
+  geo_country_id: "195"
+  zone_name: Zamora
+
+- zone_code: Zaragoza
+  geo_country_id: "195"
+  zone_name: Zaragoza
+

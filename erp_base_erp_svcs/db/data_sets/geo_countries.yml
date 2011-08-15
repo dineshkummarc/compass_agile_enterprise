@@ -1,0 +1,2952 @@
+--- 
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Afghanistan
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AF
+    iso_code_3: AFG
+    id: "1"
+    display: "1"
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Albania
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AL
+    iso_code_3: ALB
+    id: "2"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Algeria
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: DZ
+    iso_code_3: DZA
+    id: "3"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: American Samoa
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AS
+    iso_code_3: ASM
+    id: "4"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Andorra
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AD
+    iso_code_3: AND
+    id: "5"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Angola
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AO
+    iso_code_3: AGO
+    id: "6"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Anguilla
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AI
+    iso_code_3: AIA
+    id: "7"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Antarctica
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AQ
+    iso_code_3: ATA
+    id: "8"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Antigua
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AG
+    iso_code_3: ATG
+    id: "9"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Argentina
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AR
+    iso_code_3: ARG
+    id: "10"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Armenia
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AM
+    iso_code_3: ARM
+    id: "11"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Aruba
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AW
+    iso_code_3: ABW
+    id: "12"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Australia
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AU
+    iso_code_3: AUS
+    id: "13"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Austria
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AT
+    iso_code_3: AUT
+    id: "14"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Azerbaijan
+    created_at: 2010-01-22 19:42:22
+    external_id: 
+    iso_code_2: AZ
+    iso_code_3: AZE
+    id: "15"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bahamas
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BS
+    iso_code_3: BHS
+    id: "16"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bahrain
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BH
+    iso_code_3: BHR
+    id: "17"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bangladesh
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BD
+    iso_code_3: BGD
+    id: "18"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Barbados
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BB
+    iso_code_3: BRB
+    id: "19"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Belarus
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BY
+    iso_code_3: BLR
+    id: "20"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Belgium
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BE
+    iso_code_3: BEL
+    id: "21"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Belize
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BZ
+    iso_code_3: BLZ
+    id: "22"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Benin
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BJ
+    iso_code_3: BEN
+    id: "23"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bermuda
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BM
+    iso_code_3: BMU
+    id: "24"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bhutan
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BT
+    iso_code_3: BTN
+    id: "25"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bolivia
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BO
+    iso_code_3: BOL
+    id: "26"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bosnia and Herzegowina
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BA
+    iso_code_3: BIH
+    id: "27"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Botswana
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BW
+    iso_code_3: BWA
+    id: "28"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bouvet Island
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BV
+    iso_code_3: BVT
+    id: "29"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Brazil
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BR
+    iso_code_3: BRA
+    id: "30"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: British Indian Ocean Territory
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: IO
+    iso_code_3: IOT
+    id: "31"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Brunei Darussalam
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BN
+    iso_code_3: BRN
+    id: "32"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Bulgaria
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BG
+    iso_code_3: BGR
+    id: "33"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Burkina Faso
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BF
+    iso_code_3: BFA
+    id: "34"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Burundi
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: BI
+    iso_code_3: BDI
+    id: "35"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cambodia
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: KH
+    iso_code_3: KHM
+    id: "36"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cameroon
+    created_at: 2010-01-22 19:42:23
+    external_id: 
+    iso_code_2: CM
+    iso_code_3: CMR
+    id: "37"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Canada
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CA
+    iso_code_3: CAN
+    id: "38"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cape Verde
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CV
+    iso_code_3: CPV
+    id: "39"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cayman Islands
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: KY
+    iso_code_3: CYM
+    id: "40"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Central African Republic
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CF
+    iso_code_3: CAF
+    id: "41"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Chad
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: TD
+    iso_code_3: TCD
+    id: "42"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Chile
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CL
+    iso_code_3: CHL
+    id: "43"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: China
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CN
+    iso_code_3: CHN
+    id: "44"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Christmas Island
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CX
+    iso_code_3: CXR
+    id: "45"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cocos (Keeling) Islands
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CC
+    iso_code_3: CCK
+    id: "46"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Colombia
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CO
+    iso_code_3: COL
+    id: "47"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Comoros
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: KM
+    iso_code_3: COM
+    id: "48"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Congo
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CG
+    iso_code_3: COG
+    id: "49"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cook Islands
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CK
+    iso_code_3: COK
+    id: "50"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Costa Rica
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CR
+    iso_code_3: CRI
+    id: "51"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cote DIvoire
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CI
+    iso_code_3: CIV
+    id: "52"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Croatia
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: HR
+    iso_code_3: HRV
+    id: "53"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cuba
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CU
+    iso_code_3: CUB
+    id: "54"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Cyprus
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CY
+    iso_code_3: CYP
+    id: "55"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Czech Republic
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: CZ
+    iso_code_3: CZE
+    id: "56"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Denmark
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: DK
+    iso_code_3: DNK
+    id: "57"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Djibouti
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: DJ
+    iso_code_3: DJI
+    id: "58"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Dominica
+    created_at: 2010-01-22 19:42:24
+    external_id: 
+    iso_code_2: DM
+    iso_code_3: DMA
+    id: "59"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Dominican Republic
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: DO
+    iso_code_3: DOM
+    id: "60"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Ecuador
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: EC
+    iso_code_3: ECU
+    id: "62"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Egypt
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: EG
+    iso_code_3: EGY
+    id: "63"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: El Salvador
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: SV
+    iso_code_3: SLV
+    id: "64"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Equatorial Guinea
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: GQ
+    iso_code_3: GNQ
+    id: "65"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Eritrea
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: ER
+    iso_code_3: ERI
+    id: "66"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Estonia
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: EE
+    iso_code_3: EST
+    id: "67"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Ethiopia
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: ET
+    iso_code_3: ETH
+    id: "68"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Falkland Islands (Malvinas)
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: FK
+    iso_code_3: FLK
+    id: "69"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Faroe Islands
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: FO
+    iso_code_3: FRO
+    id: "70"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Fiji
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: FJ
+    iso_code_3: FJI
+    id: "71"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Finland
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: FI
+    iso_code_3: FIN
+    id: "72"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: France
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: FR
+    iso_code_3: FRA
+    id: "73"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: French Guiana
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: GF
+    iso_code_3: GUF
+    id: "75"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: French Polynesia
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: PF
+    iso_code_3: PYF
+    id: "76"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: French Southern Territories
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: TF
+    iso_code_3: ATF
+    id: "77"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Gabon
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: GA
+    iso_code_3: GAB
+    id: "78"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Gambia
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: GM
+    iso_code_3: GMB
+    id: "79"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Georgia
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: GE
+    iso_code_3: GEO
+    id: "80"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Germany
+    created_at: 2010-01-22 19:42:25
+    external_id: 
+    iso_code_2: DE
+    iso_code_3: DEU
+    id: "81"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Ghana
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GH
+    iso_code_3: GHA
+    id: "82"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Gibraltar
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GI
+    iso_code_3: GIB
+    id: "83"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Greece
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GR
+    iso_code_3: GRC
+    id: "84"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Greenland
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GL
+    iso_code_3: GRL
+    id: "85"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Grenada
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GD
+    iso_code_3: GRD
+    id: "86"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guadeloupe
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GP
+    iso_code_3: GLP
+    id: "87"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guam
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GU
+    iso_code_3: GUM
+    id: "88"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guatemala
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GT
+    iso_code_3: GTM
+    id: "89"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guinea
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GN
+    iso_code_3: GIN
+    id: "90"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guinea-bissau
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GW
+    iso_code_3: GNB
+    id: "91"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guyana
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: GY
+    iso_code_3: GUY
+    id: "92"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Haiti
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: HT
+    iso_code_3: HTI
+    id: "93"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Heard and Mc Donald Islands
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: HM
+    iso_code_3: HMD
+    id: "94"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Honduras
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: HN
+    iso_code_3: HND
+    id: "95"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Hong Kong
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: HK
+    iso_code_3: HKG
+    id: "96"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Hungary
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: HU
+    iso_code_3: HUN
+    id: "97"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Iceland
+    created_at: 2010-01-22 19:42:26
+    external_id: 
+    iso_code_2: IS
+    iso_code_3: ISL
+    id: "98"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: India
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: IN
+    iso_code_3: IND
+    id: "99"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Indonesia
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: ID
+    iso_code_3: IDN
+    id: "100"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Iran, Islamic Republic o
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: IR
+    iso_code_3: IRN
+    id: "101"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Iraq
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: IQ
+    iso_code_3: IRQ
+    id: "102"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Ireland
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: IE
+    iso_code_3: IRL
+    id: "103"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Israel
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: IL
+    iso_code_3: ISR
+    id: "104"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Italy
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: IT
+    iso_code_3: ITA
+    id: "105"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Jamaica
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: JM
+    iso_code_3: JAM
+    id: "106"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Japan
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: JP
+    iso_code_3: JPN
+    id: "107"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Jordan
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: JO
+    iso_code_3: JOR
+    id: "108"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Kazakhstan
+    created_at: 2010-01-22 19:42:27
+    external_id: 
+    iso_code_2: KZ
+    iso_code_3: KAZ
+    id: "109"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Kenya
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: KE
+    iso_code_3: KEN
+    id: "110"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Kiribati
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: KI
+    iso_code_3: KIR
+    id: "111"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Korea, Democratic People's Republic of"
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: KP
+    iso_code_3: PRK
+    id: "112"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Korea, Republic of"
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: KR
+    iso_code_3: KOR
+    id: "113"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Kuwait
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: KW
+    iso_code_3: KWT
+    id: "114"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Kyrgyzstan
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: KG
+    iso_code_3: KGZ
+    id: "115"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Lao Peoples Democratic Republic
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LA
+    iso_code_3: LAO
+    id: "116"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Latvia
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LV
+    iso_code_3: LVA
+    id: "117"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Lebanon
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LB
+    iso_code_3: LBN
+    id: "118"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Lesotho
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LS
+    iso_code_3: LSO
+    id: "119"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Liberia
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LR
+    iso_code_3: LBR
+    id: "120"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Libyan Arab Jamahiriya
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LY
+    iso_code_3: LBY
+    id: "121"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Liechtenstein
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LI
+    iso_code_3: LIE
+    id: "122"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Lithuania
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LT
+    iso_code_3: LTU
+    id: "123"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Luxembourg
+    created_at: 2010-01-22 19:42:28
+    external_id: 
+    iso_code_2: LU
+    iso_code_3: LUX
+    id: "124"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Macao
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MO
+    iso_code_3: MAC
+    id: "125"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Macedonia, The Former Yugoslav Republic of"
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MK
+    iso_code_3: MKD
+    id: "126"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Madagascar
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MG
+    iso_code_3: MDG
+    id: "127"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Malawi
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MW
+    iso_code_3: MWI
+    id: "128"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Malaysia
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MY
+    iso_code_3: MYS
+    id: "129"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Maldives
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MV
+    iso_code_3: MDV
+    id: "130"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mali
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: ML
+    iso_code_3: MLI
+    id: "131"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Malta
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MT
+    iso_code_3: MLT
+    id: "132"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Marshall Islands
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MH
+    iso_code_3: MHL
+    id: "133"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Martinique
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MQ
+    iso_code_3: MTQ
+    id: "134"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mauritania
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MR
+    iso_code_3: MRT
+    id: "135"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mauritius
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MU
+    iso_code_3: MUS
+    id: "136"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mayotte
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: YT
+    iso_code_3: MYT
+    id: "137"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mexico
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MX
+    iso_code_3: MEX
+    id: "138"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Micronesia, Federated States of"
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: FM
+    iso_code_3: FSM
+    id: "139"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Moldova, Republic of"
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MD
+    iso_code_3: MDA
+    id: "140"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Monaco
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MC
+    iso_code_3: MCO
+    id: "141"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mongolia
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MN
+    iso_code_3: MNG
+    id: "142"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Montserrat
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MS
+    iso_code_3: MSR
+    id: "143"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Morocco
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MA
+    iso_code_3: MAR
+    id: "144"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Mozambique
+    created_at: 2010-01-22 19:42:29
+    external_id: 
+    iso_code_2: MZ
+    iso_code_3: MOZ
+    id: "145"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Myanmar
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: MM
+    iso_code_3: MMR
+    id: "146"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Namibia
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NA
+    iso_code_3: NAM
+    id: "147"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Nauru
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NR
+    iso_code_3: NRU
+    id: "148"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Nepal
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NP
+    iso_code_3: NPL
+    id: "149"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Netherlands
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NL
+    iso_code_3: NLD
+    id: "150"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: New Caledonia
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NC
+    iso_code_3: NCL
+    id: "152"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: New Zealand
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NZ
+    iso_code_3: NZL
+    id: "153"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Nicaragua
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NI
+    iso_code_3: NIC
+    id: "154"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Niger
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NE
+    iso_code_3: NER
+    id: "155"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Nigeria
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NG
+    iso_code_3: NGA
+    id: "156"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Niue
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NU
+    iso_code_3: NIU
+    id: "157"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Norfolk Island
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: NF
+    iso_code_3: NFK
+    id: "158"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Northern Mariana Islands
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: MP
+    iso_code_3: MNP
+    id: "159"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Norway
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: "NO"
+    iso_code_3: NOR
+    id: "160"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Oman
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: OM
+    iso_code_3: OMN
+    id: "161"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Pakistan
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: PK
+    iso_code_3: PAK
+    id: "162"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Palau
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: PW
+    iso_code_3: PLW
+    id: "163"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Panama
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: PA
+    iso_code_3: PAN
+    id: "164"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Papua New Guinea
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: PG
+    iso_code_3: PNG
+    id: "165"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Paraguay
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: PY
+    iso_code_3: PRY
+    id: "166"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Peru
+    created_at: 2010-01-22 19:42:30
+    external_id: 
+    iso_code_2: PE
+    iso_code_3: PER
+    id: "167"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Philippines
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: PH
+    iso_code_3: PHL
+    id: "168"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Pitcairn
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: PN
+    iso_code_3: PCN
+    id: "169"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Poland
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: PL
+    iso_code_3: POL
+    id: "170"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Portugal
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: PT
+    iso_code_3: PRT
+    id: "171"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Puerto Rico
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: PR
+    iso_code_3: PRI
+    id: "172"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Qatar
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: QA
+    iso_code_3: QAT
+    id: "173"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Reunion
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: RE
+    iso_code_3: REU
+    id: "174"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Romania
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: RO
+    iso_code_3: ROM
+    id: "175"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Russian Federation
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: RU
+    iso_code_3: RUS
+    id: "176"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Rwanda
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: RW
+    iso_code_3: RWA
+    id: "177"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saint Kitts and Nevis
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: KN
+    iso_code_3: KNA
+    id: "178"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saint Lucia
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: LC
+    iso_code_3: LCA
+    id: "179"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saint Vincent and the Grenadines
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: VC
+    iso_code_3: VCT
+    id: "180"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Samoa
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: WS
+    iso_code_3: WSM
+    id: "181"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: San Marino
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: SM
+    iso_code_3: SMR
+    id: "182"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Sao Tome and Principe
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: ST
+    iso_code_3: STP
+    id: "183"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saudi Arabia
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: SA
+    iso_code_3: SAU
+    id: "184"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Senegal
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: SN
+    iso_code_3: SEN
+    id: "185"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Seychelles
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: SC
+    iso_code_3: SYC
+    id: "186"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Sierra Leone
+    created_at: 2010-01-22 19:42:31
+    external_id: 
+    iso_code_2: SL
+    iso_code_3: SLE
+    id: "187"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Singapore
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SG
+    iso_code_3: SGP
+    id: "188"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Slovakia
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SK
+    iso_code_3: SVK
+    id: "189"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Slovenia
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SI
+    iso_code_3: SVN
+    id: "190"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Solomon Islands
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SB
+    iso_code_3: SLB
+    id: "191"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Somalia
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SO
+    iso_code_3: SOM
+    id: "192"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: South Africa
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: ZA
+    iso_code_3: ZAF
+    id: "193"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: South Georgia and the South Sandwich Islands
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: GS
+    iso_code_3: SGS
+    id: "194"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Spain
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: ES
+    iso_code_3: ESP
+    id: "195"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Sri Lanka
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: LK
+    iso_code_3: LKA
+    id: "196"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saint Helena, Ascension and Tristan da Cunha
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SH
+    iso_code_3: SHN
+    id: "197"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saint Pierre and Miquelon
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: PM
+    iso_code_3: SPM
+    id: "198"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Sudan
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SD
+    iso_code_3: SDN
+    id: "199"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Suriname
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SR
+    iso_code_3: SUR
+    id: "200"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Svalbard and Jan Mayen
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SJ
+    iso_code_3: SJM
+    id: "201"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Swaziland
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SZ
+    iso_code_3: SWZ
+    id: "202"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Sweden
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SE
+    iso_code_3: SWE
+    id: "203"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Switzerland
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: CH
+    iso_code_3: CHE
+    id: "204"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Syrian Arab Republic
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: SY
+    iso_code_3: SYR
+    id: "205"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Taiwan
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: TW
+    iso_code_3: TWN
+    id: "206"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Tajikistan
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: TJ
+    iso_code_3: TJK
+    id: "207"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Tanzania, United Republic of"
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: TZ
+    iso_code_3: TZA
+    id: "208"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Thailand
+    created_at: 2010-01-22 19:42:32
+    external_id: 
+    iso_code_2: TH
+    iso_code_3: THA
+    id: "209"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Togo
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TG
+    iso_code_3: TGO
+    id: "210"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Tokelau
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TK
+    iso_code_3: TKL
+    id: "211"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Tonga
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TO
+    iso_code_3: TON
+    id: "212"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Trinidad and Tobago
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TT
+    iso_code_3: TTO
+    id: "213"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Tunisia
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TN
+    iso_code_3: TUN
+    id: "214"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Turkey
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TR
+    iso_code_3: TUR
+    id: "215"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Turkmenistan
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TM
+    iso_code_3: TKM
+    id: "216"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Turks and Caicos Islands
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TC
+    iso_code_3: TCA
+    id: "217"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Tuvalu
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: TV
+    iso_code_3: TUV
+    id: "218"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Uganda
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: UG
+    iso_code_3: UGA
+    id: "219"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Ukraine
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: UA
+    iso_code_3: UKR
+    id: "220"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: United Arab Emirates
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: AE
+    iso_code_3: ARE
+    id: "221"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: United Kingdom
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: GB
+    iso_code_3: GBR
+    id: "222"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: United States
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: US
+    iso_code_3: USA
+    id: "223"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: United States Minor Outlying Islands
+    created_at: 2010-01-22 19:42:33
+    external_id: 
+    iso_code_2: UM
+    iso_code_3: UMI
+    id: "224"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Uruguay
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: UY
+    iso_code_3: URY
+    id: "225"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Uzbekistan
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: UZ
+    iso_code_3: UZB
+    id: "226"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Vanuatu
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: VU
+    iso_code_3: VUT
+    id: "227"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Holy See (Vatican City State)
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: VA
+    iso_code_3: VAT
+    id: "228"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Venezuela
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: VE
+    iso_code_3: VEN
+    id: "229"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Viet Nam
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: VN
+    iso_code_3: VNM
+    id: "230"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Virgin Islands, British
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: VG
+    iso_code_3: VGB
+    id: "231"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Virgin Islands, U.S.
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: VI
+    iso_code_3: VIR
+    id: "232"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Wallis and Futuna
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: WF
+    iso_code_3: WLF
+    id: "233"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Western Sahara
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: EH
+    iso_code_3: ESH
+    id: "234"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Yemen
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: YE
+    iso_code_3: YEM
+    id: "235"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Zambia
+    created_at: 2010-01-22 19:42:34
+    external_id: 
+    iso_code_2: ZM
+    iso_code_3: ZMB
+    id: "238"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Zimbabwe
+    created_at: 2010-01-22 19:42:35
+    external_id: 
+    iso_code_2: ZW
+    iso_code_3: ZWE
+    id: "239"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Saint Martin
+    created_at: 2010-09-02 19:42:35
+    external_id: 
+    iso_code_2: MF
+    iso_code_3: MAF
+    id: "240"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Aland Islands
+    created_at: 2010-09-02 19:42:35
+    external_id: 
+    iso_code_2: AX
+    iso_code_3: ALA
+    id: "241"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Congo, Democratic Republic of the"
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: CD
+    iso_code_3: COD
+    id: "242"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Guernsey
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: GG
+    iso_code_3: GGY
+    id: "243"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Isle of Man
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: IM
+    iso_code_3: IMN
+    id: "244"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Jersey
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: JE
+    iso_code_3: JEY
+    id: "245"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Montenegro
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: ME
+    iso_code_3: MNE
+    id: "246"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: "Palestinian Territory, Occupied"
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: PS
+    iso_code_3: PSE
+    id: "247"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Timor-Leste
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: TL
+    iso_code_3: TLS
+    id: "248"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Serbia
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: RS
+    iso_code_3: SRB
+    id: "249"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry 
+  attributes: 
+    name: Pitcairn
+    created_at: 2010-09-29 19:42:35
+    external_id: 
+    iso_code_2: PN
+    iso_code_3: PCN
+    id: "250"
+    display: "1"
+    
+  attributes_cache: {}
+
+- !ruby/object:GeoCountry
+  attributes:
+    name: Saint Barthelemy
+    created_at: 2010-09-29 19:42:35
+    external_id:
+    iso_code_2: BL
+    iso_code_3: BLM
+    id: "251"
+    display: "1"
+
+  attributes_cache: {}
+            

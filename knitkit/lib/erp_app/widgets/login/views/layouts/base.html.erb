@@ -1,0 +1,10 @@
+<h2><%=h @website_section.title %></h2>
+
+<% @contents.each do |content| %>
+  <%=content.body_html %>
+<% end %>
+
+<%= render_widget :login, 
+                  :params => {:logout_to => "/home", 
+                              :login_to => "/home", 
+                              :signup_url => '/sign-up'} %>

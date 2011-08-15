@@ -1,0 +1,36 @@
+<%if @use_dynamic_form%>
+  <div id="<%=widget_result_id %>"></div>
+
+  <%= render_dynamic_form('WebsiteInquiry', { :width => '350' }) %>
+
+  <div id="dynamic_form_target"></div>
+<%else%>
+  <div id="<%=widget_result_id %>"></div>
+  <div>
+    <%= form_tag build_widget_url(:new), :remote => true do %>
+      <div class="form_settings">
+        <p>
+          <span>First Name</span>
+          <%= text_field_tag :first_name %>
+        </p>
+        <p>
+          <span>Last Name</span>
+          <%= text_field_tag :last_name %>
+        </p>
+        <p>
+          <span>Email</span>
+          <%= text_field_tag :email %>
+        </p>
+        <p>
+          <span>Message</span>
+          <%= text_area_tag :message, nil, :class => 'contact textarea', :rows => 8, :cols => 50 %>
+        </p>
+        <p style="padding-top: 15px">
+          <span>&nbsp;</span>
+          <%=  submit_tag "Submit", :class => "submit" %>
+        </p>
+        <input type="hidden" name="is_html_form" value="<%=!@use_dynamic_form%>"/>
+      </div>
+    <% end %>
+  </div>
+<%end%>
