@@ -440,10 +440,6 @@ class BaseErpServices < ActiveRecord::Migration
         drop_table tbl
       end
     end
-    # remove party_id from user
-    if table_exists?(:users) && columns(:users).collect {|c| c.name}.include?('party_id')
-      remove_column :users, :party_id
-    end
 
   end
 end
