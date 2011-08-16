@@ -10,7 +10,10 @@ module ErpApp
       include ErpApp::Extensions::ActiveRecord::HasUserPreferences
       include ErpApp::Extensions::ActiveRecord::ActsAsAppContainer
     end
-	
+	  
+	  #add observer
+	  config.active_record.observers = :user_app_container_observer
+	  
 	  #set engine to scope
   	engine = self
   	config.to_prepare do 

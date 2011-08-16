@@ -192,8 +192,8 @@ class BaseErpServices < ActiveRecord::Migration
 
         t.timestamps
       end
-	 add_index :contact_purposes, :parent_id
-     add_index :contact_purposes_contacts, [:contact_id, :contact_purpose_id], :name => "contact_purposes_contacts_index"
+	    add_index :contact_purposes, :parent_id
+      
     end
     
     unless table_exists?(:contact_purposes_contacts)
@@ -201,6 +201,7 @@ class BaseErpServices < ActiveRecord::Migration
           t.column :contact_id,         :integer
           t.column :contact_purpose_id, :integer
         end
+        add_index :contact_purposes_contacts, [:contact_id, :contact_purpose_id], :name => "contact_purposes_contacts_index"
     end
     
     # Create postal_addresses (a contact_mechanism)

@@ -1,13 +1,8 @@
 class Individual < ActiveRecord::Base
-
   require 'attr_encrypted'
-
   has_one :party, :as => :business_party
-
   attr_encrypted :encrypted_ssn, :key => 'a secret key', :marshall => true
   alias_attribute :unencypted_ssn, :social_security_number
-
-  
 
   def after_initialize
     self.salt ||= Digest::SHA256.hexdigest((Time.now.to_i * rand(5)).to_s)
@@ -53,25 +48,6 @@ class Individual < ActiveRecord::Base
   def self.find_page(page_size, i_id)
     sqlStmt = "select top #{page_size.to_s} * from individuals where id > #{i_id} order by id"
     find_by_sql(sqlStmt)
-  end
-
-  def after_create
-    pty = Party.new
-    pty.description = [current_personal_title,current_first_name,current_last_name].join(' ').strip
-    pty.business_party = self
-    pty.save
-    self.save
-  end
-
-  def after_save
-    party.description = [current_personal_title,current_first_name,current_last_name].join(' ').strip
-    party.save
-  end
-
-  def after_destroy
-    if self.party
-      self.party.destroy
-    end
   end
 
   def to_label

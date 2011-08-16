@@ -23,12 +23,7 @@ module ErpApp
 				user_id            = params[:user_id]
 				app_container_type = params[:app_container_type]
 
-				if app_container_type == 'Desktop'
-				  app_container = ::Desktop.find_by_user(User.find(user_id))
-				else
-				  app_container = ::Organizer.find_by_user(User.find(user_id))
-				end
-
+				app_container = (app_container_type == 'Desktop') ? ::Desktop.find_by_user(User.find(user_id)) : ::Organizer.find_by_user(User.find(user_id))
 				render :inline => build_ext_tree(applications_to_node_hashes(app_container.applications))
 			  end
 
@@ -37,12 +32,7 @@ module ErpApp
 				user_id            = params[:user_id]
 				app_container_type = params[:app_container_type]
 
-				if app_container_type == 'Desktop'
-				  app_container = ::Desktop.find_by_user(User.find(user_id))
-				else
-				  app_container = ::Organizer.find_by_user(User.find(user_id))
-				end
-
+				app_container = (app_container_type == 'Desktop') ? ::Desktop.find_by_user(User.find(user_id)) : ::Organizer.find_by_user(User.find(user_id))
 				app_container.applications = []
 				app_container.save
 

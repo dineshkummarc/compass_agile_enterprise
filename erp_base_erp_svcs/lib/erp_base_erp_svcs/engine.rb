@@ -14,5 +14,8 @@ module ErpBaseErpSvcs
       include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsCategory
     end
     
+    #add observer
+	  (config.active_record.observers.nil?) ? config.active_record.observers = [:create_party_observer] : config.active_record.observers | [:create_party_observer]
+    
   end
 end

@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
   s.version = "0.0.1"
   s.add_dependency('paperclip')
   #s.add_dependency('acts_as_versioned','~> 0.6.0')
+  s.add_dependency('delayed_job')
 end

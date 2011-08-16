@@ -12,5 +12,5 @@ gem 'jquery-rails'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 gem 'paperclip'
-#gem "acts_as_versioned", :path => 'vendor/plugins/acts_as_versioned'
+gem 'delayed_job'
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
