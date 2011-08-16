@@ -3,7 +3,7 @@ class BaseTechServices < ActiveRecord::Migration
     unless table_exists?(:users)
       # Create the users table
       create_table :users, :force => true do |t|
-		  	t.column :user_type,								  :string
+		t.column :user_type,			      :string
         t.column :login,                      :string, :limit => 40
         t.column :name,                       :string, :limit => 100, :default => '', :null => true
         t.column :email,                      :string, :limit => 100
@@ -16,12 +16,12 @@ class BaseTechServices < ActiveRecord::Migration
         t.column :activation_code,            :string, :limit => 40
         t.column :activated_at,               :datetime
         t.column :activation_code_expires_at, :datetime
- 	      t.column :password_reset_code,        :string, :limit => 40
-        t.column :enabled,                    :boolean,               :default => true   
-	      t.column :identity_url,							  :string
-	      t.column :invitation_id,						  :integer
-	      t.column :invitation_limit, 				  :integer
-	      t.column :party_id,                   :integer
+ 	    t.column :password_reset_code,        :string, :limit => 40
+        t.column :enabled,                    :boolean,:default => true   
+	    t.column :identity_url,				  :string
+	    t.column :invitation_id,			  :integer
+	    t.column :invitation_limit, 		  :integer
+	    t.column :party_id,                   :integer
 
 	      # merge in add_security_questions_add_and_mist_to_user migration
         t.column :club_number,          :string
@@ -49,6 +49,11 @@ class BaseTechServices < ActiveRecord::Migration
         # merge in add_password_lock_count_column migration
 	      t.column :lock_count,           :integer,     :default => 0
       end
+	  add_index :users, :login
+	  add_index :users, :party_id
+	  add_index :users, :name
+      add_index :users, :email
+      add_index :users, :enabled
     end
 
     unless table_exists?(:roles)
@@ -68,6 +73,8 @@ class BaseTechServices < ActiveRecord::Migration
       create_table :roles_users, :id => false do |t|
         t.integer :role_id, :user_id
       end
+	  add_index :roles_users,   :role_id
+      add_index :roles_users,   :user_id
     end
 
     unless table_exists?(:logged_exceptions)
@@ -82,6 +89,7 @@ class BaseTechServices < ActiveRecord::Migration
         t.column :request,         :text
         t.column :created_at,      :datetime
       end
+	  add_index :logged_exceptions, :created_at
     end
 
     unless table_exists?(:four_oh_fours)
@@ -101,6 +109,8 @@ class BaseTechServices < ActiveRecord::Migration
         t.integer :count, :default => 0
         t.timestamps
       end
+	  add_index :user_failures, :remote_ip, :name => "btsi_1"
+	  add_index :user_failures, :username
     end
 
     unless table_exists?(:simple_captcha_data)
@@ -110,6 +120,7 @@ class BaseTechServices < ActiveRecord::Migration
         t.string :value,  :limit => 6
         t.timestamps
       end
+	  add_index :simple_captcha_data, [:key, :value], :name => "btsi_3"
     end
 
     unless table_exists?(:sessions)    
@@ -119,6 +130,8 @@ class BaseTechServices < ActiveRecord::Migration
         t.text :data
         t.timestamps
       end
+	  add_index :sessions,      :session_id
+      add_index :sessions,      :updated_at
     end
 
     unless table_exists?(:security_questions)
@@ -143,6 +156,8 @@ class BaseTechServices < ActiveRecord::Migration
 
         t.timestamps
       end
+	  add_index :audit_logs, :party_id
+      add_index :audit_logs, [:event_record_id, :event_record_type], :name => 'event_record_index'
     end
 
     unless table_exists?(:audit_log_types)
@@ -201,6 +216,7 @@ class BaseTechServices < ActiveRecord::Migration
 		  	t.datetime :sent_at
 		  	t.timestamps
       end
+	  add_index :invitations, :sender_id
     end
 
     unless table_exists?(:secured_models)
@@ -236,7 +252,24 @@ class BaseTechServices < ActiveRecord::Migration
 
         t.timestamps
       end
+	  add_index :file_assets, :type
+	  add_index :file_assets, [:file_asset_holder_id, :file_asset_holder_type], :name => 'file_asset_holder_idx'
     end
+	
+	unless table_exists?(:delayed_jobs)
+		create_table :delayed_jobs, :force => true do |table|
+			table.integer  :priority, :default => 0      # Allows some jobs to jump to the front of the queue
+			table.integer  :attempts, :default => 0      # Provides for retries, but still fail eventually.
+			table.text     :handler                      # YAML-encoded string of the object that will do work
+			table.text     :last_error                   # reason for last failure (See Note below)
+			table.datetime :run_at                       # When to run. Could be Time.zone.now for immediately, or sometime in the future.
+			table.datetime :locked_at                    # Set when a client is working on this object
+			table.datetime :failed_at                    # Set when all retries have failed (actually, by default, the record is deleted instead)
+			table.string   :locked_by                    # Who is working on this object (if locked)
+			table.timestamps
+		end
+		add_index :delayed_jobs, [:priority, :run_at], :name => 'delayed_jobs_priority'
+	end
 
   end
 
@@ -246,7 +279,7 @@ class BaseTechServices < ActiveRecord::Migration
       :invitations,:audit_logs, :security_questions, :sessions, 
       :simple_captcha_data, :four_oh_fours, :user_failures, 
       :logged_exceptions, :roles_users, :roles, :audit_log_items, :audit_log_item_types,
-      :users, :secured_models, :roles_secured_models, :file_assets
+      :users, :secured_models, :roles_secured_models, :file_assets, :delayed_jobs
     ].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl
