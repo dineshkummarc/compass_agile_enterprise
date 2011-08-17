@@ -193,7 +193,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
       #handle themes
       themes_hash = {:text => 'Themes', :contextMenuDisabled => true, :isThemeRoot => true, :siteId => site.id, :children => []}
       site.themes.each do |theme|
-        theme_hash = {:text => theme.name, :handleContextMenu => true, :siteId => site.id, :isActive => (theme.active == 1), :isTheme => true, :id => theme.id, :children => []}
+        theme_hash = {:text => "#{theme.name}[#{theme.theme_id}]", :handleContextMenu => true, :siteId => site.id, :isActive => (theme.active == 1), :isTheme => true, :id => theme.id, :children => []}
         if theme.active == 1
           theme_hash[:iconCls] = 'icon-add'
         else
