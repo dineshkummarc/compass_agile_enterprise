@@ -18,10 +18,10 @@ ErpApp::Engine.routes.draw do
   #Organizer Application Routes
   #############################
   match '/organizer/login' => "organizer/login#index"
-  match '/organizer/:action' => "organizer/base"
+  match '/organizer(/:action)' => "organizer/base"
   
   #crm
-  match '/organizer/crm/:action/:id' => "organizer/crm/base"
+  match '/organizer/crm(/:action(/:id))' => "organizer/crm/base"
 
   ############################
   #Desktop Application Routes
@@ -37,12 +37,9 @@ ErpApp::Engine.routes.draw do
   #scaffold
   match '/desktop/scaffold/role/:action' => "desktop/scaffold/role"
   match '/desktop/scaffold/:action' => "desktop/scaffold/base"
-
-  #knitkit
-  match '/desktop/knitkit/:action' => "desktop/knitkit/base"
-
+  
   #user_management
-  match '/desktop/user_management/users/:action/:id' => "desktop/user_management/base"
+  match '/desktop/user_management/users(/:action(/:id))' => "desktop/user_management/base"
   match '/desktop/user_management/role_management/:action' => "desktop/user_management/role_management"
   match '/desktop/user_management/application_management/:action' => "desktop/user_management/application_management"
 

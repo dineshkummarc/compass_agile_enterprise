@@ -1,6 +1,12 @@
 class Individual < ActiveRecord::Base
   require 'attr_encrypted'
+  
+  after_create  :create_party
+  after_save    :save_party
+  after_destroy :destroy_party
+
   has_one :party, :as => :business_party
+
   attr_encrypted :encrypted_ssn, :key => 'a secret key', :marshall => true
   alias_attribute :unencypted_ssn, :social_security_number
 
@@ -48,6 +54,25 @@ class Individual < ActiveRecord::Base
   def self.find_page(page_size, i_id)
     sqlStmt = "select top #{page_size.to_s} * from individuals where id > #{i_id} order by id"
     find_by_sql(sqlStmt)
+  end
+
+  def create_party
+    pty = Party.new
+    pty.description = [current_personal_title,current_first_name,current_last_name].join(' ').strip
+    pty.business_party = self
+    pty.save
+    self.save
+  end
+
+  def save_party
+    party.description = [current_personal_title,current_first_name,current_last_name].join(' ').strip
+    party.save
+  end
+
+  def destroy_party
+    if self.party
+      self.party.destroy
+    end
   end
 
   def to_label

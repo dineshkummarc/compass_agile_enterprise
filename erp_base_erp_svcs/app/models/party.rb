@@ -126,10 +126,10 @@ class Party < ActiveRecord::Base
   end
 
   def find_all_contacts_by_contact_mechanism(contact_mechanism_class)
-    table_name = contact_mechanism_class.class_name.tableize
+    table_name = contact_mechanism_class.name.tableize
 
     contacts = self.contacts.find(:all,
-      :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.class_name}'")
+      :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.name}'")
 
     contacts.collect(&:contact_mechanism)
   end
@@ -137,7 +137,7 @@ class Party < ActiveRecord::Base
   def find_contact(contact_mechanism_class, contact_mechanism_args={}, contact_purposes=[])
     conditions = ''
 
-    table_name = contact_mechanism_class.class_name.tableize
+    table_name = contact_mechanism_class.name.tableize
 
     contact_mechanism_args.each do |key, value|
       begin
@@ -150,7 +150,7 @@ class Party < ActiveRecord::Base
     end
 
     contact = self.contacts.find(:first,
-      :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.class_name}'
+      :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.name}'
                  inner join contact_purposes_contacts on contact_purposes_contacts.contact_id = contacts.id and contact_purposes_contacts.contact_purpose_id in (#{contact_purposes.collect{|item| item.attributes["id"]}.join(',')})",
       :conditions => conditions)
 

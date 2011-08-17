@@ -1,6 +1,6 @@
 module Rails
 	Engine.class_eval do
-    #forces rails to reload models in this engine
+	#forces rails to reload models in this engine
     #lib_files_to_reload (array) optional specify acts_as mixins to reload
     def load_extensions
       root_models_path = "#{Rails.root}/app/models/"

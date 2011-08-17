@@ -1,6 +1,8 @@
 module ErpApp
 	module Desktop
 		class BaseController < ErpApp::ApplicationController
+		  layout nil
+		  
 		  before_filter :login_required
 
 		  def login_path
