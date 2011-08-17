@@ -20,20 +20,21 @@ module ErpApp
 		  private
 
 		  def locate_resources_in_engines(resource_type)
-			dirs = Rails::Application::Railties.engines.map{|p| p.config.root.to_s}
+		  dirs = [Rails.root]
+			dirs = dirs | Rails::Application::Railties.engines.map{|p| p.config.root.to_s}
 			paths = [] 
 			files = []
 			dirs.each do |engine_dir|
 			  #get all files based on resource type we are loading for the given application type and application
-			  application_path = File.join(engine_dir,"/public/#{resource_type}/erp_app/#{@app_type}/applications/",@app_name,"*.#{(resource_type == 'javascripts') ? 'js' : 'css'}")
-			  files = Dir.glob(application_path)
-			  break unless files.empty?
+			  if File.exists? File.join(engine_dir,"/public/#{resource_type}/erp_app/#{@app_type}/applications/",@app_name)
+			    application_path = File.join(engine_dir,"/public/#{resource_type}/erp_app/#{@app_type}/applications/",@app_name,"*.#{(resource_type == 'javascripts') ? 'js' : 'css'}")
+			    files = files | Dir.glob(application_path)
+			  end
 			end
-
 			files = files.collect{|file| File.basename(file)}
 
 			#make sure the base js file is loaded before all others
-			if resource_type == 'javascripts'
+			if resource_type == 'javascripts' && (files.index{|x| x =~ /module.js/} || files.index{|x| x =~ /base.js/})
 			  index = (@app_type == 'desktop') ? files.index{|x| x =~ /module.js/} : files.index{|x| x =~ /base.js/}
 			  first_load_js = files[index]
 			  files.delete_at(index)

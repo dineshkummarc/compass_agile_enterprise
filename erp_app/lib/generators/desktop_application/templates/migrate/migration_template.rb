@@ -1,4 +1,4 @@
-class CreateDesktopApp<%=class_name %>
+class Create<%=class_name %>DesktopApplication
   def self.up
     app = DesktopApplication.create(
       :description => '<%=description %>',

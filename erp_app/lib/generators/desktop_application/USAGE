@@ -1,25 +1,24 @@
-###########################################
-##### Desktop Application Generator #######
-##### Version 1.0                   #######
-###########################################
+Description:
+  Used to create stubs for creating a new Desktop application within 
+  the Compass AE framework
 
-script/generate desktop_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
+Example:
+    rails g desktop_application [application_name] [description] [icon-cls]
 
-What will be created
+    This will create:
+        1. A controller
+        2. Public folder structures
 
-1. A controller for your application
-2. Folder structures in the public folder directories
+           public/javascripts/erp_app/desktop/applications/[YOUR APP NAME]
+           public/stylesheets/erp_app/desktop/applications/[YOUR APP NAME]
+           public/images/erp_app/desktop/applications/[YOUR APP NAME]
 
-   vendor/plugins/[erp_app | plugin]/public/javascripts/erp_app/desktop/applications/[YOUR APP NAME]
-   vendor/plugins/[erp_app | plugin]/public/stylesheets/erp_app/desktop/applications/[YOUR APP NAME]
-   vendor/plugins/[erp_app | plugin]/public/images/erp_app/desktop/applications/[YOUR APP NAME]
+        3. A template for javascript class needed for organizer application
+        4. A data migration
+        5. Append to the routes file
+        
+        Run the migration with 
+        
+        rake db:migrate_data
 
-3. A javscript file
-4. A data migration
-5. Append the routes file
-
-Run the migration with
-
-rake db:migrate_data
-
-and start adding functionality
+        and start adding functionality

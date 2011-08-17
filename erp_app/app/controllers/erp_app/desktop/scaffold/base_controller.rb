@@ -1,8 +1,4 @@
-require 'rails_generator/spec'
-require 'rails_generator/base'
-require 'rails_generator/commands'
-require 'rails_generator/simple_logger'
-require 'generators/active_ext/active_ext_generator'
+require 'rails/generators'
 require 'fileutils'
 
 module ErpApp
@@ -10,16 +6,12 @@ module ErpApp
 		module Scaffold
 			class BaseController < ErpApp::Desktop::BaseController
 
-			  ERP_APP_PATH = "#{RAILS_ROOT}/vendor/plugins/erp_app/"
-
 			  def create_model
 				name = params[:name].underscore
 
 				result = create_scaffold_check(name)
 				if result[:success]
-				  spec = Rails::Generator::Spec.new('active_ext', "#{RAILS_ROOT}/vendor/plugins/erp_app/lib/generators/active_ext", 'controller')
-				  generator = ActiveExtGenerator.new [name, 'desktop','scaffold'], {:spec => spec, :logger => Rails::Generator::SimpleLogger.new}
-				  Rails::Generator::Commands.instance('create', generator).invoke!
+				  Rails::Generators.invoke('active_ext', [name, 'desktop','scaffold'])
 				  load_files(name)
 				end
 
@@ -61,19 +53,25 @@ module ErpApp
 			  #get all file in root app/controllers and first level plugins app/controllers
 			  def find_active_ext_models
 				model_names = []
-
-				Dir.glob("#{RAILS_ROOT}/vendor/plugins/erp_app/app/controllers/erp_app/desktop/scaffold/*.rb") do |filename|
-				  next if filename =~ /#{['svn','git'].join("|")}/
-				  open(filename) do |file|
-					if file.grep(/active_ext/).any?
-					  model = File.basename(filename).gsub("_controller.rb", "").classify
-					  if class_exists?(model)
-						model_names << model
-					  end
-					end
-				  end
-				end
-
+        
+        dirs = [Rails.root]
+        dirs = dirs | Rails::Application::Railties.engines.map{|p| p.config.root.to_s}
+        
+        dirs.map do |dir|
+          if File.exists? File.join(dir,"/app/controllers/erp_app/desktop/scaffold/")
+            Dir.glob("#{dir}/app/controllers/erp_app/desktop/scaffold/*.rb") do |filename|
+    				  next if filename =~ /#{['svn','git'].join("|")}/
+    				  open(filename) do |file|
+    					if file.grep(/active_ext/).any?
+    					  model = File.basename(filename).gsub("_controller.rb", "").classify
+    					  if class_exists?(model)
+    						model_names << model
+    					  end
+    					end
+    				  end
+    				end
+          end
+        end
 				model_names
 			  end
 
@@ -90,7 +88,7 @@ module ErpApp
 
 			  def load_files(name)
 				#reload routes file
-				load "#{ERP_APP_PATH}/config/routes.rb"
+				load "#{Rails.root}/config/routes.rb"
 
 				#load controller
 				controller = "ErpApp::Desktop::Scaffold::#{name.classify}Controller"

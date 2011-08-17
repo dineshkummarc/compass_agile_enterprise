@@ -1,0 +1,11 @@
+Compass.ErpApp.Widgets.<%=class_name%> = {
+	clickedWidget:function(){
+		alert('My new widget <%= description %> was clicked');
+	}
+}
+
+Compass.ErpApp.Widgets.AvailableWidgets.push({
+    name:'<%= description %>',
+    iconUrl:'<%= icon_url %>',
+    onClick:Compass.ErpApp.Widgets.<%=class_name%>.clickedWidget
+});

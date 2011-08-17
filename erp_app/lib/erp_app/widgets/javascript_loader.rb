@@ -1,10 +1,11 @@
 class ErpApp::Widgets::JavascriptLoader
   def self.glob_javascript
-    dirs = Rails::Application::Railties.engines.map{|p| p.config.root.to_s}
+    dirs = [Rails.root]
+    dirs = dirs | Rails::Application::Railties.engines.map{|p| p.config.root.to_s}
 
     files = []
-    dirs.each do |engine_dir|
-      files = files | Dir.glob(File.join(engine_dir,"/lib/erp_app/widgets/*/javascript/*.js"))
+    dirs.each do |possible_widget_dir|
+      files = files | Dir.glob(File.join(possible_widget_dir,"/app/widgets/*/javascript/*.js"))
     end
 
     js_code = '<script type="text/javascript">'

@@ -1,10 +1,4 @@
 Ext.ns("Compass.ErpApp.Organizer.Applications.<%= class_name %>");
-
-/*
-*Template for organizer layout.
-*/
-
-
  /**
  * Method to setup organizer application
  * @param {config} object containing (organizerLayout : reference to main layout container, widgetRoles : roles for widgets contained in this application)
@@ -20,6 +14,7 @@ Compass.ErpApp.Organizer.Applications.<%= class_name %>.Base = function(config){
    var menuTreePanel = {
         xtype:'defaultmenutree',
         title:'<%= class_name %>',
+		store:treeMenuStore,
         menuRootIconCls:'icon-content',
         rootNodeTitle:'Menu',
         treeConfig:{

@@ -1,9 +1,4 @@
 class ErpApp::Widgets::DynamicForms::Base < ErpApp::Widgets::Base
-
-  def self.title
-    "Dynamic Forms"
-  end
-
   def index
     render
   end
@@ -31,15 +26,31 @@ class ErpApp::Widgets::DynamicForms::Base < ErpApp::Widgets::Base
     end
   end
 
-  def self.name
-    File.dirname(__FILE__).split('/')[-1]
-  end
-
+  #should not be modified
+  #modify at your own risk
+  self.view_paths = File.join(File.dirname(__FILE__),"/views")
   
-  #if module lives outside of erp_app plugin this needs to be overriden
-  #get location of this class that is being executed
   def locate
     File.dirname(__FILE__)
+  end
+  
+  class << self
+    def title
+      "Dynamic Forms"
+    end
+    
+    def widget_name
+      File.basename(File.dirname(__FILE__))
+    end
+    
+    def base_layout
+      begin
+        file = File.join(File.dirname(__FILE__),"/views/layouts/base.html.erb")
+        IO.read(file)
+      rescue
+        return nil
+      end
+    end
   end
   
 end

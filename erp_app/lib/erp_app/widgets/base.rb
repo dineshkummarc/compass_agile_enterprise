@@ -121,6 +121,11 @@ module ErpApp
       
       def locate_widgets
         widgets = []
+        #get all widgets in root
+        widget_path = File.join(Rails.root.to_s,"/app/widgets/")
+        widgets = widgets | Dir.entries(widget_path) if File.exists? widget_path
+        
+        #get all widgets in engines
         Rails::Application::Railties.engines.each do |engine|
           #exclude widgets path in erp_app it defines are widgets
           next if engine.engine_name == "erp_app"

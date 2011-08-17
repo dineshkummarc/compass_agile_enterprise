@@ -1,28 +1,27 @@
-###########################################
-##### Organizer Application Generator  ####
-##### Version 1.0                      ####
-###########################################
+Description:
+  Used to create stubs for creating a new Organizer application within 
+  the Compass AE framework
 
-script/generate organizer_application [application_name] [description] [icon-cls] (optional fields) [plugin to create in]
+Example:
+    rails g organizer_application [application_name] [description] [icon-cls]
 
-What will be created
+    This will create:
+        1. A controller
+        2. Public folder structures
 
-1. A controller
-2. Public folder structures
+           public/javascripts/erp_app/organizer/applications/[YOUR APP NAME]
+           public/stylesheets/erp_app/organizer/applications/[YOUR APP NAME]
+           public/images/erp_app/organizer/applications/[YOUR APP NAME]
 
-   vendor/plugins/[erp_app | plugin]/public/javascripts/erp_app/organizer/applications/[YOUR APP NAME]
-   vendor/plugins/[erp_app | plugin]/public/stylesheets/erp_app/organizer/applications/[YOUR APP NAME]
-   vendor/plugins/[erp_app | plugin]/public/images/erp_app/organizer/applications/[YOUR APP NAME]
+        3. A template for javascript class needed for organizer application
+        4. A data migration
+        5. Append to the routes file
+        
+        Run the migration with 
+        
+        rake db:migrate_data
 
-3. A template for javascript class needed for organizer application
-4. A data migration
-5. Append to the routes file
-
-Run the migration with
-
-rake db:migrate_data
-
-and start adding functionality
+        and start adding functionality
 
 
 

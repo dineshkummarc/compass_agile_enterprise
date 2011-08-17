@@ -1,4 +1,4 @@
-class CreateOrganizerApp<%=class_name %>
+class Create<%=class_name %>OrganizerApplication
   def self.up
     OrganizerApplication.create(
       :description => '<%=description %>',
