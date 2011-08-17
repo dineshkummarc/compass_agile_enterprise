@@ -81,7 +81,6 @@ module ErpApp
     
     def defaultize_render_options_for(opts, state)
       opts[:view] ||= state
-      puts 'View:' + opts[:view].to_s
       opts
     end
     

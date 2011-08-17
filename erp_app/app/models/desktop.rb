@@ -48,7 +48,7 @@ class Desktop < ActiveRecord::Base
   class << self
     def add_background(description, image_data)
       result = {:success => true, :msg => nil}
-      name = image_data.original_path
+      name = image_data.original_filename
       #make sure this is an image
       if name != /^.?[^\.]+\.(jpe?g|png|gif|tiff)$/
         #check to make sure this description is not already being used

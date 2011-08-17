@@ -141,7 +141,7 @@ module ErpApp
 				  name     = request.env['HTTP_X_FILE_NAME']
 				else
 				  file_contents = params[:file_data]
-				  name = file_contents.original_path
+				  name = file_contents.original_filename
 				  if file_contents.respond_to?(:read)
 					contents = file_contents.read
 				  elsif file_contents.respond_to?(:path)

@@ -17,8 +17,6 @@ module Knitkit
 
               return if acts_as_themed_controller?
               include InstanceMethods
-    
-              # write_inheritable_attribute :force_template_types, options[:force_template_types] || []
             end
 
             def acts_as_themed_controller?
@@ -38,7 +36,7 @@ module Knitkit
             def add_theme_view_paths
               if respond_to?(:current_theme_paths)
                 paths = current_theme_paths.map do |path| 
-                  ActionView::ReloadableTemplate::ReloadablePath.new("#{path}/templates")
+                  File.join(path,'templates')
                 end
                 prepend_view_path(paths) unless paths.empty?
               end

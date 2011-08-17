@@ -1,7 +1,7 @@
 module Knitkit
   module ErpApp
     module Desktop
-class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
+      class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
   before_filter :set_website, :only => [:new, :change_status, :available_themes]
   before_filter :set_theme, :only => [:delete, :change_status, :copy]
   IGNORED_PARAMS = %w{action controller node_id theme_data}
@@ -94,7 +94,7 @@ class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
       name     = request.env['HTTP_X_FILE_NAME']
     else
       file_contents = params[:file_data]
-      name = file_contents.original_path
+      name = file_contents.original_filename
       if file_contents.respond_to?(:read)
         contents = file_contents.read
       elsif file_contents.respond_to?(:path)
@@ -127,7 +127,7 @@ class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
       begin
         name = File.basename(path)
         
-        theme_file = get_theme_file(path)
+        theme_file = get_them_file(path)
         theme_file.destroy
         json_str = "{success:true, msg:'#{name} was deleted successfully'}"
       rescue Exception=>ex
@@ -149,7 +149,7 @@ class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
     unless File.exists? path
       result = {:success => false, :data => {:success => false, :error => 'File does not exists'}}
     else
-      theme_file = get_theme_file(path)
+      theme_file = get_them_file(path)
       theme_file.name = name
       theme_file.save
     end
@@ -173,9 +173,9 @@ class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
     theme
   end
 
-  def get_theme_file(path)
+  def get_them_file(path)
     theme = get_theme(path)
-    path = path.gsub!(ErpApp::Engine.root.to_s,'')
+    path = path.gsub!(RAILS_ROOT,'')
     theme.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
   end
 
@@ -196,7 +196,7 @@ class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
       #handle themes
       themes_hash = {:text => 'Themes', :contextMenuDisabled => true, :isThemeRoot => true, :siteId => site.id, :children => []}
       site.themes.each do |theme|
-        theme_hash = {:text => theme.name, :handleContextMenu => true, :siteId => site.id, :isActive => (theme.active == 1), :isTheme => true, :id => theme.id, :children => []}
+        theme_hash = {:text => "#{theme.name}[#{theme.theme_id}]", :handleContextMenu => true, :siteId => site.id, :isActive => (theme.active == 1), :isTheme => true, :id => theme.id, :children => []}
         if theme.active == 1
           theme_hash[:iconCls] = 'icon-add'
         else

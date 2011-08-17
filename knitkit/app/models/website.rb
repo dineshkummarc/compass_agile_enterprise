@@ -214,7 +214,7 @@ class Website < ActiveRecord::Base
 
       file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
         f.write file.read
-        f.original_path = file.original_path
+        f.original_filename = file.original_filename
         f.read # no idea why we need this here, otherwise the zip can't be opened
       end unless file.path
       

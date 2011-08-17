@@ -13,8 +13,8 @@ module Knitkit
 	  ActiveSupport.on_load(:active_record) do
       include Knitkit::Extensions::ActiveRecord::ActsAsCommentable
       include Knitkit::Extensions::ActiveRecord::ActsAsPublishable
-      include Knitkit::Extensions::ActiveRecord::StiInstantiation::ActMacro
       include Knitkit::Extensions::ActiveRecord::ThemeSupport::HasManyThemes
+      extend Knitkit::Extensions::ActiveRecord::StiInstantiation::ActMacro
     end
     
     ActiveSupport.on_load(:action_controller) do

@@ -10,13 +10,13 @@ module ActionView
   module Helpers
     module AssetTagHelper
       def theme_javascript_path(theme, source)
-        theme = @controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
+        theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
         theme_compute_public_path(theme, source, theme.url + '/javascripts', 'js')
       end
       alias_method :theme_path_to_javascript, :theme_javascript_path
 
       def theme_javascript_include_tag(theme_id, *sources)
-        theme = @controller.website.themes.find_by_theme_id(theme_id)
+        theme = controller.website.themes.find_by_theme_id(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
 
         options = sources.extract_options!.stringify_keys
@@ -29,50 +29,52 @@ module ActionView
 
           paths = theme_compute_javascript_paths(theme, sources, recursive)
           theme_write_asset_file_contents(theme, joined_javascript_path, paths) unless File.exists?(joined_javascript_path)
-          theme_javascript_src_tag(theme, joined_javascript_name, options)
+          raw theme_javascript_src_tag(theme, joined_javascript_name, options)
         else
-          theme_expand_javascript_sources(theme, sources, recursive).collect do |source|
+          sources = theme_expand_javascript_sources(theme, sources, recursive).collect do |source|
             theme_javascript_src_tag(theme, source, options)
           end.join("\n")
+          raw sources
         end
       end
 
       def theme_stylesheet_path(theme, source)
-        theme = @controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
+        theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
         theme_compute_public_path(theme, source, theme.url + '/stylesheets', 'css')
       end
       alias_method :theme_path_to_stylesheet, :theme_stylesheet_path
 
       def theme_stylesheet_link_tag(theme_id, *sources)
-        theme = @controller.website.themes.find_by_theme_id(theme_id)
+        theme = controller.website.themes.find_by_theme_id(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
-
+        
         options = sources.extract_options!.stringify_keys
         cache   = options.delete("cache")
         recursive = options.delete("recursive")
-
+    
         if ActionController::Base.perform_caching && cache
           joined_stylesheet_name = (cache == true ? "all" : cache) + ".css"
           joined_stylesheet_path = File.join(theme.path + '/stylesheets', joined_stylesheet_name)
           
           paths = theme_compute_stylesheet_paths(theme, sources, recursive)
           theme_write_asset_file_contents(theme, joined_stylesheet_path, paths) unless File.exists?(joined_stylesheet_path)
-          theme_stylesheet_tag(theme, joined_stylesheet_name, options)
+          raw theme_stylesheet_tag(theme, joined_stylesheet_name, options)
         else
-          theme_expand_stylesheet_sources(theme, sources, recursive).collect do |source|
+          sources = theme_expand_stylesheet_sources(theme, sources, recursive).collect do |source|
             theme_stylesheet_tag(theme, source, options)
           end.join("\n")
+          raw sources
         end
       end
 
       def theme_image_path(theme, source)
-        theme = @controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
+        theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
         theme_compute_public_path(theme, source, theme.url + '/images')
       end
       alias_method :theme_path_to_image, :theme_image_path # aliased to avoid conflicts with an image_path named route
 
       def theme_image_tag(theme_id, source, options = {})
-        theme = @controller.website.themes.find_by_theme_id(theme_id)
+        theme = controller.website.themes.find_by_theme_id(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
 
         options.symbolize_keys!
@@ -93,7 +95,7 @@ module ActionView
 
       private
         def theme_compute_public_path(theme, source, dir, ext = nil, include_host = true)
-          has_request = @controller.respond_to?(:request)
+          has_request = controller.respond_to?(:request)
 
           if ext && (File.extname(source).blank? || File.exist?(File.join(theme.path, dir, "#{source}.#{ext}")))
             source += ".#{ext}"
@@ -105,43 +107,22 @@ module ActionView
             source = theme_rewrite_asset_path(theme, source)
 
             if has_request && include_host
-              unless source =~ %r{^#{ActionController::Base.relative_url_root}/}
-                source = "#{ActionController::Base.relative_url_root}#{source}"
+              unless source =~ %r{^#{ActionController::Base.config.relative_url_root}/}
+                source = "#{ActionController::Base.config.relative_url_root}#{source}"
               end
             end
           end
 
-          if include_host && source !~ %r{^[-a-z]+://}
-            host = compute_asset_host(source)
-
-            if has_request && host.present? && host !~ %r{^[-a-z]+://}
-              host = "#{@controller.request.protocol}#{host}"
-            end
-
-            "#{host}#{source}"
-          else
-            source
-          end
+          source
         end
 
         def theme_rails_asset_id(theme, source)
           if asset_id = ENV["RAILS_ASSET_ID"]
             asset_id
           else
-            if @@cache_asset_timestamps && (asset_id = @@asset_timestamps_cache[source])
-              asset_id
-            else
-              path = File.join(theme.path, source)
-              asset_id = File.exist?(path) ? File.mtime(path).to_i.to_s : ''
-
-              if @@cache_asset_timestamps
-                @@asset_timestamps_cache_guard.synchronize do
-                  @@asset_timestamps_cache[source] = asset_id
-                end
-              end
-
-              asset_id
-            end
+            path = File.join(theme.path, source)
+            asset_id = File.exist?(path) ? File.mtime(path).to_i.to_s : ''
+            asset_id
           end
         end
 
@@ -181,7 +162,7 @@ module ActionView
           if sources.include?(:all)
             all_javascript_files = collect_asset_files(theme.path + '/javascripts', ('**' if recursive), '*.js').uniq
           else
-            sources.collect { |source| determine_source(source, {}) }.flatten
+            sources.flatten
           end
         end
 
@@ -189,9 +170,7 @@ module ActionView
           if sources.first == :all
             collect_asset_files(theme.path + '/stylesheets', ('**' if recursive), '*.css')
           else
-            sources.collect do |source|
-              determine_source(source, {})
-            end.flatten
+            sources.flatten
           end
         end
 

@@ -97,7 +97,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         this.setWindowStatus('Saving...');
         var conn = new Ext.data.Connection();
         conn.request({
-            url: '/file_manager/base/update_file',
+            url: '/erp_app/desktop/file_manager/base/update_file',
             method: 'POST',
             params:{
                 node:path,

@@ -82,7 +82,7 @@ class Theme < ActiveRecord::Base
   def import(file)
     file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
       f.write file.read
-      f.original_path = file.original_path
+      f.original_filename = file.original_filename
       f.read # no idea why we need this here, otherwise the zip can't be opened
     end unless file.path
 
@@ -179,8 +179,8 @@ class Theme < ActiveRecord::Base
         #if this is the base layout change stylesheets to point to theme
         unless file.scan('base.html.erb').empty?
           contents = IO.read(file)
-          contents.gsub!("<%= stylesheet_link_tag('knitkit/extjs_4.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','extjs_4.css') %>")
-          contents.gsub!("<%= stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
+          contents.gsub!("<%= static_stylesheet_link_tag('knitkit/extjs_4.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','extjs_4.css') %>")
+          contents.gsub!("<%= static_stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
           File.open(file, 'w+') {|f| f.write(contents) }
         end
         self.add_file(file, IO.read(file))
