@@ -26,9 +26,7 @@ class PartySearchFact < ActiveRecord::Base
     text :party_primary_address_zip
     string :party_primary_address_country    
     string :user_enabled
-    text :party_member_numbers    
-    text :party_owner_numbers
-    string :party_active    
+    string :user_type 
   end
   
   def self.update_search_fact(party)    
@@ -68,9 +66,6 @@ class PartySearchFact < ActiveRecord::Base
         :party_primary_address_zip => (party.primary_address.zip rescue ''),
         :party_primary_address_country => (party.primary_address.country rescue ''),
         :user_enabled => (party.user.enabled rescue false),
-        :party_member_numbers => (party.unique_member_numbers.join(" ") rescue ''),
-        :party_owner_numbers => (party.unique_owner_numbers.join(" ") rescue ''),
-        :party_active => (party.active? rescue false),
         :user_type => (party.user.attributes['type'] rescue '')
         )
     Sunspot.commit
