@@ -1,4 +1,4 @@
-module ErpApp
+
   module Widgets
     module GoogleMap
       class Base < ErpApp::Widgets::Base
@@ -41,4 +41,4 @@ module ErpApp
       end
     end
   end
-end
+

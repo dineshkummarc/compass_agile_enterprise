@@ -91,6 +91,24 @@ class Website < ActiveRecord::Base
     PublishedWebsite.create(:website => self, :version => 0, :active => true, :comment => 'New Site Created')
     Role.create(:description => "Website #{self.title}", :internal_identifier => website_role_iid)
   end
+  
+  def setup_default_pages
+    # create default sections for each widget using widget layout
+    # needs updated to support widgets in more than just knitkit plugin
+    # but should handle the case where the base layout may not exist
+    # widgets with no base layout should not be installed
+    widgets = ::ErpApp::Widgets::Base.installed_widgets
+    widgets.each do |w|
+      widget_class = "::Widgets::#{w.camelize}::Base".constantize
+      #if there is no base layout ignore this widget
+      next if widget_class.base_layout.nil?
+      website_section = WebsiteSection.new
+      website_section.title = widget_class.title
+      website_section.in_menu = true unless ["Login", "Sign Up"].include?(widget_class.title)
+      website_section.layout = widget_class.base_layout
+      self.website_sections << website_section
+    end
+  end
 
   def export_setup
     setup_hash = {

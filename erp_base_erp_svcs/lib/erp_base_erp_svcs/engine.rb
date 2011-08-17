@@ -7,14 +7,13 @@ module ErpBaseErpSvcs
   class Engine < Rails::Engine
     isolate_namespace ErpBaseErpSvcs
 	
-	ActiveSupport.on_load(:active_record) do
+	  ActiveSupport.on_load(:active_record) do
       include ErpBaseErpSvcs::Extensions::ActiveRecord::IsDescribable
       include ErpBaseErpSvcs::Extensions::ActiveRecord::HasNotes
-	  include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType
+	    include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType
       include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsCategory
+      include ErpBaseErpSvcs::Extensions::ActiveRecord::HasContact
     end
-	puts config.active_record.observers
-	config.active_record.observers = :contact_observer
-    puts config.active_record.observers
+    
   end
 end

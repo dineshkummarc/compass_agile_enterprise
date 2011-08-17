@@ -1,30 +1,27 @@
-module ErpApp
+
   module Widgets
-    module ContactUs
+    module Signup
       class Base < ErpApp::Widgets::Base
         def index
-          @use_dynamic_form = params[:use_dynamic_form]
-
           render
         end
 
         def new
           @website = Website.find_by_host(request.host_with_port)
-          @website_inquiry = WebsiteInquiry.new
-          @website_inquiry.website_id = @website.id
-          @website_inquiry.data.created_with_form_id = params[:dynamic_form_id] if params[:is_html_form].blank?
-    
-          params.each do |k,v|
-            @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
-          end
-    
-          @website_inquiry.data.created_by = current_user unless current_user.nil?
-    
-          if @website_inquiry.valid?
-            @website_inquiry.save
-            if @website.email_inquiries?
-              @website_inquiry.send_email
-            end
+          @user = User.create(
+            :first_name => params[:first_name],
+            :last_name => params[:last_name],
+            :email => params[:email],
+            :login => params[:login],
+            :password => params[:password],
+            :password_confirmation => params[:password_confirmation]
+          )
+          if @user.valid?
+            @user.activated_at = Time.now
+            @user.roles << @website.role
+            individual = Individual.create(:current_first_name => @user.first_name, :current_last_name => @user.last_name)
+            @user.party = individual.party
+            @user.save
             render :view => :success
           else
             render :view => :error
@@ -41,7 +38,7 @@ module ErpApp
         
         class << self
           def title
-            "Contact Us"
+            "Sign Up"
           end
           
           def widget_name
@@ -61,4 +58,4 @@ module ErpApp
       end
     end
   end
-end
+

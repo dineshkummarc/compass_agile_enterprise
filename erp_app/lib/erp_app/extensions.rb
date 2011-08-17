@@ -1,5 +1,4 @@
 #railties
-require 'erp_app/extensions/railties/engine'
 require 'erp_app/extensions/railties/action_view'
 
 #active record extensions

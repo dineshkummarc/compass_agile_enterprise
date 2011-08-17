@@ -1,4 +1,4 @@
-module ErpApp
+
   module Widgets
     module Search
       class Base < ErpApp::Widgets::Base
@@ -68,4 +68,4 @@ module ErpApp
       end
     end
   end
-end
+

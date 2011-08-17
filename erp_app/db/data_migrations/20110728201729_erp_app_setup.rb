@@ -177,20 +177,6 @@ class ErpAppSetup
     system_management_app.widgets << app_role_management
     system_management_app.save
     
-    #######################################
-    #file manager app
-    #######################################
-    file_manager_app = DesktopApplication.create(
-      :description => 'File Manager',
-      :icon => 'icon-folders',
-      :javascript_class_name => 'Compass.ErpApp.Desktop.Applications.FileManager',
-      :internal_identifier => 'file_manager',
-      :shortcut_id => 'file_manager-win'
-    )
-
-    file_manager_app.preference_types << PreferenceType.iid('desktop_shortcut')
-    file_manager_app.preference_types << PreferenceType.iid('autoload_application')
-    file_manager_app.save
 
     #######################################
     #scaffold app
@@ -288,7 +274,6 @@ class ErpAppSetup
     
     admin_user.desktop.applications << user_mgr_app
     admin_user.desktop.applications << system_management_app
-    admin_user.desktop.applications << file_manager_app
     admin_user.desktop.applications << scaffold_app
     admin_user.desktop.save
     admin_user.organizer.applications << crm_app
@@ -296,7 +281,6 @@ class ErpAppSetup
     
     truenorth_user.desktop.applications << user_mgr_app
     truenorth_user.desktop.applications << system_management_app
-    truenorth_user.desktop.applications << file_manager_app
     truenorth_user.desktop.applications << scaffold_app
     truenorth_user.desktop.save
     truenorth_user.organizer.applications << crm_app

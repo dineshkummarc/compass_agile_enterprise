@@ -26,7 +26,7 @@ Knitkit::Engine.routes.draw do
   #content
   match '/erp_app/desktop/content/:action' => 'erp_app/desktop/content'
   #website
-  match '/erp_app/desktop/site/:action' => 'erp_app/desktop/website'
+  match '/erp_app/desktop/site(/:action)' => 'erp_app/desktop/website'
   #section
   match '/erp_app/desktop/section/:action' => 'erp_app/desktop/website_section'
   #theme

@@ -12,7 +12,7 @@ ErpApp::Engine.routes.draw do
   #Shared Application Routes
   #############################
 
-  match '/shared/notes/:action/:party_id' => "shared/notes"
+  match '/shared/notes/:action(/:party_id)' => "shared/notes"
 
   #############################
   #Organizer Application Routes

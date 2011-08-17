@@ -4,11 +4,11 @@ module Rails
 	    
 	    widgets = []
 	    engine_path = self.root.to_s
-	    widget_path = File.join(self.root.to_s,"/lib/erp_app/widgets/")
+	    widget_path = File.join(self.root.to_s,"/app/widgets/")
 	    widgets = Dir.entries(widget_path) if File.exists? widget_path
 	    widgets.delete_if{|name| name =~ /^\./}
 	    widgets.each do |widget|
-	      require File.join(self.root.to_s,"/lib/erp_app/widgets/",widget,'base.rb')
+	      require File.join(self.root.to_s,"/app/widgets/",widget,'base.rb')
 	    end
 	    
 	  end

@@ -1,6 +1,6 @@
 class PostalAddress < ActiveRecord::Base
-  #include ErpServices::Base::ContactMgtCallbacks
-  has_one :contact, :as => :contact_mechanism
+  has_contact
+  
   belongs_to :geo_country
   belongs_to :geo_zone
 

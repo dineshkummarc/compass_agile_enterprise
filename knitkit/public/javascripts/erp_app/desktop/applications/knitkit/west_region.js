@@ -61,7 +61,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
     exportSite : function(id){
         var self = this;
         self.setWindowStatus('Exporting theme...');
-        window.open('/erp_app/desktop/knitkit/erp_app/desktop/website/export?id='+id,'mywindow','width=400,height=200');
+        window.open('/erp_app/desktop/knitkit/erp_app/desktop/site/export?id='+id,'mywindow','width=400,height=200');
         self.clearWindowStatus();
     },
 
@@ -376,7 +376,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                 }
             },
             store:store,
-            dataUrl:'/knitkit/erp_app/desktop/websites',
             region: 'center',
             rootVisible:false,
             enableDD :true,
@@ -1617,45 +1616,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 }
                                             }
                                         },
-                                        //                                        {
-                                        //                                            xtype:'combo',
-                                        //                                            id:'knitkit_website_nav_item_article',
-                                        //                                            hiddenName:'article_id',
-                                        //                                            hidden:(record.data.linkToType == 'website_section' || record.data.linkToType == 'url'),
-                                        //                                            name:'article_id',
-                                        //                                            loadingText:'Retrieving Articles...',
-                                        //                                            store:{
-                                        //                                                xtype:'jsonstore',
-                                        //                                                autoLoad:true,
-                                        //                                                baseParams:{
-                                        //                                                    website_id:record.data.websiteId
-                                        //                                                },
-                                        //                                                url:'/knitkit/erp_app/desktop/articles/existing_articles',
-                                        //                                                fields:[
-                                        //                                                {
-                                        //                                                    name:'id'
-                                        //                                                },
-                                        //                                                {
-                                        //                                                    name:'title'
-                                        //
-                                        //                                                }
-                                        //                                                ],
-                                        //                                                listeners:{
-                                        //                                                    'load':function(store, records, options){
-                                        //                                                        Ext.getCmp('knitkit_website_nav_item_article').setValue(record.data.linkedToId);
-                                        //                                                    }
-                                        //                                                }
-                                        //                                            },
-                                        //                                            forceSelection:true,
-                                        //                                            editable:false,
-                                        //                                            fieldLabel:'Article',
-                                        //                                            autoSelect:true,
-                                        //                                            typeAhead: false,
-                                        //                                            mode: 'local',
-                                        //                                            displayField:'title',
-                                        //                                            valueField:'id',
-                                        //                                            triggerAction: 'all'
-                                        //                                        },
                                         {
                                             xtype:'combo',
                                             id:'knitkit_website_nav_item_section',

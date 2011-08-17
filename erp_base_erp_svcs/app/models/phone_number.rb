@@ -1,6 +1,5 @@
 class PhoneNumber < ActiveRecord::Base
-  #include ErpServices::Base::ContactMgtCallbacks
-  has_one :contact, :as => :contact_mechanism
+  has_contact
 
   # return first contact purpose
   def contact_purpose

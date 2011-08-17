@@ -125,7 +125,7 @@ module ErpApp
         Rails::Application::Railties.engines.each do |engine|
           #exclude widgets path in erp_app it defines are widgets
           next if engine.engine_name == "erp_app"
-          widget_path = File.join(engine.root.to_s,"/lib/erp_app/widgets/")
+          widget_path = File.join(engine.root.to_s,"/app/widgets/")
           widgets = widgets | Dir.entries(widget_path) if File.exists? widget_path
         end
         #remove .svn .git etc files

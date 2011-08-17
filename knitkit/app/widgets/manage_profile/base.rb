@@ -1,4 +1,4 @@
-module ErpApp
+
   module Widgets
     module ManageProfile
       class Base < ErpApp::Widgets::Base
@@ -325,4 +325,4 @@ module ErpApp
       end
     end
   end
-end
+
