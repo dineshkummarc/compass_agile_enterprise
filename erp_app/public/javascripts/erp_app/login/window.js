@@ -17,6 +17,7 @@ Ext.define("Compass.ErpApp.Login.Window",{
 			var login     = Ext.getCmp('login').getValue();
 			var password  = Ext.getCmp('password').getValue();
 			var loginTo   = Ext.getCmp('loginTo').getValue();
+			var waitMsg = Ext.Msg.wait('Status','Authenticating...');
 			var conn = new Ext.data.Connection();
 	        var data = {logout_to: self.initialConfig['logoutTo'], remote: true, commit: "Sign in", utf8: "✓",user: {remember_me: 1, password: password, login: login}};
 	        conn.request({
@@ -24,7 +25,8 @@ Ext.define("Compass.ErpApp.Login.Window",{
 	            method: 'POST',
 	            jsonData:data,
 	            success: function(response) {
-	                result = Ext.decode(response.responseText);
+	                waitMsg.close();
+					result = Ext.decode(response.responseText);
 					if(result.success){
 						window.location = loginTo;
 					}
@@ -33,7 +35,8 @@ Ext.define("Compass.ErpApp.Login.Window",{
 					}
 	            },
 	            failure: function(response) {
-	                var message = 'Error Authenticating'
+	                waitMsg.close();
+					var message = 'Error Authenticating'
 	                result = Ext.decode(response.responseText);
 					if(!Compass.ErpApp.Utility.isBlank(result) && !Compass.ErpApp.Utility.isBlank(result.errors)){
 						message = result.errors.reason;

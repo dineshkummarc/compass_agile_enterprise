@@ -19,9 +19,11 @@ module ErpApp
 	  #this is ugly need a better way
 	  (config.active_record.observers.nil?) ? config.active_record.observers = [:user_app_container_observer] : config.active_record.observers << :user_app_container_observer
 		  
-	 #set engine to scope
+	  #set engine to scope
   	engine = self
   	config.to_prepare do 
+  	  #load widgets that might live in root/app/widgets
+  	  engine.load_root_widgets
   		#load extensions for engine
   		engine.load_extensions
   	end

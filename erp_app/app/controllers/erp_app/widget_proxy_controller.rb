@@ -22,14 +22,6 @@ module ErpApp
 		    format.js
 		  end
 		end
-
-	  def user
-		current_user
-	  end
-
-	  def authenticated?
-		authorized?
-	  end
 	  
 	end
 end

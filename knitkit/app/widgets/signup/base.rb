@@ -12,7 +12,7 @@
             :first_name => params[:first_name],
             :last_name => params[:last_name],
             :email => params[:email],
-            :login => params[:login],
+            :username => params[:username],
             :password => params[:password],
             :password_confirmation => params[:password_confirmation]
           )

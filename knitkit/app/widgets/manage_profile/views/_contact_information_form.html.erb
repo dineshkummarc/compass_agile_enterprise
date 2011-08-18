@@ -10,10 +10,8 @@
 	  <% @email_addresses.each_with_index do |e, i|%>
 	    <p>
 	    <span>Email Address <%= i + 1 %></span>
-	    <%= text_field_tag ("email_addresses[#{i}]", e.email_address) %>
-	    <%= select_tag("email_address_contact_purposes[#{i}]", options_for_select(@purpose_hash, 
-			:selected => e.contact.contact_purposes.first.internal_identifier, :disabled => "type"), 
-			{:style => 'width: auto; float: right; margin: 5px 0px;'}) %>
+	    <%= text_field_tag "email_addresses[#{i}]", e.email_address %>
+	    <%= select_tag("email_address_contact_purposes[#{i}]", options_for_select(@purpose_hash, :selected => e.contact.contact_purposes.first.internal_identifier, :disabled => "type"), {:style => 'width: auto; float: right; margin: 5px 0px;'})%>
 	    </p>
 	    <div style='clear:both;'></div>
 	  <% end %>
@@ -31,7 +29,7 @@
 	  <div id='new_email_hide_show' style='display: none;'>
 	    <p>
 	    <span>New Email Address</span>
-        <%= text_field_tag("new_email_address") %>
+        <%= text_field_tag "new_email_address" %>
         <%= select_tag("new_email_address_contact_purpose", options_for_select(@purpose_hash,
         	:selected => "type", :disabled => "type"),
 	        {:style => 'width: auto; float: right; margin: 5px 0px;'}) %>
@@ -48,7 +46,7 @@
 	  <% @phone_numbers.each_with_index do |p, i|%>
 	  <p>
 	    <span>Phone Number <%= i + 1 %></span>
-	    <%= text_field_tag ("phone_numbers[#{i}]", p.phone_number) %>
+	    <%= text_field_tag "phone_numbers[#{i}]", p.phone_number %>
 	    <%= select_tag("phone_number_contact_purposes[#{i}]", options_for_select(@purpose_hash, 
 			:selected => p.contact.contact_purposes.first.internal_identifier, :disabled => "type"), 
 			{:style => 'width: auto; float: right; margin: 5px 0px;'}) %>
@@ -92,13 +90,13 @@
 		
 		<!-- middle column -->
 		<div style="float: left; width: 54%;">
-	      <%= text_field_tag ("postal_addresses[#{i}][address_line_1]", a.address_line_1, {:style => 'margin-bottom: 4px;'}) %>
-		  <%= text_field_tag ("postal_addresses[#{i}][address_line_2]", a.address_line_2, {:style => 'margin-bottom: 4px;'}) %>
+	      <%= text_field_tag "postal_addresses[#{i}][address_line_1]", a.address_line_1, {:style => 'margin-bottom: 4px;'} %>
+		  <%= text_field_tag "postal_addresses[#{i}][address_line_2]", a.address_line_2, {:style => 'margin-bottom: 4px;'} %>
 		
 		  <!-- left sub-column -->
 		  <div style="float: left; width: 50%;">
-			<%= text_field_tag ("postal_addresses[#{i}][city]", a.city, {:style => 'width: auto; margin-bottom: 4px;'}) %>
-			<%= text_field_tag ("postal_addresses[#{i}][zip]", a.zip, {:style => 'width: auto; margin-bottom: 4px;'}) %>
+			<%= text_field_tag "postal_addresses[#{i}][city]", a.city, {:style => 'width: auto; margin-bottom: 4px;'} %>
+			<%= text_field_tag "postal_addresses[#{i}][zip]", a.zip, {:style => 'width: auto; margin-bottom: 4px;'} %>
 		  </div>
 		
 		  <!-- right sub-column -->
@@ -144,13 +142,13 @@
 		
 		  <!-- middle column -->
 		  <div style="float: left; width: 54%;">
-	        <%= text_field_tag ("new_postal_address[address_line_1]", "Address Line 1", {:style => 'margin-bottom: 4px;'}) %>
-		    <%= text_field_tag ("new_postal_address[address_line_2]", "Address Line 2", {:style => 'margin-bottom: 4px;'}) %>
+	        <%= text_field_tag "new_postal_address[address_line_1]", "Address Line 1", {:style => 'margin-bottom: 4px;'} %>
+		    <%= text_field_tag "new_postal_address[address_line_2]", "Address Line 2", {:style => 'margin-bottom: 4px;'} %>
 		  
 		    <!-- left sub-column -->
 		    <div style="float: left; width: 50%;">
-			  <%= text_field_tag ("new_postal_address[city]", "City", {:style => 'width: auto; margin-bottom: 4px;'}) %>
-			  <%= text_field_tag ("new_postal_address[zip]", "Zipcode", {:style => 'width: auto; margin-bottom: 4px;'}) %>
+			  <%= text_field_tag "new_postal_address[city]", "City", {:style => 'width: auto; margin-bottom: 4px;'} %>
+			  <%= text_field_tag "new_postal_address[zip]", "Zipcode", {:style => 'width: auto; margin-bottom: 4px;'} %>
 		    </div>
 		
 		    <!-- right sub-column -->
@@ -191,4 +189,4 @@
       </p>
 
     </div>
-  <% end %>
+<% end %>

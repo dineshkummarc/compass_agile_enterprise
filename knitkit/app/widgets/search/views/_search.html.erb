@@ -8,7 +8,7 @@
       <%= submit_tag "Search", :disable_with => "Please wait...", :class => "submit" %>
     <% end %>
   <% else %>
-    <%= form_tag "/#{@results_permalink}", :method => :get,  html => {:id => 'search_form', :class => @css_class}  do %>
+    <%= form_tag "/#{@results_permalink}", :method => :get, :html => {:id => 'search_form', :class => @css_class}  do %>
       <%= hidden_field_tag :section_permalink, @section_permalink %>
       <%= hidden_field_tag :results_permalink, @results_permalink %>
       <%= hidden_field_tag :content_type, @content_type %>
