@@ -1,4 +1,6 @@
-module ActiveExt::ExtHelpers::FieldBuilder
+module ActiveExt
+module ExtHelpers
+module FieldBuilder
   class << self
 
     def build_field(column, value, display_only = false, hidden = false)
@@ -139,4 +141,6 @@ module ActiveExt::ExtHelpers::FieldBuilder
     end
 
   end
+end
+end
 end

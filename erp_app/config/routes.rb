@@ -35,8 +35,8 @@ ErpApp::Engine.routes.draw do
   #match '/desktop/tenancy/:action' => "desktop/tenancy/base#index"
 
   #scaffold
-  match '/desktop/scaffold/role/:action' => "desktop/scaffold/role"
   match '/desktop/scaffold/:action' => "desktop/scaffold/base"
+  match '/desktop/scaffold/role/:action(:/id)' => "desktop/scaffold/role#index"
   
   #user_management
   match '/desktop/user_management/users(/:action(/:id))' => "desktop/user_management/base"

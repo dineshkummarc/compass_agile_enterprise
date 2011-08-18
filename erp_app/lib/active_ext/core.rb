@@ -1,4 +1,5 @@
-class ActiveExt::Core
+module ActiveExt
+class Core
   attr :model_id
   attr_accessor :columns
   attr_accessor :association_names
@@ -77,4 +78,5 @@ class ActiveExt::Core
     end
   end
 
+end
 end

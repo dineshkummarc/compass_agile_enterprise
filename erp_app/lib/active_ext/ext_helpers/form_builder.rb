@@ -1,4 +1,6 @@
-module ActiveExt::ExtHelpers::FormBuilder
+module ActiveExt
+module ExtHelpers
+module FormBuilder
   class << self
 
     def build_form_fields(core, model_id, action)
@@ -42,4 +44,6 @@ module ActiveExt::ExtHelpers::FormBuilder
     end
 
   end
+end
+end
 end

@@ -1,4 +1,6 @@
-module ActiveExt::ExtHelpers::ColumnBuilder
+module ActiveExt
+module ExtHelpers
+module ColumnBuilder
 
   def self.build_column(column)
     column_hash = nil
@@ -129,4 +131,6 @@ module ActiveExt::ExtHelpers::ColumnBuilder
     column
   end
 
+end
+end
 end
