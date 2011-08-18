@@ -1,4 +1,6 @@
-class ActiveExt::DataStructures::Column
+module ActiveExt
+module DataStructures
+class Column
   attr_accessor :name, :association, :column, :options
   
   def initialize(name, active_record_class)
@@ -14,4 +16,6 @@ class ActiveExt::DataStructures::Column
   def sql_type
     @column.type
   end
+end
+end
 end

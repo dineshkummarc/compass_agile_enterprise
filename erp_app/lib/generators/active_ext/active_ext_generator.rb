@@ -18,7 +18,7 @@ class ActiveExtGenerator < Rails::Generators::NamedBase
     end
     
     #route
-    route "match map.connect \"/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}/:action\" => \"erp_app/#{container_file_name}/#{application_file_name}/#{file_name}#index\""
+    route "match \"/erp_app/#{container_file_name}/#{application_file_name}/#{file_name}/:action(/:id)\" => \"erp_app/#{container_file_name}/#{application_file_name}/#{file_name}#index\""
   end
 
   def application_file_name

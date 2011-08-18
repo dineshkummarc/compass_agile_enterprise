@@ -1,4 +1,6 @@
-module ActiveExt::ExtHelpers::DataHelper
+module ActiveExt
+module ExtHelpers
+module DataHelper
   def self.build_json_data(core, options={})
     result = {:totalCount => 0, :data => []}
     klass = get_klass(core.model)
@@ -58,5 +60,6 @@ module ActiveExt::ExtHelpers::DataHelper
   def self.get_klass(model)
     model.to_s.constantize
   end
-
+end
+end
 end

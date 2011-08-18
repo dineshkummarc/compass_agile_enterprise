@@ -1,4 +1,6 @@
-module ActiveExt::ExtHelpers::TableBuilder
+module ActiveExt
+module ExtHelpers
+module TableBuilder
 
   def self.generate_columns_and_fields(core)
     columns     = self.build_columns(core)
@@ -70,4 +72,6 @@ module ActiveExt::ExtHelpers::TableBuilder
     validations
   end
 
+end
+end
 end

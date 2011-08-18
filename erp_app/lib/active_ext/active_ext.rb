@@ -1,3 +1,7 @@
+require 'active_ext/data_structures/data_structures'
+require 'active_ext/ext_helpers/ext_helpers'
+require 'active_ext/core'
+
 module ActiveExt
   def self.included(base)
     base.extend(ClassMethods)
@@ -581,5 +585,3 @@ module ActiveExt
     end
   end
 end
-
-ActionController::Base.send(:include, ActiveExt)

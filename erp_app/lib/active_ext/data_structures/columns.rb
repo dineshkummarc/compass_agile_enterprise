@@ -1,4 +1,6 @@
-class ActiveExt::DataStructures::Columns
+module ActiveExt
+module DataStructures
+class Columns
   include Enumerable
 
   # This collection is referenced by other parts of ActiveExt and by methods within this DataStructure.
@@ -59,4 +61,6 @@ class ActiveExt::DataStructures::Columns
   def exclude_column?(name)
     @excluded_columns.include?(name)
   end
+end
+end
 end
