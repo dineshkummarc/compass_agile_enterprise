@@ -246,13 +246,11 @@ class ErpAppSetup
     #######################################
     admin_indvidual = Individual.find(:first, :conditions => ['current_first_name = ?',"Admin"])
     admin_user = User.create(
-      :login => "admin",
+      :username => "admin",
       :email => "admin@portablemind.com"
     )
     admin_user.password = 'password'
     admin_user.password_confirmation = 'password'
-    admin_user.activated_at = Time.now
-    admin_user.enabled = true
     admin_user.party = admin_indvidual.party
     admin_user.save
     admin_user.roles << Role.iid('admin')
@@ -260,13 +258,11 @@ class ErpAppSetup
 
     truenorth = Organization.find(:first, :conditions => ['description = ?', 'TrueNorth'])
     truenorth_user = User.create(
-      :login => truenorth.description.downcase,
+      :username => truenorth.description.downcase,
       :email => "#{truenorth.description.downcase}@gmail.com"
     )
     truenorth_user.password = 'password'
     truenorth_user.password_confirmation = 'password'
-    truenorth_user.activated_at = Time.now
-    truenorth_user.enabled = true
     truenorth_user.party = truenorth.party
     truenorth_user.save
     truenorth_user.roles << Role.iid('admin')

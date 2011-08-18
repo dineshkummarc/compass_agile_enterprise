@@ -18,12 +18,12 @@ module RoutingFilter
       yield
     end
     
-    def around_generate(*args, &block)      
-      returning yield do |result|
-        result = result.first if result.is_a?(Array)
-        if result !~ %r(^/([\w]{2,4}/)?admin) and result =~ generate_pattern
+    def around_generate(params, &block)      
+      yield.tap do |path|
+        path = path.first if path.is_a?(Array)
+        if path !~ %r(^/([\w]{2,4}/)?admin) and path =~ generate_pattern
           website_section = WebsiteSection.find $2.to_i
-          result.sub! "#{$1}/#{$2}", "#{website_section.permalink}#{$3}"
+          path.sub! "#{$1}/#{$2}", "#{website_section.permalink}#{$3}"
         end
       end
     end

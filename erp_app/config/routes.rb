@@ -5,19 +5,17 @@ ErpApp::Engine.routes.draw do
   #ErpApp general routes
   ##########################
   match '/application/:action' => "application"
-  match '/logout' => "application#destroy"
+  match '/login(/:action)' => "login"
   match '/public/:action' => "public"
 
   #############################
   #Shared Application Routes
   #############################
-
   match '/shared/notes/:action(/:party_id)' => "shared/notes"
 
   #############################
   #Organizer Application Routes
   #############################
-  match '/organizer/login' => "organizer/login#index"
   match '/organizer(/:action)' => "organizer/base"
   
   #crm

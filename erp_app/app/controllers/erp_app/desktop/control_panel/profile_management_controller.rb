@@ -4,8 +4,7 @@ module ErpApp
 			class ProfileManagementController < ErpApp::Desktop::ControlPanel::BaseController
 			  def update_password
 				user = current_user
-
-				unless user.authenticated?(params[:old_password])
+				unless user.valid_password?(params[:old_password])
 				  message = "Invalid current password."
 				  response = {:success => false, :message => message}
 				else

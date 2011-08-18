@@ -5,7 +5,7 @@
     <div class="blog_post" id="blog_<%=h content.id %>">
       <h4><%=h content.title %></h4>
       <p>
-        Posted: <%= content.created_at.to_s(:long) %> <%="by #{content.content.created_by.login}" rescue '' %><br />
+        Posted: <%= content.created_at.to_s(:long) %> <%="by #{content.content.created_by.username}" rescue '' %><br />
         Topics: <%=content.content.tag_list %>
       </p>
       <div class="blog_body">

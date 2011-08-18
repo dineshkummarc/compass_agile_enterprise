@@ -18,7 +18,7 @@ module ErpApp
 			  party = Party.find(params[:party_id])
 			  notes = party.notes.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
 			
-			  render :inline => "{\"totalCount\":#{party.notes.count}, \"notes\":#{notes.to_json(:only => [:id, :content, :created_at], :methods => [:summary, :note_type_desc, :created_by_login])}}"
+			  render :inline => "{\"totalCount\":#{party.notes.count}, \"notes\":#{notes.to_json(:only => [:id, :content, :created_at], :methods => [:summary, :note_type_desc, :created_by_username])}}"
 			end
 		  end
 

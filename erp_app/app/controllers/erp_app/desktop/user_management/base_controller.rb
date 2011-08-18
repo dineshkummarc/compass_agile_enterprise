@@ -5,18 +5,26 @@ module ErpApp
 			  before_filter :get_user, :only => [:get_details, :update_user_password, :delete]
 
 			  def index
-				User.include_root_in_json = false
-				login = params[:login]
+				  User.include_root_in_json = false
+          username = params[:username]
+          sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+          sort = sort_hash[:property] || 'username'
+          dir  = sort_hash[:direction] || 'ASC'
+          limit = params[:limit] || 25
+          start = params[:start] || 0
+          total_count = 0
 
-				if login.blank?
-				  users = User.all
-				else
-				  users = User.find(:all, :conditions => ['login like ?', "%#{login}%"])
-				end
+          if username.blank?
+            users = User.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+            total_count = User.count
+          else
+            users = User.find(:all, :conditions => ['username like ?', "%#{username}%"], :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+            total_count = users.count
+          end
 
-				ext_json = "{data:#{users.to_json(:only => [:id, :login, :email, :party_id])}}"
+          ext_json = "{\"totalCount\":#{total_count},data:#{users.to_json(:only => [:id, :username, :email, :party_id])}}"
 
-				render :inline => ext_json
+          render :inline => ext_json
 			  end
 
 			  def new
@@ -39,7 +47,7 @@ module ErpApp
 				else
 				  message = "<ul>"
 				  user.errors.collect do |e, m|
-					message << "<li>#{e.humanize unless e == "base"} #{m}</li>"
+					message << "<li>#{e} #{m}</li>"
 				  end
 				  message << "</ul>"
 				  response = {:success => false, :message => message}
@@ -70,7 +78,7 @@ module ErpApp
 				else
 				  message = "<ul>"
 				  @user.errors.collect do |e, m|
-					message << "<li>#{e.humanize unless e == "base"} #{m}</li>"
+					message << "<li>#{e} #{m}</li>"
 				  end
 				  message << "</ul>"
 				  response = {:success => false, :message => message}

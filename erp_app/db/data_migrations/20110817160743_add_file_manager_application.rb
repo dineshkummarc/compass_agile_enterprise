@@ -13,11 +13,11 @@ class AddFileManagerApplication
     file_manager_app.preference_types << PreferenceType.iid('autoload_application')
     file_manager_app.save
     
-    admin_user = User.find_by_login('admin')
+    admin_user = User.find_by_username('admin')
     admin_user.desktop.applications << file_manager_app
     admin_user.save
     
-    truenorth_user = User.find_by_login('truenorth')
+    truenorth_user = User.find_by_username('truenorth')
     truenorth_user.desktop.applications << file_manager_app
     truenorth_user.save
   end

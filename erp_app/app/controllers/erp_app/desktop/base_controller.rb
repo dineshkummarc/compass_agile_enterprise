@@ -2,12 +2,7 @@ module ErpApp
 	module Desktop
 		class BaseController < ErpApp::ApplicationController
 		  layout nil
-		  
-		  before_filter :login_required
-
-		  def login_path
-			return desktop_login_path
-		  end
+		  before_filter :authenticate_user!
 
 		  def index
 			@user     = current_user

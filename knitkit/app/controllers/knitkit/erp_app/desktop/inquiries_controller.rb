@@ -43,7 +43,7 @@ class InquiriesController < Knitkit::ErpApp::Desktop::AppController
 
     WebsiteInquiry.class_eval do
       def username
-        data.created_by.nil? ? '' : data.created_by.login
+        data.created_by.nil? ? '' : data.created_by.username
       end
     end
 

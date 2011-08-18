@@ -11,6 +11,7 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
+gem 'devise', '1.1.rc0'
 gem 'paperclip'
 gem 'delayed_job'
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'

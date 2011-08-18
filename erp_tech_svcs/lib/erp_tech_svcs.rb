@@ -1,7 +1,6 @@
 require 'paperclip'
 require 'delayed_job'
-require "erp_tech_svcs/authentication/authenticated_system"
-require "erp_tech_svcs/authentication/constants"
+require 'devise'
 require "erp_tech_svcs/utils/compass_logger"
 require "erp_tech_svcs/extensions"
 require "erp_tech_svcs/engine"

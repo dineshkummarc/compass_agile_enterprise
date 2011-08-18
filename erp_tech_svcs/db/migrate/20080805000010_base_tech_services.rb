@@ -2,58 +2,24 @@ class BaseTechServices < ActiveRecord::Migration
   def self.up
     unless table_exists?(:users)
       # Create the users table
-      create_table :users, :force => true do |t|
-		t.column :user_type,			      :string
-        t.column :login,                      :string, :limit => 40
-        t.column :name,                       :string, :limit => 100, :default => '', :null => true
-        t.column :email,                      :string, :limit => 100
-        t.column :crypted_password,           :string, :limit => 40
-        t.column :salt,                       :string, :limit => 40
-        t.column :created_at,                 :datetime
-        t.column :updated_at,                 :datetime
-        t.column :remember_token,             :string, :limit => 40
-        t.column :remember_token_expires_at,  :datetime
-        t.column :activation_code,            :string, :limit => 40
-        t.column :activated_at,               :datetime
-        t.column :activation_code_expires_at, :datetime
- 	    t.column :password_reset_code,        :string, :limit => 40
-        t.column :enabled,                    :boolean,:default => true   
-	    t.column :identity_url,				  :string
-	    t.column :invitation_id,			  :integer
-	    t.column :invitation_limit, 		  :integer
-	    t.column :party_id,                   :integer
+      create_table :users, do |t|
+        t.database_authenticatable :null => false
+        # t.confirmable
+        t.recoverable
+        t.rememberable
+        t.trackable
+        # t.lockable :lock_strategy => :failed_attempts, :unlock_strategy => :both
+        t.string :username
+        t.references :party
 
-	      # merge in add_security_questions_add_and_mist_to_user migration
-        t.column :club_number,          :string
-        t.column :owner_number,         :string
-        t.column :dob,                  :date
-        t.column :ssn_last_four,        :string
-
-        t.column :salutation,           :string
-        t.column :first_name,           :string
-        t.column :last_name,            :string
-
-        t.column :street_address,       :string
-        t.column :city,                 :string
-        t.column :state_province,       :string
-        t.column :postal_code,          :string
-        t.column :country,              :string
-        t.column :phone,                :string
-
-        t.column :security_question_1,  :string
-        t.column :security_answer_1,    :string
-
-        t.column :security_question_2,  :string
-        t.column :security_answer_2,    :string  
-
-        # merge in add_password_lock_count_column migration
-	      t.column :lock_count,           :integer,     :default => 0
+        t.timestamps
       end
-	  add_index :users, :login
-	  add_index :users, :party_id
-	  add_index :users, :name
-      add_index :users, :email
-      add_index :users, :enabled
+      add_index :users, :email,                :unique => true
+      add_index :users, :username,             :unique => true
+      #add_index :users, :confirmation_token,  :unique => true
+      add_index :users, :reset_password_token, :unique => true
+      #add_index :users, :unlock_token,        :unique => true
+      add_index :users, :party_id,             :unique => true
     end
 
     unless table_exists?(:roles)

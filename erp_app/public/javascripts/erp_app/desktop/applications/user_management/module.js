@@ -229,10 +229,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                 type: 'ajax',
                 url : 'user_management/users/',
                 reader: {
+                    idProperty: 'id',
+                    totalProperty:'totalCount',
                     type: 'json',
                     root: 'data'
                 }
             },
+            remoteSort:true,
             fields:[
             {
                 name: 'id',
@@ -243,7 +246,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                 type:'int'
             },
             {
-                name: 'login',
+                name: 'username',
                 type: 'string'
             },
             {
@@ -254,8 +257,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
         });
          
         var columns = [{
-            header:'Login',
-            dataIndex:'login',
+            header:'Username',
+            dataIndex:'username',
             width:150
         },
         {
@@ -378,9 +381,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                             },
                             {
                                 xtype:'textfield',
-                                fieldLabel:'Login',
+                                fieldLabel:'Username',
                                 allowBlank:false,
-                                name:'login'
+                                name:'username'
                             },
                             {
                                 xtype:'textfield',
@@ -451,20 +454,21 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             text: 'Search',
             iconCls: 'icon-search',
             handler: function(button) {
-                var login = Ext.getCmp('user_search_field').getValue();
+                var username = Ext.getCmp('user_search_field').getValue();
                 usersStore.setProxy({
                     type: 'ajax',
                     url: './user_management/users/',
                     reader: {
                         type: 'json',
-                        root: 'data'
+                        root: 'data',
+                        idProperty: 'id',
+                        totalProperty:'totalCount'
                     },
                     extraParams:{
-                        login:login
+                        username:username
                     }
                 });
-
-                usersStore.load();
+                usersStore.loadPage(1);
             }
         });
 
@@ -477,8 +481,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             tbar:{
                 items:toolBarItems
             },
-            bbar: Ext.create("Ext.PagingToolbar",{
-                pageSize: 30,
+            bbar: Ext.create("Ext.toolbar.Paging",{
+                pageSize: 25,
                 store: usersStore,
                 displayInfo: true,
                 displayMsg: 'Displaying {0} - {1} of {2}',

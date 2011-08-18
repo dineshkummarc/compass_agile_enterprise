@@ -34,7 +34,7 @@
   <body scroll="no">
     <script type="text/javascript">
       Ext.onReady(function() {
-        var organizerLayout = Ext.create("Compass.ErpApp.Organizer.Layout",{logout_url:'../logout'});
+        var organizerLayout = Ext.create("Compass.ErpApp.Organizer.Layout",{logout_url:'/users/sign_out'});
 
         <%@organizer.applications.each do |application|%>
 

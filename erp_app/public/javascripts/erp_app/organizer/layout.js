@@ -53,7 +53,7 @@ Compass.ErpApp.Organizer.Layout = function(config){
                         else
                         if(btn == 'yes')
                         {
-                            var defaultLogoutUrl = Compass.ErpApp.Utility.getRootUrl() + 'erp_app/logout';
+                            var defaultLogoutUrl = '/users/sign_out';
                             if(Compass.ErpApp.Utility.isBlank(this.layoutConfig) || Compass.ErpApp.Utility.isBlank(this.layoutConfig["logout_url"])){
                                 window.location = defaultLogoutUrl;
                             }

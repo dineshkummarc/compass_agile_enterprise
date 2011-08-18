@@ -13,11 +13,11 @@ class RailsDbAdminApplication
     rails_db_admin_app.preference_types << PreferenceType.iid('autoload_application')
     rails_db_admin_app.save
     
-    admin_user = User.find_by_login('admin')
+    admin_user = User.find_by_username('admin')
     admin_user.desktop.applications << rails_db_admin_app
     admin_user.save
     
-    truenorth_user = User.find_by_login('truenorth')
+    truenorth_user = User.find_by_username('truenorth')
     truenorth_user.desktop.applications << rails_db_admin_app
     truenorth_user.save
   end

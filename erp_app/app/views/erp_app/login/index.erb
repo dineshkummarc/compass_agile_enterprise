@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>Desktop Login</title>
+    <title>Compass AE Login</title>
 
     <%= include_extjs %>
     <%= static_stylesheet_link_tag('erp_app/compass-ext-all.css','erp_app/login/main.css') %>
@@ -15,7 +15,8 @@
    </div>
     <script type="text/javascript">
       Ext.onReady(function(){
-          var loginWindow = new Compass.ErpApp.Login.Window({title:'Desktop Login', redirectTo:'../desktop/', logoutTo:'/erp_app/desktop/login', message:'<%=flash[:error]%>'});
+          var appContainers = [['/erp_app/desktop/','Compass Desktop'],['/erp_app/organizer/','Compass Organizer']];
+          var loginWindow = new Compass.ErpApp.Login.Window({appContainers:appContainers, redirectTo:'../desktop/', logoutTo:'/erp_app/desktop/login', message:'<%=flash[:error]%>'});
           loginWindow.show();
       });
     </script>

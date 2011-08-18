@@ -14,7 +14,7 @@ class CommentsController < Knitkit::ErpApp::Desktop::AppController
 
     Comment.class_eval do
       def approved_by_username
-        approved_by.nil? ? '' : approved_by.login
+        approved_by.nil? ? '' : approved_by.username
       end
     end
 

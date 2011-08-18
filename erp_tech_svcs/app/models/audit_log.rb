@@ -11,7 +11,7 @@ class AuditLog < ActiveRecord::Base
   def user_id_name
    u= Party.find(:first, :conditions=>"id = #{user_id}")
    if(u!=nil)
-     return u.user.login
+     return u.user.username
    else
      return "cannot find user #{user_id}"
    end

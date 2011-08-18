@@ -90,7 +90,7 @@ Ext.define("Compass.ErpApp.Shared.NotesGrid",{
                 type: 'string'
             },
             {
-                name:'created_by_login',
+                name:'created_by_username',
                 type:'string'
             },
             {
@@ -112,7 +112,7 @@ Ext.define("Compass.ErpApp.Shared.NotesGrid",{
         },
         {
             header:'Created By',
-            dataIndex:'created_by_login',
+            dataIndex:'created_by_username',
             width:100
         },
         {
