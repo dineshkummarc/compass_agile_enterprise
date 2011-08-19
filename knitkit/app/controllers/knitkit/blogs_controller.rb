@@ -1,5 +1,5 @@
 module Knitkit
-class BlogsController < KnitKit::ArticlesController
+class BlogsController < ArticlesController
   PER_PAGE = 10
   
   def index

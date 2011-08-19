@@ -25,7 +25,6 @@ ErpApp::Engine.routes.draw do
   #Desktop Application Routes
   ############################
   match '/desktop' => "desktop/base#index"
-  match '/desktop/login' => "desktop/login#index"
 
   #Desktop Applications
 

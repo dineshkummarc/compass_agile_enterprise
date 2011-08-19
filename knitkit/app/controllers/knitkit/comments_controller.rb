@@ -1,5 +1,5 @@
 module Knitkit
-class CommentsController < Knitkit::BaseController
+class CommentsController < BaseController
   def add
     user    = current_user
     website_section = WebsiteSection.find(params[:section_id])

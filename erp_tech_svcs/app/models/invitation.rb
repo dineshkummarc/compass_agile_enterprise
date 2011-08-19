@@ -5,8 +5,7 @@ class Invitation < ActiveRecord::Base
 	validates_presence_of 	:email
 	validates_uniqueness_of :email, :message => '^This email address has already been submitted'
 	validates_length_of     :email, :within => 6..100
-  validates_format_of     :email, :with => Authentication.email_regex, 
-																	:message => Authentication.bad_email_message
+    validates_format_of     :email, :with => /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/, :message => "Email address is invalid"
 
 	validate :recipient_is_not_registered
 	validate :sender_has_invitations, :if => :sender

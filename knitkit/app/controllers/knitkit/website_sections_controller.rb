@@ -1,5 +1,5 @@
 module Knitkit
-class WebsiteSectionsController < Knitkit::BaseController
+class WebsiteSectionsController < BaseController
   def index
     if @website_section.has_access?(current_user)
       @contents = Article.find_published_by_section(@active_publication, @website_section)
