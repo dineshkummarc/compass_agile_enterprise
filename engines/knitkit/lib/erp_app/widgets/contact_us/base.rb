@@ -11,19 +11,15 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
   end
 
   def new
-    @website = Website.find_by_host(request.host_with_port)
+    @website = Website.find_by_host(request.host_with_port)    
     @website_inquiry = WebsiteInquiry.new
-    @website_inquiry.website_id = @website.id
-    @website_inquiry.data.created_with_form_id = params[:dynamic_form_id] if params[:is_html_form].blank?
-    
-    params.each do |k,v|
-      @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
-    end
-    
-    @website_inquiry.data.created_by = current_user unless current_user.nil?
-    
-    if @website_inquiry.valid?
-      @website_inquiry.save
+
+    params[:created_by] = current_user unless current_user.nil?
+    params[:created_with_form_id] = params[:dynamic_form_id] if params[:dynamic_form_id] and params[:is_html_form].blank?
+    params[:website_id] = @website.id
+    @website_inquiry = DynamicFormModel.save_all_attributes(@website_inquiry, params, ErpApp::Widgets::Base::IGNORED_PARAMS)
+        
+    if @website_inquiry
       if @website.email_inquiries?
         @website_inquiry.send_email
       end

@@ -2,33 +2,6 @@ class DynamicForm < ActiveRecord::Base
   belongs_to :dynamic_form_model
 
   validates_uniqueness_of :internal_identifier, :scope => :model_name
-
-  #get all file in root app/models, first level plugins app/models & extensions
-  def self.models_with_dynamic_forms
-    model_names = []
-    base_models = Dir.glob("#{RAILS_ROOT}/app/models/*.rb")
-    plugin_models = Dir.glob("#{RAILS_ROOT}/vendor/plugins/*/app/models/*.rb")
-    extensions = Dir.glob("#{RAILS_ROOT}/vendor/plugins/*/app/models/extensions/*.rb")
-    widget_models = Dir.glob("#{RAILS_ROOT}/vendor/plugins/*/lib/erp_app/widgets/*/models/*.rb")
-    files = base_models + plugin_models + extensions + widget_models
-    
-    files.each do |filename|
-      next if filename =~ /#{['svn','git'].join("|")}/
-      open(filename) do |file|
-        if file.grep(/has_dynamic_forms/).any?
-          model = File.basename(filename).gsub(".rb", "").camelize
-          if DynamicForm.class_exists?(model)
-            model_names << model
-          end
-        end
-      end
-    end
-    
-    model_names.delete('DynamicForm')
-    model_names.delete('DynamicFormDocument')
-
-    model_names
-  end
   
   def self.class_exists?(class_name)
     klass = Module.const_get(class_name)
@@ -59,22 +32,59 @@ class DynamicForm < ActiveRecord::Base
     d = self.definition
 
     # remove preceding comma
-    validateOnBlur = '"validateOnBlur": true,'
-    d = d.gsub(validateOnBlur,'"validateOnBlur": true')         
+#    validateOnBlur = '"validateOnBlur": true,'
+#    d = d.gsub(validateOnBlur,'"validateOnBlur": true')         
 
     # remove validator, not JSON compliant
-    validator = '\"validator\": function\(v\)\{(.+)\}\},'   
-    regex = Regexp.new(validator, Regexp::MULTILINE)
-    d = d.gsub(regex,'},')         
+#    validator = '\"validator\": function\(v\)\{(.+)\}\},'   
+#    regex = Regexp.new(validator, Regexp::MULTILINE)
+#    d = d.gsub(regex,'},')         
     
-    JSON.parse(d)
+    o = JSON.parse(d)
+    o.map! do |i|
+      i = i.symbolize_keys
+    end
+    
+    o
+  end
+  
+  def definition_with_validation
+    def_object = add_validation(self.definition_object)
+    definition_with_validation = post_json_strip_validator_quotes(def_object.to_json)
+  end
+  
+  def add_validation(def_object)
+    def_object.each do |item|      
+      if item[:validator_function] and item[:validator_function] != ""
+#        puts "func"
+        item[:validator] = "function(v){ regex = this.initialConfig.validation_regex; return #{item[:validator_function]}; }"
+      elsif item[:validation_regex]  and item[:validation_regex] != ""
+#        puts "regex"
+        item[:validator] = "function(v){ return validate_regex(v, this.initialConfig.validation_regex); }"
+      end
+    end
+    
+    def_object
+  end
+  
+  # we must convert the validator function value from a string to a function
+  def post_json_strip_validator_quotes(json)
+    # remove quotes from validator
+    regex = Regexp.new('\"validator\":\"(.+)\(v\)\{(.+)\}\"')
+    json = json.gsub(regex){ |match|
+      r = Regexp.new(':\"')
+      match.gsub!(r,':')
+      r = Regexp.new('\"$')
+      match.gsub!(r,'')
+    }
+    json
   end
   
   # check field against form definition to see if field still exists
   # returns true if field does not exist
   def deprecated_field?(field_name)
     definition_object.each do |field|
-      return false if field['name'] == field_name.to_s
+      return false if field[:name] == field_name.to_s
     end
     
     return true
@@ -84,6 +94,58 @@ class DynamicForm < ActiveRecord::Base
     '[' + array_of_fields.join(',') + ']'
   end
   
+  def to_extjs_formpanel(options={})    
+    javascript = "{
+              xtype: 'form',
+              id: 'dynamic_form_panel',
+              url:'#{options[:url]}',
+              title: '#{self.description}',
+              width: #{options[:width]},
+              frame: true,
+              bodyStyle:'padding: 5px 5px 0;',
+              baseParams: {"
+                
+    javascript += "  id: #{options[:record_id]}," if options[:record_id]
+              
+    javascript += "  dynamic_form_id: #{self.id},
+                dynamic_form_model_id: #{self.dynamic_form_model_id},
+                model_name: '#{self.model_name}'
+              },
+              items: #{definition_with_validation},
+
+              buttons: [{
+                  text: 'Submit',
+                  listeners:{
+                      'click':function(button){
+                          var formPanel = Ext.getCmp('dynamic_form_panel');
+                          formPanel.getForm().submit({
+                              reset:true,
+                              success:function(form, action){
+                                  Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
+                                  if (Ext.getCmp('DynamicFormDataGridPanel')){
+                                      Ext.getCmp('DynamicFormDataGridPanel').query('shared_dynamiceditablegrid')[0].store.load();                                                                      
+                                  }
+                              },
+                              failure:function(form, action){
+                                Ext.Msg.alert(action.response.responseText);                                
+                              }
+                          });
+                      }
+                  }
+                  
+              },{
+                  text: 'Cancel',
+                  listeners:{
+                      'click':function(button){
+                          Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
+                      }
+                  }
+              }]
+          }"
+#      logger.info javascript
+    javascript    
+  end
+  
   # convert form definition to ExtJS form
   # definition is essentially the formpanel items
   #
@@ -91,7 +153,7 @@ class DynamicForm < ActiveRecord::Base
   # :url => pass in URL for form to post to
   # :widget_result_id => 
   # :width =>
-  def to_extjs(options={})
+  def to_extjs_widget(options={})
     options[:width] = "'auto'" if options[:width].nil?
 
     #NOTE: The random nbsp; forces IE to eval this javascript!
@@ -112,7 +174,7 @@ class DynamicForm < ActiveRecord::Base
                 dynamic_form_model_id: #{self.dynamic_form_model_id},
                 model_name: '#{self.model_name}'
               },
-              items: #{self.definition},
+              items: #{definition_with_validation},
 
               buttons: [{
                   text: 'Submit',
@@ -130,7 +192,9 @@ class DynamicForm < ActiveRecord::Base
                                   });
                               },
                               failure:function(form, action){
-                                Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;
+                                if (action.response){
+                                  Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;                                  
+                                }
                               }
                           });
                       }
@@ -143,7 +207,7 @@ class DynamicForm < ActiveRecord::Base
       });        
 
        </script>"
-      #puts javascript
+      #logger.info javascript
     javascript
   end
   

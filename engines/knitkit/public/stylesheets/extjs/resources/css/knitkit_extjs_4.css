@@ -207,3 +207,13 @@ button
 {
 	background-image:none;
 }
+
+/* invalid field */
+.x-form-invalid-field,textarea.x-form-invalid-field
+{
+	background-color:#FFF;
+	background-image:url(../../resources/themes/images/default/grid/invalid_line.gif);
+	background-position:bottom;
+	background-repeat:repeat-x;
+	border-color:#c30;
+}

@@ -95,15 +95,21 @@ class DynamicFormField
       field += ",
         \"store\": #{selections.to_json}"
     end
+
+    if options[:validation_regex] or options[:validator_function]
+      field += ",    
+        \"validateOnBlur\": true"
+    end
+    
     
     if options[:validation_regex] and options[:validation_regex] != ''
       field += ",    
-        \"validateOnBlur\": true,
-        \"validator\": function(v){
-          var pattern = /#{options[:validation_regex]}/;
-          var regex = new RegExp(pattern);
-          return regex.test(v);          
-        }"
+        \"validation_regex\": \"#{options[:validation_regex]}\""
+    end
+
+    if options[:validator_function] and options[:validator_function] != ''
+      field += ",    
+        \"validator_function\": \"#{options[:validation_regex]}\""
     end
     
     field += "}"
