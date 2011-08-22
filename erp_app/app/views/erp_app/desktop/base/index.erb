@@ -105,11 +105,7 @@
     <script type="text/javascript">
       Ext.define("MyDesktop.App",{
         extend:"Ext.ux.desktop.App",
-        requires:["Ext.window.MessageBox",
-          "Ext.ux.desktop.ShortcutModel",
-          "Compass.ErpApp.Desktop.Applications.ControlPanel",
-          "Compass.ErpApp.Desktop.Applications.WebNavigator",
-          <%=@desktop.applications.collect(&:javascript_class_name).join(",").to_s%>],
+        requires:["Ext.window.MessageBox","Ext.ux.desktop.ShortcutModel"],
         init:function(){
           this.callParent()
         },
@@ -133,8 +129,8 @@
               model:"Ext.ux.desktop.ShortcutModel",
               data:[
                 {applicationId:0,name:"Control Panel",iconCls:"control-panel-win-shortcut",module:"control-panel-win",autoLoad:'na'},
-                {applicationId:0,name:"Web Navigator",iconCls:"web-navigator-win-shortcut",module:"web-navigator-win",autoLoad:'na'},
-                <%=@desktop.shortcuts.collect{|app| "{name:'#{app.description}',iconCls:'#{app.shortcut_id}-shortcut',module:'#{app.shortcut_id}'}"}.join(",").to_s%>
+                {applicationId:0,name:"Web Navigator",iconCls:"web-navigator-win-shortcut",module:"web-navigator-win",autoLoad:'na'}<%=(@desktop.shortcuts.count > 0) ? ',' : '' %>
+				<%=@desktop.shortcuts.collect{|app| "{name:'#{app.description}',iconCls:'#{app.shortcut_id}-shortcut',module:'#{app.shortcut_id}'}"}.join(",")%>
               ]
             }),
             wallpaper:"/images/wallpaper/<%=@desktop.get_preference(:desktop_background) %>",
