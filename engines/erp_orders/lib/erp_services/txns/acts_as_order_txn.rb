@@ -12,7 +12,7 @@ module ErpServices::Txns
         has_one :order_txn, :as => :order_txn_record
 
         #from OrderTxn
-        [ :bill_to_address,:bill_to_address=,
+        [ :bill_to_address_line_1,:bill_to_address_line_1=,
           :bill_to_city,:bill_to_city=,
           :bill_to_country,:bill_to_country=,
           :bill_to_country_name,:bill_to_country_name=,
@@ -33,7 +33,7 @@ module ErpServices::Txns
           :Phone2,:Phone2=,
           :phone_number,:phone_number=,
           :Salutation,:Salutation=,
-          :ship_to_address,:ship_to_address=,
+          :ship_to_address_line_1,:ship_to_address_line_1=,
           :ship_to_city,:ship_to_city=,
           :ship_to_country,:ship_to_country=,
           :ship_to_country_name,:ship_to_country_name=,
