@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
   s.version = "0.0.1"
+  s.add_dependency('data_migrator', '1.3')
   s.add_dependency('has_many_polymorphic')
   s.add_dependency('attr_encrypted')
   s.add_dependency('awesome_nested_set')
