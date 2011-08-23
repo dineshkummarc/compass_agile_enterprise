@@ -18,11 +18,11 @@ class ErpApp::Desktop::DynamicForms::DataController < ErpApp::Desktop::DynamicFo
       columns << DynamicGridColumn.build_edit_column("Ext.getCmp('DynamicFormDataGridPanel').editRecord(rec,'#{params[:model_name]}');")
       columns << DynamicGridColumn.build_delete_column("Ext.getCmp('DynamicFormDataGridPanel').deleteRecord(rec,'#{params[:model_name]}');")
 
-      definition << JSON(DynamicFormField.textfield({ :fieldLabel => "Updated By", :name => 'updated_username' }))
-      definition << JSON(DynamicFormField.textfield({ :fieldLabel => "Created By", :name => 'created_username' }))
-      definition << JSON(DynamicFormField.datefield({ :fieldLabel => "Created At", :name => 'created_at' }))
-      definition << JSON(DynamicFormField.datefield({ :fieldLabel => "Updated At", :name => 'updated_at' }))
-      definition << JSON(DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' }))
+      definition << DynamicFormField.textfield({ :fieldLabel => "Updated By", :name => 'updated_username' })
+      definition << DynamicFormField.textfield({ :fieldLabel => "Created By", :name => 'created_username' })
+      definition << DynamicFormField.datefield({ :fieldLabel => "Created At", :name => 'created_at' })
+      definition << DynamicFormField.datefield({ :fieldLabel => "Updated At", :name => 'updated_at' })
+      definition << DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' })
 
       result = "{
         \"success\": true,

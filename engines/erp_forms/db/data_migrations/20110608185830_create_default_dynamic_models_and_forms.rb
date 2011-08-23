@@ -11,11 +11,9 @@ class CreateDefaultDynamicModelsAndForms
     fields << DynamicFormField.email({:fieldLabel => 'Email', :name => 'email', :width => '200' })
     fields << DynamicFormField.textarea({:fieldLabel => 'Message', :name => 'message', :width => '200' })    
     
-    definition = DynamicForm.concat_fields_to_build_definition(fields)
-    
     d = DynamicForm.new
     d.description = 'Contact Form'
-    d.definition = definition
+    d.definition = fields.to_json
     d.model_name = 'WebsiteInquiry'
     d.internal_identifier = 'contact_us'
     d.default = true

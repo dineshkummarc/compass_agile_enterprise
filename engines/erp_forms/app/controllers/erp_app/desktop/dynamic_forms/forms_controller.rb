@@ -61,8 +61,7 @@ class ErpApp::Desktop::DynamicForms::FormsController < ErpApp::Desktop::DynamicF
   def get    
     form = DynamicForm.get_form(params[:model_name], params[:internal_identifier]).to_extjs_formpanel(
                 { :url => "/erp_app/desktop/dynamic_forms/data/#{params[:form_action]}",
-                  :record_id => params[:id],
-                  :width => '350' 
+                  :record_id => params[:id]
                 })
 
     render :inline => form

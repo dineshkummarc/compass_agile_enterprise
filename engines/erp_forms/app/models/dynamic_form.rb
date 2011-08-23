@@ -56,10 +56,8 @@ class DynamicForm < ActiveRecord::Base
   def add_validation(def_object)
     def_object.each do |item|      
       if item[:validator_function] and item[:validator_function] != ""
-#        puts "func"
         item[:validator] = "function(v){ regex = this.initialConfig.validation_regex; return #{item[:validator_function]}; }"
       elsif item[:validation_regex]  and item[:validation_regex] != ""
-#        puts "regex"
         item[:validator] = "function(v){ return validate_regex(v, this.initialConfig.validation_regex); }"
       end
     end
@@ -91,32 +89,34 @@ class DynamicForm < ActiveRecord::Base
   end
   
   def self.concat_fields_to_build_definition(array_of_fields)
-    '[' + array_of_fields.join(',') + ']'
+    array_of_fields.to_json
   end
   
   def to_extjs_formpanel(options={})    
     javascript = "{
-              xtype: 'form',
-              id: 'dynamic_form_panel',
-              url:'#{options[:url]}',
-              title: '#{self.description}',
-              width: #{options[:width]},
-              frame: true,
-              bodyStyle:'padding: 5px 5px 0;',
-              baseParams: {"
-                
-    javascript += "  id: #{options[:record_id]}," if options[:record_id]
-              
-    javascript += "  dynamic_form_id: #{self.id},
-                dynamic_form_model_id: #{self.dynamic_form_model_id},
-                model_name: '#{self.model_name}'
-              },
-              items: #{definition_with_validation},
+              \"xtype\": \"form\",
+              \"id\": \"dynamic_form_panel\",
+              \"url\":\"#{options[:url]}\",
+              \"title\": \"#{self.description}\","
 
-              buttons: [{
-                  text: 'Submit',
-                  listeners:{
-                      'click':function(button){
+    javascript += "\"width\": #{options[:width]}," if options[:width]
+
+    javascript += "\"frame\": true,
+              \"bodyStyle\":\"padding: 5px 5px 0;\",
+              \"baseParams\": {"
+                
+    javascript += "  \"id\": #{options[:record_id]}," if options[:record_id]
+              
+    javascript += "  \"dynamic_form_id\": #{self.id},
+                \"dynamic_form_model_id\": #{self.dynamic_form_model_id},
+                \"model_name\": \"#{self.model_name}\"
+              },
+              \"items\": #{definition_with_validation},
+
+              \"buttons\": [{
+                  \"text\": \"Submit\",
+                  \"listeners\":{
+                      \"click\":function(button){
                           var formPanel = Ext.getCmp('dynamic_form_panel');
                           formPanel.getForm().submit({
                               reset:true,
@@ -134,9 +134,9 @@ class DynamicForm < ActiveRecord::Base
                   }
                   
               },{
-                  text: 'Cancel',
-                  listeners:{
-                      'click':function(button){
+                  \"text\": \"Cancel\",
+                  \"listeners\":{
+                      \"click\":function(button){
                           Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
                       }
                   }
@@ -164,9 +164,11 @@ class DynamicForm < ActiveRecord::Base
           var dynamic_form = Ext.create('Ext.form.Panel',{
               id: 'dynamic_form_panel',
               url:'#{options[:url]}',
-              title: '#{self.description}',
-              width: #{options[:width]},
-              frame: true,
+              title: '#{self.description}',"
+
+    javascript += "\"width\": #{options[:width]}," if options[:width]
+
+    javascript += "frame: true,
               bodyStyle:'padding: 5px 5px 0;',
               renderTo: 'dynamic_form_target',
               baseParams: {

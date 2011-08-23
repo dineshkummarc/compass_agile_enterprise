@@ -189,19 +189,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                                 var newRecordWindow = Ext.create("Ext.window.Window",{
                                     layout:'fit',
                                     title:'New Record',
-                                    height:300,
-                                    width:350,
-                                    plain: false,
+                                    plain: true,
                                     buttonAlign:'center',
                                     items: form_definition
                                 });
                                 newRecordWindow.show();  
-                                // resize window base on size of formPanel                              
-                                newRecordWindow.setWidth(0);
-                                newRecordWindow.getEl().setStyle('overflow', 'scroll');
-                                var w = Math.max(Ext.getCmp('dynamic_form_panel').getEl().dom.scrollWidth + 24, 0);
-                                newRecordWindow.getEl().setStyle('overflow', '');
-                                newRecordWindow.setWidth(w + 20);                                
                             },
                             failure: function(response) {
                                 self.clearWindowStatus();

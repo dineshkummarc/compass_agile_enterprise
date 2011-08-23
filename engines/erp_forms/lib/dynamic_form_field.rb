@@ -63,7 +63,7 @@ class DynamicFormField
   end
 
   def self.textarea(options={})
-    options[:height] = '100' if options[:height].nil? 
+    options[:height] = 100 if options[:height].nil? 
     DynamicFormField.basic_field('textarea', options)
   end
 
@@ -78,55 +78,51 @@ class DynamicFormField
   def self.basic_field(xtype, options={}, selections=[])
     options = DynamicFormField.set_default_field_options(options)
 
-    field = "{
-        \"xtype\": \"#{xtype}\",
-        \"fieldLabel\": \"#{options[:fieldLabel]}\",
-        \"name\": \"#{options[:name]}\",
-        \"value\": \"#{options[:value]}\", 
-        \"allowBlank\": #{options[:allowblank]},  
-        \"readOnly\": #{options[:readonly]},
-        \"width\": #{options[:width]},
-        \"height\": #{options[:height]},
-        \"labelWidth\": #{options[:labelwidth]}"
-        
-    field += "\"maxLength\": #{options[:maxlength]}," unless options[:maxlength].nil?
+    field = {
+        :xtype => xtype,
+        :fieldLabel => options[:fieldLabel],
+        :name => options[:name],
+        :value => options[:value],
+        :allowBlank => options[:allowblank],  
+        :readOnly => options[:readonly],
+        :width =>options[:width],
+        :height => options[:height],
+        :labelWidth => options[:labelwidth]
+    }
+    
+    field[:maxLength] = options[:maxlength] unless options[:maxlength].nil?
     
     if selections and selections != []
-      field += ",
-        \"store\": #{selections.to_json}"
+      field[:store] = selections.to_json
     end
 
     if options[:validation_regex] or options[:validator_function]
-      field += ",    
-        \"validateOnBlur\": true"
+      field[:validateOnBlur] = true
     end
     
-    
     if options[:validation_regex] and options[:validation_regex] != ''
-      field += ",    
-        \"validation_regex\": \"#{options[:validation_regex]}\""
+      field[:validation_regex] = options[:validation_regex]
     end
 
     if options[:validator_function] and options[:validator_function] != ''
-      field += ",    
-        \"validator_function\": \"#{options[:validation_regex]}\""
+      field[:validator_function] = options[:validator_function]
     end
     
-    field += "}"
+    field
   end
   
   def self.set_default_field_options(options={})
         
     options[:fieldLabel] = '' if options[:fieldLabel].nil?
     options[:name] = '' if options[:name].nil?
-    options[:allowblank] = 'true' if options[:allowblank].nil?
+    options[:allowblank] = true if options[:allowblank].nil?
     options[:value] = '' if options[:value].nil?
-    options[:readonly] = 'false' if options[:readonly].nil?
+    options[:readonly] = false if options[:readonly].nil?
     options[:maxlength] = nil if options[:maxlength].nil?
-    options[:width] = '"auto"' if options[:width].nil?
-    options[:height] = '"auto"' if options[:height].nil?
+    options[:width] = 200 if options[:width].nil?
+    options[:height] = 'auto' if options[:height].nil?
     options[:validation_regex] = '' if options[:validation_regex].nil?
-    options[:labelwidth] = '75' if options[:labelwidth].nil?
+    options[:labelwidth] = 75 if options[:labelwidth].nil?
     
     options
   end
