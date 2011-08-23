@@ -19,7 +19,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement",{
                     xtype:'systemmanagement_applicationrolemanagement'
                 }
                 ]
-            })
+            });
 
             win = desktop.createWindow({
                 id: 'system_management',
