@@ -9,9 +9,9 @@
         Topics: <%=content.content.tag_list %>
       </p>
       <div class="blog_body">
-        <%= content.excerpt_html %>
+        <%= raw content.excerpt_html %>
       </div>
-      <div><%= link_to 'Read More...', blog_article_path(@website_section.id, content.permalink) %></div>
+      <div><%= link_to 'Read More...', main_app.blog_article_path(@website_section.id, content.permalink) %></div>
     </div>
   <% end %>
   
@@ -24,7 +24,7 @@
   <% @website_section.get_topics.each do |tag| %>
 
     <div class="tag_link">
-      <%= link_to tag.name, blog_tag_path(@website_section.id, tag.id) %>
+      <%= link_to tag.name, main_app.blog_tag_path(@website_section.id, tag.id) %>
     </div>
   
   <% end %>
@@ -33,9 +33,9 @@
 <div class="sidebar rss">  
   <h4>Links</h4>
   <%  if params[:action] == 'tag' %>
-    <%= link_to "RSS Feed", blog_tag_url(params[:section_id], params[:tag_id], :rss) %>
+    <%= link_to "RSS Feed", main_app.blog_tag_url(params[:section_id], params[:tag_id], :rss) %>
   <% else %>
-    <%= link_to "RSS Feed", blogs_url(params[:section_id], :rss) %>
+    <%= link_to "RSS Feed", main_app.blogs_url(params[:section_id], :rss) %>
   <% end %>
 </div>
 

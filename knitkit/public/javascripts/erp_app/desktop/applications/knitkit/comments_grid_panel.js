@@ -72,7 +72,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel",{
         var store = Ext.create('Ext.data.Store', {
             proxy: {
                 type: 'ajax',
-                url:'/knitkit/erp_app/desktop/comments/get/' + config['contentId'],
+                url:'/knitkit/erp_app/desktop/comments/index/' + config['contentId'],
                 reader: {
                     type: 'json',
                     root: 'comments'

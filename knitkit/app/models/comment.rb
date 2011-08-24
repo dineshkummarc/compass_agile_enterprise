@@ -4,9 +4,9 @@ class Comment < ActiveRecord::Base
 
   alias :approved_by :user
 
-  scope :in_order, :order => 'created_at ASC'
-  scope :recent, :order => 'created_at DESC'
-  scope :approved, :conditions => 'approved = 1'
+  scope :in_order, order('created_at ASC')
+  scope :recent, order('created_at DESC')
+  scope :approved, order('approved = 1')
 
   def approved?
     self.approved == 1

@@ -6,9 +6,9 @@ Compass::Application.routes.draw do
   
   get 'pages/:section_id' => 'knitkit/website_sections#index', :as => 'page'
   get 'pages/:section_id/:id' => 'knitkit/articles#show', :as => 'page_article'
-  get 'blogs/:section_id.:format' => 'knitkit/blogs#index', :as => 'blogs'
+  get 'blogs/:section_id(.:format)' => 'knitkit/blogs#index', :as => 'blogs'
   get 'blogs/:section_id/:id' => 'knitkit/blogs#show', :as => 'blog_article'
-  get 'blogs/:section_id/tag/:tag_id.:format' => 'knitkit/blogs#tag', :as => 'blog_tag'
+  get 'blogs/:section_id/tag/:tag_id(.:format)' => 'knitkit/blogs#tag', :as => 'blog_tag'
   
   match '/comments/add/:section_id/:content_id' => 'knitkit/comments#add', :as => 'comments'
   match '/unauthorized' => 'unauthorized#index', :as => 'knitkit/unauthorized'
@@ -34,7 +34,7 @@ Knitkit::Engine.routes.draw do
   #versions
   match '/erp_app/desktop/versions/:action' => 'erp_app/desktop/versions'
   #comments
-  match '/erp_app/desktop/comments/:action/:content_id' => 'erp_app/desktop/comments'
+  match '/erp_app/desktop/comments/:action(/:content_id)' => 'erp_app/desktop/comments'
   #inquiries
   match '/erp_app/desktop/inquiries/:action/:website_id' => 'erp_app/desktop/inquiries'
   #website_nav

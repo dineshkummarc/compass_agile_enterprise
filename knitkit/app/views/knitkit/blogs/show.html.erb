@@ -7,8 +7,8 @@
     Posted: <%= @published_content.created_at.to_s(:long) %> <%="by #{@published_content.content.created_by.username}" rescue '' %><br />
     Topics: <%= @published_content.content.tag_list %>  
   </p>
-  <p><%= @published_content.excerpt_html %></p>
-  <%= @published_content.body_html %>
+  <p><%= raw @published_content.excerpt_html %></p>
+  <%= raw @published_content.body_html %>
   <h3>Comments</h3>
   <br/>
   <%
