@@ -11,6 +11,17 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
   end
 
   def new
+    @is_html_form = params[:is_html_form]
+    @validation = {}
+    @validation[:first_name] = "First Name Cannot be Blank" if params[:first_name].blank?
+    @validation[:last_name] = "Last Name Cannot be Blank" if params[:last_name].blank?
+    @validation[:message] = "Message Cannot be Blank" if params[:message].blank?
+    @validation[:email] = "Please Enter a Valid Email Address" unless /^.+@.+\..+$/.match(params[:email])
+    
+    if @is_html_form and !@validation.empty?  
+      return render :view => :error
+    end
+    
     @website = Website.find_by_host(request.host_with_port)    
     @website_inquiry = WebsiteInquiry.new
 
