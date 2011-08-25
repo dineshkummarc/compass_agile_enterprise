@@ -1,7 +1,7 @@
 require 'routing_filter'
 require "#{File.dirname(__FILE__)}/../lib/knitkit/routing_filter/section_router.rb"
 
-Compass::Application.routes.draw do
+Rails.application.routes.draw do
   filter :section_router
   
   get 'pages/:section_id' => 'knitkit/website_sections#index', :as => 'page'
