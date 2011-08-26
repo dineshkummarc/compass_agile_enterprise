@@ -7,15 +7,9 @@ class CreateDesktopAppDynamicForms
       :internal_identifier => 'dynamic_forms',
       :shortcut_id => 'dynamic_forms-win'
     )
+    app.prefernece_types << PreferenceType.iid('desktop_shortcut')
+    app.prefernece_types << PreferenceType.iid('autoload_application')
     app.save #probably redundant
-
-    pt1 = PreferenceType.iid('desktop_shortcut')
-    pt1.preferenced_records << app
-    pt1.save
-
-    pt2 = PreferenceType.iid('autoload_application')
-    pt2.preferenced_records << app
-    pt2.save
   end
 
   def self.down
