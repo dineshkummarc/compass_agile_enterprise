@@ -62,6 +62,10 @@ class DynamicGridColumn
   def self.build_view_column(action='')    
     DynamicGridColumn.build_action_column("View", "/images/icons/document_view/document_view_16x16.png", action)
   end
+
+  def self.build_edit_column(action='')    
+    DynamicGridColumn.build_action_column("Edit", "/images/icons/document_edit/document_edit_16x16.png", action)
+  end
   
   def self.build_action_column(header, icon, action)    
     col = '{

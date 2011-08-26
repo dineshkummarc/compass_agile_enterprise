@@ -197,9 +197,14 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document/document_16x16.png', sizingMethod='crop');
 }
 
+.icon-document_ok {
+    background-image:url( /images/icons/document_ok/document_ok_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_ok/document_ok_16x16.png', sizingMethod='crop');	
+}
+
 .icon-document_lock {
     background-image:url( /images/icons/document_lock/document_lock_16x16.png ) !important;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_lock/ddocument_lock_16x16.png', sizingMethod='crop');
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_lock/document_lock_16x16.png', sizingMethod='crop');
 }
 
 .icon-folders {

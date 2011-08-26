@@ -11,7 +11,8 @@ class BaseTechServices < ActiveRecord::Migration
         # t.lockable :lock_strategy => :failed_attempts, :unlock_strategy => :both
         t.string :username
         t.references :party
-
+		t.string :type
+		
         t.timestamps
       end
       add_index :users, :email,                :unique => true

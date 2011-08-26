@@ -808,7 +808,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 fieldLabel:'Email Inquiries?',
                                                 name:'email_inquiries',
                                                 id:'knitkitEmailInquiries',
-                                                width:100,
                                                 columns:2,
                                                 items:[
                                                 {

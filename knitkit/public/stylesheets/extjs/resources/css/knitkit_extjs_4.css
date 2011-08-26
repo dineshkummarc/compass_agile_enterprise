@@ -1,0 +1,219 @@
+/* body tag - modify this in conjunction with style.css <body> */
+.x-body
+{
+	font-size:12px;	
+	font: normal .80em 'trebuchet ms', arial, sans-serif;
+  background: #F0EFE2;
+  color: #777;
+}
+
+/* header text */
+.x-panel-header-text-default-framed
+{
+	color:#FFFFFF;
+	font-family:tahoma, arial, verdana, sans-serif;
+	font-size:11px;
+	font-weight:700;
+}
+
+/* header background */
+.x-panel-header-default-framed-top
+{
+	background-color:#29415D;
+  background-image:none!important;
+	border-bottom-left-radius:0;
+	border-bottom-right-radius:0;
+	border-style:solid;
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
+	border-width:1px;
+  box-shadow:none;
+	padding:4px 5px;
+
+  /* to fix safari */
+	left: -2px!important;
+	top: -2px!important;
+}
+
+/* form background & border */
+.x-panel-default-framed
+{
+	-khtml-border-radius:4px;
+	-moz-border-radius:4px;
+	-ms-border-radius:4px;
+	-o-border-radius:4px;
+	-webkit-border-radius:4px;
+	background-color:#FFFFFF;
+	border-color:#29415D;
+	border-radius:4px;
+	border-style:solid;
+	border-width:1px;
+	padding:4px;
+}
+
+/* form background & field label color */
+.x-panel-body-default-framed
+{
+	background:#FFFFFF;
+	border-color:#29415D;
+	border-style:solid;
+	border-width:0;
+	color:#000; /* field label color */
+}
+
+/* form field borders */
+.x-form-field{
+  border:1px solid;
+	border-color:#b5b8c8;
+}
+.x-form-text,textarea.x-form-field
+{
+	background:repeat-x 0 0;
+	background-color:#FFF;
+	background-image:none;
+	border:1px solid;
+	border-color:#b5b8c8;
+	padding:1px 3px;
+}
+
+
+/* this corrects a rendering issue */
+.x-border-box .x-reset,.x-border-box .x-reset *
+{
+	-moz-box-sizing:content-box;
+	-ms-box-sizing:content-box;
+	-webkit-box-sizing:content-box;
+	box-sizing:content-box;
+}
+
+/* IE */
+.x-nbr .x-panel-default-framed-tl,.x-nbr .x-panel-default-framed-bl,.x-nbr .x-panel-default-framed-tr,.x-nbr .x-panel-default-framed-br,.x-nbr .x-panel-default-framed-tc,.x-nbr .x-panel-default-framed-bc,.x-nbr .x-panel-default-framed-ml,.x-nbr .x-panel-default-framed-mr
+{
+	background-image:none;
+	zoom:1;
+	border-color:#29415D;
+}
+.x-nlg .x-panel-default-framed
+{
+	-khtml-border-radius:0;
+	-moz-border-radius:0;
+	-ms-border-radius:0;
+	-o-border-radius:0;
+	-webkit-border-radius:0;
+	background-color:transparent;
+	background-position:1000404px 1000404px;
+	border-radius:0;
+	padding:0!important;
+	
+	background-color:#FFFFFF;
+	border-color:#29415D;
+	border-radius:4px;
+	border-style:solid;
+	border-width:1px!important;
+}
+
+/* IE form header */
+.x-nlg .x-panel-header-default-framed-docked-top,.x-nlg .x-panel-header-default-framed-docked-top-mc,.x-nlg .x-panel-header-default-framed-docked-top-mr,.x-nlg .x-panel-header-default-framed-docked-top-ml,.x-nlg .x-panel-header-default-framed-docked-top-tl,.x-nlg .x-panel-header-default-framed-docked-top-tr,.x-nlg .x-panel-header-default-framed-docked-top-tc
+{
+	background-image:none!important;  
+	background-color:#29415D!important;  
+	background:#29415D!important;  
+	box-shadow: none!important;  
+}
+.x-ie8 .x-panel-header-default-framed-top
+{
+  /* to fix IE 8 */
+  left: 0px!important;
+}
+.x-nbr .x-panel-header-default-framed-top
+{
+	-khtml-border-radius:0;
+	-moz-border-radius:0;
+	-ms-border-radius:0;
+	-o-border-radius:0;
+	-webkit-border-radius:0;
+	background-color:#29415D!important;
+	background-position:1000404px 1000000px;
+	border-radius:0;
+	border-width:0!important;
+	padding:0!important;
+	background-image:none!important;
+}
+
+/* background color of form bottom */
+.x-nlg .x-panel-default-framed-mc
+{
+	background-color:#FFFFFF;
+}
+
+/* IE button background color */
+.x-nlg .x-btn-default-small-mc
+{
+	background-color:#29415D;
+	background-image:none;
+  border-right: 1px solid #AAAAAA;
+  border-bottom: 1px solid #AAAAAA;
+}
+
+/* IE button font */
+.x-nbr .x-btn-default-small .x-btn-inner
+{
+	background-repeat:no-repeat;
+	color:#FFFFFF;
+	font-family:tahoma, arial, verdana, sans-serif;
+	font-size:11px;
+	font-style:normal!important;;
+	font-weight:400;
+	padding:0 4px;
+}
+.x-nbr .x-btn-default-small-over .x-btn-inner
+{
+	background-repeat:no-repeat;
+	color:#000000;
+	font-family:tahoma, arial, verdana, sans-serif;
+	font-size:11px;
+	font-style:normal!important;
+	font-weight:400;
+	padding:0 4px;
+}
+.x-ie9 .x-btn-default-small-over .x-btn-inner,.x-ie9 .x-btn-default-small .x-btn-inner
+{
+  color:#000000;
+  font-style:normal!important;
+}
+
+button
+{
+  overflow:hidden!important;  
+}
+
+/* IE button containers */
+.x-nbr .x-btn-default-small-tl,.x-nbr .x-btn-default-small-bl,.x-nbr .x-btn-default-small-tr,.x-nbr .x-btn-default-small-br,.x-nbr .x-btn-default-small-tc,.x-nbr .x-btn-default-small-bc,.x-nbr .x-btn-default-small-ml,.x-nbr .x-btn-default-small-mr
+{
+	background-image:none;
+	zoom:0;
+}
+.x-nbr .x-btn-default-small-ml,.x-nbr .x-btn-default-small-mr
+{
+	background-image:none;
+	background-position:0 0;
+	zoom:0;
+}
+.x-nbr .x-btn-default-small-over .x-frame-tl,.x-nbr .x-btn-default-small-over .x-frame-bl,.x-nbr .x-btn-default-small-over .x-frame-tr,.x-nbr .x-btn-default-small-over .x-frame-br,.x-nbr .x-btn-default-small-over .x-frame-tc,.x-nbr .x-btn-default-small-over .x-frame-bc
+{
+	background-image:none;
+}
+.x-nbr .x-btn-default-small-over .x-frame-ml,.x-nbr .x-btn-default-small-over .x-frame-mr
+{
+	background-image:none;
+}
+
+/* invalid field */
+.x-form-invalid-field,textarea.x-form-invalid-field
+{
+	background-color:#FFF;
+	background-image:url(../../resources/themes/images/default/grid/invalid_line.gif);
+	background-position:bottom;
+	background-repeat:repeat-x;
+	border-color:#c30;
+}
