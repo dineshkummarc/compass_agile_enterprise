@@ -48,91 +48,91 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // This allows additional POST params to be sent with file upload, and also simplifies the backend upload handler becuase a single script can be used for drag and drop, flash, and standard uploads
 // NOTE: This is currently only supported by Firefox 1.6, Chrome 6 should be released soon and will also be supported.
 
-Ext.ns('Ext.ux');
+Ext.define("Ext.ux.XHRUpload",{
+    extend:'Ext.util.Observable',
+    constructor:function(config){
+        window.awsomeUploaderXhr = this;
+        Ext.apply(this, config, {
+            method: 'POST',
+            fileNameHeader: 'X-File-Name',
+            filePostName:'fileName',
+            contentTypeHeader: 'text/plain; charset=x-user-defined-binary',
+            extraPostData:{},
+            xhrExtraPostDataPrefix:'extraPostData_',
+            sendMultiPartFormData:false
+        });
+        this.addEvents({ //extend the xhr's progress events to here
+            'loadstart':true,
+            'progress':true,
+            'abort':true,
+            'error':true,
+            'load':true,
+            'loadend':true
+        });
+        this.listeners = config.listeners;
+        Ext.ux.XHRUpload.superclass.constructor.call(this, config);
+    },
+    send:function(config){
+        Ext.apply(this, config);
+		
+        this.xhr = new XMLHttpRequest();
+        this.xhr.addEventListener('loadstart', this.relayXHREvent, false);
+        this.xhr.addEventListener('progress', this.relayXHREvent, false);
+        this.xhr.addEventListener('progressabort', this.relayXHREvent, false);
+        this.xhr.addEventListener('error', this.relayXHREvent, false);
+        this.xhr.addEventListener('load', this.relayXHREvent, false);
+        this.xhr.addEventListener('loadend', this.relayXHREvent, false);
+		
+        this.xhr.upload.addEventListener('loadstart', this.relayUploadEvent, false);
+        this.xhr.upload.addEventListener('progress', this.relayUploadEvent, false);
+        this.xhr.upload.addEventListener('progressabort', this.relayUploadEvent, false);
+        this.xhr.upload.addEventListener('error', this.relayUploadEvent, false);
+        this.xhr.upload.addEventListener('load', this.relayUploadEvent, false);
+        this.xhr.upload.addEventListener('loadend', this.relayUploadEvent, false);
 
-Ext.ux.XHRUpload = function(config){
-	Ext.apply(this, config, {
-		method: 'POST'
-		,fileNameHeader: 'X-File-Name'
-		,filePostName:'fileName'
-		,contentTypeHeader: 'text/plain; charset=x-user-defined-binary'
-		,extraPostData:{}
-		,xhrExtraPostDataPrefix:'extraPostData_'
-		,sendMultiPartFormData:false
-	});
-	this.addEvents( //extend the xhr's progress events to here
-		'loadstart'
-		,'progress'
-		,'abort'
-		,'error'
-		,'load'
-		,'loadend'
-	);
-	Ext.ux.XHRUpload.superclass.constructor.call(this);
-};
+        this.xhr.open(this.method, this.url, true);
+		
+        if(typeof(FileReader) !== 'undefined' && this.sendMultiPartFormData ){
+            //currently this is firefox only, chrome 6 will support this in the future
+            this.reader = new FileReader();
+            this.reader.addEventListener('load', this.sendFileUpload, false);
+            this.reader.readAsBinaryString(this.file);
+            return true;
+        }
+        //This will work in both Firefox 1.6 and Chrome 5
+        this.xhr.overrideMimeType(this.contentTypeHeader);
+        this.xhr.setRequestHeader(this.fileNameHeader, this.file.name);
+        for(attr in this.extraPostData){
+            this.xhr.setRequestHeader(this.xhrExtraPostDataPrefix + attr, this.extraPostData[attr]);
+        }
+        //xhr.setRequestHeader('X-File-Size', files.size); //this may be useful
+        this.xhr.send(this.file);
+        return true;
+		
+    },
+    sendFileUpload:function(){
 
-Ext.extend(Ext.ux.XHRUpload, Ext.util.Observable,{
-	send:function(config){
-		Ext.apply(this, config);
+        var boundary = (1000000000000+Math.floor(Math.random()*8999999999998)).toString(),
+        data = '';
 		
-		this.xhr = new XMLHttpRequest();
-		this.xhr.addEventListener('loadstart', this.relayXHREvent.createDelegate(this), false);
-		this.xhr.addEventListener('progress', this.relayXHREvent.createDelegate(this), false);
-		this.xhr.addEventListener('progressabort', this.relayXHREvent.createDelegate(this), false);
-		this.xhr.addEventListener('error', this.relayXHREvent.createDelegate(this), false);
-		this.xhr.addEventListener('load', this.relayXHREvent.createDelegate(this), false);
-		this.xhr.addEventListener('loadend', this.relayXHREvent.createDelegate(this), false);
+        for(attr in this.extraPostData){
+            data += '--'+boundary + '\r\nContent-Disposition: form-data; name="' + attr + '"\r\ncontent-type: text/plain;\r\n\r\n'+this.extraPostData[attr]+'\r\n';
+        }
 		
-		this.xhr.upload.addEventListener('loadstart', this.relayUploadEvent.createDelegate(this), false);
-		this.xhr.upload.addEventListener('progress', this.relayUploadEvent.createDelegate(this), false);
-		this.xhr.upload.addEventListener('progressabort', this.relayUploadEvent.createDelegate(this), false);
-		this.xhr.upload.addEventListener('error', this.relayUploadEvent.createDelegate(this), false);
-		this.xhr.upload.addEventListener('load', this.relayUploadEvent.createDelegate(this), false);
-		this.xhr.upload.addEventListener('loadend', this.relayUploadEvent.createDelegate(this), false);
-
-		this.xhr.open(this.method, this.url, true);
+        //window.btoa(binaryData)
+        //Creates a base-64 encoded ASCII string from a string of binary data.
+        //https://developer.mozilla.org/en/DOM/window.btoa
+        //Firefox and Chrome only!!
 		
-		if(typeof(FileReader) !== 'undefined' && this.sendMultiPartFormData ){
-			//currently this is firefox only, chrome 6 will support this in the future
-			this.reader = new FileReader();
-			this.reader.addEventListener('load', this.sendFileUpload.createDelegate(this), false);
-			this.reader.readAsBinaryString(this.file);
-			return true;	
-		}
-		//This will work in both Firefox 1.6 and Chrome 5
-		this.xhr.overrideMimeType(this.contentTypeHeader);
-		this.xhr.setRequestHeader(this.fileNameHeader, this.file.name);
-		for(attr in this.extraPostData){
-			this.xhr.setRequestHeader(this.xhrExtraPostDataPrefix + attr, this.extraPostData[attr]);
-		}
-		//xhr.setRequestHeader('X-File-Size', files.size); //this may be useful
-		this.xhr.send(this.file);
-		return true;
+        data += '--'+boundary + '\r\nContent-Disposition: form-data; name="' + this.filePostName + '"; filename="' + this.file.name + '"\r\nContent-Type: '+this.file.type+'\r\nContent-Transfer-Encoding: base64\r\n\r\n' + window.btoa(this.reader.result) + '\r\n'+'--'+boundary+'--\r\n\r\n';
 		
-	}
-	,sendFileUpload:function(){
-
-		var boundary = (1000000000000+Math.floor(Math.random()*8999999999998)).toString(),
-			data = '';
-		
-		for(attr in this.extraPostData){
-			data += '--'+boundary + '\r\nContent-Disposition: form-data; name="' + attr + '"\r\ncontent-type: text/plain;\r\n\r\n'+this.extraPostData[attr]+'\r\n';
-		}
-		
-		//window.btoa(binaryData)
-		//Creates a base-64 encoded ASCII string from a string of binary data. 
-		//https://developer.mozilla.org/en/DOM/window.btoa
-		//Firefox and Chrome only!!
-		
-		data += '--'+boundary + '\r\nContent-Disposition: form-data; name="' + this.filePostName + '"; filename="' + this.file.name + '"\r\nContent-Type: '+this.file.type+'\r\nContent-Transfer-Encoding: base64\r\n\r\n' + window.btoa(this.reader.result) + '\r\n'+'--'+boundary+'--\r\n\r\n';
-		
-		this.xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary='+boundary);
-		this.xhr.send(data);
-	}
-	,relayUploadEvent:function(event){
-		this.fireEvent('upload'+event.type, event);
-	}
-	,relayXHREvent:function(event){
-		this.fireEvent(event.type, event);
-	}
+        this.xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary='+boundary);
+        this.xhr.send(data);
+    },
+    relayUploadEvent:function(event){
+        window.awsomeUploaderXhr.fireEvent('upload'+event.type, event);
+    },
+    relayXHREvent:function(event){
+        window.awsomeUploaderXhr.fireEvent(event.type, event);
+    }
 });

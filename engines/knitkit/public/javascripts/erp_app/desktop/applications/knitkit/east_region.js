@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion = Ext.extend(Ext.TabPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion",{
+    extend:"Ext.TabPanel",
+    alias:'widget.knitkit_eastregion',
     initComponent: function() {
         var imageAssetsPanel = new Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel();
         var widgetsPanel = new Compass.ErpApp.Desktop.Applications.Knitkit.WidgetsPanel();
@@ -22,5 +24,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion = Ext.extend(Ext.TabPanel
         Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('knitkit_eastregion', Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion);

@@ -4,7 +4,7 @@ Compass.ErpApp.Widgets = {
     setup : function(uuid, name, action, params){
         var conn = new Ext.data.Connection();
         var widgetParams = {
-            widget_params:Ext.util.JSON.encode(params)
+            widget_params:Ext.encode(params)
         }
         conn.request({
             url: '/widgets/'+name+'/'+action+'/'+uuid,

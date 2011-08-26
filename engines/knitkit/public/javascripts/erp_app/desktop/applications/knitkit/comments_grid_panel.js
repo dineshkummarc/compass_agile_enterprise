@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel",{
+    extend:"Ext.grid.Panel",
+    alias:'widget.knitkit_commentsgridpanel',
     approve : function(rec){
         var self = this;
         self.initialConfig['centerRegion'].setWindowStatus('Approving Comment...');
@@ -10,10 +12,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
                 id:rec.get("id")
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj = Ext.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().reload();
+                    self.getStore().load();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error approving comemnt');
@@ -40,10 +42,10 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
                 id:rec.get("id")
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().reload();
+                    self.getStore().load();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error deleting comemnt');
@@ -66,12 +68,18 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
 
     constructor : function(config) {
         var self = this;
-        var store = new Ext.data.JsonStore({
-            root: 'comments',
-            totalProperty: 'totalCount',
-            idProperty: 'id',
+
+        var store = Ext.create('Ext.data.Store', {
+            proxy: {
+                type: 'ajax',
+                url:'./knitkit/comments/get/' + config['contentId'],
+                reader: {
+                    type: 'json',
+                    root: 'comments'
+                }
+            },
             remoteSort: true,
-            fields: [
+            fields:[
             {
                 name:'id'
             },
@@ -96,8 +104,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
             {
                 name:'approved_at'
             }
-            ],
-            url:'./knitkit/comments/get/' + config['contentId']
+            ]
         });
 
         config = Ext.apply({
@@ -161,7 +168,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
                             return false;
                         }
                         else{
-                            grid.approve(rec)
+                            self.approve(rec)
                         }
                     }
                 }]
@@ -176,7 +183,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
                 header:'Approved At',
                 sortable:true,
                 width:140,
-                dataIndex:'approved_at'
+                dataIndex:'approved_at',
+                renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s')
             },
             {
                 menuDisabled:true,
@@ -195,7 +203,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
                 }]
             }
             ],
-            bbar: new Ext.PagingToolbar({
+            bbar: Ext.create("Ext.PagingToolbar",{
                 pageSize: 10,
                 store: store,
                 displayInfo: true,
@@ -207,5 +215,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel = Ext.extend(Ext.g
         Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('knitkit_commentsgridpanel', Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel);

@@ -25,21 +25,19 @@ class ErpApp::Desktop::RailsDbAdmin::QueriesController < ErpApp::Desktop::RailsD
     
     @query_support.delete_query(query_name, database_connection_name)
    
-    renderr :text => "{success:true}"
+    render :text => "{success:true}"
   end
   
   def saved_queries_tree
     names = @query_support.get_saved_query_names(database_connection_name)
     
-    names_tree_nodes = ""
+    queries = []
     
-    names.each do |name| 
-      names_tree_nodes = names_tree_nodes + "{text:\"#{name}\", id:\"#{name}\", iconCls:\"icon-document\", href:\"javascript:void(0);window.RailsDbAdmin.displayAndExecuteQuery('#{name}')\", leaf:true},"
+    names.each do |name|
+      queries << {:text => name, :id => name, :iconCls => 'icon-document', :leaf => true}
     end unless names.empty?
     
-    names_tree_nodes = names_tree_nodes[0..names_tree_nodes.length - 2] unless names_tree_nodes.blank?
-    
-    render :text => "[#{names_tree_nodes}]"
+    render :inline => queries.to_json
   end
   
   def open_query

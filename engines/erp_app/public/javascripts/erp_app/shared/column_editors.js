@@ -1,7 +1,6 @@
-Ext.ns("Compass.ErpApp.Shared");
-
-Compass.ErpApp.Shared.BooleanEditor = Ext.extend(Ext.form.ComboBox, {
-	
+Ext.define("Compass.ErpApp.Shared.BooleanEditor",{
+    extend:"Ext.form.ComboBox",
+    alias:'booleancolumneditor',
     initComponent: function() {
 		
         var trueFalseStore = new Ext.data.ArrayStore({
@@ -23,7 +22,4 @@ Compass.ErpApp.Shared.BooleanEditor = Ext.extend(Ext.form.ComboBox, {
         }, config);
         Compass.ErpApp.Shared.BooleanEditor.superclass.constructor.call(this, config);
     }
-
 });
-
-Ext.reg('booleancolumneditor', Compass.ErpApp.Shared.BooleanEditor);

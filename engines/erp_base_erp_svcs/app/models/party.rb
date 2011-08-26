@@ -9,6 +9,10 @@ class Party < ActiveRecord::Base
   #* End
   #************************************************************************************************
 
+  #add the has_notes mixin to party so a pary can have notes
+  has_notes
+
+  has_many :created_notes, :class_name => 'Note', :foreign_key => 'created_by_id'
 
   # business_party is an interface implemented by the class Party
   # that provides access to the person or organization that is
@@ -47,97 +51,6 @@ class Party < ActiveRecord::Base
       self.business_party.destroy
     end
 	end
-
-  # Return primary phone number
-  def primary_phone_number
-    find_contact_mechanism_with_purpose(PhoneNumber, ContactPurpose.find_by_internal_identifier('personal'))    
-  end
-
-  def primary_phone_number=(phone_number)
-    contact_mechanism_args = {
-      :phone_number => phone_number, 
-      :description => "personal phone number"
-    }
-    update_or_add_contact_with_purpose(PhoneNumber, ContactPurpose.find_by_internal_identifier('personal'), contact_mechanism_args)
-  end
-
-  # Return primary email
-  def primary_email_address
-    find_contact_mechanism_with_purpose(EmailAddress, ContactPurpose.find_by_internal_identifier('personal'))    
-  end
-
-  def primary_email_address=(email)
-    contact_mechanism_args = {
-      :email_address => email.strip(), 
-      :description => "personal e-mail"
-    }
-    update_or_add_contact_with_purpose(EmailAddress, ContactPurpose.find_by_internal_identifier('personal'), contact_mechanism_args)
-  end
-
-  def billing_address
-    find_contact_mechanism_with_purpose(PostalAddress, ContactPurpose.find_by_internal_identifier('billing'))    
-  end
-
-  def billing_address=(address={})
-    update_or_add_contact_with_purpose(PostalAddress, ContactPurpose.find_by_internal_identifier('billing'), address)
-  end
-
-  def shipping_address
-    find_contact_mechanism_with_purpose(PostalAddress, ContactPurpose.find_by_internal_identifier('shipping'))    
-  end
-
-  def shipping_address=(address={})
-    update_or_add_contact_with_purpose(PostalAddress, ContactPurpose.find_by_internal_identifier('shipping'), address)
-  end
-
-  # Return primary address
-  def primary_address
-    find_contact_mechanism_with_purpose(PostalAddress, ContactPurpose.find_by_internal_identifier('home'))    
-  end
-
-  def primary_address=(address={})
-    update_or_add_contact_with_purpose(PostalAddress, ContactPurpose.find_by_internal_identifier('home'), address)
-  end
-
-  # Return email
-  def email
-    primary_email.nil? ? '' : primary_email
-  end
-
-  # Return primary address street line 1
-  def primary_street
-    primary_address.nil? ? nil : primary_address.address_line_1
-  end
-
-  # Return primary address city
-  def primary_city
-    primary_address.nil? ? nil : primary_address.city
-  end
-
-  # Return primary address state
-  def primary_state
-    primary_address.nil? ? nil : primary_address.state
-  end
-
-  # Return primary zip code
-  def primary_zip_code
-    primary_address.nil? ? nil : primary_address.zip
-  end
-
-  # Return primary address country
-  def primary_country
-    primary_address.nil? ? nil : primary_address.country
-  end
-
-  # Return primary phone number
-  def primary_phone
-    primary_phone_number.nil? ? nil : primary_phone_number.phone_number
-    #nil
-  end
-
-  def primary_email
-    primary_email_address.nil? ? nil : primary_email_address.email_address
-  end
 
   # return primary credit card
   def primary_credit_card

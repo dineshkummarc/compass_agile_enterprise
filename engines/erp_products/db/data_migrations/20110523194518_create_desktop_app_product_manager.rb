@@ -7,9 +7,14 @@ class CreateDesktopAppProductManager
       :internal_identifier => 'product_manager',
       :shortcut_id => 'product_manager-win'
     )
-    
-    PreferenceType.iid('desktop_shortcut').preferenced_records << app
-    PreferenceType.iid('autoload_application').preferenced_records << app
+
+    pt1 = PreferenceType.iid('desktop_shortcut')
+    pt1.preferenced_records << app
+    pt1.save
+
+    pt2 = PreferenceType.iid('autoload_application')
+    pt2.preferenced_records << app
+    pt2.save
 
     app.save
   end

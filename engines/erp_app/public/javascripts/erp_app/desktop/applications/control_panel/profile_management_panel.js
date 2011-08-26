@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel",{
+    extend:"Ext.Panel",
+    alias:"widget.controlpanel_profilemanagementpanel",
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -58,7 +60,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel = Ext.ex
                             reset:true,
                             success:function(form, action){
                                 self.clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj =  Ext.decode(action.response.responseText);
                                 if(obj.success){
                                     Ext.Msg.alert("Success", 'Password changed.');
                                 }
@@ -68,7 +70,7 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel = Ext.ex
                             },
                             failure:function(form, action){
                                 self.clearWindowStatus();
-                                var obj =  Ext.util.JSON.decode(action.response.responseText);
+                                var obj =  Ext.decode(action.response.responseText);
                                 if(Compass.ErpApp.Utility.isBlank(obj.message)){
                                     Ext.Msg.alert("Error", 'Error updating password.');
                                 }
@@ -92,8 +94,6 @@ Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel = Ext.ex
         Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('controlpanel_profilemanagementpanel', Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel);
 
 
 

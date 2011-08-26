@@ -10,8 +10,9 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
 
   def website_publications
     PublishedWebsite.include_root_in_json = false
-    sort  = params[:sort] || 'version'
-    dir   = params[:dir] || 'DESC'
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'version'
+    dir  = sort_hash[:direction] || 'DESC'
     limit = params[:limit] || 9
     start = params[:start] || 0
     

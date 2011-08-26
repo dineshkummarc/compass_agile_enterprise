@@ -4,6 +4,7 @@ require 'fileutils'
 class Theme < ActiveRecord::Base
   THEME_STRUCTURE = ['stylesheets', 'javascripts', 'images', 'templates']
   BASE_LAYOUTS_VIEWS_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views"
+  KNITKIT_WEBSITE_STYLESHEETS_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/public/stylesheets/knitkit"
 
   has_file_assets
 
@@ -167,6 +168,7 @@ class Theme < ActiveRecord::Base
     #copy all layouts over to the theme
     FileUtils.mkdir_p(path)
     FileUtils.cp_r(BASE_LAYOUTS_VIEWS_PATH, path)
+    FileUtils.cp_r(KNITKIT_WEBSITE_STYLESHEETS_PATH, ::File.join(path,'stylesheets'))
     #rename views to templates
     ::File.rename(::File.join(path,'views'), ::File.join(path,'templates'))
 
@@ -174,6 +176,13 @@ class Theme < ActiveRecord::Base
     Dir.glob(::File.join(path,'/*/*/*')).each do |file|
       next if file =~ /^\./
       unless ::File.directory? file
+        #if this is the base layout change stylesheets to point to theme
+        unless file.scan('base.html.erb').empty?
+          contents = IO.read(file)
+          contents.gsub!("<%= stylesheet_link_tag('knitkit/extjs_4.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','extjs_4.css') %>")
+          contents.gsub!("<%= stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
+          File.open(file, 'w+') {|f| f.write(contents) }
+        end
         self.add_file(file, IO.read(file))
       end
     end

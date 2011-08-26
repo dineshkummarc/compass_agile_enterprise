@@ -6,8 +6,9 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
     content = Content.find(params[:id])
     website = Website.find(params[:site_id])
-    sort  = params[:sort] || 'version'
-    dir   = params[:dir] || 'DESC'
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'version'
+    dir  = sort_hash[:direction] || 'DESC'
     limit = params[:limit] || 15
     start = params[:start] || 0
 
@@ -58,8 +59,9 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
     website_section = WebsiteSection.find(params[:id])
     website = Website.find(params[:site_id])
-    sort  = params[:sort] || 'version'
-    dir   = params[:dir] || 'DESC'
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'version'
+    dir  = sort_hash[:direction] || 'DESC'
     limit = params[:limit] || 15
     start = params[:start] || 0
 
@@ -104,6 +106,6 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     website_section.revert_to(version)
     website_section.save!
 
-    render :inline => {:success => true}.to_json
+    render :text => {:success => true, :body_html => website_section.layout}.to_json
   end
 end

@@ -25,8 +25,7 @@ class ErpApp::Desktop::RailsDbAdmin::BaseController < ErpApp::Desktop::BaseContr
   end
   
   def tables
-    json_text = '['
-
+    tables_hash = []
     tables = []
     table_names = @database_connection_class.connection.tables
     table_names.each do |table|
@@ -36,15 +35,10 @@ class ErpApp::Desktop::RailsDbAdmin::BaseController < ErpApp::Desktop::BaseContr
     tables.sort! { |a,b| a[:name].downcase <=> b[:name].downcase }
 
     tables.each do |table|
-      json_text += build_table_tree(table)
+      tables_hash << build_table_tree(table)
     end
 
-    json_text = json_text[0..json_text.length - 2]
-
-    
-    json_text += ']'
-
-    render :inline => json_text
+    render :inline => tables_hash.to_json
   end
 
   def setup_table_grid
@@ -53,7 +47,9 @@ class ErpApp::Desktop::RailsDbAdmin::BaseController < ErpApp::Desktop::BaseContr
     if @table_support.table_contains_column(table, :id) 
       json_text = "{success:true,"
       json_text += "columns:" + build_grid_columns(table)
+      json_text += ",model:'"+table+"'"
       json_text += ",fields:"+ build_store_fields(table)
+      json_text += ",validations:[]"
       json_text += "}"
     else
       json_text = "{success:false}"
@@ -161,11 +157,7 @@ class ErpApp::Desktop::RailsDbAdmin::BaseController < ErpApp::Desktop::BaseContr
     array_text = "["
 
     columns.each do |column|
-      array_text += "{name:\"#{column.name}\""
-      if column.name == "id"
-        array_text += ", allowBlank:false"
-      end
-      array_text += "},"
+      array_text += "{name:\"#{column.name}\"},"
     end
 
     array_text = array_text[0..array_text.length - 2]
@@ -178,17 +170,13 @@ class ErpApp::Desktop::RailsDbAdmin::BaseController < ErpApp::Desktop::BaseContr
   def build_table_tree(table)
     columns = @database_connection_class.connection.columns(table[:name])
 
-    json_text = "{\"text\":\"#{table[:display]}\", id:\"#{table[:display]}\", \"iconCls\":\"icon-data\", \"leaf\":false, \"children\":["
+    table_hash = {:isTable => true, :text => table[:display], :id => table[:display], :iconCls => 'icon-data', :leaf => false, :children => []}
 
     columns.each do |column|
-      json_text += "{\"text\":\"#{column.name} : #{column.type}\", \"iconCls\":\"icon-gear\", \"leaf\":true},"
+      table_hash[:children] << {:text => "#{column.name} : #{column.type}", :iconCls => 'icon-gear', :leaf => true}
     end
 
-    json_text = json_text[0..json_text.length - 2] unless json_text == "{\"text\":\"#{table[:display]}\", id:\"#{table[:display]}\", \"iconCls\":\"icon-data\", \"leaf\":false, \"children\":["
-
-    json_text += "]},"
-
-    json_text
+    table_hash
   end
 
   def setup_database_connection

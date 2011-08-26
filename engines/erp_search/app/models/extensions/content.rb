@@ -3,17 +3,23 @@ Content.class_eval do
   if $USE_SOLR_FOR_CONTENT
 
     searchable do
+      if $USE_TENANCY
+        string :tenant_id do
+          Thread.current[:tenant_id]
+        end
+      end
       text :title
       text :excerpt_html    
       text :body_html
       string :website_section_id do
-        website_sections.first.id # index website_section_id so solr does not need reindexed when section title/permalink changes        
+        # index website_section_id so solr does not need reindexed when section title/permalink changes
+        website_sections.first.id rescue 0
       end
       string :type do
-        website_sections.first.type        
+        website_sections.first.type rescue '' 
       end
       string :website_id do
-        website_sections.first.website_id
+        website_sections.first.website_id rescue 0
       end
     end
 
@@ -44,6 +50,10 @@ Content.class_eval do
 
         unless website_section_id.nil?
           with(:website_section_id, website_section_id)
+        end
+
+        if $USE_TENANCY
+          with(:tenant_id, Thread.current[:tenant_id])
         end
 
         with(:website_id, options[:website_id])

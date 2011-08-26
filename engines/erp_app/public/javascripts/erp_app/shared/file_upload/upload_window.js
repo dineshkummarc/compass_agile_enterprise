@@ -1,4 +1,6 @@
-Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
+Ext.define("Compass.ErpApp.Shared.UploadWindow",{
+    extend:"Ext.window.Window",
+    alias:'widget.erpappshared_uploadwindow',
     statusIconRenderer : function(value){
         switch(value){
             default:
@@ -19,12 +21,14 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
 
     progressBarColumnRenderer : function(value, meta, record, rowIndex, colIndex, store){
         meta.css += ' x-grid3-td-progress-cell';
+        var progressClass = "x-grid3-td-progress-cell-pending";
+        if(value == 100){
+           progressClass = "x-grid3-td-progress-cell-complete";
+        }
+
         var progressBarColumnTemplate = new Ext.XTemplate(
-            '<div class="ux-progress-cell-inner ux-progress-cell-inner-center ux-progress-cell-foreground">',
+            '<div class="ux-progress-cell-inner ux-progress-cell-inner-center ux-progress-cell-background '+progressClass+'" style="left:{value}%">',
             '<div>{value} %</div>',
-            '</div>',
-            '<div class="ux-progress-cell-inner ux-progress-cell-inner-center ux-progress-cell-background" style="left:{value}%">',
-            '<div style="left:-{value}%">{value} %</div>',
             '</div>'
             )
         return progressBarColumnTemplate.apply({
@@ -42,22 +46,21 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
         Compass.ErpApp.Shared.UploadWindow.superclass.initComponent.call(this, arguments);
         this.addEvents(
             /**
-             * @event fileuploaded
-             * Fired after file is uploaded.
-             * @param {Compass.ErpApp.Shared.UploadWindow } uploadWindow This object
-             */
+         * @event fileuploaded
+         * Fired after file is uploaded.
+         * @param {Compass.ErpApp.Shared.UploadWindow } uploadWindow This object
+         */
             'fileuploaded'
             );
     },
 
     constructor : function(config) {
         if(Compass.ErpApp.Utility.isBlank(config)){
-            var config = {};
+            config = {};
         }
         var self = this;
-        var awsomeUploader = {
-            xtype:'awesomeuploader',
-            ref:'awesomeUploader',
+        this.awesomeUploader = new Ext.create("Ext.ux.AwesomeUploader",{
+            region:'center',
             standardUploadUrl:config['standardUploadUrl'] || './file_manager/base/upload_file',
             flashUploadUrl:config['flashUploadUrl'] ||'./file_manager/base/upload_file',
             xhrUploadUrl:config['xhrUploadUrl'] ||'./file_manager/base/upload_file',
@@ -70,17 +73,13 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
             listeners:{
                 scope:this,
                 fileselected:function(awesomeUploader, file){
-                    self.awesomeUploaderGrid.store.loadData({
-                        id:file.id
-                        ,
-                        name:file.name
-                        ,
-                        size:file.size
-                        ,
-                        status:'Pending'
-                        ,
+                    self.awesomeUploaderGrid.store.insert(1,[{
+                        id:file.id,
+                        name:file.name,
+                        size:file.size,
+                        status:'Pending',
                         progress:0
-                    }, true);
+                    }]);
                 },
                 uploadstart:function(awesomeUploader, file){
                     self.updateFileUploadRecord(file.id, 'status', 'Sending');
@@ -92,7 +91,7 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
                     //Ext.Msg.alert('Data returned from server'+ serverData);
 
                     try{
-                        var result = Ext.util.JSON.decode(serverData);//throws a SyntaxError.
+                        var result = Ext.decode(serverData);//throws a SyntaxError.
                     }catch(e){
                         resultObject.error = 'Invalid JSON data returned';
                         //Invalid json data. Return false here and "uploaderror" event will be called for this file. Show error message there.
@@ -112,8 +111,7 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
                     self.updateFileUploadRecord(file.id, 'status', 'Aborted' );
                 },
                 uploadremoved:function(awesomeUploader, file ){
-
-                    self.awesomeUploaderGrid.store.remove(self.awesomeUploaderGrid.store.getById(file.id) );
+                    self.awesomeUploaderGrid.store.remove(self.awesomeUploaderGrid.store.getById(file.id));
                 },
                 uploaderror:function(awesomeUploader, file, serverData, resultObject){
                     resultObject = resultObject || {};
@@ -128,132 +126,128 @@ Compass.ErpApp.Shared.UploadWindow  = Ext.extend(Ext.Window, {
 
                 }
             }
-        };
+        });
+
+        this.awesomeUploaderGrid = Ext.create("Ext.grid.GridPanel",{
+            width:420,
+            region:'south',
+            height:200,
+            tbar:[
+            {
+                text:'Start Upload',
+                icon:'/images/erp_app/desktop/applications/file_manager/tick.png',
+                scope:this,
+                handler:function(){
+                    self.awesomeUploader.startUpload();
+                }
+            },
+            {
+                text:'Abort',
+                icon:'/images/erp_app/desktop/applications/file_manager/cancel.png',
+                scope:this,
+                handler:function(){
+                    var selModel = self.awesomeUploaderGrid.getSelectionModel();
+                    if(!selModel.hasSelection()){
+                        Ext.Msg.alert('','Please select an upload to cancel');
+                        return true;
+                    }
+                    var rec = selModel.selected.first();
+                    self.awesomeUploader.abortUpload(rec.data.id);
+                }
+            },
+            {
+                text:'Abort All',
+                icon:'/images/erp_app/desktop/applications/file_manager/cancel.png',
+                scope:this,
+                handler:function(){
+                    self.awesomeUploader.abortAllUploads();
+                }
+            },
+            {
+                text:'Remove',
+                icon:'/images/erp_app/desktop/applications/file_manager/cross.png',
+                scope:this,
+                handler:function(){
+                    var selModel = self.awesomeUploaderGrid.getSelectionModel();
+                    if(!selModel.hasSelection()){
+                        Ext.Msg.alert('','Please select an upload to cancel');
+                        return true;
+                    }
+                    var rec = selModel.selected.first();
+                    self.awesomeUploader.removeUpload(rec.data.id);
+                }
+            },
+            {
+                text:'Remove All',
+                icon:'/images/erp_app/desktop/applications/file_manager/cross.png',
+                scope:this,
+                handler:function(){
+                    self.awesomeUploader.removeAllUploads();
+                }
+            }],
+            store:Ext.create("Ext.data.Store",{
+                proxy: {
+                    type: 'memory',
+                    reader: {
+                        type: 'json'
+                    }
+                },
+                fields: ['id','name','size','status','progress']
+            }),
+            columns:[
+            {
+                header:'File Name',
+                menuDisabled:true,
+                sortable:false,
+                dataIndex:'name',
+                width:150
+            },
+            {
+                header:'Size',
+                dataIndex:'size',
+                menuDisabled:true,
+                sortable:false,
+                width:60,
+                renderer:Ext.util.Format.fileSize
+            },
+            {
+                header:'&nbsp;',
+                dataIndex:'status',
+                menuDisabled:true,
+                sortable:false,
+                width:30,
+                renderer:self.statusIconRenderer
+            },
+            {
+                header:'Status',
+                dataIndex:'status',
+                menuDisabled:true,
+                sortable:false,
+                width:60
+            },
+            {
+                header:'Progress',
+                dataIndex:'progress',
+                menuDisabled:true,
+                sortable:false,
+                width:100,
+                renderer:self.progressBarColumnRenderer
+            }
+            ]
+
+        });
 
         config = Ext.apply({
             title:'File Upload',
-            frame:true,
+            layout:'border',
             autoWidth:true,
-            autoHeight:true,
+            height:275,
+            width:455,
             iconCls:'icon-upload',
-            items:[awsomeUploader,
-            {
-                xtype:'grid'
-                ,
-                ref:'awesomeUploaderGrid'
-                ,
-                width:420
-                ,
-                height:200
-                ,
-                enableHdMenu:false
-                ,
-                tbar:[
-                {
-                    text:'Start Upload'
-                    ,
-                    icon:'/images/erp_app/desktop/applications/file_manager/tick.png'
-                    ,
-                    scope:this
-                    ,
-                    handler:function(){
-                        self.awesomeUploader.startUpload();
-                    }
-                },{
-                    text:'Abort'
-                    ,
-                    icon:'/images/erp_app/desktop/applications/file_manager/cancel.png'
-                    ,
-                    scope:this
-                    ,
-                    handler:function(){
-                        var selModel = self.awesomeUploaderGrid.getSelectionModel();
-                        if(!selModel.hasSelection()){
-                            Ext.Msg.alert('','Please select an upload to cancel');
-                            return true;
-                        }
-                        var rec = selModel.getSelected();
-                        self.awesomeUploader.abortUpload(rec.data.id);
-                    }
-                },{
-                    text:'Abort All'
-                    ,
-                    icon:'/images/erp_app/desktop/applications/file_manager/cancel.png'
-                    ,
-                    scope:this
-                    ,
-                    handler:function(){
-                        self.awesomeUploader.abortAllUploads();
-                    }
-                },{
-                    text:'Remove'
-                    ,
-                    icon:'/images/erp_app/desktop/applications/file_manager/cross.png'
-                    ,
-                    scope:this
-                    ,
-                    handler:function(){
-                        var selModel = self.awesomeUploaderGrid.getSelectionModel();
-                        if(!selModel.hasSelection()){
-                            Ext.Msg.alert('','Please select an upload to cancel');
-                            return true;
-                        }
-                        var rec = selModel.getSelected();
-                        self.awesomeUploader.removeUpload(rec.data.id);
-                    }
-                },{
-                    text:'Remove All'
-                    ,
-                    icon:'/images/erp_app/desktop/applications/file_manager/cross.png'
-                    ,
-                    scope:this
-                    ,
-                    handler:function(){
-                        self.awesomeUploader.removeAllUploads();
-                    }
-                }]
-                ,
-                store:new Ext.data.JsonStore({
-                    fields: ['id','name','size','status','progress']
-                    ,
-                    idProperty: 'id'
-                })
-                ,
-                columns:[
-                {
-                    header:'File Name',
-                    dataIndex:'name',
-                    width:150
-                }
-                ,{
-                    header:'Size',
-                    dataIndex:'size',
-                    width:60,
-                    renderer:Ext.util.Format.fileSize
-                }
-                ,{
-                    header:'&nbsp;',
-                    dataIndex:'status',
-                    width:30,
-                    renderer:self.statusIconRenderer
-                }
-                ,{
-                    header:'Status',
-                    dataIndex:'status',
-                    width:60
-                }
-                ,{
-                    header:'Progress',
-                    dataIndex:'progress',
-                    renderer:self.progressBarColumnRenderer
-                }
-                ]
-            }]
+            items:[this.awesomeUploader,this.awesomeUploaderGrid]
         }, config);
 
         Compass.ErpApp.Shared.UploadWindow.superclass.constructor.call(this, config);
     }
 
 });
-
-Ext.reg('erpappshared_uploadwindow', Compass.ErpApp.Shared.UploadWindow);

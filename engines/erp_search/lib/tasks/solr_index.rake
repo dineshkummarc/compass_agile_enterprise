@@ -50,5 +50,91 @@ namespace :sunspot do
     puts "Done."
   end
 
+  namespace :tenants do
+    def get_all_tenants
+      # get all tenants
+      tenants = Tenant.all
+      
+      # add public schema if it is in list
+      public_schema = Tenant.new
+      public_schema.id = 0
+      public_schema.schema = 'public'      
+      schemas = tenants.collect{|t| t.schema }
+      tenants << public_schema unless schemas.include?('public')
+      tenants
+    end
+        
+    task :reindex_content => :environment do
+      # loop thru tenants
+      get_all_tenants.each do |t|
+        puts "Indexing #{t.schema} ..."
+        
+        set_current_schema(t.schema)
+        
+        remove_tenant_indexes(Content, t.id)
+        
+        # reindex content for tenant
+        Content.solr_index
+        Sunspot.commit
+      end
+      
+      puts "Done."
+    end
+    
+    task :delete_content => :environment do      
+      puts "Removing Indexes for All Tenants! ..."
+      Content.solr_remove_all_from_index!
+      puts "Done."
+    end
+  end
+  
+  def get_tenant_id_by_schema(schema)
+    tenant_id = Tenant.find_by_schema(schema).id rescue 0
+    puts "tenant id is zero which means public schema!" if tenant_id == 0    
+    return tenant_id
+  end
+  
+  def set_current_schema(schema)
+    # set current tenant_id in Thread
+    if schema == 'public'
+      Thread.current[:tenant_id] = 0
+    else
+      Thread.current[:tenant_id] = get_tenant_id_by_schema(schema)
+    end      
+
+    #set schema
+    Tenancy::SchemaUtil.set_search_path(schema)  
+  end
+  
+  def remove_tenant_indexes(object, tenant_id)
+    # remove by query
+    Sunspot.remove(object) do
+      with(:tenant_id).equal_to(tenant_id)
+    end      
+    Sunspot.commit
+  end
+    
+  namespace :tenant do
+    task :reindex_content, [:schema] => :environment do |t,args|
+      puts "Indexing #{args.schema} ..."
+      
+      set_current_schema(args.schema)
+            
+      remove_tenant_indexes(Content, get_tenant_id_by_schema(args.schema))
+      
+      Content.solr_index     
+      Sunspot.commit
+      puts "Done."
+    end
+
+    task :delete_content, [:schema] => :environment do |t,args|
+      puts "Removing Indexes ..."
+      
+      set_current_schema(args.schema)
+            
+      remove_tenant_indexes(Content, get_tenant_id_by_schema(args.schema))      
+      puts "Done."
+    end
+  end
 end
 

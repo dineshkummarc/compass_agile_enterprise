@@ -21,8 +21,8 @@ class WorkEffort < ActiveRecord::Base
   def status
     status = nil
 
-    unless self.all_children.flatten!.nil?
-      work_effort_status = self.all_children.flatten!.last.get_current_status
+    unless self.descendants.flatten!.nil?
+      work_effort_status = self.descendants.flatten!.last.get_current_status
     else
       work_effort_status = self.get_current_status
     end
@@ -45,8 +45,8 @@ class WorkEffort < ActiveRecord::Base
   #start initial work_status
   def start(status_type)
     effort = self
-    unless self.all_children.flatten!.nil?
-      children = self.all_children.flatten
+    unless self.descendants.flatten!.nil?
+      children = self.descendants.flatten
       effort = children.last
     end
 

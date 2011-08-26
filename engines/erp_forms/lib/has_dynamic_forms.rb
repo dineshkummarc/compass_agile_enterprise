@@ -11,7 +11,12 @@ module HasDynamicForms
   		  attr_accessor :dynamic_form
   		  
 			  extend HasDynamicForms::SingletonMethods
-			  include HasDynamicForms::InstanceMethods											     			
+			  include HasDynamicForms::InstanceMethods			
+			  
+        def set_default(form_id)
+          DynamicForm.update_all({ :default => false }, conditions={ :model_name => self.class_name.to_s })
+          DynamicForm.update_all({ :default => true }, conditions={ :id => form_id })
+        end			  								     			
 		  end
 
 		end
@@ -54,11 +59,6 @@ module HasDynamicForms
       # get all forms by type
       def forms
 			  DynamicForm.find_all_by_model_name(self.class_name)
-      end
-
-      def set_default(internal_identifier)
-        DynamicForm.update_all('default=0', conditions="model_name=#{self.class.to_s}")
-        DynamicForm.update_all('default=1', conditions="model_name=#{self.class.to_s} AND internal_identifier=#{internal_identifier}")
       end
 
 		end	

@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
+    extend:"Ext.panel.Panel",
+    alias:'widget.knitkit_centerregion',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -32,11 +34,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 content:content
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     var activeTab = self.workArea.getActiveTab();
-                    activeTab.findByType('knitkit_versionswebsitesectiongridpanel')[0].getStore().reload();
+                    activeTab.query('knitkit_versionswebsitesectiongridpanel')[0].store.load();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving layout');
@@ -53,7 +55,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
     editSectionLayout : function(sectionName, websiteId, websiteSectionId, content, tbarItems){
         var self = this;
 
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:sectionName,
             closable:true,
@@ -102,7 +104,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 content:content
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                 }
@@ -120,8 +122,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
 
     editTemplateFile : function(node, content, tbarItems){
         var self = this;
-        var file_name = node.id.split('/').pop().split('.')[0];
-        var fileType = node.id.split('.').pop();
+        var file_name = node.data.id.split('/').pop().split('.')[0];
+        var fileType = node.data.id.split('.').pop();
         this.workArea.add(
         {
             closable:true,
@@ -136,7 +138,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 closable:true,
                 listeners:{
                     'save':function(codeMirror, content){
-                        self.saveTemplateFile(node.id, content);
+                        self.saveTemplateFile(node.data.id, content);
                     }
                 }
             }]
@@ -157,11 +159,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 html:content
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     var activeTab = self.workArea.getActiveTab();
-                    activeTab.findByType('knitkit_versionsbloggridpanel')[0].getStore().reload();
+                    activeTab.query('knitkit_versionsbloggridpanel')[0].getStore().load();
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving excerpt');
@@ -177,7 +179,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
 
     editExcerpt : function(title, id, content, siteId){
         var self = this;
-        var ckEditor = new Compass.ErpApp.Shared.CKeditor({
+        var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             value:content,
             ckEditorConfig:{
@@ -195,7 +197,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 ['Link','Unlink','Anchor'],
                 ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
                 '/',
-                ['Styles','Format','Font','FontSize'],
                 ['TextColor','BGColor'],
                 ['Maximize', 'ShowBlocks','-','About']
                 ]
@@ -207,7 +208,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             }
         });
 
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -248,11 +249,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 html:content
             },
             success: function(response) {
-                var obj =  Ext.util.JSON.decode(response.responseText);
+                var obj =  Ext.decode(response.responseText);
                 if(obj.success){
                     self.clearWindowStatus();
                     var activeTab = self.workArea.getActiveTab();
-                    activeTab.findByType('knitkit_versions'+contentType+'gridpanel')[0].getStore().reload();;
+                    activeTab.query('knitkit_versions'+contentType+'gridpanel')[0].getStore().load();;
                 }
                 else{
                     Ext.Msg.alert('Error', 'Error saving contents');
@@ -267,7 +268,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
     },
 
     viewContent : function(title, content){
-        var ckEditor = new Compass.ErpApp.Shared.CKeditor({
+        var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             value:content,
             ckEditorConfig:{
@@ -289,9 +290,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
 
     editContent : function(title, id, content, siteId, contentType){
         var self = this;
-        var ckEditor = new Compass.ErpApp.Shared.CKeditor({
+        var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
-            value:content,
+            //value:content,
             ckEditorConfig:{
                 extraPlugins:'compasssave,codemirror,jwplayer',
                 toolbar:[
@@ -307,7 +308,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 ['Link','Unlink','Anchor'],
                 ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
                 '/',
-                ['Styles','Format','Font','FontSize'],
                 ['TextColor','BGColor'],
                 ['Maximize', 'ShowBlocks','-','About']
                 ]
@@ -319,7 +319,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             }
         });
 
-        var centerRegionLayout = new Ext.Panel({
+        ckEditor.setValue(content);
+
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -342,7 +344,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 siteId:siteId
             }
             ]
-        })
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);
@@ -350,7 +352,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
 
     showComment : function(comment){
         var activeTab = this.workArea.getActiveTab();
-        var cardPanel = activeTab.findByType('panel')[0];
+        var cardPanel = activeTab.query('panel')[0];
         cardPanel.removeAll(true);
         cardPanel.add({
             disableToolbar:true,
@@ -363,7 +365,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
 
     viewContentComments : function(contentId, title){
         var self = this;
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title,
             closable:true,
@@ -385,7 +387,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 centerRegion:self
             }
             ]
-        })
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);
@@ -393,9 +395,9 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
 
     viewWebsiteInquiries : function(websiteId, title){
         var self = this;
-        var centerRegionLayout = new Ext.Panel({
+        var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
-            title:title,
+            title:title + " Inquiries",
             closable:true,
             items:[
             {
@@ -415,7 +417,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
                 centerRegion:self
             }
             ]
-        })
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);
@@ -427,11 +429,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.findByType('ckeditor').length == 0){
+            if(activeTab.query('ckeditor').length == 0){
                 Ext.Msg.alert('Error', 'No ckeditor found');
             }
             else{
-                activeTab.findByType('ckeditor')[0].insertHtml(html);
+                activeTab.query('ckeditor')[0].insertHtml(html);
             }
         }
         return false;
@@ -443,11 +445,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.findByType('ckeditor').length == 0){
+            if(activeTab.query('ckeditor').length == 0){
                 Ext.Msg.alert('Error', 'No ckeditor found');
             }
             else{
-                activeTab.findByType('ckeditor')[0].setValue(html);
+                activeTab.query('ckeditor')[0].setValue(html);
             }
         }
         return false;
@@ -459,11 +461,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.findByType('codemirror').length == 0){
+            if(activeTab.query('codemirror').length == 0){
                 Ext.Msg.alert('Error', 'No codemirror found.');
             }
             else{
-                activeTab.findByType('codemirror')[0].setValue(content);
+                activeTab.query('codemirror')[0].setValue(content);
             }
         }
         return false;
@@ -475,11 +477,11 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
             Ext.Msg.alert('Error', 'No editor');
         }
         else{
-            if(activeTab.findByType('codemirror').length == 0){
+            if(activeTab.query('codemirror').length == 0){
                 Ext.Msg.alert('Error', 'No codemirror found. Note that a widget can only be added to a Layout.');
             }
             else{
-                activeTab.findByType('codemirror')[0].insertContent(content);
+                activeTab.query('codemirror')[0].insertContent(content);
             }
         }
         return false;
@@ -507,5 +509,3 @@ Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion = Ext.extend(Ext.Panel,
         Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('knitkit_centerregion', Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion);

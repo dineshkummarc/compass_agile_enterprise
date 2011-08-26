@@ -1,5 +1,6 @@
-
-Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGrid = Ext.extend(Ext.grid.GridPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGrid",{
+    extend:"Ext.grid.GridPanel",
+    alias:'widget.railsdbadmin_readonlytabledatagrid',
     constructor : function(config) {
        var jsonStore = new Ext.data.JsonStore({
            fields:config.fields,
@@ -18,8 +19,6 @@ Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGrid = Ext.ext
         Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGrid.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('railsdbadmin_readonlytabledatagrid', Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGrid);
 
 
 

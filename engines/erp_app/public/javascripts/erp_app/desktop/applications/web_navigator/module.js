@@ -1,4 +1,5 @@
-Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
+Ext.define("Compass.ErpApp.Desktop.Applications.WebNavigator",{
+    extend:"Ext.ux.desktop.Module",
     id:'web-navigator-win',
     iframeId:'web_navigator_iframe',
     urlHistory:[],
@@ -77,10 +78,6 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
                 }
             });
            
-            if(!Compass.ErpApp.Utility.isBlank(this.initialConfig.toolBarButtons)){
-                tbarItems = tbarItems.concat(this.initialConfig.toolBarButtons);
-            }
-            
             win = desktop.createWindow({
                 id: 'web_navigator',
                 title:'Web Navigator',
@@ -106,6 +103,7 @@ Compass.ErpApp.Desktop.Applications.WebNavigator = Ext.extend(Ext.app.Module, {
         }
         win.show();
         this.gotToPage(url);
+        return win;
     }
 });
 

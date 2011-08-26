@@ -176,6 +176,8 @@ class SetupKnitkit < ActiveRecord::Migration
         t.string :url
         t.integer :position, :default => 0
 
+        t.references :linked_to_item, :polymorphic => true
+
         #better nested set columns
         t.integer :parent_id
         t.integer :lft
@@ -184,6 +186,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.timestamps
       end
 
+      add_index :website_nav_items, [:linked_to_item_id, :linked_to_item_type], :name => 'linked_to_idx'
       add_index :website_nav_items, :website_nav_id
       add_index :website_nav_items, :position
       add_index :website_nav_items, :parent_id

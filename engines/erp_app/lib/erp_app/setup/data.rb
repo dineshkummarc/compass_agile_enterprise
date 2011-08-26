@@ -10,6 +10,9 @@ class ErpApp::Setup::Data
     #Organization
     Organization.create(:description => 'TrueNorth')
 
+    #Note Types
+    NoteType.create(:description => 'Basic Note', :internal_identifier => 'basic_note')
+
     #######################################
     #contact purposes
     #######################################
@@ -78,18 +81,26 @@ class ErpApp::Setup::Data
     #######################################
     #create preference types
     desktop_backgroud_pt = PreferenceType.create(:description => 'Desktop Background', :internal_identifier => 'desktop_background')
+    extjs_theme_pt = PreferenceType.create(:description => 'Theme', :internal_identifier => 'extjs_theme')
     desktop_shortcut_pt = PreferenceType.create(:description => 'Desktop Shortcut', :internal_identifier => 'desktop_shortcut')
     auto_load_app_pt = PreferenceType.create(:description => 'Autoload Application', :internal_identifier => 'autoload_application')
 
     #create preference options
+    #yes no options
     yes_po = PreferenceOption.create(:description => 'Yes', :internal_identifier => 'yes', :value => 'yes')
     no_po = PreferenceOption.create(:description => 'No', :internal_identifier => 'no', :value => 'no')
+
+    #desktop background options
     blue_background_po = PreferenceOption.create(:description => 'Blue', :internal_identifier => 'blue_desktop_background', :value => 'blue.gif')
     gradient_background_po = PreferenceOption.create(:description => 'Grey Gradient', :internal_identifier => 'grey_gradient_desktop_background', :value => 'gradient.png')
     purple_background_po = PreferenceOption.create(:description => 'Purple', :internal_identifier => 'purple_desktop_background', :value => 'purple.jpg')
     planet_background_po = PreferenceOption.create(:description => 'Planet', :internal_identifier => 'purple_desktop_background', :value => 'planet.jpg')
     portablemind_background_po = PreferenceOption.create(:description => 'Portablemind', :internal_identifier => 'portablemind_desktop_background', :value => 'portablemind.png')
 
+    #desktop theme options
+    access_extjs_theme_po = PreferenceOption.create(:description => 'Access', :internal_identifier => 'access_extjs_theme', :value => 'ext-all-access.css')
+    gray_extjs_theme_po = PreferenceOption.create(:description => 'Gray', :internal_identifier => 'gray_extjs_theme', :value => 'ext-all-gray.css')
+    blue_extjs_theme_po = PreferenceOption.create(:description => 'Blue', :internal_identifier => 'blue_extjs_theme', :value => 'ext-all.css')
 
     #associate options
     desktop_shortcut_pt.preference_options << yes_po
@@ -110,6 +121,13 @@ class ErpApp::Setup::Data
     desktop_backgroud_pt.default_preference_option = portablemind_background_po
     desktop_backgroud_pt.save
 
+    extjs_theme_pt.preference_options << access_extjs_theme_po
+    extjs_theme_pt.preference_options << gray_extjs_theme_po
+    extjs_theme_pt.preference_options << blue_extjs_theme_po
+    extjs_theme_pt.default_preference_option = blue_extjs_theme_po
+    extjs_theme_pt.save
+
+
     #create widgets and assign roles
     app_mgr = ::Widget.create(
       :description => 'Application Management',
@@ -120,6 +138,17 @@ class ErpApp::Setup::Data
 
     app_mgr.roles << Role.iid('admin')
     app_mgr.save
+
+    notes_grid = ::Widget.create(
+      :description => 'Notes',
+      :icon => 'icon-documents',
+      :xtype => 'shared_notesgrid',
+      :internal_identifier => 'shared_notes_grid'
+    )
+
+    notes_grid.roles << Role.iid('admin')
+    notes_grid.roles << Role.iid('employee')
+    notes_grid.save
 
     role_mgr = ::Widget.create(
       :description => 'Role Management',
@@ -151,23 +180,37 @@ class ErpApp::Setup::Data
       :shortcut_id => 'user-management-win'
     )
 
-    desktop_shortcut_pt.preferenced_records << user_mgr_app
-    auto_load_app_pt.preferenced_records << user_mgr_app
+    user_mgr_app.preference_types << desktop_shortcut_pt
+    user_mgr_app.preference_types << auto_load_app_pt
+    
     user_mgr_app.widgets << role_mgr
     user_mgr_app.widgets << personal_info
     user_mgr_app.widgets << app_mgr
+    user_mgr_app.widgets << notes_grid
     user_mgr_app.save
 
     #created desktop app containers for users
     User.all.each do |user|
       desktop = Desktop.create
       desktop.user = user
-      desktop_backgroud_pt.preferenced_records << desktop
+      desktop.preference_types << desktop_backgroud_pt
+      desktop.preference_types << extjs_theme_pt
 
-
+      #setup desktop background
       pref = Preference.create(
         :preference_type => desktop_backgroud_pt,
         :preference_option => portablemind_background_po
+      )
+
+      desktop.user_preferences << UserPreference.create(
+        :user => user,
+        :preference => pref
+      )
+
+      #setup desktop theme
+      pref = Preference.create(
+        :preference_type => extjs_theme_pt,
+        :preference_option => blue_extjs_theme_po
       )
 
       desktop.user_preferences << UserPreference.create(
@@ -200,8 +243,9 @@ class ErpApp::Setup::Data
       :shortcut_id => 'system_management-win'
     )
 
-    desktop_shortcut_pt.preferenced_records << system_management_app
-    auto_load_app_pt.preferenced_records << system_management_app
+    system_management_app.preference_types << desktop_shortcut_pt
+    system_management_app.preference_types << auto_load_app_pt
+
     system_management_app.widgets << app_role_management
     system_management_app.save
 
@@ -213,6 +257,7 @@ class ErpApp::Setup::Data
     #######################################
     #organizer setup
     #######################################
+
     party_contact_mgm_widget = ::Widget.create(
       :description => 'Party Contact Management',
       :icon => 'icon-grid',
@@ -244,11 +289,25 @@ class ErpApp::Setup::Data
 
     crm_app.widgets << party_contact_mgm_widget
     crm_app.widgets << party_mgm_widget
+    crm_app.widgets << notes_grid
     crm_app.save
 
     User.all.each do |user|
       organizer = Organizer.create
       organizer.user = user
+
+      organizer.preference_types << extjs_theme_pt
+
+      #setup organizer theme
+      pref = Preference.create(
+        :preference_type => extjs_theme_pt,
+        :preference_option => blue_extjs_theme_po
+      )
+
+      organizer.user_preferences << UserPreference.create(
+        :user => user,
+        :preference => pref
+      )
 
       organizer.applications << crm_app
       organizer.save
@@ -265,9 +324,8 @@ class ErpApp::Setup::Data
       :shortcut_id => 'file_manager-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << file_manager_app
-    PreferenceType.iid('autoload_application').preferenced_records << file_manager_app
-
+    file_manager_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    file_manager_app.preference_types << PreferenceType.iid('autoload_application')
     file_manager_app.save
 
     admin = User.find_by_login('admin')
@@ -286,9 +344,8 @@ class ErpApp::Setup::Data
       :shortcut_id => 'scaffold-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << scaffold_app
-    PreferenceType.iid('autoload_application').preferenced_records << scaffold_app
-
+    scaffold_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    scaffold_app.preference_types << PreferenceType.iid('autoload_application')
     scaffold_app.save
 
     admin = User.find_by_login('admin')
@@ -307,9 +364,8 @@ class ErpApp::Setup::Data
       :shortcut_id => 'knitkit-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << knikit_app
-    PreferenceType.iid('autoload_application').preferenced_records << knikit_app
-
+    knikit_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    knikit_app.preference_types << PreferenceType.iid('autoload_application')
     knikit_app.save
 
     admin = User.find_by_login('admin')
@@ -330,8 +386,8 @@ class ErpApp::Setup::Data
       :shortcut_id => 'rails_db_admin-win'
     )
 
-    PreferenceType.iid('desktop_shortcut').preferenced_records << rails_db_admin_app
-    PreferenceType.iid('autoload_application').preferenced_records << rails_db_admin_app
+    rails_db_admin_app.preference_types << PreferenceType.iid('desktop_shortcut')
+    rails_db_admin_app.preference_types << PreferenceType.iid('autoload_application')
 
     rails_db_admin_app.save
 

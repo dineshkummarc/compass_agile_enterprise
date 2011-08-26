@@ -6,8 +6,9 @@ class ErpApp::Widgets::GoogleMap::Base < ErpApp::Widgets::Base
 
   def index
     @uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(100).to_s)
-    @address = params[:address]
-    @title = params[:title]
+    @drop_pins = params[:drop_pins]
+    @zoom = params[:zoom] || 18
+    @map_type = params[:map_type] || 'SATELLITE'
 
     render
   end

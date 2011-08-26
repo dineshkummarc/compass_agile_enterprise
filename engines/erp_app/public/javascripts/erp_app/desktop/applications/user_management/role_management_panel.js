@@ -1,4 +1,6 @@
-Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel",{
+    extend:"Ext.Panel",
+    alias:'widget.usermanagement_rolemanagementpanel',
     setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
@@ -11,36 +13,23 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
         Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel.superclass.initComponent.call(this, arguments);
     },
 
-    loadTrees :function(){
-        var treePanels = this.findByType('treepanel');
-        Ext.each(treePanels, function(tree){
-            tree.getRootNode().reload();
-        });
-    },
-
     addAllAvailableRoles : function(){
-        var availableRolesRoot = this.findById('role_mgt_available_roles').getRootNode();
-        var currentRolesRoot = this.findById('role_mgt_current_roles').getRootNode();
+        var availableRolesRoot = this.availableRolesTree.getRootNode();
+        var currentRolesRoot = this.currentRolesTree.getRootNode();
 
         availableRolesRoot.eachChild(function(node) {
-            var atts = node.attributes;
-            atts.id = node.id;
-            atts.text = node.text;
-            currentRolesRoot.appendChild(new Ext.tree.TreeNode(Ext.apply({}, atts)));
+            currentRolesRoot.appendChild(node.copy());
         });
 
         availableRolesRoot.removeAll(true);
     },
 
     removeAllCurrentRoles : function(){
-        var availableRolesRoot = this.findById('role_mgt_available_roles').getRootNode();
-        var currentRolesRoot = this.findById('role_mgt_current_roles').getRootNode();
+        var availableRolesRoot = this.availableRolesTree.getRootNode();
+        var currentRolesRoot = this.currentRolesTree.getRootNode();
 
         currentRolesRoot.eachChild(function(node) {
-            var atts = node.attributes;
-            atts.id = node.id;
-            atts.text = node.text;
-            availableRolesRoot.appendChild(new Ext.tree.TreeNode(Ext.apply({}, atts)));
+            availableRolesRoot.appendChild(node.copy());
         });
 
         currentRolesRoot.removeAll(true);
@@ -48,12 +37,12 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
 
     saveRoles : function(){
         var roleIds = []
-        var treePanel = this.findById('role_mgt_current_roles');
+        var treePanel = this.currentRolesTree;
         var treeRoot = treePanel.getRootNode();
         this.setWindowStatus('Saving...');
 
         treeRoot.eachChild(function(node) {
-            roleIds.push(node.id);
+            roleIds.push(node.get('role_id'));
         });
 
         var rolesJson = {
@@ -81,18 +70,49 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
     },
 
     constructor : function(config) {
-        var available_roles_tree = new Ext.tree.TreePanel({
-            id:'role_mgt_available_roles',
-            animate:false,
-            autoScroll:true,
-            region:'west',
-            loader: new Ext.tree.TreeLoader({
-                dataUrl:'./user_management/role_management/available_roles',
-                baseParams:{
+        var availableApplicationsStore = Ext.create('Ext.data.TreeStore', {
+            proxy: {
+                type: 'ajax',
+                url: './user_management/role_management/available_roles',
+                extraParams:{
                     user_id:config['userId']
                 }
-            }),
-            enableDD:true,
+            },
+            root: {
+                text: 'Available Roles',
+                expanded: true
+            },
+            fields:[
+            {
+                name:'role_id'
+            },
+            {
+                name:'text'
+            },
+            {
+                name:'icon_cls'
+            },
+            {
+                name:'is_leaf'
+            }
+            ]
+        });
+
+        this.availableRolesTree = Ext.create("Ext.tree.TreePanel",{
+            store:availableApplicationsStore,
+            id:'role_mgt_available_roles',
+            animate:false,
+            autoDestroy:true,
+            autoScroll:true,
+            region:'west',
+            viewConfig: {
+                //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+                loadMask: false,
+                plugins: {
+                    ptype: 'treeviewdragdrop',
+                    appendOnly: true
+                }
+            },
             containerScroll: true,
             border: false,
             width: 250,
@@ -110,28 +130,44 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
                     }
                 }
                 ]
-            },
-            root:new Ext.tree.AsyncTreeNode({
-                text: 'Available Roles',
-                draggable:false
-            })
+            }
         });
-        
-        var current_roles_tree = new Ext.tree.TreePanel({
-            id:'role_mgt_current_roles',
-            animate:false,
-            region:'center',
-            autoScroll:true,
-            loader: new Ext.tree.TreeLoader({
-                dataUrl:'./user_management/role_management/current_roles',
-                baseParams:{
+
+        var currentApplicationsStore = Ext.create('Ext.data.TreeStore', {
+            proxy: {
+                type: 'ajax',
+                url:'./user_management/role_management/current_roles',
+                extraParams:{
                     user_id:config['userId']
                 }
-            }),
-            root:new Ext.tree.AsyncTreeNode({
+            },
+            root: {
                 text: 'Current Roles',
-                draggable:false
-            }),
+                expanded: true
+            },
+            fields:[
+            {
+                name:'role_id'
+            },
+            {
+                name:'text'
+            },
+            {
+                name:'icon_cls'
+            },
+            {
+                name:'is_leaf'
+            }
+            ]
+        });
+        
+        this.currentRolesTree = Ext.create("Ext.tree.TreePanel",{
+            store:currentApplicationsStore,
+            id:'role_mgt_current_roles',
+            animate:false,
+            autoDestroy:true,
+            region:'center',
+            autoScroll:true,
             tbar:{
                 items:[
                 {
@@ -144,32 +180,39 @@ Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel = Ext.ext
                 }
                 ]
             },
-            enableDD:true,
             containerScroll: true,
             border: false,
             frame:true,
+            viewConfig: {
+                //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+                loadMask: false,
+                plugins: {
+                    ptype: 'treeviewdragdrop',
+                    appendOnly: true
+                }
+            },
             width: 250,
-            height: 300,
-            buttons:[
-            {
-                text:'save',
+            height: 300
+        });
+
+        config = Ext.apply({
+            layout:'border',
+            title:'Roles',
+            autoDestroy:true,
+            items:[this.availableRolesTree,this.currentRolesTree],
+            buttonAlign:'left',
+            buttons:[{
+                text:'Save',
+                iconCls:'icon-save',
                 scope:this,
                 handler:function(){
                     this.saveRoles();
                 }
             }
             ]
-        });
-
-        config = Ext.apply({
-            layout:'border',
-            title:'Roles',
-            items:[available_roles_tree,current_roles_tree]
         }, config);
 
 
         Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('usermanagement_rolemanagementpanel', Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel);

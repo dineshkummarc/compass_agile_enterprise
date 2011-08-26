@@ -227,7 +227,7 @@ class OrderTxn < ActiveRecord::Base
     #check if we are using delayed jobs or not
     unless use_delayed_jobs
       financial_txns.each do |financial_txn|
-        financial_txn.authorize_payment(credit_card, gateway, gateway_options)
+        financial_txn.authorize(credit_card, gateway, gateway_options)
         if financial_txn.payments.empty?
           all_txns_authorized = false
           gateway_message = 'Unknown Gateway Error'
@@ -243,7 +243,7 @@ class OrderTxn < ActiveRecord::Base
     else
       financial_txns.each do |financial_txn|
         #push into delayed job so we can fire off more payments if needed
-        ErpTxnsAndAccts::DelayedJobs::PaymentGatewayJob.start(financial_txn, gateway, :authorize_payment, gateway_options, credit_card)
+        ErpTxnsAndAccts::DelayedJobs::PaymentGatewayJob.start(financial_txn, gateway, :authorize, gateway_options, credit_card)
       end
       #wait till all payments are complete
       #wait a max of 120 seconds 2 minutes
@@ -270,7 +270,7 @@ class OrderTxn < ActiveRecord::Base
     #check if we are using delayed jobs or not
     unless use_delayed_jobs
       authorized_txns.each do |financial_txn|
-        result = financial_txn.finalize_payment(credit_card, gateway, gateway_options)
+        result = financial_txn.capture(credit_card, gateway, gateway_options)
         unless(result[:success])
           all_txns_captured = false
           gateway_message   = result[:gateway_message]
@@ -280,7 +280,7 @@ class OrderTxn < ActiveRecord::Base
     else
       authorized_txns.each do |financial_txn|
         #push into delayed job so we can fire off more payments if needed
-        ErpTxnsAndAccts::DelayedJobs::PaymentGatewayJob.start(financial_txn, gateway, :finalize_payment, gateway_options, credit_card)
+        ErpTxnsAndAccts::DelayedJobs::PaymentGatewayJob.start(financial_txn, gateway, :capture, gateway_options, credit_card)
       end
 
       #wait till all payments are complete

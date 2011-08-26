@@ -8,15 +8,17 @@
     <meta name="keywords" content="" />
     <meta name="copyright" content="&copy;" />
     <meta name="robots" content="ALL" />
-    <meta name="language" content="English"> 
+    <meta name="language" content="English" />
     
     <title><%= @website.title %></title>
     <%= javascript_include_tag 'prototype' %>
-    <%= include_extjs('ext_3_3_1', 'xtheme-slate.css') %>
+    <%= include_extjs %>
+    <%= stylesheet_link_tag('extjs/resources/css/knitkit_extjs_4.css') %>
     <%= stylesheet_link_tag('knitkit/style.css') %>
     <%= javascript_include_tag('erp_app/utility.js') %>
     <%= javascript_include_tag('erp_app/widgets.js') %>
     <%= javascript_include_tag('erp_app/shared/ajax_pagination.js') %>
+    <%= javascript_include_tag('erp_forms/dynamic_forms_validation.js') %>    
     <%= yield :head %>
   </head>
   <body>

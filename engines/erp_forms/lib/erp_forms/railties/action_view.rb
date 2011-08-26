@@ -8,7 +8,7 @@ ActionView::Base.class_eval do
   # }
   def render_dynamic_form(name, options={})
     
-    form = DynamicForm.get_form(name.to_s, options[:internal_identifier]).to_extjs(
+    form = DynamicForm.get_form(name.to_s, options[:internal_identifier]).to_extjs_widget(
                 { :url => build_widget_url(:new),
                   :widget_result_id => widget_result_id,
                   :width => options[:width] 

@@ -4,7 +4,8 @@ Ext.ns("Compass.ErpApp.Desktop.Applications");
 //module
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager = Ext.extend(Ext.app.Module, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager",{
+    extend:"Ext.ux.desktop.Module",
     id:'product_manager-win',
     init : function(){
         this.launcher = {
@@ -41,7 +42,9 @@ Compass.ErpApp.Desktop.Applications.ProductManager = Ext.extend(Ext.app.Module, 
 //form to manage description and title
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm = Ext.extend(Ext.FormPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm",{
+    extend:"Ext.form.Panel",
+    alias:'widget.productmanager_productdescriptionform',
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm.superclass.initComponent.call(this, arguments);
 
@@ -59,9 +62,6 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm = Ext.
     constructor : function(config) {
         var self = this;
         config = Ext.apply({
-            labelWidth:40,
-            frame:true,
-            autoHeight: true,
             buttonAlign:'center',
             bodyStyle:'padding:5px 5px 0',
             items: [
@@ -83,6 +83,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm = Ext.
                 allowBlank:false,
                 ckEditorConfig:{
                     height:'345px',
+                    width:750,
                     extraPlugins:'jwplayer',
                     toolbar:[
                     ['Source','-','Preview','Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
@@ -112,12 +113,12 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm = Ext.
                     var basicForm = formPanel.getForm();
 
                     //ckeditor does not post.  Get the value and set to hidden field
-                    var ckeditor = formPanel.findByType('ckeditor')[0];
+                    var ckeditor = formPanel.query('ckeditor')[0];
                     basicForm.findField('description').setValue(ckeditor.getValue());
 
                     basicForm.submit({
                         success:function(form, action){
-                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                            var obj = Ext.decode(action.response.responseText);
                             if(obj.success){
                                 self.fireEvent('saved', this, obj.id);
                             }
@@ -138,18 +139,17 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm = Ext.
     }
 });
 
-Ext.reg('productmanager_productdescriptionform', Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptionForm);
-
 //
 //form to manage pricing
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel",{
+    extend:"Ext.panel.Panel",
+    alias:'widget.productmanager_productpricingpanel',
     updatePrice : function(rec){
-        var formPanel = this.findByType('form')[0];
-        formPanel.buttons[0].setText('Update Price');
-        formPanel.buttons[1].show();
-        formPanel.getForm().setValues(rec.data);
+        this.addEditPriceBtn.setText('Update Price');
+        this.cancelBtn.show();
+        this.addPriceFormPanel.getForm().setValues(rec.data);
     },
 
     deletePrice : function(rec){
@@ -164,10 +164,10 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
                 conn.request({
                     url: './product_manager/delete_price/'+rec.get('pricing_plan_id'),
                     success: function(response) {
-                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        var obj =  Ext.decode(response.responseText);
                         if(obj.success){
                             Ext.getCmp('productListPanel').loadProducts();
-                            self.findByType('grid')[0].getStore().reload();
+                            self.pricesGridPanel.getStore().load();
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting price.');
@@ -188,22 +188,14 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
     constructor : function(config) {
         var self = this;
 
-        var expander = new Ext.ux.grid.RowExpander({
-            tpl : new Ext.Template('<p><b>Comments:</b> {comments}</p><br>')
-        });
-
-        this.pricesGridPanel = {
+        this.pricesGridPanel = Ext.create("Ext.grid.Panel",{
             layout:'fit',
-            xtype:'grid',
             region:'center',
-            plugins: expander,
             split:true,
-            width:'100%',
             columns: [
-            expander,
             {
                 header:'Description',
-                width:370,
+                width:310,
                 sortable: false,
                 dataIndex: 'description'
             },
@@ -267,31 +259,91 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
                         self.deletePrice(rec);
                     }
                 }]
+            },
+            {
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
+                header:'Comment',
+                align:'center',
+                width:60,
+                items:[{
+                    getClass: function(v, meta, rec) {  // Or return a class from a function
+                        this.items[0].tooltip = rec.get('comments');
+                        return 'info-col';
+                    },
+                    handler: function(grid, rowIndex, colIndex) {
+                        return false;
+                    }
+                }]
             }
             ],
             loadMask: true,
             stripeRows: true,
-            store:{
-                xtype:'jsonstore',
-                url: './product_manager/prices/'+config.productTypeId,
+            store: Ext.create("Ext.data.Store",{
                 autoLoad: true,
-                root: 'prices',
-                id:'id',
+                proxy:{
+                    type:'ajax',
+                    url: './product_manager/prices/'+config.productTypeId,
+                    reader:{
+                        root: 'prices',
+                        type:'json'
+                    }
+                },
                 fields:[{
                     name:'price',
                     type:'decimal'
                 }, 'currency', 'currency_display', 'from_date', 'thru_date', 'description','comments','pricing_plan_id']
-            }
-        }
+            })
+        });
 
-        this.addPriceFormPanel = {
-            xtype:'form',
-            labelWidth:60,
+        this.addEditPriceBtn = Ext.create("Ext.button.Button",{
+            scope:this,
+            text:'Add Price',
+            handler:function(btn){
+                var formPanel = btn.findParentByType('form');
+                var basicForm = formPanel.getForm();
+
+                basicForm.submit({
+                    reset:true,
+                    success:function(form, action){
+                        var obj =  Ext.decode(action.response.responseText);
+                        if(obj.success){
+                            self.addEditPriceBtn.setText('Add Price');
+                            self.cancelBtn.hide();
+                            Ext.getCmp('productListPanel').loadProducts();
+                            self.pricesGridPanel.getStore().load();
+                        }
+                        else{
+                            Ext.Msg.alert("Error", 'Error creating price');
+                        }
+                    },
+                    failure:function(form, action){
+                        Ext.Msg.alert("Error", 'Error creating price');
+                    }
+                });
+            }
+        });
+
+        this.cancelBtn = Ext.create("Ext.button.Button",{
+            text:'Cancel',
+            hidden:true,
+            handler:function(btn){
+                var formPanel = btn.findParentByType('form');
+                var basicForm = formPanel.getForm();
+                basicForm.reset();
+                self.addEditPriceBtn.setText('Add Price');
+                self.cancelBtn.hide();
+            }
+        });
+
+        this.addPriceFormPanel = Ext.create("Ext.form.Panel",{
+            layout:'anchor',
             collapsible:true,
+            split:true,
+            height:175,
             frame:true,
             region:'south',
-            split:true,
-            autoHeight: true,
             buttonAlign:'center',
             bodyStyle:'padding:5px 5px 0',
             url:'./product_manager/new_and_update_price',
@@ -304,20 +356,23 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
             },
             {
                 layout:'column',
+                xtype:'container',
+                frame:false,
+                border:false,
                 defaults:{
                     columnWidth:0.25,
-                    layout:'form',
                     border:false,
-                    xtype:'panel',
+                    frame:false,
+                    xtype:'container',
                     bodyStyle:'padding:0 18px 0 0'
                 },
-                border:false,
                 items:[{
                     items:[
                     {
                         fieldLabel:'Price',
                         xtype:'numberfield',
-                        width:75,
+                        width:200,
+                        layout:'anchor',
                         allowBlank:false,
                         name:'price'
                     }
@@ -328,14 +383,19 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
                     {
                         fieldLabel:'Currency',
                         xtype:'combo',
-                        width:75,
+                        width:200,
                         id : 'call_center_party_country',
                         allowBlank : false,
-                        store : {
+                        store :Ext.create("Ext.data.Store",{
                             autoLoad: true,
-                            xtype:'jsonstore',
-                            root: 'currencies',
-                            url:'./product_manager/currencies',
+                            proxy:{
+                                type:'ajax',
+                                url: './product_manager/currencies',
+                                reader:{
+                                    root: 'currencies',
+                                    type:'json'
+                                }
+                            },
                             fields: [
                             {
                                 name:'internal_identifier'
@@ -344,12 +404,11 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
                                 name:'id'
                             }
                             ]
-                        },
+                        }),
                         hiddenName: 'currency',
                         hiddenField: 'currency',
                         valueField: 'id',
                         displayField: 'internal_identifier',
-                        mode:'local',
                         forceSelection : true,
                         triggerAction : 'all',
                         name:'currency'
@@ -361,6 +420,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
                     {
                         fieldLabel:'From Date',
                         xtype:'datefield',
+                        width:200,
                         allowBlank:false,
                         name:'from_date'
                     }
@@ -371,6 +431,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
                     {
                         fieldLabel:'Thru Date',
                         xtype:'datefield',
+                        width:200,
                         allowBlank:false,
                         name:'thru_date'
                     }
@@ -395,65 +456,28 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel = Ext.ext
             }
             ],
             buttons:[
-            {
-                text:'Add Price',
-                handler:function(btn){
-                    var formPanel = btn.findParentByType('form');
-                    var basicForm = formPanel.getForm();
-
-                    basicForm.submit({
-                        reset:true,
-                        success:function(form, action){
-                            var obj =  Ext.util.JSON.decode(action.response.responseText);
-                            if(obj.success){
-                                self.findByType('form')[0].buttons[0].setText('Add Price');
-                                self.findByType('form')[0].buttons[1].hide();
-                                Ext.getCmp('productListPanel').loadProducts();
-                                self.findByType('grid')[0].getStore().reload();
-                            }
-                            else{
-                                Ext.Msg.alert("Error", 'Error creating price');
-                            }
-                        },
-                        failure:function(form, action){
-                            Ext.Msg.alert("Error", 'Error creating price');
-                        }
-                    });
-                }
-            },
-            {
-                text:'Cancel',
-                hidden:true,
-                handler:function(btn){
-                    var formPanel = btn.findParentByType('form');
-                    var basicForm = formPanel.getForm();
-                    basicForm.reset();
-                    self.findByType('form')[0].buttons[0].setText('Add Price');
-                    self.findByType('form')[0].buttons[1].hide();
-                }
-            }
+            this.addEditPriceBtn,
+            this.cancelBtn
             ]
-        }
+        });
 
         config = Ext.apply({
             title:'Pricing',
             layout:'border',
-            width:'100%',
-            height:485,
-            items:[this.pricesGridPanel, this.addPriceFormPanel]
+            items:[this.pricesGridPanel,this.addPriceFormPanel]
         }, config);
 
         Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel.superclass.constructor.call(this, config);
     }
 });
 
-Ext.reg('productmanager_productpricingpanel', Compass.ErpApp.Desktop.Applications.ProductManager.ProductPricingPanel);
-
 //
 //Panel for product images
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.extend(Ext.Panel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel",{
+    extend:"Ext.panel.Panel",
+    alias:'widget.productmanager_productimagespanel',
     deleteImage : function(id){
         var self = this;
         Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this image?', function(btn){
@@ -466,9 +490,9 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.exte
                 conn.request({
                     url: './product_manager/delete_image/'+id,
                     success: function(response) {
-                        var obj =  Ext.util.JSON.decode(response.responseText);
+                        var obj =  Ext.decode(response.responseText);
                         if(obj.success){
-                            self.imageAssetsDataView.getStore().reload();
+                            self.imageAssetsDataView.getStore().load();
                         }
                         else{
                             Ext.Msg.alert('Error', 'Error deleting image.');
@@ -487,19 +511,20 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.exte
         var productTypeId = config.productTypeId;
         var uploadUrl = './product_manager/new_image'
         
-        this.imageAssetsDataView = new Ext.DataView({
+        this.imageAssetsDataView = Ext.create("Ext.view.View",{
             autoDestroy:true,
             itemSelector: 'div.thumb-wrap',
             style:'overflow:auto',
-            multiSelect: true,
-            plugins: new Ext.DataView.DragSelector({
-                dragSafe:true
-            }),
-            store: new Ext.data.JsonStore({
-                url: './product_manager/images/'+productTypeId,
+            store: Ext.create("Ext.data.Store",{
                 autoLoad: true,
-                root: 'images',
-                id:'id',
+                proxy:{
+                    type:'ajax',
+                    url: './product_manager/images/'+productTypeId,
+                    reader:{
+                        root: 'images',
+                        type:'json'
+                    }
+                },
                 fields:['name', 'url', 'shortName', 'id']
             }),
             tpl: new Ext.XTemplate(
@@ -510,9 +535,9 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.exte
                 '</tpl>'
                 ),
             listeners:{
-                'contextmenu':function(dataView, index, node, e){
+                'itemcontextmenu':function(view, record, htmlitem, index, e, options){
                     e.stopEvent();
-                    var contextMenu = new Ext.menu.Menu({
+                    var contextMenu = Ext.create("Ext.menu.Menu",{
                         items:[
                         {
                             text:'Delete',
@@ -542,7 +567,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.exte
                     text:'Add Image',
                     iconCls:'icon-upload',
                     handler:function(btn){
-                        var uploadWindow = new Compass.ErpApp.Shared.UploadWindow({
+                        var uploadWindow = Ext.create("Compass.ErpApp.Shared.UploadWindow",{
                             standardUploadUrl:uploadUrl,
                             flashUploadUrl:uploadUrl,
                             xhrUploadUrl:uploadUrl,
@@ -551,8 +576,8 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.exte
                             },
                             listeners:{
                                 'fileuploaded':function(){
-                                    var dataView = btn.findParentByType('panel').findByType('dataview')[0];
-                                    dataView.getStore().reload();
+                                    var dataView = btn.findParentByType('panel').query('dataview')[0];
+                                    dataView.getStore().load();
                                     Ext.getCmp('productListPanel').loadProducts();
                                 }
                             }
@@ -568,14 +593,13 @@ Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel = Ext.exte
     }
 });
 
-Ext.reg('productmanager_productimagespanel', Compass.ErpApp.Desktop.Applications.ProductManager.ProductImagesPanel);
-
-
 //
 //Inventory Management
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel = Ext.extend(Ext.FormPanel, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel",{
+    extend:"Ext.form.Panel",
+    alias:'widget.productmanager_inventoryformpanel',
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel.superclass.initComponent.call(this, arguments);
     },
@@ -583,9 +607,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel = Ext.exte
     constructor : function(config) {
         config = Ext.apply({
             title:'Inventory',
-            labelWidth:75,
             frame:true,
-            autoHeight: true,
             buttonAlign:'left',
             bodyStyle:'padding:5px 5px 0',
             url:'./product_manager/update_inventory',
@@ -593,13 +615,11 @@ Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel = Ext.exte
             {
                 fieldLabel:'SKU #',
                 xtype:'textfield',
-                width:200,
                 allowBlank:true,
                 name:'sku'
             },{
                 fieldLabel:'# Available',
                 xtype:'numberfield',
-                width:75,
                 allowBlank:false,
                 name:'number_available'
             },
@@ -619,7 +639,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel = Ext.exte
                     basicForm.submit({
                         reset:false,
                         success:function(form, action){
-                            var obj =  Ext.util.JSON.decode(action.response.responseText);
+                            var obj = Ext.decode(action.response.responseText);
                             if(obj.success){
                                 Ext.getCmp('productListPanel').loadProducts();
                             }
@@ -640,13 +660,13 @@ Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel = Ext.exte
     }
 });
 
-Ext.reg('productmanager_inventoryformpanel', Compass.ErpApp.Desktop.Applications.ProductManager.InventoryFormPanel);
-
 //
 //Add product window
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow = Ext.extend(Ext.Window, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow",{
+    extend:"Ext.window.Window",
+    alias:'widget.productmanager_addproductwindow',
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow.superclass.initComponent.call(this, arguments);
     },
@@ -656,6 +676,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow = Ext.extend
         config = Ext.apply({
             title:'Add New Product',
             width:800,
+            layout:'fit',
             height:525,
             autoScroll:true,
             buttonAlign:'center',
@@ -679,13 +700,13 @@ Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow = Ext.extend
     }
 });
 
-Ext.reg('productmanager_addproductwindow', Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow);
-
 //
 //Update product window
 //
 
-Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow = Ext.extend(Ext.Window, {
+Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow",{
+    extend:"Ext.window.Window",
+    alias:'widget.productmanager_updateproductwindow',
     initComponent: function() {
         Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow.superclass.initComponent.call(this, arguments);
     },
@@ -713,9 +734,9 @@ Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow = Ext.ext
                             conn.request({
                                 url: './product_manager/show/'+panel.initialConfig['productTypeId'],
                                 success: function(response) {
-                                    var obj =  Ext.util.JSON.decode(response.responseText);
+                                    var obj =  Ext.decode(response.responseText);
                                     self.getForm().setValues(obj);
-                                    self.findByType('ckeditor')[0].setValue(obj.description);
+                                    self.query('ckeditor')[0].setValue(obj.description);
                                 },
                                 failure: function(response) {
                                     Ext.Msg.alert('Error', 'Error loading product details.');
@@ -744,7 +765,7 @@ Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow = Ext.ext
                         conn.request({
                             url: './product_manager/inventory/'+panel.initialConfig['productTypeId'],
                             success: function(response) {
-                                var obj =  Ext.util.JSON.decode(response.responseText);
+                                var obj = Ext.decode(response.responseText);
                                 self.getForm().setValues(obj);
                             },
                             failure: function(response) {
@@ -760,12 +781,13 @@ Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow = Ext.ext
         config = Ext.apply({
             title:'Update Product',
             width:860,
+            layout:'fit',
             height:560,
             autoScroll:true,
             items:[tabLayout],
             listeners:{
                 show:function(comp){
-                    comp.findByType('tabpanel')[0].setActiveTab(activeTab);
+                    comp.query('tabpanel')[0].setActiveTab(activeTab);
                 }
             }
         }, config);
@@ -773,5 +795,3 @@ Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow = Ext.ext
         Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow.superclass.constructor.call(this, config);
     }
 });
-
-Ext.reg('productmanager_updateproductwindow', Compass.ErpApp.Desktop.Applications.ProductManager.UpdateProductWindow);

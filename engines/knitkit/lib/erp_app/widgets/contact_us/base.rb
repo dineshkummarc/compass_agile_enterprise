@@ -5,24 +5,32 @@ class ErpApp::Widgets::ContactUs::Base < ErpApp::Widgets::Base
   end
   
   def index
+    @use_dynamic_form = params[:use_dynamic_form]
+
     render
   end
 
   def new
-    @website = Website.find_by_host(request.host_with_port)
-
-    @website_inquiry = WebsiteInquiry.new
-    @website_inquiry.data.created_with_form_id = params[:dynamic_form_id]
-    @website_inquiry.website_id = @website.id
-
-    params.each do |k,v|
-      @website_inquiry.data.send(DynamicDatum::DYNAMIC_ATTRIBUTE_PREFIX + k + '=', v) unless ErpApp::Widgets::Base::IGNORED_PARAMS.include?(k.to_s)
+    @is_html_form = params[:is_html_form]
+    @validation = {}
+    @validation[:first_name] = "First Name Cannot be Blank" if params[:first_name].blank?
+    @validation[:last_name] = "Last Name Cannot be Blank" if params[:last_name].blank?
+    @validation[:message] = "Message Cannot be Blank" if params[:message].blank?
+    @validation[:email] = "Please Enter a Valid Email Address" unless /^.+@.+\..+$/.match(params[:email])
+    
+    if @is_html_form and !@validation.empty?  
+      return render :view => :error
     end
     
-    @website_inquiry.data.created_by = current_user unless current_user.nil?
-    
-    if @website_inquiry.valid?
-      @website_inquiry.save
+    @website = Website.find_by_host(request.host_with_port)    
+    @website_inquiry = WebsiteInquiry.new
+
+    params[:created_by] = current_user unless current_user.nil?
+    params[:created_with_form_id] = params[:dynamic_form_id] if params[:dynamic_form_id] and params[:is_html_form].blank?
+    params[:website_id] = @website.id
+    @website_inquiry = DynamicFormModel.save_all_attributes(@website_inquiry, params, ErpApp::Widgets::Base::IGNORED_PARAMS)
+        
+    if @website_inquiry
       if @website.email_inquiries?
         @website_inquiry.send_email
       end
