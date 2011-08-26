@@ -24,41 +24,13 @@
 	});
 </script>
 
-
-	<!-- High Slide  -->
-	<div class="highslide-gallery">
-	<!--
-		4) This is how you mark up the thumbnail image with an anchor tag around it.
-		The anchor's href attribute defines the URL of the full-size image.
-	-->
-	<a href="/images/high_slide/gallery1.jpg" class="highslide" onclick="return hs.expand(this)">
-		<img src="/images/high_slide/gallery1.thumb.jpg" alt="Highslide JS"
-			title="Click to enlarge" />
-	</a>
-
-	<!--
-		5 (optional). This is how you mark up the caption. The correct class name is important.
-	-->
-
-	<div class="highslide-caption">
-		Caption for the first image. This caption can be styled using CSS.
-	</div>
-
-
-	<!-- Repetionion of the above -->
-	<a href="/images/high_slide/gallery2.jpg" class="highslide" onclick="return hs.expand(this)">
-		<img src="/images/high_slide/gallery2.thumb.jpg" alt="Highslide JS"
-			title="Click to enlarge" /></a>
-
-	<div class="highslide-caption">
-		Caption for the second image.
-	</div>
-
-	<a href="/images/high_slide/gallery3.jpg" class="highslide" onclick="return hs.expand(this)">
-
-		<img src="/images/high_slide/gallery3.thumb.jpg" alt="Highslide JS"
-			title="Click to enlarge" /></a>
-
-	<div class="highslide-caption">
-		Caption for the third image.
-	</div>
+<!-- High Slide  -->
+<div class="highslide-gallery">
+	<% @images.each do |image| %>
+		<%= link_to(image_tag(image.data.url(:thumb), :title => "Click to enlarge"), 
+			image.data.url, :class => "highslide", :onclick => "return hs.expand(this)") %>
+		<div class="highslide-caption">
+			Optional caption for images. This caption can be styled using CSS.
+		</div>
+	<% end %>
+</div>

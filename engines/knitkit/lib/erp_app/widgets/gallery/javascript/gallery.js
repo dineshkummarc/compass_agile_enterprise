@@ -1,11 +1,11 @@
 Compass.ErpApp.Widgets.Gallery = {
     addGallery:function(){
 		 var uploadWindow = new Compass.ErpApp.Shared.UploadWindow({
-				standardUploadUrl:'./knitkit/image_assets/upload_file',
-				flashUploadUrl:'./knitkit/image_assets/upload_file',
-				xhrUploadUrl:'./knitkit/image_assets/upload_file',
+				standardUploadUrl:'./knitkit/image_assets/upload_file_paperclip',
+				flashUploadUrl:'./knitkit/image_assets/upload_file_paperclip',
+				xhrUploadUrl:'./knitkit/image_assets/upload_file_paperclip',
                 extraPostData:{
-                        directory:'public/images/high_slide'
+                        directory:"public/images/high_slide"
                     },
             });
 		  Ext.getCmp('knitkitCenterRegion').addContentToActiveCodeMirror('<%= render_widget :gallery  %>');

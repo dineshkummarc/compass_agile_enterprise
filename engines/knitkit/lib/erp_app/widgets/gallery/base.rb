@@ -5,8 +5,8 @@ class ErpApp::Widgets::Gallery::Base < ErpApp::Widgets::Base
   end
 
   def index
-    # @website = Website.find_by_host(request.host_with_port)
-    # logger.info { "*********************************************Inside gallery base.rb, @website: #{@website.id}" }
+    @website = Website.find_by_host(request.host_with_port)
+    @images = @website.files
     render
   end
 

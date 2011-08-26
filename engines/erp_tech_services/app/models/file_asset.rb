@@ -11,8 +11,19 @@ class FileAsset < ActiveRecord::Base
   instantiates_with_sti
 
   has_attached_file :data,
-    :url => ":file_url",
-    :path => ":file_path",
+    :url => lambda {|this|
+      case this.instance.class.to_s
+        when 'Image' then ":file_url/:style/:basename.:extension"
+        else ":file_url"
+      end
+      },
+    :path => lambda {|this| 
+      case this.instance.class.to_s
+        when 'Image' then ":file_path/:style/:basename.:extension"
+        else ":file_path"
+      end
+      },
+    :styles => {:thumb => "100x100>"},
     # FIXME fails with a weird file upload error
   # Tempfile has a name like RackMultipart20090310-22070-hu8w3m-0 which is missing the extension
   :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
