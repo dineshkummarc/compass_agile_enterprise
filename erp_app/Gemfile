@@ -11,6 +11,6 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
-gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
-gem 'erp_dev_svcs', :path => '../erp_dev_svcs'
-gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
+group :development, :test do
+  gem 'rspec-rails', '~> 2.5'
+end
