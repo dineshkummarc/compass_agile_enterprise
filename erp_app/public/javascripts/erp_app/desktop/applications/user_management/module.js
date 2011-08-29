@@ -327,22 +327,21 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             });
         }
 
-        var toolBarItems = []
+        var toolBarItems = [];
         if(ErpApp.Authentication.RoleManager.hasRole('admin')){
-            toolBarItems.push( {
+            toolBarItems.push({
                 text:'Add User',
                 iconCls:'icon-add',
                 handler:function(){
-                    var addUserWindow = new Ext.Window({
-                        layout:'fit',
+                    var addUserWindow = Ext.create("Ext.window.Window",{
                         width:325,
                         title:'New User',
                         height:270,
                         plain: true,
                         buttonAlign:'center',
-                        items: new Ext.FormPanel({
+                        items: {
+                            xtype:'form',
                             frame:false,
-                            layout:'',
                             bodyStyle:'padding:5px 5px 0',
                             url:'/erp_app/desktop/user_management/users/new',
                             defaults: {
@@ -398,9 +397,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                                 inputType: 'password',
                                 allowBlank:false,
                                 name:'password_confirmation'
-                            },
+                            }
                             ]
-                        }),
+                        },
                         buttons: [{
                             text:'Submit',
                             listeners:{
