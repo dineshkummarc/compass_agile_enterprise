@@ -36,7 +36,7 @@ Knitkit::Engine.routes.draw do
   #comments
   match '/erp_app/desktop/comments/:action(/:content_id)' => 'erp_app/desktop/comments'
   #inquiries
-  match '/erp_app/desktop/inquiries/:action/:website_id' => 'erp_app/desktop/inquiries'
+  match '/erp_app/desktop/inquiries/:action(/:website_id)' => 'erp_app/desktop/inquiries'
   #website_nav
   match '/erp_app/desktop/website_nav/:action' => 'erp_app/desktop/website_nav'
   #position

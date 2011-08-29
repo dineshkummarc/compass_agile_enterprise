@@ -22,7 +22,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                 self.setWindowStatus('Deleting Dynamic Model...');
                 var conn = new Ext.data.Connection();
                 conn.request({
-                    url: './dynamic_forms/models/delete',
+                    url: '/erp_forms/erp_app/desktop/dynamic_forms/models/delete',
                     method: 'POST',
                     params:{
                         id:node.data.modelId
@@ -58,7 +58,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                 self.setWindowStatus('Deleting form...');
                 var conn = new Ext.data.Connection();
                 conn.request({
-                    url: './dynamic_forms/forms/delete',
+                    url: '/erp_forms/erp_app/desktop/dynamic_forms/forms/delete',
                     method: 'POST',
                     params:{
                         id:node.data.formId
@@ -87,7 +87,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
         self.setWindowStatus('Setting Default form...');
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './dynamic_forms/models/set_default_form',
+            url: '/erp_forms/erp_app/desktop/dynamic_forms/models/set_default_form',
             method: 'POST',
             params:{
                 id:node.data.formId,
@@ -119,7 +119,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
         self.setWindowStatus('Loading section template...');
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './dynamic_forms/forms/get',
+            url: '/erp_forms/erp_app/desktop/dynamic_forms/forms/get',
             method: 'POST',
             params:{
                 id:formId
@@ -161,8 +161,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
             {
                 xtype:'dynamic_forms_DynamicDataGridPanel',
                 model_name:record.data.text,
-                dataUrl: './dynamic_forms/data/index/'+record.data.text,
-                setupUrl: './dynamic_forms/data/setup/'+record.data.text,
+                dataUrl: '/erp_forms/erp_app/desktop/dynamic_forms/data/index/'+record.data.text,
+                setupUrl: '/erp_forms/erp_app/desktop/dynamic_forms/data/setup/'+record.data.text,
                 region:'center',
                 height:300,
                 collapsible:false,
@@ -177,7 +177,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                         self.setWindowStatus('Getting form...');
                         var conn = new Ext.data.Connection();
                         conn.request({
-                            url: './dynamic_forms/forms/get',
+                            url: '/erp_forms/erp_app/desktop/dynamic_forms/forms/get',
                             method: 'POST',
                             params:{
                                 model_name:record.data.text,
@@ -216,7 +216,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
         var store = Ext.create('Ext.data.TreeStore', {
             proxy:{
                 type: 'ajax',
-                url: './dynamic_forms/forms/get_tree'
+                url: '/erp_forms/erp_app/desktop/dynamic_forms/forms/get_tree'
             },
             root: {
                 text: 'Dynamic Forms',
@@ -266,7 +266,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                 loadMask: false
             },
             store:store,
-            dataUrl: './dynamic_forms/forms/get_tree',
+            dataUrl: '/erp_forms/erp_app/desktop/dynamic_forms/forms/get_tree',
             region: 'center',
             rootVisible:false,
             enableDD :true,
@@ -389,7 +389,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                                 frame:false,
                                 fileUpload: true,
                                 bodyStyle:'padding:5px 5px 0',
-                                url:'./dynamic_forms/models/create',
+                                url:'/erp_forms/erp_app/desktop/dynamic_forms/models/create',
                                 defaults: {
                                     width: 225
                                 },

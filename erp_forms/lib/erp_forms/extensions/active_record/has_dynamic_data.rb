@@ -10,9 +10,9 @@ module ErpForms
         		def has_dynamic_data
       		  	include ErpForms::Extensions::ActiveRecord::HasDynamicData::InstanceMethods		
       		  	
-      		  	after_update     :save_dynamic_data
+      		  	after_save       :save_dynamic_data
       		  	after_initialize :initialize_dynamic_data
-      		  	after_create     :create_dynamic_data
+#      		  	after_create     :create_dynamic_data
       		  	
       		  	has_one :dynamic_data, :as => :reference, :class_name => 'DynamicDatum', :dependent => :destroy
 
@@ -27,7 +27,7 @@ module ErpForms
       		module InstanceMethods
 
       			def data
-      				self.dynamic_data.proxy_target
+      			  self.dynamic_data
       			end
 	
             def save_dynamic_data
@@ -49,16 +49,17 @@ module ErpForms
               end        
             end
       
-            def create_dynamic_data    
-              if self.dynamic_data.nil?
-                t = DynamicDatum.new
-                self.dynamic_data = t
-                t.reference = self
+            #def create_dynamic_data  
+            #  puts "create_dynamic_data"  
+            #  if self.dynamic_data.nil?
+            #    t = DynamicDatum.new
+            #    self.dynamic_data = t
+            #    t.reference = self
 
-                t.save
-                self.save
-              end        
-            end
+            #    t.save
+            #    self.save
+            #  end        
+            #end
       	end	
       end
     end

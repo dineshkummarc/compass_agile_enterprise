@@ -1,4 +1,4 @@
-class ErpApp::Desktop::DynamicForms::ModelsController < ErpApp::Desktop::DynamicForms::BaseController
+class ErpForms::ErpApp::Desktop::DynamicForms::ModelsController < ErpForms::ErpApp::Desktop::DynamicForms::BaseController
   
   # get dynamic form models
   # used in dynamic forms widget combo box

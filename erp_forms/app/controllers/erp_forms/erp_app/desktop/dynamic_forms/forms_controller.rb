@@ -1,4 +1,4 @@
-class ErpApp::Desktop::DynamicForms::FormsController < ErpApp::Desktop::DynamicForms::BaseController
+class ErpForms::ErpApp::Desktop::DynamicForms::FormsController < ErpForms::ErpApp::Desktop::DynamicForms::BaseController
   
   # get tree of dynamic models and forms
   def get_tree
@@ -60,7 +60,7 @@ class ErpApp::Desktop::DynamicForms::FormsController < ErpApp::Desktop::DynamicF
   # get a single form
   def get    
     form = DynamicForm.get_form(params[:model_name], params[:internal_identifier]).to_extjs_formpanel(
-                { :url => "/erp_app/desktop/dynamic_forms/data/#{params[:form_action]}",
+                { :url => "/erp_forms/erp_app/desktop/dynamic_forms/data/#{params[:form_action]}",
                   :record_id => params[:id]
                 })
 

@@ -7,7 +7,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.DynamicDataGridPane
         Ext.getCmp('westregionPanel').setWindowStatus('Getting update form...');
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './dynamic_forms/forms/get',
+            url: '/erp_forms/erp_app/desktop/dynamic_forms/forms/get',
             method: 'POST',
             params:{
                 id:rec.get("id"),
@@ -39,7 +39,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.DynamicDataGridPane
         Ext.getCmp('westregionPanel').setWindowStatus('Deleting record...');
         var conn = new Ext.data.Connection();
         conn.request({
-            url: './dynamic_forms/data/delete',
+            url: '/erp_forms/erp_app/desktop/dynamic_forms/data/delete',
             method: 'POST',
             params:{
                 id:rec.get("id"),

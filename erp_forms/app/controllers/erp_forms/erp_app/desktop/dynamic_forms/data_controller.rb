@@ -1,4 +1,4 @@
-class ErpApp::Desktop::DynamicForms::DataController < ErpApp::Desktop::DynamicForms::BaseController
+class ErpForms::ErpApp::Desktop::DynamicForms::DataController < ErpForms::ErpApp::Desktop::DynamicForms::BaseController
 
     # setup dynamic data grid
     def setup
@@ -47,8 +47,8 @@ class ErpApp::Desktop::DynamicForms::DataController < ErpApp::Desktop::DynamicFo
         wihash = i.data.dynamic_attributes_without_prefix
   #      puts i.data.created_by.inspect
         wihash[:id] = i.id
-        wihash[:created_username] = i.data.created_by.nil? ? '' : i.data.created_by.login
-        wihash[:updated_username] = i.data.updated_by.nil? ? '' : i.data.updated_by.login
+        wihash[:created_username] = i.data.created_by.nil? ? '' : i.data.created_by.username
+        wihash[:updated_username] = i.data.updated_by.nil? ? '' : i.data.updated_by.username
         wihash[:created_at] = i.data.created_at
         wihash[:updated_at] = i.data.updated_at
         wi << wihash
@@ -60,10 +60,10 @@ class ErpApp::Desktop::DynamicForms::DataController < ErpApp::Desktop::DynamicFo
     # create a dynamic data record
     def create
       @myDynamicObject = DynamicFormModel.get_instance(params[:model_name])
-
+      puts current_user.inspect
       params[:created_by] = current_user unless current_user.nil?
       params[:created_with_form_id] = params[:dynamic_form_id] if params[:dynamic_form_id]
-      @myDynamicObject = DynamicFormModel.save_all_attributes(@myDynamicObject, params, ErpApp::Desktop::DynamicForms::BaseController::IGNORED_PARAMS)
+      @myDynamicObject = DynamicFormModel.save_all_attributes(@myDynamicObject, params, ErpForms::ErpApp::Desktop::DynamicForms::BaseController::IGNORED_PARAMS)
       
       if @myDynamicObject
         render :inline => {:success => true}.to_json
@@ -78,7 +78,7 @@ class ErpApp::Desktop::DynamicForms::DataController < ErpApp::Desktop::DynamicFo
 
       params[:updated_by] = current_user unless current_user.nil?
       params[:updated_with_form_id] = params[:dynamic_form_id] if params[:dynamic_form_id]      
-      @myDynamicObject = DynamicFormModel.save_all_attributes(@myDynamicObject, params, ErpApp::Desktop::DynamicForms::BaseController::IGNORED_PARAMS)
+      @myDynamicObject = DynamicFormModel.save_all_attributes(@myDynamicObject, params, ErpForms::ErpApp::Desktop::DynamicForms::BaseController::IGNORED_PARAMS)
             
       if @myDynamicObject
         render :inline => {:success => true}.to_json

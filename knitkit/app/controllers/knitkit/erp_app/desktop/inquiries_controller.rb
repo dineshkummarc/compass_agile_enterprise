@@ -18,9 +18,9 @@ class InquiriesController < Knitkit::ErpApp::Desktop::AppController
     columns << DynamicGridColumn.build_view_column("Ext.getCmp('knitkitCenterRegion').showComment(rec.get('message'));")
     columns << DynamicGridColumn.build_delete_column("Ext.getCmp('InquiriesGridPanel').deleteInquiry(rec);")
     
-    definition << JSON(DynamicFormField.textfield({ :fieldLabel => "Username", :name => 'username' }))
-    definition << JSON(DynamicFormField.datefield({ :fieldLabel => "Created At", :name => 'created_at' }))
-    definition << JSON(DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' }))
+    definition << DynamicFormField.textfield({ :fieldLabel => "Username", :name => 'username' })
+    definition << DynamicFormField.datefield({ :fieldLabel => "Created At", :name => 'created_at' })
+    definition << DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' })
     
     result = "{
       \"success\": true,
@@ -41,21 +41,15 @@ class InquiriesController < Knitkit::ErpApp::Desktop::AppController
     sort = sort_hash[:property] || 'created_at'
     dir  = sort_hash[:direction] || 'DESC'
 
-    WebsiteInquiry.class_eval do
-      def username
-        data.created_by.nil? ? '' : data.created_by.username
-      end
-    end
-
     website_inquiries = website.website_inquiries.paginate(:page => page, :per_page => per_page, :order => "#{sort} #{dir}")
 
     wi = []
     website_inquiries.each do |i|
       wihash = i.data.dynamic_attributes_without_prefix
-#      puts i.data.created_by.inspect
-      wihash['id'] = i.id
-      wihash['username'] = i.username
-      wihash['created_at'] = i.data.created_at
+
+      wihash[:id] = i.id
+      wihash[:username] = i.data.created_by.nil? ? '' : i.data.created_by.username
+      wihash[:created_at] = i.data.created_at
       wi << wihash
     end
     
