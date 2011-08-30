@@ -120,7 +120,7 @@ class DynamicFormField
     options[:readonly] = false if options[:readonly].nil?
     options[:maxlength] = nil if options[:maxlength].nil?
     options[:width] = 200 if options[:width].nil?
-    options[:height] = 'auto' if options[:height].nil?
+    options[:height] = nil if options[:height].nil?
     options[:validation_regex] = '' if options[:validation_regex].nil?
     options[:labelwidth] = 75 if options[:labelwidth].nil?
     
