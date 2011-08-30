@@ -1,1 +1,8 @@
-engines/knitkit/public/sites/*
+.DS_Store
+*~
+*.cache
+*.log
+*.pid
+*.sqlite3
+temp/*
+tmp/*

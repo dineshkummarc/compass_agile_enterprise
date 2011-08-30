@@ -3,7 +3,7 @@ Description:
   the Compass AE framework
 
 Example:
-    rails g cms_widget [application_name] [description] [icon_url]
+    rails g cms_widget [widget_name] [description] [icon_url]
 
     This will create:
         1. Folder structure app/widgets/[widget_name]
