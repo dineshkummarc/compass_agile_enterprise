@@ -246,7 +246,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                 type:'int'
             },
             {
-                name: 'login',
+                name: 'username',
                 type: 'string'
             },
             {
@@ -257,8 +257,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
         });
          
         var columns = [{
-            header:'Login',
-            dataIndex:'login',
+            header:'Username',
+            dataIndex:'username',
             width:150
         },
         {
