@@ -69,7 +69,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.DynamicDataGridPane
             title:'Dynamic Data',
             editable:false,
             page:true,
-            pageSize:20,
+            pageSize: 20,
             displayMsg:'Displaying {0} - {1} of {2}',
             emptyMsg:'Empty'
         }, config);

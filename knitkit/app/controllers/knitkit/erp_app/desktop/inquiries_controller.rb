@@ -53,7 +53,7 @@ class InquiriesController < Knitkit::ErpApp::Desktop::AppController
       wi << wihash
     end
     
-    render :inline => "{ totalCount:#{website_inquiries.total_entries}, data:#{wi.to_json} }"
+    render :inline => "{ total:#{website_inquiries.total_entries}, data:#{wi.to_json} }"
   end
 
   def delete

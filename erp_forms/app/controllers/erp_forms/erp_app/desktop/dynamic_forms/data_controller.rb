@@ -54,7 +54,7 @@ class ErpForms::ErpApp::Desktop::DynamicForms::DataController < ErpForms::ErpApp
         wi << wihash
       end
 
-      render :inline => "{ totalCount:#{dynamic_records.total_entries}, data:#{wi.to_json} }"
+      render :inline => "{ total:#{dynamic_records.total_entries}, data:#{wi.to_json} }"
     end
 
     # create a dynamic data record

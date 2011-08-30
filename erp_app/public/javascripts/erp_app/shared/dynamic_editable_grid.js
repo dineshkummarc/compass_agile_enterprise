@@ -7,6 +7,7 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
             fields:config['fields'],
             autoLoad: true,
             autoSync: true,
+            pageSize: config['pageSize'],
             proxy: {
                 type: 'rest',
                 url:config.url,
@@ -38,7 +39,6 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
 
         if(config['page'] == true){
             this.bbar = new Ext.PagingToolbar({
-                pageSize: config['pageSize'],
                 store: store,
                 displayInfo: true,
                 displayMsg: config['displayMsg'],

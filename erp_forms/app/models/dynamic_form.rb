@@ -29,18 +29,7 @@ class DynamicForm < ActiveRecord::Base
   # parse JSON definition into a ruby object 
   # returns an array of hashes
   def definition_object
-    d = self.definition
-
-    # remove preceding comma
-#    validateOnBlur = '"validateOnBlur": true,'
-#    d = d.gsub(validateOnBlur,'"validateOnBlur": true')         
-
-    # remove validator, not JSON compliant
-#    validator = '\"validator\": function\(v\)\{(.+)\}\},'   
-#    regex = Regexp.new(validator, Regexp::MULTILINE)
-#    d = d.gsub(regex,'},')         
-    
-    o = JSON.parse(d)
+    o = JSON.parse(self.definition)
     o.map! do |i|
       i = i.symbolize_keys
     end
@@ -112,7 +101,11 @@ class DynamicForm < ActiveRecord::Base
                 \"model_name\": \"#{self.model_name}\"
               },
               \"items\": #{definition_with_validation},
-
+              \"listeners\": {
+                  \"afterrender\": function(form) {
+                      Ext.getCmp('dynamic_form_panel').getComponent(0).focus(false);
+                  }
+              },
               \"buttons\": [{
                   \"text\": \"Submit\",
                   \"listeners\":{
@@ -177,7 +170,11 @@ class DynamicForm < ActiveRecord::Base
                 model_name: '#{self.model_name}'
               },
               items: #{definition_with_validation},
-
+              listeners: {
+                  afterrender: function(form) {
+                      Ext.getCmp('dynamic_form_panel').getComponent(0).focus(false);
+                  }
+              },
               buttons: [{
                   text: 'Submit',
                   listeners:{
