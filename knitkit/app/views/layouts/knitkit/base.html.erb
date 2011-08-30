@@ -11,14 +11,15 @@
     <meta name="language" content="English" />
     
     <title><%= @website.title %></title>
-    <%= javascript_include_tag :application %>
+    <%= static_javascript_include_tag 'prototype.js' %>
+    <%# javascript_include_tag :application %>
     <%= include_extjs %>
     <%= static_stylesheet_link_tag('extjs/resources/css/knitkit_extjs_4.css') %>
     <%= static_stylesheet_link_tag('knitkit/style.css') %>
     <%= static_javascript_include_tag('erp_app/utility.js') %>
     <%= static_javascript_include_tag('erp_app/widgets.js') %>
     <%= static_javascript_include_tag('erp_app/shared/ajax_pagination.js') %>
-    <%= static_javascript_include_tag('erp_app/shared/dynamic_forms_validation.js') %>
+    <%= static_javascript_include_tag('erp_app/shared/dynamic_forms/dynamic_forms_validation.js') %>
     <%= yield :head %>
   </head>
   <body>
