@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'rails', '3.1.0.rc5'
+gem 'rails', '3.1.0.rc8'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -14,3 +14,6 @@ gem 'jquery-rails'
 group :development, :test do
   gem 'rspec-rails', '~> 2.5'
 end
+
+gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
+gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
