@@ -17,5 +17,6 @@ end
 
 gem 'dynamic_attributes'
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
+gem 'erp_dev_svcs', :path => '../erp_dev_svcs'
 gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
 gem 'erp_app', :path => '../erp_app'
