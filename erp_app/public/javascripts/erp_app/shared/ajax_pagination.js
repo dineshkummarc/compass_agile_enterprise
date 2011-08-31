@@ -1,4 +1,6 @@
 /* ajax pagination */
+
+/* Prototype implementation let here for reference
 document.observe("dom:loaded", function() {
   // the element in which we will observe all clicks and capture
   // ones originating from pagination links
@@ -21,4 +23,10 @@ document.observe("dom:loaded", function() {
       }
     });
   }
+});
+*/
+
+/* jQuery implementation */
+$(document).ready(function(){
+  $('.pagination a').attr('data-remote', 'true'); 
 });
