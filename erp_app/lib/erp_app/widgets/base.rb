@@ -49,10 +49,12 @@ module ErpApp
     def render_view_for(opts, state)
       return '' if opts[:nothing]
 
+      
       ### TODO: dispatch dynamically:
       if    opts[:text]   ### FIXME: generic option?
       elsif opts[:inline]
       elsif opts[:file]
+      elsif opts[:json]
       elsif opts[:state]  ### FIXME: generic option
         opts[:text] = render_state(opts[:state])
       else
@@ -60,11 +62,10 @@ module ErpApp
         opts = defaultize_render_options_for(opts, state)
         template = find_family_view_for_state(opts[:view])
         opts[:template] = template
+        opts[:inline] = render_to_string(opts)
+        opts.except!(:template)
       end   
-
-      opts = sanitize_render_options(opts)
-
-      render_to_string(opts)
+      sanitize_render_options(opts)
     end
     
     def find_family_view_for_state(state)

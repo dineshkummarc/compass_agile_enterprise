@@ -13,14 +13,7 @@ module ErpApp
 
   		widget_obj = "::Widgets::#{@widget_name.camelize}::Base".constantize.new(self, @widget_name, @widget_action, @uuid, widget_params)
 		
-  		@action_results = widget_obj.send(@widget_action)
-		
-		  respond_to do |format|
-		    format.html do
-		      render :inline => @action_results, :layout => false
-		    end
-		    format.js
-		  end
+  		render widget_obj.send(@widget_action)
 		end
 	  
 	end
