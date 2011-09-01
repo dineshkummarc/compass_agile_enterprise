@@ -11,7 +11,7 @@ module ErpTechSvcs
       resource ||= resource_or_scope
       sign_in(scope, resource) unless warden.user(scope) == resource    
       
-      (params[:login_to].blank?) ? (render :json => {:success => true}) : (redirect_to params[:login_to])
+      request.xhr? ? (render :json => {:success => true}) : (redirect_to params[:login_to])
     end
     
     def new
@@ -28,9 +28,9 @@ module ErpTechSvcs
 
     # JSON login failure message                                                            
     def failure
-      messsage = "Login failed. Try again"
-      flash[:notice] = messsage
-      (params[:login_to].blank?) ? (render :json => {:success => false, :errors => {:reason => messsage}}) : (redirect_to params[:logout_to])
+      message = "Login failed. Try again"
+      set_flash_message :notice, message
+      request.xhr? ? (render :json => {:success => false, :errors => {:reason => message}}) : (render :text => message)
     end
     
   end

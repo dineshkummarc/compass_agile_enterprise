@@ -361,3 +361,8 @@ ul#submenu li a
 
 ul#submenu li a:hover, ul#submenu li.selected a, ul#submenu li.selected a:hover
 { color: #000;}
+
+
+div.sexyerror{
+	background: #FFEBE8 none repeat scroll 0;border: 1px solid #DD3C10;padding: 1em;font-weight: bold;
+}
