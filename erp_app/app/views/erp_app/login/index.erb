@@ -16,7 +16,7 @@
     <script type="text/javascript">
       Ext.onReady(function(){
           var appContainers = [['/erp_app/desktop/','Compass Desktop'],['/erp_app/organizer/','Compass Organizer']];
-          var loginWindow = new Compass.ErpApp.Login.Window({appContainers:appContainers, redirectTo:'../desktop/', logoutTo:'/erp_app/desktop/login', message:'<%=flash[:error]%>'});
+          var loginWindow = new Compass.ErpApp.Login.Window({appContainers:appContainers, redirectTo:'../desktop/', logoutTo:'/erp_app/login', message:'<%=flash[:error]%>'});
           loginWindow.show();
       });
     </script>

@@ -4,6 +4,6 @@
       <a href="<%=@login_url%>">Login</a>&nbsp;|&nbsp;<a href="<%=@signup_url%>">Signup</a>
     </span>
   <% else  %>
-    <span>Welcome <%= @user.party.description %>&nbsp;|&nbsp;<a href="/erp_app/logout">Logout</a></span>
+    <span>Welcome <%= @user.party.description %>&nbsp;|&nbsp;<a href="/users/sign_out">Logout</a></span>
   <% end %>
 </div>
