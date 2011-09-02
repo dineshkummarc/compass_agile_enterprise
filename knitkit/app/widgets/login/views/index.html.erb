@@ -4,15 +4,15 @@
     <div class="form_settings">
       <p>
         <span style="width:175px">Username or Email Address</span>
-        <%= text_field_tag :login%>
+        <%= text_field_tag "user[login]"%>
       </p>
       <p>
         <span style="width:175px">Password</span>
-        <%= password_field_tag :password %>
+        <%= password_field_tag "user[password]"%>
       </p>
-      <input type="hidden" name="logout_to" value="<%=@logout_to%>" />
-      <input type="hidden" name="login_to" value="<%=@login_to%>" />
-      <input type="hidden" name="remote" value="true" />
+      <input type="hidden" name="user[logout_to]" value="<%=@logout_to%>" />
+      <input type="hidden" name="user[login_to]" value="<%=@login_to%>" />
+      <input type="hidden" name="user[remote]" value="true" />
       <p style="padding-top: 15px">
         <span style="width:175px">&nbsp;</span>
         <%= submit_tag "Login", :disable_with => "Please wait...", :class => "submit", :style => 'margin:0px;'%> | <%= link_to 'Sign Up', @signup_url %>

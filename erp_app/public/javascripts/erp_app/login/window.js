@@ -19,7 +19,7 @@ Ext.define("Compass.ErpApp.Login.Window",{
 			var loginTo   = Ext.getCmp('loginTo').getValue();
 			var waitMsg = Ext.Msg.wait('Status','Authenticating...');
 			var conn = new Ext.data.Connection();
-	        var data = {logout_to: self.initialConfig['logoutTo'], remote: true, commit: "Sign in", utf8: "✓",user: {remember_me: 1, password: password, login: login}};
+	        var data = {authenticity_token: self.initialConfig['authenticity_token'], logout_to: self.initialConfig['logoutTo'], remote: true, commit: "Sign in", utf8: "✓",user: {remember_me: 1, password: password, login: login}};
 	        conn.request({
 	            url: '/users/sign_in',
 	            method: 'POST',
