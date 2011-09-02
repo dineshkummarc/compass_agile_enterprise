@@ -13,6 +13,5 @@ gem 'jquery-rails'
 
 gem 'data_migrator'
 gem 'has_many_polymorphic'
-gem 'will_paginate', '~> 3.0.pre4'
 gem 'attr_encrypted'
 gem 'awesome_nested_set'

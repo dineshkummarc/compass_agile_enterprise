@@ -11,5 +11,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.5'
 end
 
+gem 'will_paginate', '~> 3.0.0'
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
 gem 'erp_tech_svcs', :path => '../erp_tech_svcs'

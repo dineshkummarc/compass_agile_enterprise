@@ -12,5 +12,4 @@ Gem::Specification.new do |s|
   s.add_dependency('has_many_polymorphic')
   s.add_dependency('attr_encrypted')
   s.add_dependency('awesome_nested_set')
-  s.add_dependency('will_paginate','~> 3.0.pre4')
 end
