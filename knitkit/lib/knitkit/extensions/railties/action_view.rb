@@ -1,4 +1,15 @@
 ActionView::Base.class_eval do
+
+  def blog_pagination(css_class, params)
+    return will_paginate @contents, :class => css_class, :params => { 
+                                                                :section_id => params[:section_id],                                            
+                                                                :per_page => params[:per_page],
+                                                                :format => params[:format],
+                                                                :only_path => true,
+                                                                :use_route => params[:use_route],
+                                                                :scope => main_app
+                                                              }    
+  end
   
   # render a piece of content by permalink regardless if it belongs to a section or not
   def render_content(permalink)
