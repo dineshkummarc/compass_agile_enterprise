@@ -7,7 +7,7 @@
 <%else%>
   <div id="<%=widget_result_id %>"></div>
   <div>
-    <%= form_tag build_widget_url(:new), :remote => true do %>
+    <%= form_tag build_widget_url(:new), :remote => true, :id => 'contact_form' do %>
       <div class="form_settings">
         <p>
           <span>First Name</span>
@@ -34,3 +34,13 @@
     <% end %>
   </div>
 <%end%>
+<script type="text/javascript">
+$('#contact_form').bind('ajaxComplete', function(e, xhr, settings){
+  var response = xhr.responseText;
+  if(response.success){
+    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response+'</div>');
+  }else{
+    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response+'</div>');
+  }
+});
+</script>
