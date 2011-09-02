@@ -184,7 +184,8 @@ class DynamicForm < ActiveRecord::Base
                           formPanel.getForm().submit({
                               reset:true,
                               success:function(form, action){
-                                  Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;
+                                  json_hash = Ext.decode(action.response.responseText);
+                                  Ext.get('#{options[:widget_result_id]}').dom.innerHTML = json_hash.response;
                                   var scriptTags = Ext.get('#{options[:widget_result_id]}').dom.getElementsByTagName('script');
                                   Ext.each(scriptTags, function(scriptTag){
                                         eval(scriptTag.text);
@@ -192,7 +193,8 @@ class DynamicForm < ActiveRecord::Base
                               },
                               failure:function(form, action){
                                 if (action.response){
-                                  Ext.get('#{options[:widget_result_id]}').dom.innerHTML = action.response.responseText;                                  
+                                  json_hash = Ext.decode(action.response.responseText);
+                                  Ext.get('#{options[:widget_result_id]}').dom.innerHTML = json_hash.response;
                                 }
                               }
                           });

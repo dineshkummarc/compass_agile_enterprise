@@ -55,6 +55,7 @@ module ErpApp
       elsif opts[:inline]
       elsif opts[:file]
       elsif opts[:json]
+        opts[:json] = opts[:json].to_json
       elsif opts[:state]  ### FIXME: generic option
         opts[:text] = render_state(opts[:state])
       else
