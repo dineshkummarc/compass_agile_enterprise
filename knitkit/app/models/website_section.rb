@@ -58,11 +58,9 @@ class WebsiteSection < ActiveRecord::Base
   def get_published_layout(active_publication)
     layout_content = nil
     published_website_id = active_publication.id
-    published_element = PublishedElement.find(:first,
-      :include => [:published_website],
-      :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, self.id, 'WebsiteSection'])
+    published_element = PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, self.id, 'WebsiteSection').first
     unless published_element.nil?
-      layout_content = WebsiteSection::Version.find(:first, :conditions => ['version = ? and website_section_id = ?', published_element.version, published_element.published_element_record_id]).layout
+      layout_content = WebsiteSection::Version.where('version = ? and website_section_id = ?', published_element.version, published_element.published_element_record_id).first.layout
     else
       layout_content = IO.read(File.join(WEBSITE_SECTIONS_TEMP_LAYOUT_PATH,"index.html.erb"))
     end
@@ -92,9 +90,7 @@ class WebsiteSection < ActiveRecord::Base
   def self.get_published_version(active_publication, content)
     content_version = nil
     published_website_id = active_publication.id
-    published_element = PublishedElement.find(:first,
-      :include => [:published_website],
-      :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, content.id, 'Content'])
+    published_element = PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, content.id, 'Content').first
     unless published_element.nil?
       content_version = Content::Version.find(:first, :conditions => ['version = ? and content_id = ?', published_element.version, published_element.published_element_record_id])
     end

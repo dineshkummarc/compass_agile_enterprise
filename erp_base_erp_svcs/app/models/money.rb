@@ -1,10 +1,6 @@
 class Money < ActiveRecord::Base
   
-  # need to specify class name in this namespaced model to avoid rspec error:
-  # ErpServices::Money is not missing constant Currency!
-  # see http://pivotallabs.com/users/will/blog/articles/986-standup-8-21-2009-not-missing-constant-and-rake-set-theory-
   belongs_to :currency
-
   before_save :parse_currency_code
 
   attr_accessor :currency_code

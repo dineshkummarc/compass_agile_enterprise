@@ -15,4 +15,12 @@ describe Note do
     note.save
     note.content.should == "test"
   end
+  
+  it "should have summmary" do
+    note = Note.create
+    note.content = "This is going to be summarized"
+    note.save
+    note.summary.should == "This is going to be s..."
+  end
+  
 end

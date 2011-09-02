@@ -26,15 +26,12 @@ class Content < ActiveRecord::Base
     else
       content_type_scope = "website_sections.type = '#{options[:content_type]}' AND"
     end
-    
-    Content.find(:all,
-      :include => :website_sections,
-      :conditions => "#{content_type_scope} #{section_scope} 
-                      website_sections.website_id = #{options[:website_id]} AND
-                      (UPPER(contents.title) LIKE UPPER('%#{options[:query]}%') 
-                        OR UPPER(contents.excerpt_html) LIKE UPPER('%#{options[:query]}%') 
-                        OR UPPER(contents.body_html) LIKE UPPER('%#{options[:query]}%') )",
-      :order => "contents.created_at DESC").paginate(:page => options[:page], :per_page => options[:per_page])
+ 
+    Content.includes([:website_sections]).where("#{content_type_scope} #{section_scope} 
+                    website_sections.website_id = #{options[:website_id]} AND
+                    (UPPER(contents.title) LIKE UPPER('%#{options[:query]}%') 
+                      OR UPPER(contents.excerpt_html) LIKE UPPER('%#{options[:query]}%') 
+                      OR UPPER(contents.body_html) LIKE UPPER('%#{options[:query]}%') )").order("contents.created_at DESC").all.paginate(:page => options[:page], :per_page => options[:per_page])
   end
 
   def self.do_search(options = {})    
@@ -50,16 +47,11 @@ class Content < ActiveRecord::Base
   end
       
   def self.find_by_section_id( website_section_id )
-    Content.find(:all, 
-      :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-      :conditions => "website_section_id = #{website_section_id} ",
-      :order => "website_section_contents.position ASC, website_section_contents.created_at DESC")
+    Content.joins(:website_section_contents).where('website_section_id = ?', website_section_id).order("website_section_contents.position ASC, website_section_contents.created_at DESC").all
   end
 
   def self.find_by_section_id_filtered_by_id( website_section_id, id_filter_list )
-    Content.find(:all, 
-      :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-      :conditions => "website_section_id = #{website_section_id} AND contents.id IN (#{id_filter_list.join(',')})")
+    Content.joins(:website_section_contents).where("website_section_id = ? AND contents.id IN (#{id_filter_list.join(',')})", website_section_id).all
   end
 
   def self.find_published_by_section(active_publication, website_section)
@@ -86,7 +78,7 @@ class Content < ActiveRecord::Base
   end
 
   def find_website_sections_by_site_id( website_id )
-    self.website_sections.find(:all, :conditions => "website_id = #{website_id}")
+    self.website_sections.where('website_id = ?',website_id).all
   end
 
   def position( website_section_id )
@@ -103,7 +95,7 @@ class Content < ActiveRecord::Base
   end
 
   def update_content_area_and_position_by_section(section, content_area, position)
-    website_section_content = WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id])
+    website_section_content = WebsiteSectionContent.where('content_id = ? and website_section_id = ?',self.id, section.id).first
     unless website_section_content.nil?
       website_section_content.content_area = content_area
       website_section_content.position = position
@@ -113,16 +105,16 @@ class Content < ActiveRecord::Base
 
   def content_area_by_website_section(section)
     content_area = nil
-    unless WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).nil?
-      content_area = WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).content_area
+    unless WebsiteSectionContent.where('content_id = ? and website_section_id = ?',self.id, section.id).first.nil?
+      content_area = WebsiteSectionContent.where('content_id = ? and website_section_id = ?',self.id, section.id).first.content_area
     end
     content_area
   end
 
   def position_by_website_section(section)
     position = nil
-    unless WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).nil?
-      position = WebsiteSectionContent.find(:first, :conditions => ['content_id = ? and website_section_id = ?',self.id, section.id]).position
+    unless WebsiteSectionContent.where('content_id = ? and website_section_id = ?',self.id, section.id).first.nil?
+      position = WebsiteSectionContent.where('content_id = ? and website_section_id = ?',self.id, section.id).first.position
     end
     position
   end
@@ -157,11 +149,9 @@ class Content < ActiveRecord::Base
   def self.get_published_version(active_publication, content)
     content_version = nil
     published_website_id = active_publication.id
-    published_element = PublishedElement.find(:first,
-      :include => [:published_website],
-      :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, content.id, 'Content'])
+    published_element = PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, content.id, 'Content').first
     unless published_element.nil?
-      content_version = Content::Version.find(:first, :conditions => ['version = ? and content_id = ?', published_element.version, published_element.published_element_record_id])
+      content_version = Content::Version.where('version = ? and content_id = ?', published_element.version, published_element.published_element_record_id).first
     end
     content_version
   end

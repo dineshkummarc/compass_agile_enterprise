@@ -1,3 +1,5 @@
+require 'will_paginate'
+
 module ErpApp
   class Engine < Rails::Engine
     isolate_namespace ErpApp

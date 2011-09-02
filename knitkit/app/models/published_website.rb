@@ -22,8 +22,7 @@ class PublishedWebsite < ActiveRecord::Base
     website_sections = new_publication.website.website_sections
     website_sections = website_sections | website_sections.collect{|section| section.descendants}.flatten
     website_sections.each do |website_section|
-      if new_publication.published_elements.find(:first,
-          :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', website_section.id, website_section.class.to_s, website_section.class.superclass.to_s]).nil?
+      if new_publication.published_elements.where('published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', website_section.id, website_section.class.to_s, website_section.class.superclass.to_s).first.nil?
         published_element = PublishedElement.new
         published_element.published_website = new_publication
         published_element.published_element_record = website_section
@@ -36,8 +35,7 @@ class PublishedWebsite < ActiveRecord::Base
 
     #make sure all elements have published_element objects
     elements.each do |element|
-      if new_publication.published_elements.find(:first,
-          :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', element.id, element.class.to_s, element.class.superclass.to_s]).nil?
+      if new_publication.published_elements.where('published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', element.id, element.class.to_s, element.class.superclass.to_s).first.nil?
         published_element = PublishedElement.new
         published_element.published_website = new_publication
         published_element.published_element_record = element
@@ -61,8 +59,7 @@ class PublishedWebsite < ActiveRecord::Base
   def publish_element(comment, element, version)
     new_publication = clone_publication(0.1, comment)
 
-    published_element = new_publication.published_elements.find(:first,
-      :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', element.id, element.class.to_s, element.class.superclass.to_s])
+    published_element = new_publication.published_elements.where('published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', element.id, element.class.to_s, element.class.superclass.to_s).first
 
     unless published_element.nil?
       published_element.version = version

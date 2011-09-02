@@ -51,11 +51,6 @@ class Individual < ActiveRecord::Base
     return ind
   end
 
-  def self.find_page(page_size, i_id)
-    sqlStmt = "select top #{page_size.to_s} * from individuals where id > #{i_id} order by id"
-    find_by_sql(sqlStmt)
-  end
-
   def create_party
     pty = Party.new
     pty.description = [current_personal_title,current_first_name,current_last_name].join(' ').strip

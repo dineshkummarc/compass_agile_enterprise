@@ -1,28 +1,13 @@
 class Party < ActiveRecord::Base
-  #************************************************************************************************
-  #* Contact relationships
-  #************************************************************************************************
-  
-  has_many :contacts, :dependent => :destroy
-  
-  #************************************************************************************************
-  #* End
-  #************************************************************************************************
-
-  #add the has_notes mixin to party so a pary can have notes
   has_notes
-
-  has_many :created_notes, :class_name => 'Note', :foreign_key => 'created_by_id'
-
-  # business_party is an interface implemented by the class Party
-  # that provides access to the person or organization that is
-  # identified by an instance of Party.
-  belongs_to  :business_party, :polymorphic => true
-  attr_reader :relationships
+  has_many   :contacts, :dependent => :destroy
+  has_many   :created_notes, :class_name => 'Note', :foreign_key => 'created_by_id'
+  belongs_to :business_party, :polymorphic => true
+  has_many   :party_roles, :dependent => :destroy
+	has_many   :role_types, :through => :party_roles
+	
+	attr_reader :relationships
   attr_writer :create_relationship
-
-  has_many :party_roles, :dependent => :destroy
-	has_many :role_types, :through => :party_roles
 
   # Gathers all party relationships that contain this particular party id
   # in either the from or to side of the relationship.
@@ -35,15 +20,6 @@ class Party < ActiveRecord::Base
   def create_relationship(description, to_party_id)
     PartyRelationship.create(:description => description, :party_id_from => id, :party_id_to => to_party_id)
   end
-
-	#**********************************************************************
-	# I have replaced this with a has_many :through => AgreementPartyRoles
-	# will delete this if nothing breaks - rak
-	#**********************************************************************
-  # Wrapper to get all party agreements
-  # def agreements
-  #     AgreementPartyRole.find(:all, :joins => [:party], :conditions => ['party_id = ?', id])
-  # end
 
   # Callback
 	def after_destroy

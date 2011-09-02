@@ -23,5 +23,4 @@ class PhoneNumber < ActiveRecord::Base
 		"#{description} : #{phone_number}"
 	end
 
-  
 end
