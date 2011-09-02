@@ -13,24 +13,34 @@
 
 <% if @ajax_results %>  
 <p>
-  <%#= will_paginate @results, :class => 'pagination ajax', :params => { :controller => "/widgets/search", 
-                                                                        :action => :new,
+  <%= will_paginate @results, :class => 'pagination ajax', :params => { :widget_name => 'search',
                                                                         :widget_action => 'new', 
+                                                                        :uuid => @uuid,
                                                                         :query => params[:query],
                                                                         :content_type => params[:content_type],
                                                                         :section_permalink => params[:section_permalink],
-                                                                        :per_page => params[:per_page]
+                                                                        :per_page => params[:per_page],
+                                                                        :only_path => true,
+                                                                        :use_route => :widget,
+                                                                        :scope => erp_app
                                                                       } %>
 </p>
 <% else %>
 <p>
-   <%= will_paginate @results, :params => { :controller => "/#{@results_permalink}", 
+   <%= will_paginate @results, :params => { :url => '/search',
                                             :widget_action => @widget_action, 
                                             :query => params[:query],
                                             :content_type => params[:content_type],
                                             :section_permalink => params[:section_permalink],
-                                            :per_page => params[:per_page]                                            
+                                            :per_page => params[:per_page],
+                                            :only_path => true,
+                                            :use_route => :knitkit,
+                                            :scope => knitkit                                    
                                           } %>
 </p>
 <% end %>
-
+<script type="text/javascript">
+$(function(){
+  $('.pagination a').attr('data-remote', 'true'); 
+});
+</script>
