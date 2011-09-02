@@ -27,20 +27,22 @@
 </p>
 <% else %>
 <p>
-   <%= will_paginate @results, :params => { :url => '/search',
-                                            :widget_action => @widget_action, 
+   <%= will_paginate @results, :params => { :section_id => WebsiteSection.find_by_permalink(@results_permalink).id,                                            
+                                            :widget_action => 'new', 
                                             :query => params[:query],
                                             :content_type => params[:content_type],
                                             :section_permalink => params[:section_permalink],
                                             :per_page => params[:per_page],
                                             :only_path => true,
-                                            :use_route => :knitkit,
-                                            :scope => knitkit                                    
+                                            :use_route => :page,
+                                            :scope => main_app                                    
                                           } %>
 </p>
 <% end %>
+<% if @ajax_results %>  
 <script type="text/javascript">
 $(function(){
   $('.pagination a').attr('data-remote', 'true'); 
 });
 </script>
+<% end %>
