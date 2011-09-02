@@ -21,10 +21,7 @@ class Blog < WebsiteSection
   end
 
   def find_blog_post(permalink)
-    Article.find(
-      :first,
-      :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-      :conditions => ['website_section_contents.website_section_id = ? and permalink = ?',self.id, permalink])
+    Article.joins(:website_section_contents).where('website_section_contents.website_section_id = ? and permalink = ?',self.id, permalink).first
   end
 
   def find_published_blog_post(active_publication, permalink)

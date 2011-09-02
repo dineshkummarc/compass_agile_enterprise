@@ -2,6 +2,7 @@ PATH
   remote: ../erp_app
   specs:
     erp_app (0.0.1)
+      will_paginate (~> 3.0.0)
 
 PATH
   remote: ../erp_base_erp_svcs
@@ -11,12 +12,17 @@ PATH
       awesome_nested_set
       data_migrator
       has_many_polymorphic
-      will_paginate (~> 3.0.pre4)
 
 PATH
   remote: ../erp_dev_svcs
   specs:
     erp_dev_svcs (0.0.1)
+
+PATH
+  remote: ../erp_forms
+  specs:
+    erp_forms (0.0.1)
+      dynamic_attributes
 
 PATH
   remote: ../erp_tech_svcs
@@ -29,12 +35,12 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    actionmailer (3.1.0.rc8)
-      actionpack (= 3.1.0.rc8)
+    actionmailer (3.1.0)
+      actionpack (= 3.1.0)
       mail (~> 2.3.0)
-    actionpack (3.1.0.rc8)
-      activemodel (= 3.1.0.rc8)
-      activesupport (= 3.1.0.rc8)
+    actionpack (3.1.0)
+      activemodel (= 3.1.0)
+      activesupport (= 3.1.0)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       i18n (~> 0.6)
@@ -42,21 +48,21 @@ GEM
       rack-cache (~> 1.0.3)
       rack-mount (~> 0.8.2)
       rack-test (~> 0.6.1)
-      sprockets (~> 2.0.0.beta.15)
-    activemodel (3.1.0.rc8)
-      activesupport (= 3.1.0.rc8)
+      sprockets (~> 2.0.0)
+    activemodel (3.1.0)
+      activesupport (= 3.1.0)
       bcrypt-ruby (~> 3.0.0)
       builder (~> 3.0.0)
       i18n (~> 0.6)
-    activerecord (3.1.0.rc8)
-      activemodel (= 3.1.0.rc8)
-      activesupport (= 3.1.0.rc8)
+    activerecord (3.1.0)
+      activemodel (= 3.1.0)
+      activesupport (= 3.1.0)
       arel (~> 2.2.1)
       tzinfo (~> 0.3.29)
-    activeresource (3.1.0.rc8)
-      activemodel (= 3.1.0.rc8)
-      activesupport (= 3.1.0.rc8)
-    activesupport (3.1.0.rc8)
+    activeresource (3.1.0)
+      activemodel (= 3.1.0)
+      activesupport (= 3.1.0)
+    activesupport (3.1.0)
       multi_json (~> 1.0)
     acts-as-taggable-on (2.1.1)
       rails
@@ -78,6 +84,7 @@ GEM
     devise (1.1.rc0)
       warden (~> 0.10.3)
     diff-lcs (1.1.3)
+    dynamic_attributes (1.2.0)
     encryptor (1.1.3)
     erubis (2.7.0)
     has_many_polymorphic (0.5.0)
@@ -95,7 +102,7 @@ GEM
     multi_json (1.0.3)
     nokogiri (1.5.0)
     nokogiri (1.5.0-x86-mingw32)
-    paperclip (2.3.16)
+    paperclip (2.4.0)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
       cocaine (>= 0.0.2)
@@ -105,23 +112,23 @@ GEM
     rack (1.3.2)
     rack-cache (1.0.3)
       rack (>= 0.4)
-    rack-mount (0.8.2)
+    rack-mount (0.8.3)
       rack (>= 1.0.0)
     rack-ssl (1.3.2)
       rack
     rack-test (0.6.1)
       rack (>= 1.0)
-    rails (3.1.0.rc8)
-      actionmailer (= 3.1.0.rc8)
-      actionpack (= 3.1.0.rc8)
-      activerecord (= 3.1.0.rc8)
-      activeresource (= 3.1.0.rc8)
-      activesupport (= 3.1.0.rc8)
+    rails (3.1.0)
+      actionmailer (= 3.1.0)
+      actionpack (= 3.1.0)
+      activerecord (= 3.1.0)
+      activeresource (= 3.1.0)
+      activesupport (= 3.1.0)
       bundler (~> 1.0)
-      railties (= 3.1.0.rc8)
-    railties (3.1.0.rc8)
-      actionpack (= 3.1.0.rc8)
-      activesupport (= 3.1.0.rc8)
+      railties (= 3.1.0)
+    railties (3.1.0)
+      actionpack (= 3.1.0)
+      activesupport (= 3.1.0)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -169,11 +176,12 @@ DEPENDENCIES
   erp_app!
   erp_base_erp_svcs!
   erp_dev_svcs!
+  erp_forms!
   erp_tech_svcs!
   jquery-rails
   nokogiri
   permalink_fu
-  rails (= 3.1.0.rc8)
+  rails (= 3.1)
   routing-filter
   rspec-rails (~> 2.5)
   rubyzip

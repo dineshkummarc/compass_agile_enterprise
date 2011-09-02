@@ -1,7 +1,6 @@
 require 'has_many_polymorphic'
 require 'attr_encrypted'
 require 'awesome_nested_set'
-require 'will_paginate'
 require 'data_migrator'
 
 module ErpBaseErpSvcs

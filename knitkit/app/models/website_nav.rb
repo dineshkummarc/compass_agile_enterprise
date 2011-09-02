@@ -3,7 +3,7 @@ class WebsiteNav < ActiveRecord::Base
   
   has_many :website_nav_items, :dependent => :destroy do
     def positioned
-      find(:all, :order => 'position')
+      order('position desc')
     end
   end
 

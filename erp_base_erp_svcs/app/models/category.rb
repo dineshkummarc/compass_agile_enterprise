@@ -5,7 +5,7 @@ class Category < ActiveRecord::Base
   has_many :category_classifications, :dependent => :destroy
   
   def self.iid( internal_identifier_string )
-    find( :first, :conditions => [ 'internal_identifier = ?', internal_identifier_string.to_s ])
+    where("internal_identifier = ?",internal_identifier_string.to_s).first
   end
   
 end
