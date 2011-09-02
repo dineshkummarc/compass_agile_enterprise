@@ -1,6 +1,6 @@
 <div>
   <% if @ajax_results %>
-    <%= form_tag build_widget_url(:new), :remote => true, :html => {:id => 'search_form', :class => @css_class} do %>
+    <%= form_tag build_widget_url(:new), :remote => true, :id => 'search_form', :html => {:class => @css_class} do %>
       <%= hidden_field_tag :section_permalink, @section_permalink %>
       <%= hidden_field_tag :content_type, @content_type %>
       <%= hidden_field_tag :per_page, @per_page %>
@@ -20,3 +20,11 @@
 </div>
 <br />
 <div id="<%=widget_result_id%>"></div>
+
+<% if @ajax_results %>
+<script type="text/javascript">
+$('#search_form').bind('ajaxComplete', function(e, xhr, settings){
+  $('#<%=widget_result_id%>').html(xhr.responseText);
+});
+</script>
+<% end %>
