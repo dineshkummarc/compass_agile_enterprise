@@ -1,7 +1,10 @@
-
   module Widgets
     module Search
       class Base < ErpApp::Widgets::Base
+        include ActionDispatch::Routing::UrlFor
+        include Rails.application.routes.url_helpers
+        include WillPaginate::ActionView
+         
         def set_variables
           @results_permalink = params[:results_permalink]
           @section_permalink = params[:section_permalink]

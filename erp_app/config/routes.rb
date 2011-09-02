@@ -54,7 +54,7 @@ ErpApp::Engine.routes.draw do
   match '/desktop/file_manager/download_file/:path' => "desktop/file_manager/base#download_file"
 
   #widget proxy
-  match '/widgets/:widget_name/:widget_action/:uuid(/:id)' => "widget_proxy#index"
+  match '/widgets/:widget_name/:widget_action/:uuid(/:id)' => "widget_proxy#index", :as => :widget
 end
 
 
