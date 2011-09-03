@@ -54,7 +54,7 @@ Compass.ErpApp.Widgets.DynamicForms = {
                     xtype:'textfield',
                     fieldLabel:'Form Width in Pixels',
                     allowBlank:false,
-                    value:'350',
+                    value:'410',
                     id:'WidgetDynamicFormWidth'
                 }
                 ]

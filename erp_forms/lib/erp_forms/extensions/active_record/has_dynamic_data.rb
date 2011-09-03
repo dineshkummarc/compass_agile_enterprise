@@ -12,7 +12,6 @@ module ErpForms
       		  	
       		  	after_save       :save_dynamic_data
       		  	after_initialize :initialize_dynamic_data
-#      		  	after_create     :create_dynamic_data
       		  	
       		  	has_one :dynamic_data, :as => :reference, :class_name => 'DynamicDatum', :dependent => :destroy
 
@@ -47,19 +46,7 @@ module ErpForms
                   self.dynamic_form_model_id = dfm.id unless dfm.nil?
                 end        
               end        
-            end
-      
-            #def create_dynamic_data  
-            #  puts "create_dynamic_data"  
-            #  if self.dynamic_data.nil?
-            #    t = DynamicDatum.new
-            #    self.dynamic_data = t
-            #    t.reference = self
-
-            #    t.save
-            #    self.save
-            #  end        
-            #end
+            end      
       	end	
       end
     end
