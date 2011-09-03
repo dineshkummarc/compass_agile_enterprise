@@ -27,7 +27,7 @@ Compass.ErpApp.Widgets.DynamicForms = {
                               type:'json',
                               root: 'dynamic_form_model'
                           },
-                          url:'./dynamic_forms/models/index'
+                          url:'/erp_forms/erp_app/desktop/dynamic_forms/models/index'
                         },
                         fields:[
                         {
@@ -83,7 +83,7 @@ Compass.ErpApp.Widgets.DynamicForms = {
                             "<%= render_widget :dynamic_forms,\n",
                             "   :params => {:model_name => '{WidgetDynamicFormModelName}',\n",
                             "               :internal_identifier => '',\n",
-                            "               :width => '{WidgetDynamicFormWidth}'} %>");
+                            "               :width => {WidgetDynamicFormWidth}} %>");
                         content = tpl.apply(data);
 
                         //add rendered template to center region editor
