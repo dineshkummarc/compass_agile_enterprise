@@ -12,5 +12,15 @@ module ErpForms
       include ErpForms::Extensions::ActiveRecord::HasDynamicData
       include ErpForms::Extensions::ActiveRecord::HasDynamicForms
     end
+	
+	#set engine to scope
+  	engine = self
+  	config.to_prepare do 
+      #load extensions for engine
+  	  engine.load_extensions
+  	  #load widgets for engine
+  	  engine.load_widgets
+  	end
+	
   end
 end
