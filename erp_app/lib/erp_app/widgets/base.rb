@@ -15,7 +15,7 @@ module ErpApp
 		include Rendering, Layouts, Helpers, Callbacks, Translation
 		include ActionController::RequestForgeryProtection
 	  
-	  IGNORED_PARAMS = %w{action controller uuid widget_name widget_action dynamic_form_id dynamic_form_model_id model_name use_dynamic_form authenticity_token is_html_form commit}
+	  IGNORED_PARAMS = %w{action controller uuid widget_name widget_action dynamic_form_id dynamic_form_model_id model_name use_dynamic_form authenticity_token is_html_form commit utf8}
     
     delegate :config, :params, :session, :request, :logger, :user_signed_in?, :current_user, :flash, :to => :controller
 

@@ -17,7 +17,12 @@ class DynamicDatum < ActiveRecord::Base
 
     attrs
   end
-  
+
+=begin
+  # this was used for sorting dynamic sttributes under Ruby 1.8.7 which did not have ordered hashes
+  # it is now obsolete under Ruby 1.9  
+  # leave it here for reference for the time being in case we find that dynamic attributes are stored in the wrong order in the DB
+  # using ordered hashes assumes that dynamic attributes are stored in order in the database
   def sorted_dynamic_attributes(with_prefix=true)    
     if !self.updated_with_form.nil?
       form = self.updated_with_form
@@ -55,5 +60,6 @@ class DynamicDatum < ActiveRecord::Base
       end
     end
   end
+=end
   
 end

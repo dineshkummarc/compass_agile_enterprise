@@ -29,7 +29,7 @@ module Widgets
 				
     			if @website_inquiry
     			  if @website.email_inquiries?
-    				@website_inquiry.send_email
+    				  @website_inquiry.send_email
     			  end
 			  
     			  if @is_html_form

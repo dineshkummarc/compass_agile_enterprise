@@ -6,6 +6,6 @@ class WebsiteInquiry < ActiveRecord::Base
 	has_dynamic_data
 
   def send_email
-    WebsiteInquiryMailer.deliver_inquiry(self)
+    WebsiteInquiryMailer.inquiry(self).deliver
   end
 end
