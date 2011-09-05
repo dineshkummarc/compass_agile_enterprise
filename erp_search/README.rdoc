@@ -1,0 +1,46 @@
+ErpSearch
+=========
+
+ERP Search adds Solr extensions to Compass using Sunspot.
+
+Setup
+=====
+Copy vendor/plugins/erp_search/config/sunspot.yml to config/sunspot.yml
+Edit config/sunspot.yml to your desired configuration if different from default
+
+
+Example Usage
+=============
+
+Start Solr server:
+rake sunspot:solr:start
+
+Index Content:
+rake sunspot:reindex_content
+
+Index Parties:
+rake sunspot:reindex_party_search_facts
+
+Index Roles:
+rake sunspot:reindex_roles
+
+Stop Solr server:
+rake sunspot:solr:stop  
+
+
+Example Usage if using Tenancy
+==============================
+
+Index Content for All Tenants:
+rake sunspot:tenants:reindex_content
+
+Index Content for a single Tenant:
+rake sunspot:tenant:reindex_content['schema_name']
+
+
+Gem Dependencies
+================
+sunspot_rails
+sunspot
+
+Copyright (c) 2011 Adam Hull, released under the MIT license
