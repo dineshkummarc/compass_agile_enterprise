@@ -113,7 +113,7 @@
           return[
             new Compass.ErpApp.Desktop.Applications.ControlPanel(),
             new Compass.ErpApp.Desktop.Applications.WebNavigator(),
-            <%=@desktop.applications.collect{|app| "new #{app.javascript_class_name}({#{app.build_widget_roles_js}})"}.join(",").to_s%>
+            <%=raw @desktop.applications.collect{|app| "new #{app.javascript_class_name}(#{app.widget_roles.to_json})"}.join(",").to_s%>
           ]
         },
         getDesktopConfig:function(){

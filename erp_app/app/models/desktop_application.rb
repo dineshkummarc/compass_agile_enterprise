@@ -1,3 +1,2 @@
 class DesktopApplication < Application
-  
 end

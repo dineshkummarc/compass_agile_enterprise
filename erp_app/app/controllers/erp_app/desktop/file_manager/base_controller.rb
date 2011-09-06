@@ -132,9 +132,7 @@ module ErpApp
 			  def upload_file_to_path(upload_path, valid_file_type_regex=nil)
 				result = {}
 
-				unless File.directory? upload_path
-				  FileUtils.mkdir_p(upload_path)
-				end
+				FileUtils.mkdir_p(upload_path) unless File.directory? upload_path 
 
 				unless request.env['HTTP_X_FILE_NAME'].blank?
 				  contents = request.raw_post

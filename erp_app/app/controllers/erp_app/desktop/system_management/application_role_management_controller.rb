@@ -3,60 +3,52 @@ module ErpApp
 		module SystemManagement
 			class ApplicationRoleManagementController < ErpApp::Desktop::BaseController
 			  def applications
-				apps = Application.all
+          apps = Application.all
 
-				node_hashes = []
-				apps.each do |app|
-				  if !app.widgets.nil? && !app.widgets.empty?
-					children_hashes = []
-					app.widgets.each do |widget|
-					  children_hashes << {:text => widget.description, :is_leaf => true, :icon_cls => 'icon-document', :attributes => {:widget_id => widget.id}}
-					end
-					node_hashes << {:text => app.description, :icon_cls => app.icon, :is_leaf => false, :children => children_hashes, :attributes => {:app_id => app.id}}
-				  end
-				end
-				render :inline => build_ext_tree(node_hashes)
+          node_hashes = []
+          apps.each do |app|
+            if !app.widgets.nil? && !app.widgets.empty?
+              children_hashes = []
+              app.widgets.each do |widget|
+                children_hashes << {:text => widget.description, :leaf => true, :iconCls => 'icon-document', :widget_id => widget.id}
+              end
+              node_hashes << {:text => app.description, :iconCls => app.icon, :leaf => false, :children => children_hashes, :app_id => app.id}
+            end
+          end
+          
+          render :json => node_hashes
 			  end
 
 			  def available_roles
-				id = params[:id]
-				widget = Widget.find(id)
-				all_roles = Role.all
-				current_role_ids = widget.roles.collect{|r| r.id}
-				roles = all_roles.delete_if{|r| current_role_ids.include?(r.id)}
+          id = params[:id]
+          widget = Widget.find(id)
+          all_roles = Role.all
+          current_role_ids = widget.roles.collect{|r| r.id}
+          roles = all_roles.delete_if{|r| current_role_ids.include?(r.id)}
 
-				render :inline => build_ext_tree(roles_to_node_hashes(roles))
+          render :json => roles.map{|role| {:text => role.description, :leaf => true, :iconCls => 'icon-user', :role_id => role.id}}
 			  end
 
 			  def current_roles
-				id = params[:id]
-				widget = Widget.find(id)
-				roles = widget.roles
+          id = params[:id]
+          widget = Widget.find(id)
+          roles = widget.roles
 
-				render :inline => build_ext_tree(roles_to_node_hashes(roles))
+          render :json => roles.map{|role| {:text => role.description, :leaf => true, :iconCls => 'icon-user', :role_id => role.id}}
 			  end
 
 			  def save_roles
-				id = params[:id]
-				role_ids = params[:role_ids]
+          id = params[:id]
+          role_ids = params[:role_ids]
 
-				widget = Widget.find(id)
-				roles = Role.find(:all, :conditions => ["id in (#{role_ids.join(',')})"])
-				widget.roles = roles
-				widget.save
+          widget = Widget.find(id)
+          roles = Role.where("id in (#{role_ids.join(',')})")
+          widget.roles = roles
+          widget.save
 
-				render :inline => "{success:true,message:'Roles Saved'}"
+          render :json => {:success => true, :message => 'Roles Saved'}
 			  end
-
-			  private
-			  def roles_to_node_hashes(roles)
-				node_hashes = []
-				roles.each do |role|
-				  node_hashes << {:text => role.description, :is_leaf => true, :icon_cls => 'icon-user', :attributes => {:role_id => role.id}}
-				end
-
-				node_hashes
-			  end
+			  
 			end
 		end
 	end

@@ -4,7 +4,7 @@ class PreferenceType < ActiveRecord::Base
                :models => [:app_containers, :desktops, :organizers, :applications]
 
   has_many    :preferences
-  belongs_to  :default_preference_option, :foreign_key => 'default_pref_option_id', :class_name => 'PreferenceOption'
+  belongs_to  :default_preference_option, :foreign_key => 'default_pref_option_id', :class_name => 'PreferenceOption', :dependent => :destroy
   has_and_belongs_to_many :preference_options
   
   alias :options :preference_options
@@ -15,7 +15,7 @@ class PreferenceType < ActiveRecord::Base
   end
 
   def self.iid( internal_identifier )
-    find( :first, :conditions => [ 'internal_identifier = ?', internal_identifier.to_s ])
+    where('internal_identifier = ?', internal_identifier.to_s).first
   end
 
   def default_value

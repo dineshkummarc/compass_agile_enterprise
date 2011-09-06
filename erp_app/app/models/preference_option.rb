@@ -3,6 +3,6 @@ class PreferenceOption < ActiveRecord::Base
   has_and_belongs_to_many :preference_type
 
   def self.iid( internal_identifier )
-    find( :first, :conditions => [ 'internal_identifier = ?', internal_identifier.to_s ])
+    where('internal_identifier = ?', internal_identifier.to_s).first
   end
 end

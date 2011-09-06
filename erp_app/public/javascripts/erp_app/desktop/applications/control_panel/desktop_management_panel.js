@@ -153,7 +153,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                                     fieldLabel:'Background Image',
                                     buttonText:'Upload',
                                     buttonOnly:false,
-                                    allowBlank:true,
+                                    allowBlank:false,
                                     name:'image_data'
                                 }
                                 ]
@@ -181,7 +181,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
                                                 self.clearWindowStatus();
                                                 if(action.response !== undefined){
                                                     var obj =  Ext.decode(action.response.responseText);
-                                                    Ext.Msg.alert("Error", obj.message);
+                                                    Ext.Msg.alert("Error", obj.msg);
                                                 }
                                                 else{
                                                     Ext.Msg.alert("Error", 'Error adding background.');

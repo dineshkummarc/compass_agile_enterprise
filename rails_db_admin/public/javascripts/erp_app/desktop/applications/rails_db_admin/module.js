@@ -264,7 +264,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
                 title:'RailsDBAdmin',
                 autoDestroy:true,
                 width:1200,
-                height:800,
+                height:550,
                 iconCls: 'icon-rails_db_admin',
                 shim:false,
                 animCollapse:false,

@@ -2,10 +2,10 @@ User.class_eval do
   has_many :app_containers, :dependent => :destroy
 
   def desktop
-    Desktop.find(:first, :include => :app_container, :conditions => ['app_containers.user_id = ?', self.id])
+    Desktop.includes([:app_container]).where('app_containers.user_id = ?', self.id).first
   end
 
   def organizer
-    Organizer.find(:first, :include => :app_container, :conditions => ['app_containers.user_id = ?', self.id])
+    Organizer.includes([:app_container]).where('app_containers.user_id = ?', self.id).first
   end
 end

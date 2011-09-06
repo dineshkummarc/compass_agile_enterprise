@@ -1,12 +1,12 @@
 class AppContainer < ActiveRecord::Base
   has_user_preferences
 
-  belongs_to :user
+  belongs_to :user, :dependent => :destroy
   belongs_to :app_container_record, :polymorphic => true
   has_and_belongs_to_many :applications
 
   def preferences()
-    self.user_preferences.find(:all, :include => [:preference], :conditions => ['user_id = ?', self.user.id]).map(&:preference)
+    self.user_preferences.includes([:preference]).where('user_id = ?', self.user.id).map(&:preference)
   end
 
   def get_preference(preference_type_iid)

@@ -82,7 +82,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.WebNavigator",{
                 id: 'web_navigator',
                 title:'Web Navigator',
                 width:1000,
-                height:800,
+                height:550,
                 iconCls: 'icon-globe',
                 shim:false,
                 animCollapse:false,
