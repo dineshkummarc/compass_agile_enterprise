@@ -10,6 +10,7 @@ module ErpBaseErpSvcs
 	  ActiveSupport.on_load(:active_record) do
       include ErpBaseErpSvcs::Extensions::ActiveRecord::IsDescribable
       include ErpBaseErpSvcs::Extensions::ActiveRecord::HasNotes
+      include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsNoteType
 	    include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType
       include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsCategory
       include ErpBaseErpSvcs::Extensions::ActiveRecord::HasContact

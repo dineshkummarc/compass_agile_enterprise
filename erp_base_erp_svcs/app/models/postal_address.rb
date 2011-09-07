@@ -4,16 +4,6 @@ class PostalAddress < ActiveRecord::Base
   belongs_to :geo_country
   belongs_to :geo_zone
 
-  # return first contact purpose
-  def contact_purpose
-  	contact.contact_purposes.first
-  end
-  
-  #return all contact purposes
-  def contact_purposes
-  	contact.contact_purposes
-  end
-  
 	def summary_line
 		"#{description} : #{address_line_1}, #{city}"
 	end

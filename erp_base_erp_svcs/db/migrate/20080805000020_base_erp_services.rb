@@ -429,6 +429,18 @@ class BaseErpServices < ActiveRecord::Migration
 
       add_index :note_types, [:note_type_record_id, :note_type_record_type], :name => "note_type_record_idx"
     end
+    
+    unless table_exists?(:valid_note_types)
+      create_table   :valid_note_types do |t|
+        t.references :valid_note_type_record, :polymorphic => true
+        t.references :note_type
+    
+        t.timestamps
+      end
+
+      add_index :valid_note_types, [:valid_note_type_record_id, :valid_note_type_record_type], :name => "valid_note_type_record_idx"
+      add_index :valid_note_types, :note_type_id
+    end
 
   end
 
@@ -440,7 +452,7 @@ class BaseErpServices < ActiveRecord::Migration
       :contacts, :individuals, :organizations, 
       :party_relationships, :relationship_types, :role_types, 
       :party_roles, :parties, :categories, :category_classifications,
-      :descriptive_assets, :view_types, :notes, :note_types
+      :descriptive_assets, :view_types, :notes, :note_types, :valid_note_types
     ].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl

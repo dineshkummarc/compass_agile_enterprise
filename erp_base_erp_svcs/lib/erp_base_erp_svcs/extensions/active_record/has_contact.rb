@@ -24,6 +24,16 @@ module ErpBaseErpSvcs
 				end
 
 				module InstanceMethods
+				  # return first contact purpose
+          def contact_purpose
+            contact.contact_purposes.count == 0 ? nil : contact.contact_purposes.first
+          end
+
+          # return all contact purposes
+          def contact_purposes
+            contact.contact_purposes
+          end
+				  
 				  def save_contact
 					  self.contact.save
 				  end

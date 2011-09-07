@@ -12,7 +12,7 @@ class Party < ActiveRecord::Base
   # Gathers all party relationships that contain this particular party id
   # in either the from or to side of the relationship.
   def relationships
-    @relationships ||= PartyRelationship.find(:all, :conditions => ['party_id_from = ? OR party_id_to = ?', id, id])
+    @relationships ||= PartyRelationship.where('party_id_from = ? OR party_id_to = ?', id, id)
   end
 
   # Creates a new PartyRelationship for this particular
@@ -35,34 +35,37 @@ class Party < ActiveRecord::Base
 
   # return credit card by credit card account purpose using internal identifier
   def get_credit_card(internal_identifier)
+    result = nil
     self.credit_card_account_party_roles.each do |ccapr|
       if ccapr.credit_card_account.credit_card_account_purpose.internal_identifier.eql?(internal_identifier)
-        return ccapr.credit_card
+        result = ccapr.credit_card
       end
     end 
-    return nil  
+    result 
   end
 
   def has_phone_number?(phone)
+    result = nil
     self.contacts.each do |c|
       if c.contact_mechanism_type == 'PhoneNumber'
         if c.contact_mechanism.eql_to?(phone)
-          return true
+          result = true
         end
       end
     end
-    return false
+    result
   end
 
   def has_zip_code?(zip)
+    result = nil
     self.contacts.each do |c|
       if c.contact_mechanism_type == 'PostalAddress'
         if c.contact_mechanism.zip_eql_to?(zip)
-          return true
+          result = true
         end
       end
     end
-    return false
+    result
   end
 
   # Alias for to_s
@@ -104,8 +107,7 @@ class Party < ActiveRecord::Base
   def find_all_contacts_by_contact_mechanism(contact_mechanism_class)
     table_name = contact_mechanism_class.name.tableize
 
-    contacts = self.contacts.find(:all,
-      :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.name}'")
+    contacts = self.contacts.joins("inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.name}'")
 
     contacts.collect(&:contact_mechanism)
   end
@@ -116,21 +118,14 @@ class Party < ActiveRecord::Base
     table_name = contact_mechanism_class.name.tableize
 
     contact_mechanism_args.each do |key, value|
-      begin
-        conditions += " #{table_name}.#{key} = '#{value}' and"
-      end unless value.nil?
+      conditions += " #{table_name}.#{key} = '#{value}' and" unless value.nil?
     end unless contact_mechanism_args.nil?
 
-    unless conditions == ''
-      conditions = conditions[0..conditions.length - 5]
-    end
-
-    contact = self.contacts.find(:first,
-      :joins => "inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.name}'
-                 inner join contact_purposes_contacts on contact_purposes_contacts.contact_id = contacts.id and contact_purposes_contacts.contact_purpose_id in (#{contact_purposes.collect{|item| item.attributes["id"]}.join(',')})",
-      :conditions => conditions)
-
-    contact
+    conditions = conditions[0..conditions.length - 5] unless conditions == ''
+    
+    self.contacts.joins("inner join #{table_name} on #{table_name}.id = contact_mechanism_id and contact_mechanism_type = '#{contact_mechanism_class.name}'
+                                   inner join contact_purposes_contacts on contact_purposes_contacts.contact_id = contacts.id
+                                   and contact_purposes_contacts.contact_purpose_id in (#{contact_purposes.collect{|item| item.attributes["id"]}.join(',')})").where(conditions).first
   end
 
   # looks for contacts matching on value and purpose
@@ -150,16 +145,16 @@ class Party < ActiveRecord::Base
       contact_mechanism = update_contact(contact_mechanism_class, contact, contact_mechanism_args)
     end
     
-    return contact_mechanism
+    contact_mechanism
   end
 
   # tries to update contact by purpose
   # if contact doesn't exist, it adds it
   def update_or_add_contact_with_purpose(contact_mechanism_class, contact_purpose, contact_mechanism_args)
     if return_value = update_contact_with_purpose(contact_mechanism_class, contact_purpose, contact_mechanism_args)
-      return return_value
+      return_value
     else
-      return add_contact(contact_mechanism_class, contact_mechanism_args, [contact_purpose])
+      add_contact(contact_mechanism_class, contact_mechanism_args, [contact_purpose])
     end
   end
   
@@ -167,11 +162,7 @@ class Party < ActiveRecord::Base
   # if it exists, it updates it, if not returns false
   def update_contact_with_purpose(contact_mechanism_class, contact_purpose, contact_mechanism_args)
     contact = find_contact_with_purpose(contact_mechanism_class, contact_purpose)
-    if !contact.nil?
-      return update_contact(contact_mechanism_class, contact, contact_mechanism_args)
-    else
-      return false
-    end
+    contact.nil? ? false : update_contact(contact_mechanism_class, contact, contact_mechanism_args)
   end
 
   def update_contact(contact_mechanism_class, contact, contact_mechanism_args)

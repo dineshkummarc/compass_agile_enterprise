@@ -7,5 +7,4 @@ class IsoCountryCode < GeoCountry
     name
   end
   
-  
 end

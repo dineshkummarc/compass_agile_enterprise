@@ -25,27 +25,23 @@ module ErpBaseErpSvcs
 
 				module InstanceMethods
 				  def method_missing(name, *args)
-					if self.category.respond_to?(name)
-					  self.category.send(name, *args)
-					else
-					  super
-					end
+            self.category.respond_to?(name) ? self.category.send(name, *args) : super
 				  end
 
 				  def save_category
-					self.category.save
+            self.category.save
 				  end
 
 				  def destroy_category
-					self.category.destroy
+            self.category.destroy
 				  end
 
 				  def initialize_category
-					if (self.category.nil?)
-					  category = Category.new
-					  self.category = category
-					  category.category_record = self
-					end
+            if (self.category.nil?)
+              category = Category.new
+              self.category = category
+              category.category_record = self
+            end
 				  end
 				end
 			end

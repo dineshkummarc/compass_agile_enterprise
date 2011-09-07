@@ -13,30 +13,30 @@ module ErpBaseErpSvcs
 
 				  def acts_as_erp_type
 							
-					# this is at the class level
-					# add any class level manipulations you need here, like has_many, etc.
-					extend ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType::ActsAsSingletonMethods
-					include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType::ActsAsInstanceMethods
+            # this is at the class level
+            # add any class level manipulations you need here, like has_many, etc.
+            extend ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType::ActsAsSingletonMethods
+            include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType::ActsAsInstanceMethods
 							
-					# find each valid value for the domain type (erp_type) in question
-					# we will then create a class method with the name of the internal idenfifier
-					# for that type
-					valid_values = self.find(:all)
+            # find each valid value for the domain type (erp_type) in question
+            # we will then create a class method with the name of the internal idenfifier
+            # for that type
+            valid_values = self.all
 							
-					# the class method will return a populated instance of the correct type
-					valid_values.each do | vv |
-					  proc = Proc.new{ vv }
-					  self.class.send(:define_method, vv.internal_identifier, proc ) unless vv.internal_identifier.nil?
-					end
+            # the class method will return a populated instance of the correct type
+            valid_values.each do | vv |
+              proc = Proc.new{ vv }
+              self.class.send(:define_method, vv.internal_identifier, proc ) unless vv.internal_identifier.nil?
+            end
 								 
 				  end
 
 				  def belongs_to_erp_type(model_id = nil, options = {})
 
-					@model_id = model_id
-					self.belongs_to model_id, options
-					extend ActsAsErpType::BelongsToSingletonMethods
-					include ActsAsErpType::BelongsToInstanceMethods
+            @model_id = model_id
+            self.belongs_to model_id, options
+            extend ActsAsErpType::BelongsToSingletonMethods
+            include ActsAsErpType::BelongsToInstanceMethods
 							
 				  end
 
@@ -46,20 +46,20 @@ module ErpBaseErpSvcs
 				module ActsAsSingletonMethods
 								  
 				  def valid_types
-					self.find(:all).collect{ |type| type.internal_identifier.to_sym }
+            self.all.collect{ |type| type.internal_identifier.to_sym }
 				  end
 					  
 				  def valid_type?( type_name_string )
-					sym_list = self.find(:all).collect{ |type| type.internal_identifier.to_sym }
-					sym_list.include?(type_name_string.to_sym)
+            sym_list = self.all.collect{ |type| type.internal_identifier.to_sym }
+            sym_list.include?(type_name_string.to_sym)
 				  end
 						
 				  def eid( external_identifier_string )
-					find( :first, :conditions => [ 'external_identifier = ?', external_identifier_string.to_s ])
+            where('external_identifier = ?', external_identifier_string.to_s).first
 				  end
 							
 				  def iid( internal_identifier_string )
-					find( :first, :conditions => [ 'internal_identifier = ?', internal_identifier_string.to_s ])
+            where('internal_identifier = ?', internal_identifier_string.to_s).first
 				  end
 						
 				end
@@ -67,63 +67,60 @@ module ErpBaseErpSvcs
 				module BelongsToSingletonMethods
 						
 				  def fbet( domain_value, options = {})
-					find_by_erp_type( domain_value, options )
+            find_by_erp_type( domain_value, options )
 				  end
 							
 				  def find_by_erp_type(domain_value, options = {})
 							
-					# puts "options...."
-					# puts options[:class]
-					# puts options[:foreign_key]
+            # puts "options...."
+            # puts options[:class]
+            # puts options[:foreign_key]
 							
-					erp_type = options[:class] || @model_id
-					fk_str = options[:foreign_key] || erp_type.to_s + '_id'
+            erp_type = options[:class] || @model_id
+            fk_str = options[:foreign_key] || erp_type.to_s + '_id'
 							
-					#***************************************************************
-					# uncomment these lines for a variety of debugging information
-					#***************************************************************
-					# klass = self.to_s.underscore + '_type'
-					# puts "default class name"
-					# puts klass
+            #***************************************************************
+            # uncomment these lines for a variety of debugging information
+            #***************************************************************
+            # klass = self.to_s.underscore + '_type'
+            # puts "default class name"
+            # puts klass
 							
-					# puts "model id"
-					# puts @model_id
-					#
-					# puts "finding by erp type"
-					# puts "self is: #{self}"
-					# puts "type is: #{erp_type}"
+            # puts "model id"
+            # puts @model_id
+            #
+            # puts "finding by erp type"
+            # puts "self is: #{self}"
+            # puts "type is: #{erp_type}"
 							
-					# puts "fk_str for in clause..."
-					# puts fk_str
+            # puts "fk_str for in clause..."
+            # puts fk_str
 							
-					type_klass = Kernel.const_get( erp_type.to_s.camelcase )
-					in_clause_array = type_klass.send( domain_value.to_sym )
+            type_klass = Kernel.const_get( erp_type.to_s.camelcase )
+            in_clause_array = type_klass.send( domain_value.to_sym )
 							
-					find( :all, :conditions => [ fk_str + ' in (?)', in_clause_array ] )
+            where(fk_str + ' in (?)', in_clause_array)
 							
 				  end
 
 				  def fabet( domain_value, options = {} )
-					find_all_by_erp_type( domain_value, options )
+            find_all_by_erp_type( domain_value, options )
 				  end
 
 				  def find_all_by_erp_type( domain_value, options = {} )
 
-					erp_type = options[:class] || @model_id
-					fk_str = options[:foreign_key] || erp_type.to_s + '_id'
+            erp_type = options[:class] || @model_id
+            fk_str = options[:foreign_key] || erp_type.to_s + '_id'
 											
-					type_klass = Kernel.const_get( erp_type.to_s.camelcase )
-					in_clause_array = type_klass.send( domain_value.to_sym ).full_set
+            type_klass = Kernel.const_get( erp_type.to_s.camelcase )
+            in_clause_array = type_klass.send( domain_value.to_sym ).full_set
 
-					#puts "id for in clause..."
-					#id_str = erp_type.to_s + '_id'
+            #puts "id for in clause..."
+            #id_str = erp_type.to_s + '_id'
 							
-					find( :all, :conditions => [ fk_str + ' in (?)', in_clause_array ] )
+            where(fk_str + ' in (?)', in_clause_array)
 							
-				  end
-
-
-										
+				  end			
 				end
 
 					

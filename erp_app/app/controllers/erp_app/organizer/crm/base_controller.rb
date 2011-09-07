@@ -132,34 +132,14 @@ module ErpApp
           params[:data].delete(:contact_purpose_id)
 
           contact_mechanism_class = contact_type.constantize
-
           party = Party.find(party_id)
-          contact_mechanism = contact_mechanism_class.new
+          
+          contact_purpose = contact_purpose_id.blank? ? ContactPurpose.find_by_internal_identifier('default') : ContactPurpose.find(contact_purpose_id)
+          contact_mechanism = party.add_contact(contact_mechanism_class, params[:data], contact_purpose)
 
-          params[:data].each do |key,value|
-            method = key + '='
-            contact_mechanism.send method.to_sym, value
-          end
-
-          contact_mechanism.save
-
-          if contact_purpose_id.blank?
-            contact_mechanism.contact.contact_purposes << ContactPurpose.find_by_internal_identifier('default')
-          else
-            contact_purpose = ContactPurpose.find(contact_purpose_id)
-            contact_mechanism.contact.contact_purposes << contact_purpose
-          end
-
-          contact_mechanism.contact.party = party
-          contact_mechanism.contact.save
-
-          contact_type.constantize.class_eval do
+          contact_mechanism_class.class_eval do
             def contact_purpose_id
-              if self.contact_purposes.count == 0
-                return nil
-              else
-                self.contact_purposes.first.id
-              end
+              self.contact_purpose ? contact_purpose.id : nil
             end
           end
 
@@ -172,7 +152,7 @@ module ErpApp
           contact_purpose_id = params[:data][:contact_purpose_id]
           params[:data].delete(:id)
           params[:data].delete(:contact_purpose_id)
-
+          
           contact_mechanism = contact_type.constantize.find(contact_mechanism_id)
 
           if !contact_purpose_id.blank?
@@ -189,13 +169,9 @@ module ErpApp
 
           contact_mechanism.save
 
-          contact_type.constantize.class_eval do
+          contact_mechanism_class.class_eval do
             def contact_purpose_id
-              if self.contact_purposes.count == 0
-                return nil
-              else
-                self.contact_purposes.first.id
-              end
+              self.contact_purpose ? contact_purpose.id : nil
             end
           end
 
@@ -206,19 +182,14 @@ module ErpApp
           party_id = params[:party_id]
           contact_type = params[:contact_type]
 
-          contact_type_class = contact_type.constantize
-          contact_type_class.include_root_in_json = false
+          contact_mechanism_class = contact_type.constantize
 
           party = Party.find(party_id)
-          contact_mechanisms = party.find_all_contacts_by_contact_mechanism(contact_type_class)
+          contact_mechanisms = party.find_all_contacts_by_contact_mechanism(contact_mechanism_class)
 
-          contact_type_class.class_eval do
+          contact_mechanism_class.class_eval do
             def contact_purpose_id
-              if self.contact_purposes.count == 0
-                return nil
-              else
-                self.contact_purposes.first.id
-              end
+              self.contact_purpose ? contact_purpose.id : nil
             end
           end
 
@@ -228,7 +199,7 @@ module ErpApp
 			  def delete_contact_mechanism
           party_id = params[:party_id]
           contact_type = params[:contact_type]
-          contact_mechanism_id = params[:data]
+          contact_mechanism_id = params[:id]
 
           contact_type_class = contact_type.constantize
           contact_mechanism = contact_type_class.find(contact_mechanism_id)
