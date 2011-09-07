@@ -34,9 +34,10 @@ module ErpServices
       def after_initialize()
         if (self.note_type.nil?)
           self.note_type_record = NoteType.new
-          self.note_type_record.noted_record = self
+          self.note_type_record.note_type_record = self
         end
       end
+      
     end
   end
 end
