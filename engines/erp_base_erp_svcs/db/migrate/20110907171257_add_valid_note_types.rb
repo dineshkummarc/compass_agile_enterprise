@@ -8,7 +8,7 @@ class AddValidNoteTypes < ActiveRecord::Migration
         t.timestamps
       end
 
-      add_index :valid_note_types, [:valid_note_record_id, :valid_note_record_type], :name => "valid_note_type_record_idx" 
+      add_index :valid_note_types, [:valid_note_type_record_id, :valid_note_type_record_type], :name => "valid_note_type_record_idx"
       add_index :valid_note_types, :note_type_id
     end
   end
