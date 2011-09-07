@@ -38,7 +38,7 @@
 
         <%@organizer.applications.each do |application|%>
 
-        var <%=application.internal_identifier.camelize%> = Ext.create("Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base",{organizerLayout:organizerLayout,<%=application.build_widget_roles_js%>});
+        var <%=application.internal_identifier.camelize%> = Ext.create("Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base",<%=raw application.widget_roles.merge({:organizerLayout => 'organizerLayout'}).to_json.gsub('"organizerLayout"','organizerLayout')%>);
         <%=application.internal_identifier.camelize%>.setup();
 
         <%end%>

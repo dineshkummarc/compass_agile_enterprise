@@ -5,51 +5,37 @@ module ErpApp
       before_filter :authenticate_user!
 		  
 		  def index
-			@organizer = ::Organizer.find_by_user(current_user)
-			@user = current_user
+        @organizer = ::Organizer.find_by_user(current_user)
+        @user = current_user
 		  end
-
-		  #organizer user preferences
-
+		  
 		  def get_preferences
-			user = current_user
-			organizer = ::Organizer.find_by_user(user)
-			preferences = organizer.preferences
+        user = current_user
+        organizer = ::Organizer.find_by_user(user)
 
-			ext_json = "{success:true, preferences:#{preferences.to_json(:include => [:preference_type, :preference_option])}}"
-
-			render :inline => ext_json
+        render :inline => "{\"success\":true, \"preferences\":#{organizer.preferences.to_json(:include => [:preference_type, :preference_option])}}"
 		  end
 
 		  def setup_preferences
-			PreferenceType.include_root_in_json = false
-			PreferenceOption.include_root_in_json = false
+		    #remove when I fix has_many_polymorphic
+        PreferenceType
 
-			user = current_user
-			ext_json = '{success:true,preference_types:'
-
-			organizer = ::Organizer.find_by_user(user)
-			preference_types = organizer.preference_types
-			ext_json << preference_types.to_json(:include => :preference_options)
-			ext_json << "}"
-			render :inline => ext_json
+        user = current_user
+        organizer = ::Organizer.find_by_user(user)
+			
+        render :inline => "{\"success\":true, \"preference_types\":#{organizer.preference_types.to_json(:include => :preference_options)}}"
 		  end
 
 		  def update_preferences
-			user = current_user
-			organizer = ::Organizer.find_by_user(user)
+        user = current_user
+        organizer = ::Organizer.find_by_user(user)
 
-			params.each do |k,v|
-			  organizer.set_preference(k, v) unless k.to_s == 'action' or k.to_s == 'controller'
-			end
-
-			organizer.save
-
-			preferences = organizer.preferences
-
-			ext_json = "{success:true, preferences:#{preferences.to_json(:include => [:preference_type, :preference_option])}}"
-
-			render :inline => ext_json
+        params.each do |k,v|
+          organizer.set_preference(k, v) unless k.to_s == 'action' or k.to_s == 'controller'
+        end
+        organizer.save
+			
+        render :inline => "{\"success\":true, \"preferences\":#{organizer.preferences.to_json(:include => [:preference_type, :preference_option])}}"
 		  end
 		end
 	end

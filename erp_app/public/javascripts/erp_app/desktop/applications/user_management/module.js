@@ -380,9 +380,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                             },
                             {
                                 xtype:'textfield',
-                                fieldLabel:'Login',
+                                fieldLabel:'Username',
                                 allowBlank:false,
-                                name:'login'
+                                name:'username'
                             },
                             {
                                 xtype:'textfield',
@@ -453,7 +453,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             text: 'Search',
             iconCls: 'icon-search',
             handler: function(button) {
-                var login = Ext.getCmp('user_search_field').getValue();
+                var username = Ext.getCmp('user_search_field').getValue();
                 usersStore.setProxy({
                     type: 'ajax',
                     url: '/erp_app/desktop/user_management/users/',
@@ -464,7 +464,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                         totalProperty:'totalCount'
                     },
                     extraParams:{
-                        login:login
+                        username:username
                     }
                 });
                 usersStore.loadPage(1);
