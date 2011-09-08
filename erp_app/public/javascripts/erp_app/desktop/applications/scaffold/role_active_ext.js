@@ -11,6 +11,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid",{
             displayMsg:'Displaying {0} - {1} of {2}',
             emptyMsg:'Empty'
         }, config);
-        Compass.ErpApp.Desktop.Applications.Scaffold.RoleActiveExtGrid.superclass.constructor.call(this, config);
+
+        this.callParent([config]);
     }
 });

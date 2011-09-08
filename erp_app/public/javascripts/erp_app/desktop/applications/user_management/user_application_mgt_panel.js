@@ -55,17 +55,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
             jsonData:appsJson,
             success: function(responseObject) {
                 self.clearWindowStatus();
-                Compass.ErpApp.Utility.promptReload();
+				if(self.initialConfig['userId'] == ErpApp.Authentication.currentUser.id)
+                	Compass.ErpApp.Utility.promptReload();
             },
             failure: function() {
                 self.clearWindowStatus();
                 Ext.Msg.alert('Status', 'Unable To Save Applications. Please Try Agian Later.');
             }
         });
-    },
-
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel.superclass.initComponent.call(this, arguments);
     },
 
     constructor : function(config) {
@@ -209,7 +206,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
             ]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMgtPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

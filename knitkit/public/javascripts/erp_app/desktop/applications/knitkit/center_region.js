@@ -486,10 +486,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         }
         return false;
     },
-
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion.superclass.initComponent.call(this, arguments);
-    },
   
     constructor : function(config) {
         this.workArea = new Ext.TabPanel({
@@ -506,6 +502,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             items:[this.workArea]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

@@ -127,7 +127,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
     },
 
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel.superclass.initComponent.call(this, arguments);
+		this.callParent(arguments);
         this.getStore().load();
     },
   
@@ -424,7 +424,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
             })
         }, config);
   
-        Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 
@@ -485,7 +485,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel",{
             ]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 
@@ -549,6 +549,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
             }]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

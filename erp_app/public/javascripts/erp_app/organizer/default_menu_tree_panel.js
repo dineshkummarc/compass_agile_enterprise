@@ -30,7 +30,8 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreeStore",{
             },
             fields:fields
         }, config);
-        Compass.ErpApp.Organizer.DefaultMenuTreeStore.superclass.constructor.call(this, config);
+
+        this.callParent([config]);
     }
 });
 
@@ -58,7 +59,7 @@ Ext.define("Compass.ErpApp.Organizer.DefaultMenuTreePanel",{
             border:false
         }, config);
         
-        Compass.ErpApp.Organizer.DefaultMenuTreePanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

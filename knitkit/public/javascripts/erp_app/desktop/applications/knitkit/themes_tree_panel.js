@@ -2,7 +2,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
     extend:"Compass.ErpApp.Shared.FileManagerTree",
     alias:'widget.knitkit_themestreepanel',
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.ThemesTreePanel.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
     },
 
     updateThemeActiveStatus : function(themeId, siteId, active){
@@ -394,6 +394,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
             }
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.ThemesTreePanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

@@ -41,6 +41,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel",{
             emptyMsg:'Empty'
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.InquiriesGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

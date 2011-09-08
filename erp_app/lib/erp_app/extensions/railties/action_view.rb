@@ -54,9 +54,10 @@ ActionView::Base.class_eval do
     end
   end
 
-  def setup_role_manager(user)
+  def setup_js_authentication(user)
+    current_user = {:username => user.username, :lastSignInAt => user.last_sign_in_at, :email => user.email, :id => user.id}
     js_string = '<script type="text/javascript" src="/javascripts/erp_app/authentication/role_manager.js"></script>'
-    js_string << "<script type='text/javascript'>ErpApp.Authentication.RoleManager.roles = [#{user.roles.collect{|role| "'#{role.internal_identifier}'"}.join(',')}];</script>"
+    js_string << "<script type='text/javascript'>ErpApp.Authentication.currentUser = #{current_user.to_json};ErpApp.Authentication.RoleManager.roles = [#{user.roles.collect{|role| "'#{role.internal_identifier}'"}.join(',')}];</script>"
 
     raw js_string
   end

@@ -87,10 +87,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
         }
     },
 
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel.superclass.initComponent.call(this, arguments);
-    },
-
     constructor : function(config) {
         var applicationsTreeStore = Ext.create('Ext.data.TreeStore', {
             proxy: {
@@ -247,7 +243,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
             items:[applicationsTree,rolesPanel]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRoleManagementPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

@@ -165,8 +165,8 @@ module ErpApp
           render :json => build_tree_for_directory(path, options)
 			  end
 
-			  def build_tree_for_directory(directory, options)
-          Dir.entries(directory).reject{|file| file =~ REMOVE_FILES_REGEX}.map{|file|
+			  def build_tree_for_directory(directory, options={})
+          files_folders = Dir.entries(directory).reject{|file| file =~ REMOVE_FILES_REGEX}.map{|file|
             leaf = !File.directory?(directory + '/' + file)
 
             if File.directory?(directory + '/' + file)
@@ -177,6 +177,8 @@ module ErpApp
               {:text => file, :leaf => leaf, :id => (directory + '/' +file).gsub('//', '/')}
             end
           } if File.directory?(directory)
+          
+          files_folders.nil? ? [] : files_folders
 			  end
 
 			end

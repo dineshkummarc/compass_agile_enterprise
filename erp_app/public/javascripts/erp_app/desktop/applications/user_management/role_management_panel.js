@@ -58,7 +58,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
             jsonData:rolesJson,
             success: function(responseObject) {
                 self.clearWindowStatus();
-                Compass.ErpApp.Utility.promptReload();
+				if(self.initialConfig['userId'] == ErpApp.Authentication.currentUser.id)
+                	Compass.ErpApp.Utility.promptReload();
             },
             failure: function() {
                 self.clearWindowStatus();
@@ -213,6 +214,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
         }, config);
 
 
-        Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

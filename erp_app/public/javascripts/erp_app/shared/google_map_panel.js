@@ -21,7 +21,7 @@ Ext.define('Ext.ux.GoogleMapPanel', {
 
         Ext.applyIf(this,defConfig);
 
-        this.callParent();
+        this.callParent(arguments);
     },
 
     afterRender : function(){

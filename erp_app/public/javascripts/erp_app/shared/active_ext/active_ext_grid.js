@@ -150,7 +150,7 @@ Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid",{
             });
         }
 
-        Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid.superclass.initComponent.apply(this, arguments);
+        this.callParent(arguments);
     },
 
     constructor : function(config) {
@@ -335,7 +335,8 @@ Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid",{
             plugins:plugins,
             tbar:tbar
         }, config);
-        Compass.ErpApp.Shared.ActiveExt.ActiveExtGrid.superclass.constructor.call(this, config);
+        
+		this.callParent([config]);
     }
 });
 

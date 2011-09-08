@@ -84,7 +84,7 @@ Ext.define("Compass.ErpApp.Ecommerce.CreditCardWindow",{
             "charge_failure"
             );
 
-        Compass.ErpApp.Ecommerce.CreditCardWindow.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
     },
 
     constructor : function(config) {
@@ -312,7 +312,7 @@ Ext.define("Compass.ErpApp.Ecommerce.CreditCardWindow",{
             }]
         }, config);
 
-        Compass.ErpApp.Ecommerce.CreditCardWindow.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
     
 });

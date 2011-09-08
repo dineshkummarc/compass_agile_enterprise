@@ -289,3 +289,31 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
         win.show();
     }
 });
+
+Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.BooleanEditor",{
+    extend:"Ext.form.ComboBox",
+    alias:'widget.booleancolumneditor',
+    initComponent: function() {
+        var trueFalseStore = new Ext.data.ArrayStore({
+            fields: ['display', 'value'],
+            data: [['False', '0'],['True', '1']]
+        });
+	
+        this.store = trueFalseStore;
+
+        this.callParent(arguments);
+    },
+    constructor : function(config) {
+        config = Ext.apply({
+            valueField:'value',
+            displayField:'display',
+            triggerAction:'all',
+            forceSelection:true,
+            mode:'local'
+        }, config);
+
+		this.callParent([config])
+    }
+});
+
+Compass.ErpApp.Desktop.Applications.RailsDbAdmin.renderBooleanColumn = function(v){return (v == 1) ? "True" : "False";}

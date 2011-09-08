@@ -62,7 +62,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel",{
     },
 
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel.superclass.initComponent.call(this, arguments);
+		this.callParent(arguments);
         this.getStore().load();
     },
 
@@ -212,6 +212,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel",{
             })
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.CommentsGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

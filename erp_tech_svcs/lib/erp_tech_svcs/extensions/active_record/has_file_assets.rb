@@ -23,17 +23,18 @@ module ErpTechSvcs
 				end
 				
 				module InstanceMethods
-					  def add_file(path, data)
+          def add_file(path, data)
 						FileAsset.create!(:file_asset_holder => self, :base_path => path, :data => data)
-					  end
+          end
 
-					  def images
+          def images
 						self.files.find(:all, :conditions => ['type = ?', 'Image'])
-					  end
+          end
 
-					  def templates
+          def templates
 						self.files.find(:all, :conditions => ['type = ?', 'Template'])
-					  end
+          end
+          
 				end
 			end
 		end

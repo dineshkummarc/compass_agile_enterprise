@@ -20,7 +20,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.FormBuilder",{
             "publish_failure"
             );
 
-        Compass.ErpApp.Desktop.Applications.DynamicForms.FormBuilder.superclass.initComponent.call(this, arguments);
+		this.callParent(arguments);
     },
 
     constructor : function(config) {
@@ -86,7 +86,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.FormBuilder",{
             }]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.DynamicForms.FormBuilder.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
     
 });

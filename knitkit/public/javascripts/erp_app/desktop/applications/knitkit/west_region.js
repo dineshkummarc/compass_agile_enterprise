@@ -1998,8 +1998,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
             centerRegion:this.initialConfig['module'].centerRegion
         }];
         
-        Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion.superclass.initComponent.call(this, arguments);
-        
+		this.callParent(arguments);
         this.setActiveTab(0);
     },
 
@@ -2035,6 +2034,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
             collapsible:true
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

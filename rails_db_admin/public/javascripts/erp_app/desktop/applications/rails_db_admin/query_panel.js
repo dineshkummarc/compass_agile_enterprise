@@ -182,9 +182,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
             }]
         };
 
-        this.items = [codeMirrorPanel, tableGridContainer]
-		
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel.superclass.initComponent.call(this, arguments);
+        this.items = [codeMirrorPanel, tableGridContainer];
+		this.callParent(arguments);
     },
 
     constructor : function(config) {
@@ -195,7 +194,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
             closable: true,
             border:false
         }, config);
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel.superclass.constructor.call(this, config);
+		this.callParent([config]);
     }
 	
 });

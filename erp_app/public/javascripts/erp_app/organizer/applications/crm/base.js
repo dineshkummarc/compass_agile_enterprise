@@ -37,7 +37,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
             ]
 
         }, config);
-        Compass.ErpApp.Organizer.Applications.Crm.Layout.superclass.constructor.call(this, config);
+
+        this.callParent([config]);
     },
 
     /**

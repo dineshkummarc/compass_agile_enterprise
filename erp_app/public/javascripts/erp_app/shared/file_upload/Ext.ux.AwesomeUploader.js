@@ -90,7 +90,7 @@ Ext.define("Ext.ux.AwesomeUploader",{
             }
         });
 
-        Ext.ux.AwesomeUploader.superclass.initComponent.apply(this, arguments);
+        this.callParent(arguments);
     },
     startUpload:function(){
         var fileId;

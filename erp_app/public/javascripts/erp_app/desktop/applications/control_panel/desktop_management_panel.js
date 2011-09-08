@@ -203,7 +203,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
             }
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

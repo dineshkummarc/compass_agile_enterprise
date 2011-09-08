@@ -75,7 +75,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.DynamicDataGridPane
             emptyMsg:'Empty'
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.DynamicForms.DynamicDataGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

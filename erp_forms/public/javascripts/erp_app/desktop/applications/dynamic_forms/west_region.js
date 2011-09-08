@@ -450,9 +450,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
         });
 
         this.items = [layout];
-        
-        Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion.superclass.initComponent.call(this, arguments);
-        
+        this.callParent(arguments);
         this.setActiveTab(0);
     },
 
@@ -465,6 +463,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
             collapsible:false
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

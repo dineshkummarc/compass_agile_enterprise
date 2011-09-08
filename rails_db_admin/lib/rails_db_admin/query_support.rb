@@ -1,9 +1,8 @@
 module RailsDbAdmin
 	class QuerySupport
-	  QUERY_LOCATION = "#{Rails.root}/public/rails_db_admin/queries/"
-	  
 	  def initialize(database_connection_class)
 	   @connection = database_connection_class.connection
+	   @query_location = "#{Rails.root}/public/rails_db_admin/queries/"
 	  end
 	
 	  def execute_sql(sql)
@@ -36,7 +35,7 @@ module RailsDbAdmin
 	  end
 	  
 	  def get_saved_query_names(database_connection_name)
-	    path = "#{QUERY_LOCATION}#{database_connection_name}/"
+	    path = "#{@query_location}#{database_connection_name}/"
 	    
 	    query_files = []
 	    
@@ -52,40 +51,24 @@ module RailsDbAdmin
 	  end
 	  
 	  def save_query(query, name, database_connection_name)
-	    path = "#{QUERY_LOCATION}#{database_connection_name}/"
+	    path = "#{@query_location}#{database_connection_name}/"
 	    
-	    unless File.directory? path
-	      FileUtils.mkdir_p(path)
-	    end
-	    
-	    unless File.exist?("#{path}#{name}.sql")
-	      File.new("#{path}#{name}.sql", 'w')
-	    end
-	    
+	    FileUtils.mkdir_p(path) unless File.directory? path
+	    File.new("#{path}#{name}.sql", 'w') unless File.exist?("#{path}#{name}.sql")
 	    File.open("#{path}#{name}.sql", 'w+'){|f| f.write(query) }
 	  end
 	  
 	  def delete_query(name, database_connection_name)
-	    path = "#{QUERY_LOCATION}#{database_connection_name}/"
-	    
-	    if File.exist?("#{path}#{name}.sql")
-	      FileUtils.rm("#{path}#{name}.sql")
-	    end
+	    path = "#{@query_location}#{database_connection_name}/"
+	    FileUtils.rm("#{path}#{name}.sql") if File.exist?("#{path}#{name}.sql")
 	  end
 	  
 	  def get_query(name, database_connection_name)
-	    path = "#{QUERY_LOCATION}#{database_connection_name}/"
+	    path = "#{@query_location}#{database_connection_name}/"
 	    
 	    query = ""
-	    
-	    if File.exist?("#{path}#{name}.sql")
-	      query = File.open("#{path}#{name}.sql") { |f| f.read }
-	    end
-	    
-	    query.gsub!("\r", " ")
-	    query.gsub!("\n", " ")
-	    
-	    query
+	    query = File.open("#{path}#{name}.sql") { |f| f.read } if File.exist?("#{path}#{name}.sql")
+	    query.gsub("\r", " ").gsub("\n", " ")
 	  end
 	end
 end

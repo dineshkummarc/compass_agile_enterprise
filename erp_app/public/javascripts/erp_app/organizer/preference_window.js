@@ -55,10 +55,6 @@ Ext.define("Compass.ErpApp.Organizer.PreferencesWindow",{
         });
     },
 
-    initComponent: function() {
-        Compass.ErpApp.Organizer.PreferencesWindow.superclass.initComponent.call(this, arguments);
-    },
-
     constructor : function(config) {
         var self = this;
    
@@ -92,6 +88,6 @@ Ext.define("Compass.ErpApp.Organizer.PreferencesWindow",{
             layout:'fit'
         }, config);
 
-        Compass.ErpApp.Organizer.PreferencesWindow.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

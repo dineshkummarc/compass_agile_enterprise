@@ -49,8 +49,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
             displayMsg: 'Displaying {0} - {1} of {2}',
             emptyMsg: "No " + config.title
         });
-
-        Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.superclass.initComponent.call(this, arguments);
+		
+		this.callParent(arguments);
     },
     constructor : function(config) {
         if(config['contactPurposeStore'] == null)
@@ -181,6 +181,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
                 }]
             }
         }, config);
-        Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.superclass.constructor.call(this, config);
+        
+		this.callParent([config]);
     }
 });

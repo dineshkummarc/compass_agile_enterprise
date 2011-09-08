@@ -57,10 +57,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
         form.setup();
     },
 
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel.superclass.initComponent.call(this, arguments);
-    },
-
     constructor : function(config) {
 
         var store = Ext.create('Ext.data.TreeStore', {
@@ -105,7 +101,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
             items:[this.applicationsTree, this.settingsCard]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManagementPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

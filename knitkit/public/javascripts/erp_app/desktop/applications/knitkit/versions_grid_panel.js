@@ -1,7 +1,7 @@
 Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",{
     extend:"Ext.grid.Panel",
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
         this.getStore().load();
     },
 
@@ -121,17 +121,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",{
             })
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 
 Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel",{
     extend:"Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",
     alias:'widget.knitkit_versionsarticlegridpanel',
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel.superclass.initComponent.call(this, arguments);
-    },
-
     viewVersionedContent : function(rec){
         this.initialConfig['centerRegion'].viewContent(rec.get('title') + " - Revision " + rec.get('version'), rec.get('body_html'));
     },
@@ -243,16 +239,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel
             })
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 
 Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsBlogGridPanel",{
     extend:"Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",
     alias:'widget.knitkit_versionsbloggridpanel',
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsBlogGridPanel.superclass.initComponent.call(this, arguments);
-    },
 
     viewVersionedContent : function(rec){
         this.initialConfig['centerRegion'].viewContent(rec.get('title') + " - Revision " + rec.get('version'), rec.get('body_html'));
@@ -382,16 +375,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsBlogGridPanel",{
             }]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsBlogGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 
 Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsWebsiteSectionGridPanel",{
     extend:"Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",
     alias:'widget.knitkit_versionswebsitesectiongridpanel',
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsWebsiteSectionGridPanel.superclass.initComponent.call(this, arguments);
-    },
 
     viewVersionedContent : function(rec){
         this.initialConfig['centerRegion'].setWindowStatus('Loading template...');
@@ -517,6 +507,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsWebsiteSectionGr
             })
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.VersionsWebsiteSectionGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

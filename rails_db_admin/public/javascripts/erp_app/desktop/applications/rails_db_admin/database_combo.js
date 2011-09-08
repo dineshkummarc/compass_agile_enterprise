@@ -4,7 +4,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox",{
     initComponent: function() {
 		
         var databaseJsonStore = new Ext.data.Store({
-            timeout:60000,
+            autoLoad:true,
+			timeout:60000,
             proxy: {
                 type: 'ajax',
                 url :'/rails_db_admin/base/databases',
@@ -21,10 +22,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox",{
         });
 	
         this.store = databaseJsonStore;
-		
-        databaseJsonStore.load();
-		
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox.superclass.initComponent.call(this, arguments);
+		this.callParent(arguments);
     },
     
     constructor : function(config) {
@@ -44,6 +42,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox",{
                 }
             }
         }, config);
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.DatabaseComboBox.superclass.constructor.call(this, config);
+		this.callParent([config]);
     }
 });

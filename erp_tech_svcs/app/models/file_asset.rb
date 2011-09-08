@@ -69,7 +69,7 @@ class FileAsset < ActiveRecord::Base
     end
   end
   
-  def initialize(attributes = {})
+  def initialize(attributes = {}, other_value)
     attributes ||= {}
 
     base_path = attributes.delete(:base_path)
@@ -86,9 +86,7 @@ class FileAsset < ActiveRecord::Base
     
     type ||= FileAsset.type_for(directory, name) if name
     data = StringIO.new(data) if data.is_a?(String)
-    
-    puts data
-
+  
     super attributes.merge(:type => type, :directory => directory, :name => name, :data => data)
   end
 

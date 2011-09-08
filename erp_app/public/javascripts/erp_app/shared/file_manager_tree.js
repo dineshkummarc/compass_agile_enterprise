@@ -13,7 +13,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
      */
 
     initComponent: function() {
-        Compass.ErpApp.Shared.FileManagerTree.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
 
         this.addEvents(
             /**
@@ -502,6 +502,6 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
             }
         }, config);
 		
-        Compass.ErpApp.Shared.FileManagerTree.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

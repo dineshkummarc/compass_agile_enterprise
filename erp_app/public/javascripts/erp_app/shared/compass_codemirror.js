@@ -58,7 +58,7 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
     codeMirrorInstance : null,
 
     initComponent: function() {
-        Compass.ErpApp.Shared.CodeMirror.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
 
         this.addEvents(
             /**
@@ -123,7 +123,8 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
                 value: config['sourceCode']
             }]
         },config);
-        Compass.ErpApp.Shared.CodeMirror.superclass.constructor.call(this, config);
+        
+		this.callParent([config]);
     },
 
     onRender : function(ct, position){

@@ -169,6 +169,6 @@ Ext.define("Compass.ErpApp.Shared.PreferenceForm",{
             "afterUpdate"
             );
 
-        Compass.ErpApp.Shared.PreferenceForm.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
     }
 });

@@ -11,6 +11,6 @@ Ext.define("Compass.ErpApp.<%= container_class_name %>.Applications.<%= applicat
             displayMsg:'Displaying {0} - {1} of {2}',
             emptyMsg:'Empty'
         }, config);
-        Compass.ErpApp.<%= container_class_name %>.Applications.<%= application_class_name %>.<%=class_name %>ActiveExtGrid.superclass.constructor.call(this, config);
+       this.callParent([config]);
     }
 });

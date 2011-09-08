@@ -2,7 +2,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
     extend:"Ext.grid.Panel",
     alias:'widget.knitkit_publishedgridpanel',
     initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
         this.getStore().load();
     },
 
@@ -204,6 +204,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
             })
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

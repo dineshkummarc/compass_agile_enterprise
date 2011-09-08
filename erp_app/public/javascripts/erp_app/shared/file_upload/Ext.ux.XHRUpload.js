@@ -70,7 +70,7 @@ Ext.define("Ext.ux.XHRUpload",{
             'loadend':true
         });
         this.listeners = config.listeners;
-        Ext.ux.XHRUpload.superclass.constructor.call(this, config);
+        this.callParent([config]);
     },
     send:function(config){
         Ext.apply(this, config);

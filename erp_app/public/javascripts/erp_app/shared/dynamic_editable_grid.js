@@ -46,7 +46,7 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
             });
         }
         
-        Compass.ErpApp.Shared.DynamicEditableGrid.superclass.initComponent.apply(this, arguments);
+        this.callParent(arguments);
     },
 
     constructor : function(config) {
@@ -97,6 +97,6 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
             plugins:plugins,
             tbar:tbar
         }, config);
-        Compass.ErpApp.Shared.DynamicEditableGrid.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

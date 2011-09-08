@@ -8,10 +8,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel
     clearWindowStatus : function(){
         this.findParentByType('statuswindow').clearStatus();
     },
-
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel.superclass.initComponent.call(this, arguments);
-    },
   
     constructor : function(config) {
         var form;
@@ -80,6 +76,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel
             title:config['entityType'] + ' Information'
             }, config);
 
-        Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

@@ -20,7 +20,7 @@
       "erp_app/coolclock/moreskins.js",
       "erp_app/organizer/layout.js",
       "erp_app/organizer/default_menu_tree_panel.js") %>
-    <%=setup_role_manager(@user)%>
+    <%=setup_js_authentication(@user)%>
 	<%@organizer.applications.each do |application| application.locate_resources('javascripts').each{|path|%>
 		<%=static_javascript_include_tag(path)%>
 	<%}end%>

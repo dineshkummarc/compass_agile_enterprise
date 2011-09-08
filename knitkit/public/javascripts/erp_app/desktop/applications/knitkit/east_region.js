@@ -7,8 +7,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion",{
         var fileAssetsPanel  = new Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel(this.initialConfig['module']);
         this.items = [imageAssetsPanel.layout, fileAssetsPanel.layout, widgetsPanel.layout];
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion.superclass.initComponent.call(this, arguments);
-
+        this.callParent(arguments);
         this.setActiveTab(0);
     },
   
@@ -21,6 +20,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion",{
             collapsible:true
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

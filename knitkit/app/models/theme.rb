@@ -173,7 +173,7 @@ class Theme < ActiveRecord::Base
     ::File.rename(::File.join(path,'views'), ::File.join(path,'templates'))
 
     #create FileAssets for all the files
-    Dir.glob(::File.join(path,'/*/*/*')).each do |file|
+    Dir.glob(::File.join(path,'/*/*/*/*')).each do |file|
       next if file =~ /^\./
       unless ::File.directory? file
         #if this is the base layout change stylesheets to point to theme

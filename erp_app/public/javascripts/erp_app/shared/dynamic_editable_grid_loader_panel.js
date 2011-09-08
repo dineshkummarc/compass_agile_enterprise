@@ -50,7 +50,7 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel",{
         config = Ext.apply({
             layout:'card'
         }, config);
-        Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

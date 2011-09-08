@@ -25,11 +25,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel
 
         var menuTree = new Ext.tree.TreePanel({
             store:this.store,
-            animate:true,
-            autoScroll:false,
-            frame:false,
-            height:650,
-            border: false,
+            animate:false,
+			//TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+            viewConfig:{
+                loadMask: false
+            },
             listeners:{
                 'itemcontextmenu':function(view, record, item, index, e){
                     e.stopEvent();
@@ -69,14 +69,16 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel
 
         this.treePanel = menuTree;
         this.items = [menuTree];
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel.superclass.initComponent.call(this, arguments);
+		this.callParent(arguments);
     },
 
     constructor : function(config) {
         config = Ext.apply({
             title:'Tables',
-            autoScroll:true
+            autoScroll:true,
+			layout:'fit'
         }, config);
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.TablesMenuTreePanel.superclass.constructor.call(this, config);
+
+		this.callParent([config]);
     }
 });

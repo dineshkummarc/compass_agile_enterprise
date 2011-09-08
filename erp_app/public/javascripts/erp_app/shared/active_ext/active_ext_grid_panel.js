@@ -56,7 +56,8 @@ Ext.define("Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel",{
         config = Ext.apply({
             layout:'card'
         }, config);
-        Compass.ErpApp.Shared.ActiveExt.ActiveExtGridPanel.superclass.constructor.call(this, config);
+
+        this.callParent([config]);
     }
 });
 

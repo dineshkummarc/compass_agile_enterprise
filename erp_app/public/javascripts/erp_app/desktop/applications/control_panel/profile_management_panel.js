@@ -9,10 +9,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPa
         this.findParentByType('statuswindow').clearStatus();
     },
 
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel.superclass.initComponent.call(this, arguments);
-    },
-
     constructor : function(config) {
         var self = this;
         this.passwordForm = new Ext.FormPanel({
@@ -91,7 +87,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPa
             items:[this.passwordForm]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.ControlPanel.ProfileManagementPanel.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

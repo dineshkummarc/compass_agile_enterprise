@@ -13,14 +13,10 @@ module RailsDbAdmin
 	    data.each do |k,v|
 	      columns.each do |column|
 	        if column.name == k
-	          if column.type == :integer || column.type == :datetime
-	            if v.blank?
-	              sql += " #{k} = null,"
-	            else
-	              sql += " #{k} = '#{v}',"
-	            end
+	          sql << if column.type == :string or column.type == :text
+	            " #{k} = '#{v.gsub("'","''")}',"
 	          else
-	            sql += " #{k} = '#{v}',"
+	            (v.blank? ? " #{k} = null," : " #{k} = '#{v.gsub("'","''")}',")
 	          end
 	        end
 	      end
@@ -28,8 +24,8 @@ module RailsDbAdmin
 	
 	    sql = sql[0..sql.length - 2]
 	
-	    sql += " where id = #{id}"
-	
+	    sql << " where id = #{id}"
+	    
 	    @connection.execute(sql)
 	  end
 	
@@ -49,29 +45,23 @@ module RailsDbAdmin
 	    column_names = columns.map{|column| column.name}
 	    column_names = column_names.join(", ")
 	
-	    sql += column_names
-	    sql += ") values ( "
+	    sql << column_names
+	    sql << ") values ( "
 	
 	    columns.each do |column|
 	      found = false
 	      data.each do |k,v|
 	        if column.name == k
 	          found = true
-	          if v.blank?
-	            sql += "null,"
-	          else
-	            sql += "'#{v}',"
-	          end
+	          sql << v.blank? ? "null," : "'#{v}',"
 	        end
 	      end
-	      unless found
-	        sql += "null,"
-	      end
+	      sql << "null,"  unless found
 	    end
 	
 	    sql = sql[0..sql.length - 2]
 	
-	    sql += ")"
+	    sql << ")"
 	
 	    @connection.execute(sql)
 	    
@@ -93,14 +83,11 @@ module RailsDbAdmin
 	
 	  def self.database_rows_to_hash(rows)
 	    records = []
+	    
 	    rows.each do |row|
 	      record = nil
 	      row.each {|k, v|
-	        if record.nil?
-	          record = {k.to_sym => v}
-	        else
-	          record = record.merge({k.to_sym => v})
-	        end
+	        record = record.nil? ? {k.to_sym => v} : record.merge({k.to_sym => v})
 	      }
 	      records << record
 	    end

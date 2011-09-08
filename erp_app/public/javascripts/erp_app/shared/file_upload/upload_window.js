@@ -43,7 +43,7 @@ Ext.define("Compass.ErpApp.Shared.UploadWindow",{
     },
 
     initComponent: function() {
-        Compass.ErpApp.Shared.UploadWindow.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
         this.addEvents(
             /**
          * @event fileuploaded
@@ -247,7 +247,7 @@ Ext.define("Compass.ErpApp.Shared.UploadWindow",{
             items:[this.awesomeUploader,this.awesomeUploaderGrid]
         }, config);
 
-        Compass.ErpApp.Shared.UploadWindow.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 
 });

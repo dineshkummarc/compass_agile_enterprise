@@ -10,27 +10,40 @@ It is meant to stay completely out of the directories that a Rails application d
 
 Compass.rake README
 
-TASK DESCRIPTIONS
-=================
-
-compass:install:core - installs the core compass plugins
-
-compass:install:default - installs the core compass plugin and the default (eCommerce) plugins
-
-compass:bootstrap:data - This rake task sets up some default data such as an Administrative user account and desktop applications for Iris.
  
-If you run the installer below the following is executed
-
-compass:install:core 
-
-compass:bootstrap:data
-
+COMPASS_INSTALLATION
+====================
  
- COMPASS_INSTALLATION
- ====================
+ To install Compass AE simple add the gems you want to your gem file and run bundle install:
  
- Compass installation follows the following simple four step process:
+ gem 'erp_base_erp_svcs', :path => '../compass_agile_enterprise/erp_base_erp_svcs'
+ gem 'erp_dev_svcs', :path => '../compass_agile_enterprise/erp_dev_svcs'
+ gem 'erp_tech_svcs', :path => '../compass_agile_enterprise/erp_tech_svcs'
+ gem 'erp_app', :path => '../compass_agile_enterprise/erp_app'
+ gem 'knitkit', :path => '../compass_agile_enterprise/knitkit'
+ gem 'rails_db_admin', :path => '../compass_agile_enterprise/rails_db_admin'
+ gem 'erp_forms', :path => '../compass_agile_enterprise/erp_forms'
+ gem 'console', :path => '../compass_agile_enterprise/console'
  
- (Step 1) Create a new Rails application using the compass installer template
-     
- rails [myappname] -m http://www.portablemind.com/file_assets/compass_install.rb
+ run 
+ 
+ rake db:migrate
+ 
+ and
+ 
+ rake db:migrate_data
+ 
+ start up your server 
+ 
+ rails s
+ 
+ navigate to 
+ 
+ http://localhost:3000/erp_app/login
+ 
+ Login To: Compass Desktop
+ Username: admin
+ Password: password
+ 
+ Enjoy !
+ 

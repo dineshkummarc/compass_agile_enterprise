@@ -34,7 +34,7 @@ Ext.define("Compass.ErpApp.Shared.NotesGrid",{
 
     initComponent: function() {
         this.store.load();
-        Compass.ErpApp.Shared.NotesGrid.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
     },
 
     constructor : function(config) {
@@ -285,7 +285,7 @@ Ext.define("Compass.ErpApp.Shared.NotesGrid",{
             })
         }, config);
 
-        Compass.ErpApp.Shared.NotesGrid.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

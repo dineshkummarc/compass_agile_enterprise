@@ -53,10 +53,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
         });
     },
 
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree.superclass.initComponent.call(this, arguments);
-    },
-
     constructor : function(config) {
         var self = this;
 
@@ -112,7 +108,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree",{
             }
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Scaffold.ModelsTree.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });
 

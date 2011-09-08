@@ -125,7 +125,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             emptyMsg: "No Parties"
         });
 
-        Compass.ErpApp.Organizer.Applications.Crm.PartyGrid.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
     },
     constructor : function(config) {
         var columns = [
@@ -418,7 +418,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
             plugins:[this.editing],
             loadMask:true
         }, config);
-        Compass.ErpApp.Organizer.Applications.Crm.PartyGrid.superclass.constructor.call(this, config);
+        
+		this.callParent([config]);
     }
 });
 

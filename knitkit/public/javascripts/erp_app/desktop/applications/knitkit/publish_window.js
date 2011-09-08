@@ -86,7 +86,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow",{
             }]
         }, config);
 
-        Compass.ErpApp.Desktop.Applications.Knitkit.PublishWindow.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
     
 });

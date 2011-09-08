@@ -15,7 +15,7 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
     ckEditorInstance : null,
 
     initComponent: function() {
-        Compass.ErpApp.Shared.CKeditor.superclass.initComponent.call(this, arguments);
+        this.callParent(arguments);
 
         this.addEvents(
             /**
@@ -33,7 +33,8 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
             grow:true,
             hideLabel:true
         },config);
-        Compass.ErpApp.Shared.CKeditor.superclass.constructor.call(this, config);
+        
+		this.callParent([config]);
     },
 
     onRender : function(ct, position){

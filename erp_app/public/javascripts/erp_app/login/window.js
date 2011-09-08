@@ -116,6 +116,6 @@ Ext.define("Compass.ErpApp.Login.Window",{
 	        	}
 	    	}]
         }, config);
-        Compass.ErpApp.Login.Window.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

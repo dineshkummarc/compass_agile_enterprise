@@ -16,7 +16,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGr
             region:'center',
             loadMask:true
         }, config);
-        Compass.ErpApp.Desktop.Applications.RailsDbAdmin.ReadOnlyTableDataGrid.superclass.constructor.call(this, config);
+		
+		this.callParent([config]);
     }
 });
 
