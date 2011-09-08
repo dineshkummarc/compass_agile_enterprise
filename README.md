@@ -16,14 +16,14 @@ COMPASS_INSTALLATION
  
  To install Compass AE simple add the gems you want to your gem file and run bundle install:
  
- gem 'erp_base_erp_svcs', :path => '../compass_agile_enterprise/erp_base_erp_svcs'
- gem 'erp_dev_svcs', :path => '../compass_agile_enterprise/erp_dev_svcs'
- gem 'erp_tech_svcs', :path => '../compass_agile_enterprise/erp_tech_svcs'
- gem 'erp_app', :path => '../compass_agile_enterprise/erp_app'
- gem 'knitkit', :path => '../compass_agile_enterprise/knitkit'
- gem 'rails_db_admin', :path => '../compass_agile_enterprise/rails_db_admin'
- gem 'erp_forms', :path => '../compass_agile_enterprise/erp_forms'
- gem 'console', :path => '../compass_agile_enterprise/console'
+ * gem 'erp_base_erp_svcs', :path => '../compass_agile_enterprise/erp_base_erp_svcs'
+ * gem 'erp_dev_svcs', :path => '../compass_agile_enterprise/erp_dev_svcs'
+ * gem 'erp_tech_svcs', :path => '../compass_agile_enterprise/erp_tech_svcs'
+ * gem 'erp_app', :path => '../compass_agile_enterprise/erp_app'
+ * gem 'knitkit', :path => '../compass_agile_enterprise/knitkit'
+ * gem 'rails_db_admin', :path => '../compass_agile_enterprise/rails_db_admin'
+ * gem 'erp_forms', :path => '../compass_agile_enterprise/erp_forms'
+ * gem 'console', :path => '../compass_agile_enterprise/console'
  
  run 
  
