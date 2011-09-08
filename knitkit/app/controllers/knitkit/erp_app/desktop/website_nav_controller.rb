@@ -15,34 +15,19 @@ class WebsiteNavController < Knitkit::ErpApp::Desktop::AppController
       result[:success] = false
     end
 
-    render :inline => result.to_json
+    render :json=> result
   end
 
   def update
     result = {}
     website_nav = WebsiteNav.find(params[:website_nav_id])
     website_nav.name = params[:name]
-
-    if website_nav.save
-      result[:success] = true
-    else
-      result[:success] = false
-    end
-
-    render :inline => result.to_json
+	
+    render :json => website_nav.save ? {:success => true} : {:success => false}
   end
 
   def delete
-    result = {}
-    website_nav = WebsiteNav.find(params[:id])
-
-    if website_nav.destroy
-      result[:success] = true
-    else
-      result[:success] = false
-    end
-
-    render :inline => result.to_json
+    render :json => WebsiteNav.find(params[:id]).destroy ? {:success => true} : {:success => false}
   end
 
   def add_menu_item
@@ -74,7 +59,7 @@ class WebsiteNavController < Knitkit::ErpApp::Desktop::AppController
       result[:success] = false
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def update_menu_item
@@ -109,20 +94,11 @@ class WebsiteNavController < Knitkit::ErpApp::Desktop::AppController
       result[:success] = false
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def delete_menu_item
-    result = {}
-    website_nav_item = WebsiteNavItem.find(params[:id])
-
-    if website_nav_item.destroy
-      result[:success] = true
-    else
-      result[:success] = false
-    end
-
-    render :inline => result.to_json
+    render :json => WebsiteNavItem.find(params[:id]).destroy ? {:success => true} : {:success => false}
   end
 
 end

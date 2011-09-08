@@ -24,13 +24,11 @@ class ErpForms::ErpApp::Desktop::DynamicForms::DataController < ErpForms::ErpApp
       definition << DynamicFormField.datefield({ :fieldLabel => "Updated At", :name => 'updated_at' })
       definition << DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' })
 
-      result = "{
+      render :inline => "{
         \"success\": true,
         \"columns\": [#{columns.join(',')}],
         \"fields\": #{definition.to_json}
-      }"    
-
-      render :inline => result
+      }"
     end
 
     # get dynamic data records
@@ -65,11 +63,7 @@ class ErpForms::ErpApp::Desktop::DynamicForms::DataController < ErpForms::ErpApp
       params[:created_with_form_id] = params[:dynamic_form_id] if params[:dynamic_form_id]
       @myDynamicObject = DynamicFormModel.save_all_attributes(@myDynamicObject, params, ErpForms::ErpApp::Desktop::DynamicForms::BaseController::IGNORED_PARAMS)
       
-      if @myDynamicObject
-        render :inline => {:success => true}.to_json
-      else
-        render :inline => {:success => false}.to_json        
-      end      
+      render :json => @myDynamicObject ? {:success => true} : {:success => false}
     end
 
     # update a dynamic data record
@@ -80,18 +74,14 @@ class ErpForms::ErpApp::Desktop::DynamicForms::DataController < ErpForms::ErpApp
       params[:updated_with_form_id] = params[:dynamic_form_id] if params[:dynamic_form_id]      
       @myDynamicObject = DynamicFormModel.save_all_attributes(@myDynamicObject, params, ErpForms::ErpApp::Desktop::DynamicForms::BaseController::IGNORED_PARAMS)
             
-      if @myDynamicObject
-        render :inline => {:success => true}.to_json
-      else
-        render :inline => {:success => false}.to_json        
-      end      
+      render :json => @myDynamicObject ? {:success => true} : {:success => false}
     end
 
     # delete a dynamic data record
     def delete
       @myDynamicObject = DynamicFormModel.get_constant(params[:model_name])
       @myDynamicObject.destroy(params[:id])
-      render :inline => {:success => true}.to_json
+      render :json => {:success => true}
     end
       
 end

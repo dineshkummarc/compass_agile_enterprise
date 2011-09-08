@@ -7,11 +7,7 @@ module Knitkit
   IGNORED_PARAMS = %w{action controller node_id theme_data}
 
   def index
-    if params[:node] == ROOT_NODE
-      setup_tree
-    else
-      expand_file_directory(params[:node], :folders_only => false)
-    end
+    params[:node] == ROOT_NODE ? setup_tree : expand_file_directory(params[:node], :folders_only => false)
   end
 
   def available_themes
@@ -19,7 +15,7 @@ module Knitkit
     @website.themes.each do |theme|
       result[:themes].push << {:id => theme.id, :name => theme.name}
     end
-    render :inline => result.to_json
+    render :json => result
   end
 
   def new
@@ -34,12 +30,12 @@ module Knitkit
       theme.save
     end
    
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def delete
     @theme.destroy
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def export
@@ -52,17 +48,11 @@ module Knitkit
 
   def change_status
     #clear active themes
-    if (params[:active] == 'true')
-      @website.deactivate_themes!
-    end
+    @website.deactivate_themes! if (params[:active] == 'true')
 
-    if (params[:active] == 'true')
-      @theme.activate!
-    else
-      @theme.deactivate!
-    end
-
-    render :inline => {:success => true}.to_json
+   (params[:active] == 'true') ? @theme.activate! : @theme.deactivate!
+ 
+    render :json => {:success => true}
   end
 
   ##############################################################
@@ -78,28 +68,20 @@ module Knitkit
     theme = get_theme(path)
     theme.add_file(File.join(path,name), '#Empty File')
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def upload_file
     result = {}
-    if request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank?
-      upload_path = params[:directory]
-    else
-      upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
-    end
-
+    upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
+   
     unless request.env['HTTP_X_FILE_NAME'].blank?
       contents = request.raw_post
       name     = request.env['HTTP_X_FILE_NAME']
     else
       file_contents = params[:file_data]
       name = file_contents.original_filename
-      if file_contents.respond_to?(:read)
-        contents = file_contents.read
-      elsif file_contents.respond_to?(:path)
-        contents = File.read(file_contents.path)
-      end
+      contents = file_contents.respond_to?(:read) ? file_contents.read : File.read(file_contents.path)
     end
 
     theme = get_theme(upload_path)
@@ -114,31 +96,31 @@ module Knitkit
       result = {:success => false, :error => "Error uploading #{name}"}
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def delete_file
     path = params[:node]
-    json_str = ''
+    result = {}
 
     unless File.exists? path
-      json_str = "{success:false, error:'File does not exists'}"
+	  result = {:success => false, :error => "File does not exists"}
     else
       begin
         name = File.basename(path)
         
         theme_file = get_them_file(path)
         theme_file.destroy
-        json_str = "{success:true, msg:'#{name} was deleted successfully'}"
+		result = {:success => true, :error => "#{name} was deleted successfully"}
       rescue Exception=>ex
         logger.error ex.message
         logger.error ex.backtrace.join("\n")
-        json_str = "{success:false, error:'Error deleting #{name}'}"
+		result = {:success => false, :error => "Error deleting #{name}"}
       end
 
     end
 
-    render :inline => json_str
+    render :json => result
   end
 
   def rename_file
@@ -154,7 +136,7 @@ module Knitkit
       theme_file.save
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   private
@@ -176,7 +158,7 @@ module Knitkit
   def get_them_file(path)
     theme = get_theme(path)
     path = path.gsub!(RAILS_ROOT,'')
-    theme.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
+    theme.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
   end
 
   def setup_tree
@@ -211,7 +193,7 @@ module Knitkit
       tree << site_hash
     end
 
-    render :json => tree.to_json
+    render :json => tree
   end
 
   protected

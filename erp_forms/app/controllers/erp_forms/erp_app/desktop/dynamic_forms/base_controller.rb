@@ -30,11 +30,7 @@ class ErpForms::ErpApp::Desktop::DynamicForms::BaseController < ::ErpApp::Deskto
       else
         website_section_hash[:leaf] = true
       end
-      if website_section_hash[:isSecured]
-        website_section_hash[:iconCls] = 'icon-document_lock'
-      else
-        website_section_hash[:iconCls] = 'icon-document'
-      end
+      website_section_hash[:iconCls] = website_section_hash[:isSecured] ? 'icon-document_lock' : 'icon-document'
     end
 
     website_section_hash
@@ -42,19 +38,10 @@ class ErpForms::ErpApp::Desktop::DynamicForms::BaseController < ::ErpApp::Deskto
   
   def page
     offset = params[:start].to_f
-    
-    if offset > 0
-      return (offset / params[:limit].to_f).to_i + 1
-    else 
-      return 1
-    end
+    offset > 0 ? (offset / params[:limit].to_f).to_i + 1 : 1
   end
   
   def per_page
-    if !params[:limit].nil?
-      return params[:limit].to_i
-    else
-      return 20
-    end
+	params[:limit].nil? ? 20 : params[:limit].to_i
   end  
 end

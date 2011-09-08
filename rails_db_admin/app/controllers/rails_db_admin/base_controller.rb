@@ -1,26 +1,14 @@
 module RailsDbAdmin
 	class BaseController < ErpApp::Desktop::BaseController
 	  before_filter :setup_database_connection
-
-	  def login_path
-		return rails_db_admin_login_path
-	  end
-
-	  def index
-
-	  end
 	  
 	  def databases
-		json_text = '{"databases":['
-		
+		result = {:databases => []}
 		Rails.configuration.database_configuration.each do |k, v|
-		  json_text += "{display:\"#{k}\", value:\"#{k}\"},"
+		  result[:databases] << {:display => k, :value => k}
 		end
 		
-		json_text = json_text[0..json_text.length - 2]
-		json_text += ']}'
-		
-		render :inline => json_text
+		render :json => result
 	  end
 	  
 	  def tables
@@ -37,40 +25,35 @@ module RailsDbAdmin
 		  tables_hash << build_table_tree(table)
 		end
 
-		render :inline => tables_hash.to_json
+		render :json => tables_hash
 	  end
 
 	  def setup_table_grid
+	    result = {:success => true}
 		table = params[:table]
 
 		if @table_support.table_contains_column(table, :id) 
-		  json_text = "{success:true,"
-		  json_text += "columns:" + build_grid_columns(table)
-		  json_text += ",model:'"+table+"'"
-		  json_text += ",fields:"+ build_store_fields(table)
-		  json_text += ",validations:[]"
-		  json_text += "}"
+		  result[:columns] = build_grid_columns(table)
+		  result[:model] = table
+		  result[:fields] = build_store_fields(table)
+		  result[:validations] = []
 		else
-		  json_text = "{success:false}"
+		  result[:success] = false
 		end
 		
-		render :inline => json_text
+		render :json => result
 	  end
 
 	  def table_data
-		json_text = nil
-
-		if request.get?
-		  json_text = get_table_data
+		render :json => if request.get?
+		  get_table_data
 		elsif request.post?
-		  json_text = create_table_row
+		  create_table_row
 		elsif request.put?
-		  json_text = update_table_data
+		  update_table_data
 		elsif request.delete?
-		  json_text = delete_table_row
+		  delete_table_row
 		end
-
-		render :inline => json_text
 	  end
 
 	  private
@@ -96,12 +79,9 @@ module RailsDbAdmin
 		params[:data].delete('id')
 
 		inserted_id = @table_support.insert_row(table, params[:data])
-
 		record = @json_data_builder.get_row_data(table, inserted_id)
 
-		json_text = "{\"success\":true,data:#{record.to_json}}"
-
-		json_text
+		{:success => true, :data => record}
 	  end
 
 	  def update_table_data
@@ -111,59 +91,29 @@ module RailsDbAdmin
 
 		@table_support.update_table(table, id, params[:data])
 		record = @json_data_builder.get_row_data(table, id)
-
-		json_text = "{\"success\":true,data:"
-
-		json_text += record.to_json
-
-		json_text += '}'
-
-		json_text
+		
+		{:success => true, :data => record}
 	  end
 
 	  def delete_table_row
 		table = params[:table]
 		id = params[:id]
 
-		table = table.pluralize.underscore
-		
-		@table_support.delete_row(table, id)
+		@table_support.delete_row(table.pluralize.underscore, id)
 
-		json_text = "{\"success\":true,data:[]}"
-
-		json_text
+		{:success => true, :data => []}
 	  end
 
 	  def build_grid_columns(table)
-		columns = @database_connection_class.connection.columns(table)
-		
-		array_text = "["
-
-		columns.each do |column|
-		  array_text += RailsDbAdmin::Extjs::JsonColumnBuilder.build_column_from_column_obj(column) + ","
+		@database_connection_class.connection.columns(table).collect do |column|
+		  RailsDbAdmin::Extjs::JsonColumnBuilder.build_column_from_column_obj(column)
 		end
-
-		array_text = array_text[0..array_text.length - 2]
-
-		array_text += "]"
-
-		array_text
 	  end
 
 	  def build_store_fields(table)
-		columns = @database_connection_class.connection.columns(table)
-
-		array_text = "["
-
-		columns.each do |column|
-		  array_text += "{name:\"#{column.name}\"},"
+		@database_connection_class.connection.columns(table).collect do |column|
+		  {:name => column.name}
 		end
-
-		array_text = array_text[0..array_text.length - 2]
-
-		array_text += "]"
-
-		array_text
 	  end
 
 	  def build_table_tree(table)

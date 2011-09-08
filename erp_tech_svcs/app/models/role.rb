@@ -8,12 +8,8 @@ class Role < ActiveRecord::Base
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :secured_models
-  #has_and_belongs_to_many :auth_permissions
 
- 
 	def to_xml(options = {})
-		#Add attributes accessible by xml
-  	#Ex. default_only = [:id, :name]
 		default_only = []
   	options[:only] = (options[:only] || []) + default_only
   	super(options)

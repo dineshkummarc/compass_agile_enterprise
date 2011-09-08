@@ -32,7 +32,7 @@ module RailsDbAdmin
 	    rows = @connection.select_all(query)
 	    records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
 	    
-	    return query, records.to_json
+	    return query, records
 	  end
 	  
 	  def get_saved_query_names(database_connection_name)

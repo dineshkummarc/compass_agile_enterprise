@@ -7,27 +7,23 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
   before_filter :set_website, :only => [:export, :website_publications, :set_viewing_version, :activate_publication, :publish, :update, :delete]
   
   def index
-    Website.include_root_in_json = false
     render :inline => {:sites => Website.all}.to_json
   end
 
   def website_publications
-    PublishedWebsite.include_root_in_json = false
     sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
     sort = sort_hash[:property] || 'version'
     dir  = sort_hash[:direction] || 'DESC'
     limit = params[:limit] || 9
     start = params[:start] || 0
     
-    published_websites = @website.published_websites.find(:all, :order => "#{sort} #{dir}", :limit => limit, :offset => start)
+    published_websites = @website.published_websites.order("#{sort} #{dir}").limit(limit).offset(start)
     
     #set site_version. User can view different versions. Check if they are viewing another version
     site_version = @website.active_publication.version
     if !session[:website_version].blank? && !session[:website_version].empty?
       site_version_hash = session[:website_version].find{|item| item[:website_id] == @website.id}
-      unless site_version_hash.nil?
-        site_version = site_version_hash[:version].to_f
-      end
+      site_version = site_version_hash[:version].to_f unless site_version_hash.nil?
     end
 
     PublishedWebsite.class_exec(site_version) do
@@ -44,7 +40,7 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
   def activate_publication
     @website.set_publication_version(params[:version].to_f)
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def set_viewing_version
@@ -56,13 +52,13 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
       session[:website_version] << {:website_id => @website.id, :version => params[:version]}
     end
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def publish
     @website.publish(params[:comment])
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def new
@@ -94,7 +90,7 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
       result[:success] = false
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def update
@@ -108,14 +104,14 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
 
     @website.save
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
   
  
   def delete
     @website.destroy
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def export
@@ -128,7 +124,7 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
   def import
     result, message = Website.import(params[:website_data])
 
-    render :inline => {:success => result, :message => message}.to_json
+    render :json => {:success => result, :message => message}
   ensure
     FileUtils.rm_r File.dirname(zip_path) rescue nil
   end
@@ -139,7 +135,7 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
     website.hosts << website_host
     website.save
 
-    render :inline => {
+    render :json => {
       :success => true,
       :node => {
         :text => website_host.host,
@@ -150,7 +146,7 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
         :isHost => true,
         :leaf => true,
         :children => []}
-      }.to_json
+      }
   end
 
   def update_host
@@ -158,13 +154,13 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
     website_host.host = params[:host]
     website_host.save
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   def delete_host
     WebsiteHost.destroy(params[:id])
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 
   private

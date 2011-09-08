@@ -9,7 +9,7 @@ class PositionController < Knitkit::ErpApp::Desktop::AppController
       model.save
     end
 
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 end
 end

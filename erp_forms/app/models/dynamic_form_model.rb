@@ -3,12 +3,14 @@ class DynamicFormModel < ActiveRecord::Base
   has_many :dynamic_forms, :dependent => :destroy
 
   def self.get_constant(klass_name)
-    begin
-      return klass_name.constantize
+	result = nil
+	begin
+      result = klass_name.constantize
     rescue
       DynamicFormDocument.declare(klass_name)
-      return klass_name.constantize
+      result = klass_name.constantize
     end
+	result
   end
 
   def self.get_instance(klass_name)
@@ -33,12 +35,8 @@ class DynamicFormModel < ActiveRecord::Base
         end
       end
     end
-    
-    if dynamicObject.valid? and dynamicObject.save        
-      return dynamicObject
-    else
-      return false
-    end
+
+    (dynamicObject.valid? and dynamicObject.save) ? dynamicObject : nil
   end
 
 end

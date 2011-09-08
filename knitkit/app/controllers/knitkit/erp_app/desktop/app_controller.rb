@@ -5,7 +5,7 @@ module Knitkit
   KNIT_KIT_ROOT = Knitkit::Engine.root.to_s
 
   def websites
-    websites = Website.find(:all)
+    websites = Website.all
 
     tree = []
 
@@ -43,7 +43,6 @@ module Knitkit
 
       website_hash[:children] << sections_hash
       
-      
       #handle menus
       menus_hash = {:text => 'Menus', :iconCls => 'icon-content', :isMenuRoot => true, :websiteId => website.id, :leaf => false, :children => []}
       website.website_navs.each do |website_nav|
@@ -69,27 +68,18 @@ module Knitkit
       tree << website_hash
     end
 
-    render :json => tree.to_json
+    render :json => tree
   end
 
   protected
 
   def page
     offset = params[:start].to_f
-    
-    if offset > 0
-      return (offset / params[:limit].to_f).to_i + 1
-    else 
-      return 1
-    end
+    (offset > 0) ? (offset / params[:limit].to_f).to_i + 1 : 1
   end
   
   def per_page
-    if !params[:limit].nil?
-      return params[:limit].to_i
-    else
-      return 20
-    end
+    params[:limit].nil? ? 20 : params[:limit].to_i
   end
   
   def build_section_hash(website_section, website)

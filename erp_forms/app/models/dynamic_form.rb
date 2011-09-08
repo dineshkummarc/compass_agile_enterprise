@@ -4,26 +4,24 @@ class DynamicForm < ActiveRecord::Base
   validates_uniqueness_of :internal_identifier, :scope => :model_name
   
   def self.class_exists?(class_name)
-    klass = Module.const_get(class_name)
-    if klass.is_a?(Class)
-      if klass.superclass == ActiveRecord::Base or klass.superclass == DynamicModel
-        return true
-      else
-        return false
-      end
-    else
-      return false
-    end
-  rescue NameError
-    return false
+	result = nil
+	begin
+	  klass = Module.const_get(class_name)
+      result = klass.is_a?(Class) ? ((klass.superclass == ActiveRecord::Base or klass.superclass == DynamicModel) ? true : nil) : nil
+	rescue NameError
+	  result = nil
+	end
+	result
   end
   
   def self.get_form(klass_name, internal_identifier='')
-    if internal_identifier and internal_identifier != ''
-	    return DynamicForm.find_by_model_name_and_internal_identifier(klass_name, internal_identifier)
-	  else
-	    return DynamicForm.find_by_model_name_and_default(klass_name, true)
-	  end
+    result = nil
+	if internal_identifier and internal_identifier != ''
+	  result = DynamicForm.find_by_model_name_and_internal_identifier(klass_name, internal_identifier)
+	else
+	  result = DynamicForm.find_by_model_name_and_default(klass_name, true)
+	end
+	result
   end
   
   # parse JSON definition into a ruby object 
@@ -70,11 +68,12 @@ class DynamicForm < ActiveRecord::Base
   # check field against form definition to see if field still exists
   # returns true if field does not exist
   def deprecated_field?(field_name)
-    definition_object.each do |field|
-      return false if field[:name] == field_name.to_s
+    result = true
+	definition_object.each do |field|
+      result = false if field[:name] == field_name.to_s
     end
     
-    return true
+    result
   end
   
   def self.concat_fields_to_build_definition(array_of_fields)

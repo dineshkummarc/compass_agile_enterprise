@@ -24,14 +24,12 @@ class ImageAssetsController < ::ErpApp::Desktop::FileManager::BaseController
         url_path = path.gsub(base_path.to_s, '/images/')
         #url_path = url_path.gsub('/', '\/')
         short_name = entry
-        if short_name.length > 16
-          short_name = short_name[0..13] + '...'
-        end
+        short_name = short_name[0..13] + '...' if short_name.length > 16
         data[:images] << {:name => entry, :shortName => short_name, :url => url_path}
       end
     end unless directory.blank?
 
-    render :inline => data.to_json
+    render :json => data
   end
   
 end

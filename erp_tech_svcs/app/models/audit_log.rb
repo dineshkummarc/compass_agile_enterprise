@@ -9,12 +9,8 @@ class AuditLog < ActiveRecord::Base
   belongs_to :event_record, :polymorphic => true
 
   def user_id_name
-   u= Party.find(:first, :conditions=>"id = #{user_id}")
-   if(u!=nil)
-     return u.user.username
-   else
-     return "cannot find user #{user_id}"
-   end
+   u = Party.where("id = #{user_id}").frist
+   u.nil? ? "cannot find user #{user_id}" : u.user.username
   end
 
   def AuditLog.custom_log_message(party, msg)

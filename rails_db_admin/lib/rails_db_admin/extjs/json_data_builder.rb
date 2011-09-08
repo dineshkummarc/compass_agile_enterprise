@@ -29,13 +29,7 @@ module RailsDbAdmin
         rows = @connection.select_all(query)
         records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
 			
-        json_text = "{\"totalCount\":#{total_count},data:"
-			
-        json_text += records.to_json
-			
-        json_text += '}'
-			
-        json_text
+        {:totalCount => total_count, :data => records}
       end
 			
       def get_row_data(table, id)

@@ -4,12 +4,7 @@ class ErpForms::ErpApp::Desktop::DynamicForms::ModelsController < ErpForms::ErpA
   # used in dynamic forms widget combo box
   def index
     models = []
-    dynamic_form_models = DynamicFormModel.find(
-                            :all, 
-                            :conditions => ["model_name != 'DynamicFormDocument'"],
-                            :order => 'model_name ASC'
-                          )
-    
+    dynamic_form_models = DynamicFormModel.where("model_name != 'DynamicFormDocument'").order('model_name ASC')
     dynamic_form_models.each do |m|
       model_hash = {
         :id => m.id,
@@ -19,20 +14,22 @@ class ErpForms::ErpApp::Desktop::DynamicForms::ModelsController < ErpForms::ErpA
       models << model_hash
     end
     
-    render :json => models.to_json
+    render :json => models
   end
 
   # set default form for this model
   def set_default_form
     myDynamicObject = DynamicFormModel.get_constant(params[:model_name])    
     myDynamicObject.set_default(params[:id])
-    render :inline => "{\"success\": true}"
+	
+    render :json => {success => true}
   end
 
   # delete a dynamic form model
   def delete
     DynamicFormModel.destroy(params[:id])
-    render :inline => "{\"success\": true}"
+	
+    render :json => {success => true}
   end
   
   # create a dynamic form model
@@ -41,7 +38,8 @@ class ErpForms::ErpApp::Desktop::DynamicForms::ModelsController < ErpForms::ErpA
     DynamicFormModel.create({
       :model_name => model_name
     })
-    render :inline => "{\"success\": true}"
+	
+    render :json => {success => true}
   end
   
 end

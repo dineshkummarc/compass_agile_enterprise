@@ -2,13 +2,7 @@ class ErpForms::ErpApp::Desktop::DynamicForms::FormsController < ErpForms::ErpAp
   
   # get tree of dynamic models and forms
   def get_tree
-    if params[:node] == "root"    
-      models = DynamicFormModel.all(:order => :model_name)
-    else
-      id = params[:node].gsub("form_model_", '').to_i
-      models = DynamicFormModel.find_all_by_id(id)
-    end
-    
+    models = params[:node] == "root" ? DynamicFormModel.all(:order => :model_name) : DynamicFormModel.find_all_by_id(id)
     tree = []
 
     models.each do |form_model|
@@ -47,7 +41,7 @@ class ErpForms::ErpApp::Desktop::DynamicForms::FormsController < ErpForms::ErpAp
       tree << model_hash
     end
 
-    render :json => tree.to_json
+    render :json => tree
   end
 
   # get a single form definition

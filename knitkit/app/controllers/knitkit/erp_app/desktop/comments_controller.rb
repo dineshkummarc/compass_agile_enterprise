@@ -17,14 +17,13 @@ module Knitkit
           end
           
           #limit and offset are not working rails issue?
-          comments = content.comments.order("#{sort} #{dir}")
+          comments = content.comments.order("#{sort} #{dir}").limit(limit).offset(offset)
     
           render :inline => "{totalCount:#{comments.count}, comments:#{comments.to_json(:methods => [:approved?, :approved_by_username])}}"
         end
 
         def approve
           comment = Comment.find(params[:id])
-
           comment.approve(current_user)
 
           render :json => {:success => true}

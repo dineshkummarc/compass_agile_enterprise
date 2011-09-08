@@ -92,7 +92,7 @@ class WebsiteSection < ActiveRecord::Base
     published_website_id = active_publication.id
     published_element = PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ?', published_website_id, content.id, 'Content').first
     unless published_element.nil?
-      content_version = Content::Version.find(:first, :conditions => ['version = ? and content_id = ?', published_element.version, published_element.published_element_record_id])
+      content_version = Content::Version.where('version = ? and content_id = ?', published_element.version, published_element.published_element_record_id).first
     end
     content_version
   end

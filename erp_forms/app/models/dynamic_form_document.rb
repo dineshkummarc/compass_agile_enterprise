@@ -16,18 +16,14 @@ class DynamicFormDocument < ActiveRecord::Base
   end
   
   def self.class_exists?(class_name)
-    klass = Module.const_get(class_name)
-    if klass.is_a?(Class)
-      if klass.superclass == ActiveRecord::Base or klass.superclass == DynamicModel
-        return true
-      else
-        return false
-      end
-    else
-      return false
-    end
-  rescue NameError
-    return false
+	result = nil
+	begin
+	  klass = Module.const_get(class_name)
+      result = klass.is_a?(Class) ? ((klass.superclass == ActiveRecord::Base or klass.superclass == DynamicModel) ? true : nil) : nil
+	rescue NameError
+	  result = nil
+	end
+	result
   end
 
 end

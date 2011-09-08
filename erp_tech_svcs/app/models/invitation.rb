@@ -16,18 +16,15 @@ class Invitation < ActiveRecord::Base
 	attr_accessible :email
 
 	def self.pending_users(page)
-		paginate :all,
-						 :per_page => 50, :page => page,
-        		 :conditions => ['sent_at IS NULL'],
-        		 :order => 'created_at ASC'
+		#paginate :all,
+		#:per_page => 50, :page => page,
+        #:conditions => ['sent_at IS NULL'],
+        #:order => 'created_at ASC'
 	end
 
 	def self.users_for_mailing(limit)
 		return nil if ((limit > 20) || (limit < 1))
-		find :all,
-				 :conditions => ['sent_at IS NULL'],
-				 :order => 'created_at ASC',
-				 :limit => limit
+		where('sent_at IS NULL').order('created_at ASC').limit(limit)
 	end
 
 	def self.send_to_pending_users(limit)

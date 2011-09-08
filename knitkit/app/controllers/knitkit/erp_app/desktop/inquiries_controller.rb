@@ -59,7 +59,7 @@ class InquiriesController < Knitkit::ErpApp::Desktop::AppController
   def delete
     website_inquiry = WebsiteInquiry.find(params[:id])
     website_inquiry.destroy
-    render :inline => {:success => true}.to_json
+    render :json => {:success => true}
   end
 end
 end

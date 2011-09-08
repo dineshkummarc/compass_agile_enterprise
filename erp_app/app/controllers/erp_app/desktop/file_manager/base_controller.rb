@@ -106,11 +106,7 @@ module ErpApp
 			  end
 
 			  def upload_file
-          if request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank?
-            upload_path = params[:directory]
-          else
-            upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
-          end
+          upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
 
           upload_path = base_path if upload_path == ROOT_NODE
 

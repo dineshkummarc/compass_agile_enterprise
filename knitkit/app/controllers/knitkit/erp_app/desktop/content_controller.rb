@@ -5,16 +5,10 @@ module Knitkit
          def update
           id      = params[:id]
           html    = params[:html]
-          result = {}
           content = Content.find(id)
           content.body_html = html
-          if content.save
-            result[:success] = true
-          else
-            result[:success] = false
-          end
-
-          render :inline => result.to_json
+    
+          render :json => content.save ? {success => true} : {success => false}
         end
 
         def save_excerpt
@@ -23,13 +17,8 @@ module Knitkit
           result = {}
           content = Content.find(id)
           content.excerpt_html = html
-          if content.save
-            result[:success] = true
-          else
-            result[:success] = false
-          end
-
-          render :inline => result.to_json
+        
+          render :json => content.save ? {success => true} : {success => false}
         end
       end
     end

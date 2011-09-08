@@ -43,13 +43,12 @@ module Knitkit
 
           end
 
-          render :inline => result.to_json
+          render :json => result
 
         end
 
         def delete
-          WebsiteSection.destroy(params[:id])
-          render :inline => {:success => true}.to_json
+          render :json => WebsiteSection.destroy(params[:id]) ? {:success => true} : {:success => false}
         end
 
         def update_security
@@ -60,7 +59,7 @@ module Knitkit
             @website_section.remove_role(website.role)
           end
 
-          render :inline => {:success => true}.to_json
+          render :json => {:success => true}
         end
 
         def update
@@ -68,12 +67,12 @@ module Knitkit
           @website_section.title = params[:title]
           @website_section.save
 
-          render :inline => {:success => true}.to_json
+          render :json => {:success => true}
         end
 
         def add_layout
           @website_section.create_layout
-          render :inline => {:success => true}.to_json
+          render :json => {:success => true}
         end
 
         def get_layout
@@ -82,27 +81,17 @@ module Knitkit
   
         def save_layout
           @website_section.layout = params[:content]
-    
-          if @website_section.save
-            render :inline => {:success => true}.to_json
-          else
-            render :inline => {:success => false}.to_json
-          end
+          render :json => @website_section.save ? {:success => true} : {:success => false}
         end
 
         def available_articles
-          current_articles = Article.find(:all,
-            :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-            :conditions => "website_section_id = #{params[:section_id]}")
-
+          current_articles = Article.joins("INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id").where("website_section_id = #{params[:section_id]}")
           available_articles = Article.all - current_articles
 
           render :inline => available_articles.to_json(:only => [:title, :id])
         end
   
         def existing_sections
-          WebsiteSection.include_root_in_json = false
-
           website = Website.find(params[:website_id])
           render :inline => website.all_sections.to_json(:only => [:title, :id])
         end

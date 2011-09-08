@@ -5,8 +5,6 @@ class VersionsController < Knitkit::ErpApp::Desktop::AppController
   #content
 
   def content_versions
-    Content::Version.include_root_in_json = false
-
     content = Content.find(params[:id])
     website = Website.find(params[:site_id])
     sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
@@ -15,21 +13,18 @@ class VersionsController < Knitkit::ErpApp::Desktop::AppController
     limit = params[:limit] || 15
     start = params[:start] || 0
 
-    versions = content.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+    versions = content.versions.order("#{sort} #{dir}").offset(start).limit(limit)
 
     Content::Version.class_exec(website) do
       cattr_accessor :website
       self.website = website
       def active
         published_site_id = self.website.active_publication.id
-        !PublishedElement.find(:first,
-          :include => [:published_website],
-          :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version]).nil?
+        !PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version).first.nil?
       end
 
       def published
-        !PublishedElement.find(:first,
-          :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.content_id, 'Content', self.version]).nil?
+        !PublishedElement.where('published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.content_id, 'Content', self.version).first.nil?
       end
     end
 
@@ -59,8 +54,6 @@ class VersionsController < Knitkit::ErpApp::Desktop::AppController
   #website section layouts
 
   def website_section_layout_versions
-    WebsiteSection::Version.include_root_in_json = false
-
     website_section = WebsiteSection.find(params[:id])
     website = Website.find(params[:site_id])
     sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
@@ -69,21 +62,18 @@ class VersionsController < Knitkit::ErpApp::Desktop::AppController
     limit = params[:limit] || 15
     start = params[:start] || 0
 
-    versions = website_section.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+    versions = website_section.versions.order("#{sort} #{dir}").offset(start).limit(limit)
 
     WebsiteSection::Version.class_exec(website) do
       cattr_accessor :website
       self.website = website
       def active
-        published_site_id =self.website.active_publication.id
-        !PublishedElement.find(:first,
-          :include => [:published_website],
-          :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.website_section_id, 'WebsiteSection', self.version]).nil?
+        published_site_id = self.website.active_publication.id
+        !PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.website_section_id, 'WebsiteSection', self.version).first.nil?
       end
 
       def published
-        !PublishedElement.find(:first,
-          :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version]).nil?
+        !PublishedElement.where('published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version).nil?
       end
     end
 

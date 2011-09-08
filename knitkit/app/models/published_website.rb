@@ -3,7 +3,7 @@ class PublishedWebsite < ActiveRecord::Base
   has_many   :published_elements, :dependent => :destroy
 
   def self.activate(website, version)
-    published_websites = self.where('website_id = ?',website.id).all
+    published_websites = where('website_id = ?',website.id).all
     published_websites.each do |published_website|
       if published_website.version == version
         published_website.active = true

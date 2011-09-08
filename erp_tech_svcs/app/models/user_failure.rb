@@ -3,13 +3,11 @@ class UserFailure < ActiveRecord::Base
 
 	# Looks for five failures within one hour from the same IP address
 	def self.failure_check(remote_ip)
-		find(:first, :conditions => 
-              ['remote_ip = ? and count > ? and updated_at >= ?', remote_ip, 5, 1.hour.ago])
+		where('remote_ip = ? and count > ? and updated_at >= ?', remote_ip, 5, 1.hour.ago).first
 	end
 
   def self.record_failure(remote_ip, http_user_agent, failure_type, username = nil)
-		failure = find(:first, :conditions => ['remote_ip = ?', remote_ip],
-            :order => 'updated_at DESC')
+		failure = where('remote_ip = ?', remote_ip).order('updated_at DESC')
 		if (failure && failure.within_hour?)
 			increment_count(failure, http_user_agent, failure_type, username)
 		else

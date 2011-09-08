@@ -23,7 +23,7 @@ module Knitkit
             result[:success] = false
           end
 
-          render :inline => result.to_json
+          render :json => result
         end
 
         def update
@@ -44,19 +44,7 @@ module Knitkit
             result[:success] = false
           end
 
-          render :inline => result.to_json
-        end
- 
-        def set_attributes(article)
-          params.each do |k,v|
-            if k == 'tags'
-              article.tag_list = params[:tags].split(',').collect{|t| t.strip() }
-            else
-              article.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
-            end
-          end
-    
-          article    
+          render :json => result
         end
   
         def delete
@@ -68,23 +56,21 @@ module Knitkit
             result[:success] = false
           end
 
-          render :inline => result.to_json
+          render :json => result
         end
 
         def add_existing
           website_section = WebsiteSection.find(params[:section_id])
           website_section.contents << Article.find(params[:article_id])
 
-          render :inline => {:success => true}.to_json
+          render :json => {:success => true}
         end
 
         def existing_articles
-          Article.include_root_in_json = false
           render :inline => Article.all.to_json(:only => [:title, :id])
         end
 
         def get
-        Article.include_root_in_json = false
         sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
         sort = sort_hash[:property] || 'created_at'
         dir  = sort_hash[:direction] || 'DESC'
@@ -92,16 +78,10 @@ module Knitkit
         start = params[:start] || 0
 
         website_section_id = params[:section_id]
-        articles = Article.find(:all,
-          :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-          :conditions => "website_section_id = #{website_section_id}",
-          :order => "#{sort} #{dir}",
-          :limit => limit,
-          :offset => start)
+        articles = Article.joins("INNER JOIN website_section_contents 
+		                          ON website_section_contents.content_id = contents.id").where("website_section_id = #{website_section_id}").order("#{sort} #{dir}").limit(limit).offset(start)
 
-        total_count = Article.find(:all,
-          :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
-          :conditions => "website_section_id = #{website_section_id}").count
+        total_count = Article.joins("INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id").where("website_section_id = #{website_section_id}").count
 
         Article.class_exec(website_section_id) do
           @@website_section_id = website_section_id
@@ -125,6 +105,17 @@ module Knitkit
 
         render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position], :methods => [:website_section_position])}}"
       end
+	  
+	  private
+	  
+	  def set_attributes(article)
+          params.each do |k,v|
+            (k == 'tags') ? article.tag_list = params[:tags].split(',').collect{|t| t.strip() } : article.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
+          end
+    
+          article    
+        end
+	  
       end
     end
   end
