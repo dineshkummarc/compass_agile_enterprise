@@ -27,19 +27,19 @@ COMPASS_INSTALLATION
  
  run 
  
- rake db:migrate
+     rake db:migrate
  
  and
  
- rake db:migrate_data
+     rake db:migrate_data
  
  start up your server 
  
- rails s
+     rails s
  
  navigate to 
  
- http://localhost:3000/erp_app/login
+     http://localhost:3000/erp_app/login
  
  Login To: Compass Desktop
  Username: admin
