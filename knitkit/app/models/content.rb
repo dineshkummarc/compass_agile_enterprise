@@ -31,7 +31,7 @@ class Content < ActiveRecord::Base
                     website_sections.website_id = #{options[:website_id]} AND
                     (UPPER(contents.title) LIKE UPPER('%#{options[:query]}%') 
                       OR UPPER(contents.excerpt_html) LIKE UPPER('%#{options[:query]}%') 
-                      OR UPPER(contents.body_html) LIKE UPPER('%#{options[:query]}%') )").order("contents.created_at DESC").all.paginate(:page => options[:page], :per_page => options[:per_page])
+                      OR UPPER(contents.body_html) LIKE UPPER('%#{options[:query]}%') )").order("contents.created_at DESC").paginate(:page => options[:page], :per_page => options[:per_page])
   end
 
   def self.do_search(options = {})    
