@@ -1,6 +1,8 @@
 require 'nokogiri'
 
 class Website < ActiveRecord::Base
+  has_file_assets
+  
   after_create :create_publication_and_role
   
   has_many :published_websites, :dependent => :destroy

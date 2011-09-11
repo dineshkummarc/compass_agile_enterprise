@@ -2,6 +2,7 @@
 require 'erp_base_erp_svcs/extensions/core/array'
 require 'erp_base_erp_svcs/extensions/core/hash'
 require 'erp_base_erp_svcs/extensions/core/numbers'
+require 'erp_base_erp_svcs/extensions/core/object'
 
 #railties
 require 'erp_base_erp_svcs/extensions/railties/engine'

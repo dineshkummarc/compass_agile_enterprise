@@ -21,20 +21,20 @@
           @phone_numbers = @user.party.find_all_contacts_by_contact_mechanism(PhoneNumber)
           @postal_addresses = @user.party.find_all_contacts_by_contact_mechanism(PostalAddress)
     
-          contact_purposes = ContactPurpose.find(:all)
+          contact_purposes = ContactPurpose.all
           @purpose_hash={"Type" => "type"}
           contact_purposes.each do |p|
             @purpose_hash[p.description]=p.internal_identifier
           end
 
-      	countries= GeoCountry.find(:all)
+      	countries= GeoCountry.all
           @countries_id=[]
           @countries_id << ["Country", "default"]
       	countries.each do |c|
       	  @countries_id << [c.name, c.id]
       	end
 	
-      	states= GeoZone.find(:all)
+      	states= GeoZone.all
       	@states_id=[]
       	@states_id << ["State", "default"]
       	states.each do |s|

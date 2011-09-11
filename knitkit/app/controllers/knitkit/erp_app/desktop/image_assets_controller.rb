@@ -1,38 +1,22 @@
 module Knitkit
   module ErpApp
     module Desktop
-class ImageAssetsController < ::ErpApp::Desktop::FileManager::BaseController
+      class ImageAssetsController < FileAssetsController
+        
+        IMAGE_FILE_EXTENSIONS_REGEX = /^.?[^\.]+\.(jpe?g|png|PNG|gif|tiff)$/
+        
+        before_filter :set_website
+        
+        def base_path
+          @base_path = nil
+          @base_path ||= File.join(Rails.root, "/public", "/sites/site-#{@website.id}", "images") unless @website.nil?
+        end
 
-  IMAGE_FILE_EXTENSIONS_REGEX = /^.?[^\.]+\.(jpe?g|png|PNG|gif|tiff)$/
-
-  def base_path
-    @base_path ||= File.join(Rails.root, "/public/images/")
-  end
-
-  def expand_directory
-    expand_file_directory(params[:node], :folders_only => false)
-  end
-
-  def get_images
-    directory = params[:directory]
-    directory = base_path if directory == ROOT_NODE
-    data = {:images => []}
-
-    Dir.entries(directory).each do |entry|
-      if entry =~ IMAGE_FILE_EXTENSIONS_REGEX
-        path = directory + '/' + entry
-        url_path = path.gsub(base_path.to_s, '/images/')
-        #url_path = url_path.gsub('/', '\/')
-        short_name = entry
-        short_name = short_name[0..13] + '...' if short_name.length > 16
-        data[:images] << {:name => entry, :shortName => short_name, :url => url_path}
+        def get_images
+          render :json => @website.images.collect{|image|{:name => image.name, :shortName => image.name[0..20], :url => image.url}}
+        end
+        
       end
-    end unless directory.blank?
-
-    render :json => data
+    end
   end
-  
-end
-end
-end
 end

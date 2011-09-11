@@ -38,7 +38,7 @@ module Knitkit
       if !session[:website_version].blank? && !session[:website_version].empty?
         site_version_hash = session[:website_version].find{|item| item[:website_id] == @website.id}
         unless site_version_hash.nil?
-          @active_publication = @website.published_websites.find(:first, :conditions => ['version = ?', site_version_hash[:version].to_f])
+          @active_publication = @website.published_websites.where('version = ?', site_version_hash[:version].to_f).first
         end
       end
     end

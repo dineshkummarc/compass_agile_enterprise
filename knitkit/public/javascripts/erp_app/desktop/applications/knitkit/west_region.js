@@ -201,6 +201,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
         });
     },
 
+	expandWebsite : function(websiteId){
+		Ext.getCmp('knitkitEastRegion').fileAssetsPanel.selectWebsite(websiteId);
+		Ext.getCmp('knitkitEastRegion').imageAssetsPanel.selectWebsite(websiteId);
+	},
+
     initComponent: function() {
         var self = this;
         
@@ -324,11 +329,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                     ptype: 'treeviewdragdrop'
                 },
                 listeners:{
-                    'beforedrop':function(node, data, overModel, dropPosition,dropFunction,options){
-                        if(overModel.data['isWebsiteNavItem'] || overModel.data['isSection']){
-                            if((overModel.parentNode.data['isSectionRoot'])){
-                                return true;
-                            }
+					'beforedrop':function(node, data, overModel, dropPosition,dropFunction,options){
+					    if(overModel.data['isWebsiteNavItem']){
+							return true;
+						}
+                        else if(overModel.data['isSection']){
+							if(overModel.parentNode.data['isSectionRoot']){
+								return true;
+							}
                         }
                         return false;
                     },
@@ -380,7 +388,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
             rootVisible:false,
             enableDD :true,
             listeners:{
-                'itemclick':function(view, record, item, index, e){
+                'beforeitemexpand':function(node, opts){
+					if(node.data['isWebsite']){
+						if(!node.isExpanded()){
+							node.parentNode.eachChild(function(node){node.collapse(true)});
+							self.expandWebsite(node.data.id.split('_')[1]);
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+				},
+				'itemclick':function(view, record, item, index, e){
                     e.stopEvent();
                     if(record.data['isSection']){
                         self.getArticles(record);

@@ -36,7 +36,7 @@ class WebsiteNavController < Knitkit::ErpApp::Desktop::AppController
     website_nav_item = WebsiteNavItem.new(:title => params[:title])
 
     url = params[:url]
-    if(params[:link_to] != 'Url')
+    if(params[:link_to] != 'url')
       #user wants to see Section so this is needed
       params[:link_to] = 'WebsiteSection' if params[:link_to] == 'website_section'
 

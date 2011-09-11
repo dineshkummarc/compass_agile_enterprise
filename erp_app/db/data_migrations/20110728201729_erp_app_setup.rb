@@ -244,7 +244,7 @@ class ErpAppSetup
     #######################################
     #users
     #######################################
-    admin_indvidual = Individual.find(:first, :conditions => ['current_first_name = ?',"Admin"])
+    admin_indvidual = Individual.where('current_first_name = ?',"Admin").first
     admin_user = User.create(
       :username => "admin",
       :email => "admin@portablemind.com"
@@ -256,7 +256,7 @@ class ErpAppSetup
     admin_user.roles << Role.iid('admin')
     admin_user.save
 
-    truenorth = Organization.find(:first, :conditions => ['description = ?', 'TrueNorth'])
+    truenorth = Organization.where('description = ?', 'TrueNorth').first
     truenorth_user = User.create(
       :username => truenorth.description.downcase,
       :email => "#{truenorth.description.downcase}@gmail.com"

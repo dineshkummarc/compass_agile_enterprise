@@ -111,8 +111,9 @@ module ErpApp
           upload_path = base_path if upload_path == ROOT_NODE
 
           result = upload_file_to_path(upload_path)
-
-          render :json => result
+          
+          #the awesome uploader widget whats this to mime type text, leave it render :inline
+          render :inline => result.to_json
 			  end
 
 			  def expand_directory

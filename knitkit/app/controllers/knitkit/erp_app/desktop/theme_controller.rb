@@ -66,38 +66,48 @@ module Knitkit
           name = params[:name]
 
           theme = get_theme(path)
-          theme.add_file(File.join(path,name), '#Empty File')
+          theme.add_file('#Empty File', File.join(path,name))
 
           render :json => {:success => true}
         end
 
         def upload_file
           result = {}
+          
           upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
-   
-          unless request.env['HTTP_X_FILE_NAME'].blank?
-            contents = request.raw_post
-            name     = request.env['HTTP_X_FILE_NAME']
-          else
-            file_contents = params[:file_data]
-            name = file_contents.original_filename
-            contents = file_contents.respond_to?(:read) ? file_contents.read : File.read(file_contents.path)
-          end
+          name = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data].original_filename : request.env['HTTP_X_FILE_NAME']          
+          data = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data] : request.raw_post
 
           theme = get_theme(upload_path)
-          name = File.join(upload_path,name)
-
           begin
-            theme.add_file(name, contents)
+            theme.add_file(data, File.join(upload_path,name))
             result = {:success => true}
           rescue Exception=>ex
             logger.error ex.message
             logger.error ex.backtrace.join("\n")
             result = {:success => false, :error => "Error uploading #{name}"}
           end
+          
+          #the awesome uploader widget whats this to mime type text, leave it render :inline
+          render :inline => result.to_json
+        end
+        
+        def save_move
+          result          = {}
+          path            = params[:node]
+          new_parent_path = params[:parent_node]
+          new_parent_path = base_path if new_parent_path == ROOT_NODE
+
+          unless File.exists? path
+            result = {:success => false, :msg => 'File does not exists'}
+          else
+            theme_file = get_theme_file(path)
+            theme_file.move(new_parent_path.gsub(Rails.root.to_s,''))
+            result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
+          end
 
           render :json => result
-        end
+			  end
 
         def delete_file
           path = params[:node]
@@ -107,11 +117,14 @@ module Knitkit
             result = {:success => false, :error => "File does not exists"}
           else
             begin
-              name = File.basename(path)
-        
-              theme_file = get_them_file(path)
-              theme_file.destroy
-              result = {:success => true, :error => "#{name} was deleted successfully"}
+              if File.directory? path
+                result = Dir.entries(path) == [".", ".."] ? (FileUtils.rm_rf(path);{:success => true, :error => "Directory deleted."}) : {:success => false, :error => "Directory is not empty."}
+              else
+                name = File.basename(path)
+                theme_file = get_theme_file(path)
+                theme_file.destroy
+                result = {:success => true, :error => "#{name} was deleted successfully"}
+              end
             rescue Exception=>ex
               logger.error ex.message
               logger.error ex.backtrace.join("\n")
@@ -131,9 +144,8 @@ module Knitkit
           unless File.exists? path
             result = {:success => false, :data => {:success => false, :error => 'File does not exists'}}
           else
-            theme_file = get_them_file(path)
-            theme_file.name = name
-            theme_file.save
+            theme_file = get_theme_file(path)
+            theme_file.rename(name)
           end
 
           render :json => result
@@ -150,14 +162,12 @@ module Knitkit
           themes_index = path.index('themes')
           path = path[themes_index..path.length]
           theme_name = path.split('/')[1]
-          theme = site.themes.find_by_theme_id(theme_name)
-
-          theme
+          site.themes.find_by_theme_id(theme_name)
         end
 
-        def get_them_file(path)
+        def get_theme_file(path)
           theme = get_theme(path)
-          path = path.gsub!(RAILS_ROOT,'')
+          path = path.gsub!(Rails.root.to_s,'')
           theme.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
         end
 

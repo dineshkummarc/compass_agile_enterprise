@@ -41,7 +41,7 @@ module ErpApp
 
 				module SingletonMethods
 				  def find_by_user_and_klass(user, klass)
-					AppContainer.find(:first, :conditions => ['user_id = ? and app_container_record_type = ?', user.id, klass.to_s]).app_container_record
+					AppContainer.where('user_id = ? and app_container_record_type = ?', user.id, klass.to_s).first.app_container_record
 				  end
 				end
 

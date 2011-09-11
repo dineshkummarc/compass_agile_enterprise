@@ -12,39 +12,38 @@ class FileAsset < ActiveRecord::Base
     class_inheritable_writer :valid_extensions
   end
   
+  after_create :set_sti
+  after_save   :set_data_file_name
+  
   belongs_to :file_asset_holder, :polymorphic => true
   instantiates_with_sti
 
   has_attached_file :data,
     :url => ":file_url",
     :path => ":file_path",
-    # FIXME fails with a weird file upload error
-  # Tempfile has a name like RackMultipart20090310-22070-hu8w3m-0 which is missing the extension
-  :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
-
-  validates_presence_of :name, :directory
-  validates_uniqueness_of :name, :scope => [:directory]
+    :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
   validates_attachment_presence :data
   validates_attachment_size :data, :less_than => 500.kilobytes
-
+    
+  validates_presence_of :name, :directory
+  validates_uniqueness_of :name, :scope => [:directory]
   validates_each :directory, :name do |record, attr, value|
     record.errors.add attr, 'may not contain consequtive dots' if value =~ /\.\./
   end
-
   validates_format_of :name, :with => /^\w/
-
+  
   class << self
-    def acceptable?(directory, name)
+    def acceptable?(name)
       valid_extensions.include?(::File.extname(name))
     end
 
     def type_for(directory, name)
-      classes = subclasses.uniq
-      classes.detect{ |k| k.acceptable?(directory, name) }.try(:name)
+      classes = all_subclasses.uniq
+      classes.detect{ |k| k.acceptable?(name) }.try(:name)
     end
 
     def type_by_extension(extension)
-      subclasses.detect{ |k| k.valid_extensions.include?(extension) }
+      all_subclasses.detect{ |k| k.valid_extensions.include?(extension) }
     end
 
     def validate_extension(data, file)
@@ -59,7 +58,7 @@ class FileAsset < ActiveRecord::Base
     end
 
     def all_valid_extensions
-      subclasses.map { |k| k.valid_extensions }.flatten.uniq
+      all_subclasses.map { |k| k.valid_extensions }.flatten.uniq
     end
 
     def split_path(path)
@@ -73,21 +72,16 @@ class FileAsset < ActiveRecord::Base
     attributes ||= {}
 
     base_path = attributes.delete(:base_path)
-    type, directory, name, data = attributes.values_at(:type, :directory, :name, :data)
+    @type, directory, name, data = attributes.values_at(:type, :directory, :name, :data)
     base_path ||= data.original_filename if data.respond_to?(:original_filename)
     
     directory, name = FileAsset.split_path(base_path) if base_path and name.blank?
-    #take out RAILS_ROOT
     directory.gsub!(Rails.root.to_s,'')
-    
-    puts directory
-    
-    puts data
-    
-    type ||= FileAsset.type_for(directory, name) if name
+      
+    @type ||= FileAsset.type_for(directory, name) if name
     data = StringIO.new(data) if data.is_a?(String)
-  
-    super attributes.merge(:type => type, :directory => directory, :name => name, :data => data)
+    
+    super attributes.merge(:directory => directory, :name => name, :data => data)
   end
 
   def path
@@ -120,15 +114,44 @@ class FileAsset < ActiveRecord::Base
   def extname
     ::File.extname(data_file_name).gsub(/^\.+/, '')
   end
+  
+  def set_sti
+    update_attribute :type, @type
+  end
+  
+  def set_data_file_name
+    update_attribute :data_file_name, name if data_file_name != name
+  end
+  
+  def rename(new_name)
+    old_name = File.basename(path)
+    path_pieces = path.split('/')
+    path_pieces.delete(path_pieces.last)
+    path_pieces.push(new_name)
+    new_path = path_pieces.join('/')
+    File.rename(path, new_path)
+    self.name = new_name
+    self.save
+  end
+  
+  def move(new_parent_path)
+    full_path = File.join(Rails.root,new_parent_path)
+    FileUtils.mkdir_p full_path unless File.directory? full_path
+    FileUtils.mv(path, full_path)
+    self.directory = new_parent_path
+    self.save
+  end
 
 end
 
 class Image < FileAsset
   self.file_type = :image
-  self.valid_extensions = %w(.jpg .jpeg .gif .png .ico)
+  self.valid_extensions = %w(.jpg .jpeg .gif .png .ico .PNG .JPEG .JPG)
 end
 
 class TextFile < FileAsset
+  self.valid_extensions = %w(.txt .text)
+  
   def data=(data)
     data = StringIO.new(data) if data.is_a?(String)
     super
@@ -151,5 +174,5 @@ end
 
 class Template < TextFile
   self.file_type = :template
-  self.valid_extensions = %w(.erb .haml .liquid)
+  self.valid_extensions = %w(.erb .haml .liquid .builder)
 end

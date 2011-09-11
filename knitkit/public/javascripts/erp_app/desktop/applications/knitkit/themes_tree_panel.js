@@ -39,32 +39,42 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
 
     deleteTheme : function(themeId){
         var self = this;
-        self.initialConfig['centerRegion'].setWindowStatus('Deleting theme...');
-        var conn = new Ext.data.Connection();
-        conn.request({
-            url: '/knitkit/erp_app/desktop/theme/delete',
-            method: 'POST',
-            params:{
-                id:themeId
-            },
-            success: function(response) {
-                var obj =  Ext.decode(response.responseText);
-                if(obj.success){
-                    self.initialConfig['centerRegion'].clearWindowStatus();
-                    self.getStore().load({
-                        node:self.getRootNode()
-                        });
-                }
-                else{
-                    Ext.Msg.alert('Error', 'Error deleting theme');
-                    self.initialConfig['centerRegion'].clearWindowStatus();
-                }
-            },
-            failure: function(response) {
-                self.initialConfig['centerRegion'].clearWindowStatus();
-                Ext.Msg.alert('Error', 'Error deleting theme');
+		Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this theme?', function(btn){
+            if(btn == 'no'){
+                return false;
+            }
+            else
+            if(btn == 'yes')
+            {
+			    self.initialConfig['centerRegion'].setWindowStatus('Deleting theme...');
+		        var conn = new Ext.data.Connection();
+		        conn.request({
+		            url: '/knitkit/erp_app/desktop/theme/delete',
+		            method: 'POST',
+		            params:{
+		                id:themeId
+		            },
+		            success: function(response) {
+		                var obj =  Ext.decode(response.responseText);
+		                if(obj.success){
+		                    self.initialConfig['centerRegion'].clearWindowStatus();
+		                    self.getStore().load({
+		                        node:self.getRootNode()
+		                        });
+		                }
+		                else{
+		                    Ext.Msg.alert('Error', 'Error deleting theme');
+		                    self.initialConfig['centerRegion'].clearWindowStatus();
+		                }
+		            },
+		            failure: function(response) {
+		                self.initialConfig['centerRegion'].clearWindowStatus();
+		                Ext.Msg.alert('Error', 'Error deleting theme');
+		            }
+		        });
             }
         });
+	
     },
 
     exportTheme : function(themeId){

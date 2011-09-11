@@ -98,12 +98,12 @@ class Theme < ActiveRecord::Base
           data = ''
           entry.get_input_stream { |io| data = io.read }
           data = StringIO.new(data) if data.present?
-          theme_file = self.files.find(:first, :conditions => ["name = ?", ::File.basename(name)])
+          theme_file = self.files.where("name = ?", ::File.basename(name)).first
           unless theme_file.nil?
             theme_file.data = data
             theme_file.save
           else
-            self.add_file(File.join(self.path,name), data) rescue next
+            self.add_file(data, File.join(self.path,name)) rescue next
           end
         end
       end
@@ -127,7 +127,7 @@ class Theme < ActiveRecord::Base
   end
 
   def has_template?(directory, name)
-    self.templates.find{|item| item.directory == directory and item.name == name}
+    result = self.templates.find{|item| item.directory == ::File.join(path,directory).gsub(Rails.root.to_s, '') and item.name == name}
   end
 
   class << self
@@ -183,7 +183,7 @@ class Theme < ActiveRecord::Base
           contents.gsub!("<%= static_stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
           File.open(file, 'w+') {|f| f.write(contents) }
         end
-        self.add_file(file, IO.read(file))
+        self.add_file(IO.read(file), file)
       end
     end
   end

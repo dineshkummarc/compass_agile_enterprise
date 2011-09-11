@@ -1,7 +1,7 @@
 Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
     var self = this;
     self.module = module;
-	
+		
     this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
         autoDestroy:true,
         allowDownload:false,
@@ -51,5 +51,17 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         title:'File Assets',
         items: [this.fileTreePanel]
     });
+
+	this.selectWebsite = function(websiteId){
+		this.fileTreePanel.extraPostData = {website_id:websiteId};
+		this.fileTreePanel.getStore().setProxy({
+			type: 'ajax',
+            url:'/knitkit/erp_app/desktop/file_assets/expand_directory',
+			extraParams:{
+				website_id:websiteId
+			}
+		});
+		this.fileTreePanel.getStore().load();
+	}
 }
 

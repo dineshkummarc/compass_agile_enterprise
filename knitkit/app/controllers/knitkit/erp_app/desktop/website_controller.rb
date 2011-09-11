@@ -7,7 +7,7 @@ class WebsiteController < Knitkit::ErpApp::Desktop::AppController
   before_filter :set_website, :only => [:export, :website_publications, :set_viewing_version, :activate_publication, :publish, :update, :delete]
   
   def index
-    render :inline => {:sites => Website.all}.to_json
+    render :json => {:sites => Website.all}
   end
 
   def website_publications

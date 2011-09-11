@@ -15,33 +15,22 @@ ActionView::Base.class_eval do
   def render_content(permalink)
     content = Content.find_by_permalink(permalink.to_s)
     content_version = Content.get_published_version(@active_publication, content)
-    body_html = content.body_html.nil? ? '' : content.body_html
-    
-    body_html
+    content.body_html.nil? ? '' : content.body_html
   end
 
   def render_content_area(name)
     html = ''
     
-    section_contents = WebsiteSectionContent.find(:all,
-      :joins => :content,
-      :conditions => {
-        :website_section_id => @website_section.id,
-        :content_area => name.to_s },
-      :order => :position )
-      
+    section_contents = WebsiteSectionContent.joins(:content).where('website_section_id = ? and content_area = ?', @website_section.id, name.to_s).order('position')
     published_contents = []
     section_contents.each do |sc|
       content_version = Content.get_published_version(@active_publication, sc.content)
       published_contents << content_version unless content_version.nil?    
     end
     
-    published_contents.each do |content|
-      body_html = content.body_html.nil? ? '' : content.body_html
-      html << body_html
-    end
-
-    html
+    published_contents.collect do |content|
+      content.body_html.nil? ? '' : content.body_html
+    end.join('')
   end
 
   def render_version_viewing
@@ -64,7 +53,7 @@ ActionView::Base.class_eval do
     if !options.nil? && !options[:name].blank?
       menu = WebsiteNav.find_by_name(options[:name].to_s)
       raise "Menu with name #{options[:name]} does not exist" if menu.nil?
-      if !active_theme.nil? && active_theme.has_template?('templates/menus', "_#{options[:name]}.html.erb")
+      if !active_theme.nil? && active_theme.has_template?('templates/menus/knitkit', "_#{options[:name]}.html.erb")
         render :partial => "menus/knitkit/#{options[:name]}", :locals => {:menu => menu}
       else
         render :partial => "menus/knitkit/default", :locals => {:menu => menu}
