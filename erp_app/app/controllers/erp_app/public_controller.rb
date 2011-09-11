@@ -4,7 +4,7 @@ module ErpApp
 	  def download_file
 		path = params[:path]
 
-		send_file path, :type=>"text/plain"
+		send_file File.join(Rails.root,'public',path), :type=>"text/plain"
 	  end
 	end
 end

@@ -15,7 +15,7 @@ ActionView::Base.class_eval do
   def render_content(permalink)
     content = Content.find_by_permalink(permalink.to_s)
     content_version = Content.get_published_version(@active_publication, content)
-    content.body_html.nil? ? '' : content.body_html
+    raw content.body_html.nil? ? '' : content.body_html
   end
 
   def render_content_area(name)
@@ -28,9 +28,11 @@ ActionView::Base.class_eval do
       published_contents << content_version unless content_version.nil?    
     end
     
-    published_contents.collect do |content|
+    html = published_contents.collect do |content|
       content.body_html.nil? ? '' : content.body_html
     end.join('')
+
+    raw html
   end
 
   def render_version_viewing
@@ -45,7 +47,7 @@ ActionView::Base.class_eval do
       end
     end
 
-    html
+    raw html
   end
 
   def render_menu(contents, options=nil)

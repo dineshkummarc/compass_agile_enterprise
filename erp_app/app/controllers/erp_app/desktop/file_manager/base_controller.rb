@@ -169,13 +169,14 @@ module ErpApp
 			  def build_tree_for_directory(directory, options={})
           files_folders = Dir.entries(directory).reject{|file| file =~ REMOVE_FILES_REGEX}.map{|file|
             leaf = !File.directory?(directory + '/' + file)
-
+	    path = (directory + '/' + file).gsub('//', '/')
+            downloadPath = path.gsub(File.join(Rails.root.to_s,'public'),'')
             if File.directory?(directory + '/' + file)
-              {:text => file, :leaf => leaf, :id => (directory + '/' + file).gsub('//', '/')}
+              {:text => file, :leaf => leaf, :id => path, :downloadPath => downloadPath}
             elsif !options[:included_file_extensions_regex].nil? && file =~ options[:included_file_extensions_regex]
-              {:text => file, :leaf => leaf, :id => (directory + '/' + file).gsub('//', '/')}
+              {:text => file, :leaf => leaf, :id => path, :downloadPath => downloadPath}
             elsif options[:included_file_extensions_regex].nil?
-              {:text => file, :leaf => leaf, :id => (directory + '/' +file).gsub('//', '/')}
+              {:text => file, :leaf => leaf, :id => path, :downloadPath => downloadPath}
             end
           } if File.directory?(directory)
           

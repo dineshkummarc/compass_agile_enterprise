@@ -8,7 +8,7 @@ module Knitkit
           content = Content.find(id)
           content.body_html = html
     
-          render :json => content.save ? {success => true} : {success => false}
+          render :json => content.save ? {:success => true} : {:success => false}
         end
 
         def save_excerpt
@@ -18,7 +18,7 @@ module Knitkit
           content = Content.find(id)
           content.excerpt_html = html
         
-          render :json => content.save ? {success => true} : {success => false}
+          render :json => content.save ? {:success => true} : {:success => false}
         end
       end
     end
