@@ -127,7 +127,7 @@ class Theme < ActiveRecord::Base
   end
 
   def has_template?(directory, name)
-    self.templates.find{|item| item.directory == directory and item.name == name}
+    self.templates.find{|item| item.directory == ::File.join(path,directory).gsub(Rails.root, '') and item.name == name}
   end
 
   class << self

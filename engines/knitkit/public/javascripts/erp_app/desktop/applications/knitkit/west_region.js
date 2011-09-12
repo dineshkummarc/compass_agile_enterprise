@@ -325,10 +325,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                 },
                 listeners:{
                     'beforedrop':function(node, data, overModel, dropPosition,dropFunction,options){
-                        if(overModel.data['isWebsiteNavItem'] || overModel.data['isSection']){
-                            if((overModel.parentNode.data['isSectionRoot'])){
-                                return true;
-                            }
+					    if(overModel.data['isWebsiteNavItem']){
+							return true;
+						}
+                        else if(overModel.data['isSection']){
+							if(overModel.parentNode.data['isSectionRoot']){
+								return true;
+							}
                         }
                         return false;
                     },
