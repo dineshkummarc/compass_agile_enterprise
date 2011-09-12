@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
 
-  mount ErpApp::Engine => "/erp_app"
+  mount ErpAgreements::Engine => "/erp_agreements"
 end

@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require *Rails.groups(:assets) if defined?(Bundler)
-require "erp_app"
+require "erp_agreements"
 
 module Dummy
   class Application < Rails::Application

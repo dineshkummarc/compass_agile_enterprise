@@ -1,0 +1,1 @@
+require 'erp_inventory/extensions/active_record/acts_as_inventory_entry'
