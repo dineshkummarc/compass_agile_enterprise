@@ -1,0 +1,4 @@
+require 'erp_work_effort/extensions/active_record/acts_as_project_effort'
+require 'erp_work_effort/extensions/active_record/acts_as_project_requirement'
+require 'erp_work_effort/extensions/active_record/acts_as_support_effort'
+require 'erp_work_effort/extensions/active_record/acts_as_support_requirement'
