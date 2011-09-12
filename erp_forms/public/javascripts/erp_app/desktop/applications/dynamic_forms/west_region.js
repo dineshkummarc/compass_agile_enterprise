@@ -122,7 +122,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
             url: '/erp_forms/erp_app/desktop/dynamic_forms/forms/get',
             method: 'POST',
             params:{
-                id:formId
+                id:record.get('formId')
             },
             success: function(response) {
                 self.initialConfig['centerRegion'].editSectionLayout(

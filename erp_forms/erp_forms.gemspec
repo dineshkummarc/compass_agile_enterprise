@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
   s.version = "0.0.1"
   s.add_development_dependency("rspec-rails", "~> 2.5")
-#  s.add_dependency('dynamic_attributes')
+  s.add_dependency('dynamic_attributes','1.2.0')
 end

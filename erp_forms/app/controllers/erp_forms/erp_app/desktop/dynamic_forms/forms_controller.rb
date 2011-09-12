@@ -53,12 +53,12 @@ class ErpForms::ErpApp::Desktop::DynamicForms::FormsController < ErpForms::ErpAp
 
   # get a single form
   def get    
-    form = DynamicForm.get_form(params[:model_name], params[:internal_identifier]).to_extjs_formpanel(
+    form = DynamicForm.find(params[:id]).to_extjs_formpanel(
                 { :url => "/erp_forms/erp_app/desktop/dynamic_forms/data/#{params[:form_action]}",
                   :record_id => params[:id]
                 })
 
-    render :inline => form
+    render :json => form
   end
 
   # delete dynamic form

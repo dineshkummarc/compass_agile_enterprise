@@ -28,41 +28,25 @@ class DynamicForm < ActiveRecord::Base
   # returns an array of hashes
   def definition_object
     o = JSON.parse(self.definition)
-    o.map! do |i|
+    o.map do |i|
       i = i.symbolize_keys
     end
-    
-    o
   end
   
   def definition_with_validation
-    def_object = add_validation(self.definition_object)
-    definition_with_validation = post_json_strip_validator_quotes(def_object.to_json)
+    add_validation(self.definition_object)
   end
   
   def add_validation(def_object)
     def_object.each do |item|      
       if item[:validator_function] and item[:validator_function] != ""
-        item[:validator] = "function(v){ regex = this.initialConfig.validation_regex; return #{item[:validator_function]}; }"
-      elsif item[:validation_regex]  and item[:validation_regex] != ""
-        item[:validator] = "function(v){ return validate_regex(v, this.initialConfig.validation_regex); }"
+        item[:validator] = NonEscapeJsonString.new("function(v){ regex = this.initialConfig.validation_regex; return #{item[:validator_function]}; }")
+      elsif item[:validation_regex] and item[:validation_regex] != ""
+        item[:validator] = NonEscapeJsonString.new("function(v){ return validate_regex(v, this.initialConfig.validation_regex); }")
       end
     end
     
     def_object
-  end
-  
-  # we must convert the validator function value from a string to a function
-  def post_json_strip_validator_quotes(json)
-    # remove quotes from validator
-    regex = Regexp.new('\"validator\":\"(.+)\(v\)\{(.+)\}\"')
-    json = json.gsub(regex){ |match|
-      r = Regexp.new(':\"')
-      match.gsub!(r,':')
-      r = Regexp.new('\"$')
-      match.gsub!(r,'')
-    }
-    json
   end
   
   # check field against form definition to see if field still exists
@@ -81,61 +65,54 @@ class DynamicForm < ActiveRecord::Base
   end
   
   def to_extjs_formpanel(options={})    
-    javascript = "{
-              \"xtype\": \"form\",
-              \"id\": \"dynamic_form_panel\",
-              \"url\":\"#{options[:url]}\",
-              \"title\": \"#{self.description}\","
-
-    javascript += "\"width\": #{options[:width]}," if options[:width]
-
-    javascript += "\"frame\": true,
-              \"bodyStyle\":\"padding: 5px 5px 0;\",
-              \"baseParams\": {"
-                
-    javascript += "  \"id\": #{options[:record_id]}," if options[:record_id]
-              
-    javascript += "  \"dynamic_form_id\": #{self.id},
-                \"dynamic_form_model_id\": #{self.dynamic_form_model_id},
-                \"model_name\": \"#{self.model_name}\"
-              },
-              \"items\": #{definition_with_validation},
-              \"listeners\": {
-                  \"afterrender\": function(form) {
-                      Ext.getCmp('dynamic_form_panel').getComponent(0).focus(false);
-                  }
-              },
-              \"buttons\": [{
-                  \"text\": \"Submit\",
-                  \"listeners\":{
-                      \"click\":function(button){
-                          var formPanel = Ext.getCmp('dynamic_form_panel');
-                          formPanel.getForm().submit({
-                              reset:true,
-                              success:function(form, action){
-                                  Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
-                                  if (Ext.getCmp('DynamicFormDataGridPanel')){
-                                      Ext.getCmp('DynamicFormDataGridPanel').query('shared_dynamiceditablegrid')[0].store.load();                                                                      
-                                  }
-                              },
-                              failure:function(form, action){
-                                Ext.Msg.alert(action.response.responseText);                                
-                              }
-                          });
+    form_hash = {
+      :xtype => 'form',
+      :id => 'dynamic_form_panel',
+      :url => options[:url],
+      :title => self.description,
+      :frame => true,
+      :bodyStyle => 'padding: 5px 5px 0;'
+    }
+    
+    form_hash[:width] = options[:width] if options[:width]
+    form_hash[:baseParams] = {}
+    form_hash[:baseParams][:id] = options[:record_id] if options[:record_id]
+    form_hash[:baseParams][:dynamic_form_id] = self.id
+    form_hash[:baseParams][:dynamic_form_model_id] = self.dynamic_form_model_id
+    form_hash[:baseParams][:model_name] = self.model_name
+    form_hash[:listeners] = {:afterrender => NonEscapeJsonString.new("function(form) {Ext.getCmp('dynamic_form_panel').getComponent(0).focus(false);}")}
+    form_hash[:items] = definition_with_validation
+    form_hash[:buttons] = []
+    form_hash[:buttons][0] = {
+      :text => 'Submit',
+      :listeners => NonEscapeJsonString.new("{
+          \"click\":function(button){
+              var formPanel = Ext.getCmp('dynamic_form_panel');
+              formPanel.getForm().submit({
+                  reset:true,
+                  success:function(form, action){
+                      Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
+                      if (Ext.getCmp('DynamicFormDataGridPanel')){
+                          Ext.getCmp('DynamicFormDataGridPanel').query('shared_dynamiceditablegrid')[0].store.load();                                                                      
                       }
+                  },
+                  failure:function(form, action){
+                    Ext.Msg.alert(action.response.responseText);                                
                   }
-                  
-              },{
-                  \"text\": \"Cancel\",
-                  \"listeners\":{
-                      \"click\":function(button){
-                          Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
-                      }
-                  }
-              }]
-          }"
-#      logger.info javascript
-    javascript    
+              });
+          }
+      }")
+    }
+    form_hash[:buttons][1] = {
+      :text => 'Cancel',
+      :listeners => NonEscapeJsonString.new("{
+          \"click\":function(button){
+              Ext.getCmp('dynamic_form_panel').findParentByType('window').close();
+          }
+      }")
+    }
+      
+    form_hash   
   end
   
   # convert form definition to ExtJS form
