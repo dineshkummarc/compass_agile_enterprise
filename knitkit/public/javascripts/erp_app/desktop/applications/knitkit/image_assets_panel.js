@@ -21,8 +21,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
             '<div class="thumb-wrap" id="{name}">',
             '<div class="thumb"><img src="{url}" class="thumb-img"></div>',
             '<span>{shortName}</span></div>',
-            '</tpl>'
-            )
+            '</tpl>')
     });
 
     this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
@@ -30,6 +29,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
         viewConfig:{
             loadMask: false
         },
+		rootText:'Images',
         autoDestroy:true,
         allowDownload:false,
         addViewContentsToContextMenu:false,

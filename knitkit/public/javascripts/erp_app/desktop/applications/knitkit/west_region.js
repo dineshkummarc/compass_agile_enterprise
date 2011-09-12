@@ -61,7 +61,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
     exportSite : function(id){
         var self = this;
         self.setWindowStatus('Exporting theme...');
-        window.open('/erp_app/desktop/knitkit/erp_app/desktop/site/export?id='+id,'mywindow','width=400,height=200');
+        window.open('/knitkit/erp_app/desktop/site/export?id='+id,'mywindow','width=400,height=200');
         self.clearWindowStatus();
     },
 

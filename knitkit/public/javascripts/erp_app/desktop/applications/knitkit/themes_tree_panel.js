@@ -80,7 +80,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
     exportTheme : function(themeId){
         var self = this;
         self.initialConfig['centerRegion'].setWindowStatus('Exporting theme...');
-        window.open('/erp_app/desktop/knitkit/erp_app/desktop/theme/export?id='+themeId,'mywindow','width=400,height=200');
+        window.open('/knitkit/erp_app/desktop/theme/export?id='+themeId,'mywindow','width=400,height=200');
         self.initialConfig['centerRegion'].clearWindowStatus();
     },
   

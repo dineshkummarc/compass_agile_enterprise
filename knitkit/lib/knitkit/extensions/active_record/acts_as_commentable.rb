@@ -9,11 +9,7 @@ module Knitkit
         module ClassMethods
 
           def acts_as_commentable
-            has_many :comments, :as => :commented_record, :dependent => :destroy do
-              def limit(limit)
-                find(:all, :limit => limit)
-              end
-            end
+            has_many :comments, :as => :commented_record, :dependent => :destroy
 
             extend ActsAsCommentable::SingletonMethods
             include ActsAsCommentable::InstanceMethods

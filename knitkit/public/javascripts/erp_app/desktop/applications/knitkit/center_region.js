@@ -177,7 +177,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         });
     },
 
-    editExcerpt : function(title, id, content, siteId){
+    editExcerpt : function(title, id, content, siteId, contentGridStore){
         var self = this;
         var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
@@ -203,7 +203,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             },
             listeners:{
                 'save':function(ckEditor, content){
-                    self.saveExcerpt(id, content)
+                    self.saveExcerpt(id, content);
+					contentGridStore.load();
                 }
             }
         });
@@ -288,7 +289,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         this.workArea.setActiveTab(this.workArea.items.length - 1);
     },
 
-    editContent : function(title, id, content, siteId, contentType){
+    editContent : function(title, id, content, siteId, contentType, contentGridStore){
         var self = this;
         var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
@@ -314,7 +315,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             },
             listeners:{
                 'save':function(ckEditor, content){
-                    self.saveContent(id, content, contentType)
+                    self.saveContent(id, content, contentType);
+					contentGridStore.load();
                 }
             }
         });
@@ -355,10 +357,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         var cardPanel = activeTab.query('panel')[0];
         cardPanel.removeAll(true);
         cardPanel.add({
-            disableToolbar:true,
-            xtype:'codemirror',
-            parser:'dummy',
-            sourceCode:comment
+            xtype:'panel',
+			html:comment
         });
         cardPanel.getLayout().setActiveItem(0);
     },

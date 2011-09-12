@@ -192,7 +192,7 @@ class Website < ActiveRecord::Base
 
     files.uniq!
 
-    returning(tmp_dir + "#{name}.zip") do |file_name|
+    (tmp_dir + "#{name}.zip").tap do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
         files.each { |file| zip.add(file[:name], file[:path]) if ::File.exists?(file[:path]) }
@@ -205,7 +205,7 @@ class Website < ActiveRecord::Base
   class << self
     def make_tmp_dir
       random = Time.now.to_i.to_s.split('').sort_by { rand }
-      returning Pathname.new(Rails.root + "/tmp/website_export/tmp_#{random}/") do |dir|
+      Pathname.new(Rails.root + "/tmp/website_export/tmp_#{random}/").tap do |dir|
         FileUtils.mkdir_p(dir) unless dir.exist?
       end
     end
@@ -214,7 +214,7 @@ class Website < ActiveRecord::Base
       message = ''
       success = true
 
-      file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
+      file = ActionController::UploadedTempfile.new("uploaded-theme").tap do |f|
         f.write file.read
         f.original_filename = file.original_filename
         f.read # no idea why we need this here, otherwise the zip can't be opened

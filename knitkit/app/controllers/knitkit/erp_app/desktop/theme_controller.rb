@@ -29,8 +29,9 @@ module Knitkit
             end
             theme.save
           end
-   
-          render :json => {:success => true}
+          
+          #issue with chrome and response headers leave it render :inline
+          render :inline => {:success => true}.to_json
         end
 
         def delete

@@ -216,7 +216,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
                 tooltip:'Edit',
                 handler :function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
-                    self.initialConfig['centerRegion'].editContent(rec.get('title'), rec.get('id'), rec.get('body_html'), grid.ownerCt.initialConfig.siteId, grid.ownerCt.initialConfig.contentType);
+                    self.initialConfig['centerRegion'].editContent(rec.get('title'), rec.get('id'), rec.get('body_html'), grid.ownerCt.initialConfig.siteId, grid.ownerCt.initialConfig.contentType, grid.ownerCt.getStore());
                 }
             }]
         },
@@ -543,7 +543,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
                     tooltip:'Edit',
                     handler :function(grid, rowIndex, colIndex){
                         var rec = grid.getStore().getAt(rowIndex);
-                        self.initialConfig['centerRegion'].editExcerpt(rec.get('title') + ' - Excerpt', rec.get('id'), rec.get('excerpt_html'), self.initialConfig.siteId);
+                        self.initialConfig['centerRegion'].editExcerpt(rec.get('title') + ' - Excerpt', rec.get('id'), rec.get('excerpt_html'), self.initialConfig.siteId, self.getStore());
                     }
                 }]
             }]

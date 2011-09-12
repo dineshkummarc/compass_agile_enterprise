@@ -3,7 +3,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
     self.module = module;
 		
     this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
-        autoDestroy:true,
+		autoDestroy:true,
         allowDownload:false,
         addViewContentsToContextMenu:false,
         rootVisible:true,

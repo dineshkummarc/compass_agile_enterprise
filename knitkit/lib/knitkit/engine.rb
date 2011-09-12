@@ -1,6 +1,8 @@
 require 'nokogiri'
 require 'permalink_fu'
 require 'acts-as-taggable-on'
+require 'zip/zip'
+require 'zip/zipfilesystem'
 
 module Knitkit
   class Engine < Rails::Engine

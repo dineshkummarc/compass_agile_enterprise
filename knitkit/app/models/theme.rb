@@ -20,14 +20,14 @@ class Theme < ActiveRecord::Base
     def import(file, website)
       name = file.original_filename.to_s.gsub(/(^.*(\\|\/))|(\.zip$)/, '').gsub(/[^\w\.\-]/, '_')
       return false unless valid_theme?(file)
-      returning Theme.create(:name => name, :website => website) do |theme|
+      Theme.create(:name => name, :website => website).tap do |theme|
         theme.import(file)
       end
     end
 
     def make_tmp_dir
       random = Time.now.to_i.to_s.split('').sort_by { rand }
-      returning Pathname.new(Rails.root + "/tmp/themes/tmp_#{random}/") do |dir|
+      Pathname.new(Rails.root.to_s + "/tmp/themes/tmp_#{random}/").tap do |dir|
         FileUtils.mkdir_p(dir) unless dir.exist?
       end
     end
@@ -80,7 +80,7 @@ class Theme < ActiveRecord::Base
   end
   
   def import(file)
-    file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
+    file = ActionController::UploadedTempfile.new("uploaded-theme").tap do |f|
       f.write file.read
       f.original_filename = file.original_filename
       f.read # no idea why we need this here, otherwise the zip can't be opened
@@ -112,10 +112,10 @@ class Theme < ActiveRecord::Base
 
   def export
     tmp_dir = Theme.make_tmp_dir
-    returning(tmp_dir + "#{name}.zip") do |file_name|
+    (tmp_dir + "#{name}.zip").tap do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
-        theme_path = self.path.gsub(Rails.root, '')
+        theme_path = self.path.gsub(Rails.root.to_s, '')
         files.each {|file|
           name = file.base_path.gsub(theme_path + '/','')
           zip.add(name, file.path) if ::File.exists?(file.path)
