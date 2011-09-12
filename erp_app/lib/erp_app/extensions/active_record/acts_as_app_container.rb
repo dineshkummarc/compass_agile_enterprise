@@ -59,8 +59,7 @@ module ErpApp
 				  end
 
 				  def destroy_app_container
-					if self.app_container && !self.app_container.frozen?
-					  self.app_container.destroy
+					  self.app_container.destroy if (self.app_container && !self.app_container.frozen?)
 					end
 				  end
 

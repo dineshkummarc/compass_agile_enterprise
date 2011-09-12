@@ -46,7 +46,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.OrdersGridPanel",{
             autoLoad: true,
             proxy:{
                 type:'ajax',
-                url: './order_manager',
+                url: '/erp_orders/erp_app/desktop/order_manager',
                 reader:{
                     type:'json',
                     root: 'orders'

@@ -18,7 +18,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.PaymentsGridPanel",
         var store = Ext.create("Ext.data.Store",{
             proxy:{
                 type:'ajax',
-                url: '/erp_app/desktop/order_manager/payments',
+                url: '/erp_orders/erp_app/desktop/order_manager/payments',
                 reader:{
                     type:'json',
                     root: 'payments',

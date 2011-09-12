@@ -11,7 +11,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrdersGridPane
             {
                 var conn = new Ext.data.Connection();
                 conn.request({
-                    url: '/erp_app/desktop/order_manager/delete/'+rec.get('id'),
+                    url: '/erp_orders/erp_app/desktop/order_manager/delete/'+rec.get('id'),
                     success: function(response) {
                         var obj =  Ext.util.JSON.decode(response.responseText);
                         if(obj.success){
@@ -45,7 +45,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.OrderManagement.OrdersGridPane
         var store = Ext.create("Ext.data.Store",{
             proxy:{
                 type:'ajax',
-                url: '/erp_app/desktop/order_manager',
+                url: '/erp_orders/erp_app/desktop/order_manager',
                 reader:{
                     type:'json',
                     root: 'orders'

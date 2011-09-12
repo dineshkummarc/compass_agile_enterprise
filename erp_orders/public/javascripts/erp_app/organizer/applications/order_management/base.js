@@ -76,7 +76,7 @@ Compass.ErpApp.Organizer.Applications.OrderManagement.Base = function(config){
     Compass.ErpApp.Organizer.Applications.OrderManagement.loadExtensions();
 
     var treeMenuStore = Ext.create('Compass.ErpApp.Organizer.DefaultMenuTreeStore', {
-        url:'./order_management/menu',
+        url:'/erp_orders/erp_app/organizer/order_management/menu',
         rootText:'Menu',
         rootIconCls:'icon-content'
     });

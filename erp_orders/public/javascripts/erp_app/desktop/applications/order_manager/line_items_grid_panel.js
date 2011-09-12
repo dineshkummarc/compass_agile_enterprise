@@ -17,7 +17,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.OrderLineItemsGridP
         var store = Ext.create("Ext.data.Store",{
             proxy:{
                 type:'ajax',
-                url: '/erp_app/desktop/order_manager/line_items',
+                url: '/erp_orders/erp_app/desktop/order_manager/line_items',
                 reader:{
                     type:'json',
                     root: 'lineItems',

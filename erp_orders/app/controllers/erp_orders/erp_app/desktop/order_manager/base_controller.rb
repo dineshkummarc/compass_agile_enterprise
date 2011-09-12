@@ -23,7 +23,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
     order_number = params[:order_number]
 
     if order_id.blank? and party_id.blank? and order_number.blank?
-      orders = OrderTxn.find(:all, :order => "#{sort} #{dir}", :limit => limit, :offset => start)
+      orders = OrderTxn.order("#{sort} #{dir}").limit(limit).offset(start)
       result[:totalCount] = OrderTxn.all.count
     elsif !order_number.blank?
       orders = OrderTxn.find_by_order_number(order_number).nil? ? [] : [OrderTxn.find_by_order_number(order_number)]
@@ -33,12 +33,9 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       result[:totalCount] = orders.count
     elsif !party_id.blank?
       sort = "order_txns.#{sort}"
-      orders = OrderTxn.find(:all,
-        :joins => "join biz_txn_events bte on bte.biz_txn_record_id = order_txns.id and bte.biz_txn_record_type = 'OrderTxn'
-                   join biz_txn_party_roles btpr on btpr.biz_txn_event_id = bte.id and btpr.party_id = #{party_id} and biz_txn_party_role_type_id = #{buyer_role.id}",
-        :order => "#{sort} #{dir}", :limit => limit, :offset => start)
-      result[:totalCount] = OrderTxn.find(:all,
-        :joins => "join biz_txn_events bte on bte.biz_txn_record_id = order_txns.id and bte.biz_txn_record_type = 'OrderTxn'
+      orders = OrderTxn.joins("join biz_txn_events bte on bte.biz_txn_record_id = order_txns.id and bte.biz_txn_record_type = 'OrderTxn'
+                   join biz_txn_party_roles btpr on btpr.biz_txn_event_id = bte.id and btpr.party_id = #{party_id} and biz_txn_party_role_type_id = #{buyer_role.id}").order("#{sort} #{dir}").limit(limit).offset(start)
+      result[:totalCount] = OrderTxn.joins("join biz_txn_events bte on bte.biz_txn_record_id = order_txns.id and bte.biz_txn_record_type = 'OrderTxn'
                    join biz_txn_party_roles btpr on btpr.biz_txn_event_id = bte.id and btpr.party_id = #{party_id} and biz_txn_party_role_type_id = #{buyer_role.id}").count
     end
 
@@ -49,7 +46,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       #get payor party if it exists
       buyer_party_id = nil
       unless order.root_txn.biz_txn_party_roles.empty?
-        buyer_party_id = order.root_txn.biz_txn_party_roles.find(:first, :conditions => ['biz_txn_party_role_type_id = ?', buyer_role.id]).party.id
+        buyer_party_id = order.root_txn.biz_txn_party_roles.where('biz_txn_party_role_type_id = ?', buyer_role.id).first.party.id
       end
 
       result[:orders] << {
@@ -66,7 +63,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       }
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def delete
@@ -78,7 +75,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       result[:success] = false
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def line_items
@@ -87,10 +84,10 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
     limit    = params[:limit] || 10
     start    = params[:start] || 0
 
-    line_items = OrderLineItem.find(:all, :conditions => ['order_txn_id = ?',params[:order_id]], :limit => limit, :offset => start)
+    line_items = OrderLineItem.where('order_txn_id = ?',params[:order_id]).limit(limit).offset(start)
 
     result[:results] = line_items.count
-    result[:totalCount] = OrderLineItem.find(:all, :conditions => ['order_txn_id = ?',params[:order_id]]).count
+    result[:totalCount] = OrderLineItem.count("order_txn_id = #{params[:order_id]}",)
 
     line_items.each do |line_item|
       price = 0
@@ -110,7 +107,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       }
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
   def payments
@@ -136,7 +133,7 @@ class ErpApp::Desktop::OrderManager::BaseController < ErpApp::Desktop::BaseContr
       
     end
 
-    render :inline => result.to_json
+    render :json => result
   end
 
 end
