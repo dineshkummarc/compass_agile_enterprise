@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
   s.version = "0.0.1"
   s.add_development_dependency("rspec-rails", "~> 2.5")
-  s.add_dependency('routing-filter')
-  s.add_dependency('nokogiri')
-  s.add_dependency('rubyzip')
-  s.add_dependency('permalink_fu')
-  s.add_dependency('acts-as-taggable-on')
+  s.add_dependency('routing-filter','0.2.4')
+  s.add_dependency('nokogiri','1.5.0')
+  s.add_dependency('rubyzip','0.9.4')
+  s.add_dependency('permalink_fu','1.0.0')
+  s.add_dependency('acts-as-taggable-on','2.1.1')
 end

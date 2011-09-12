@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   s.version = "0.0.1"
   s.add_development_dependency("rspec-rails", "~> 2.5")
-  s.add_dependency('data_migrator')
-  s.add_dependency('has_many_polymorphic')
-  s.add_dependency('attr_encrypted')
-  s.add_dependency('awesome_nested_set')
+  s.add_dependency('data_migrator','1.5')
+  s.add_dependency('has_many_polymorphic','0.5.0')
+  s.add_dependency('attr_encrypted','1.2.0')
+  s.add_dependency('awesome_nested_set','2.0.2')
 end
