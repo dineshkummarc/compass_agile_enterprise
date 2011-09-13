@@ -86,7 +86,6 @@
           end
     
           if @individual.birth_date != formated_date
-            @user.dob= formated_date
             @individual.birth_date= formated_date
           end
     
@@ -107,7 +106,7 @@
         def update_password
           @user= User.find(current_user)
     
-          if @user.authenticated? params[:old_password]
+          if @user.valid_password? params[:old_password]
             if params[:new_password] != "" && params[:password_confirmation] != "" && params[:new_password] == params[:password_confirmation]
       		
               @user.password= params[:new_password]
