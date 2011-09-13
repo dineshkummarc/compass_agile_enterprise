@@ -76,7 +76,11 @@ class PublishedWebsite < ActiveRecord::Base
     #create new PublishedWebsite with comment
     published_website = PublishedWebsite.new
     published_website.website = self.website
-    published_website.version == (version_increment == 1) ? (self.version = self.version.to_i + version_increment) : (self.version += version_increment)
+    if version_increment == 1
+      published_website.version = (self.version = self.version.to_i + version_increment)
+    else
+      published_website.version = (self.version += version_increment)
+    end
     published_website.comment = comment
     published_website.save
     
