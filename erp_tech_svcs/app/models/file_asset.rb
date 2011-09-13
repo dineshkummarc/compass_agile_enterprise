@@ -23,7 +23,7 @@ class FileAsset < ActiveRecord::Base
     :path => ":file_path",
     :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
   validates_attachment_presence :data
-  validates_attachment_size :data, :less_than => 500.kilobytes
+  validates_attachment_size :data, :less_than => 5.megabytes
     
   validates_presence_of :name, :directory
   validates_uniqueness_of :name, :scope => [:directory]
