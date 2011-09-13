@@ -2,24 +2,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
 	this.websiteId = null;    
 	var self = this;
     self.module = module;
-	
-	var insertDownloadLink = {
-        nodeType:'leaf',
-        text:'Insert link at cursor',
-        iconCls:'icon-add',
-        listeners:{
-            scope:self,
-            'click':function(){
-                var node = this.fileTreePanel.selectedNode;
-                Ext.MessageBox.prompt('Display Name', 'Please enter display name:', function(btn, text){
-                    if(btn == 'ok'){
-                        self.module.centerRegion.insertHtmlIntoActiveCkEditor('<a href="#" onclick="window.open(\'/erp_app/public/download_file/?path='+node.data.downloadPath+'\',\'mywindow\',\'width=400,height=200\');return false;">'+text+'</a>');
-                    }
-                });
-            }
-        }
-    };
-		
+			
     this.sharedFileAssetsTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
         //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
         viewConfig:{loadMask: false},
@@ -32,7 +15,22 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         xhrUploadUrl:'/knitkit/erp_app/desktop/file_assets/shared/upload_file',
         url:'/knitkit/erp_app/desktop/file_assets/shared/expand_directory',
         containerScroll: true,
-        additionalContextMenuItems:[insertDownloadLink],
+        additionalContextMenuItems:[{
+	        nodeType:'leaf',
+	        text:'Insert link at cursor',
+	        iconCls:'icon-add',
+	        listeners:{
+	            scope:self,
+	            'click':function(){
+	                var node = this.sharedFileAssetsTreePanel.selectedNode;
+	                Ext.MessageBox.prompt('Display Name', 'Please enter display name:', function(btn, text){
+	                    if(btn == 'ok'){
+	                        self.module.centerRegion.insertHtmlIntoActiveCkEditor('<a href="#" onclick="window.open(\'/erp_app/public/download_file/?path='+node.data.downloadPath+'\',\'mywindow\',\'width=400,height=200\');return false;">'+text+'</a>');
+	                    }
+	                });
+	            }
+	        }
+	    }],
         listeners:{
             'itemclick':function(view, record, item, index, e){
                 e.stopEvent();
@@ -55,7 +53,22 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
         xhrUploadUrl:'/knitkit/erp_app/desktop/file_assets/website/upload_file',
         url:'/knitkit/erp_app/desktop/file_assets/website/expand_directory',
         containerScroll: true,
-        additionalContextMenuItems:[insertDownloadLink],
+        additionalContextMenuItems:[{
+	        nodeType:'leaf',
+	        text:'Insert link at cursor',
+	        iconCls:'icon-add',
+	        listeners:{
+	            scope:self,
+	            'click':function(){
+	                var node = this.websiteFileAssetsTreePanel.selectedNode;
+	                Ext.MessageBox.prompt('Display Name', 'Please enter display name:', function(btn, text){
+	                    if(btn == 'ok'){
+	                        self.module.centerRegion.insertHtmlIntoActiveCkEditor('<a href="#" onclick="window.open(\'/erp_app/public/download_file/?path='+node.data.downloadPath+'\',\'mywindow\',\'width=400,height=200\');return false;">'+text+'</a>');
+	                    }
+	                });
+	            }
+	        }
+	    }],
         listeners:{
             'itemclick':function(view, record, item, index, e){
                 e.stopEvent();
