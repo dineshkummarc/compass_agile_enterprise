@@ -4,16 +4,19 @@ module Knitkit
       class ImageAssetsController < FileAssetsController
         
         IMAGE_FILE_EXTENSIONS_REGEX = /^.?[^\.]+\.(jpe?g|png|PNG|gif|tiff)$/
-        
-        before_filter :set_website
-        
+      
         def base_path
           @base_path = nil
-          @base_path ||= File.join(Rails.root, "/public", "/sites/site-#{@website.id}", "images") unless @website.nil?
+          if @context == :website
+            @base_path = File.join(Rails.root, "/public", "/sites/site-#{@assets_model.id}", "images") unless @assets_model.nil?
+          else
+            @base_path = File.join(Rails.root, "/public", "images") unless @assets_model.nil?
+          end
         end
 
         def get_images
-          render :json => @website.images.collect{|image|{:name => image.name, :shortName => image.name[0..20], :url => image.url}}
+          directory = (params[:directory] == 'root_node') ? base_path : params[:directory]
+          render :json => @assets_model.images.where("directory = ?", directory.gsub(Rails.root.to_s,'')).collect{|image|{:name => image.name, :shortName => image.name[0..20], :url => image.url}}
         end
         
       end

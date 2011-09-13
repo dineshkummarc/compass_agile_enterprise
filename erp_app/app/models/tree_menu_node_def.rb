@@ -1,21 +1,6 @@
 class TreeMenuNodeDef < ActiveRecord::Base
-
-  # For Rails 2.1: override default of include_root_in_json
-  # (the Ext.tree.TreeLoader cannot use the additional nesting)
-  TreeMenuNodeDef.include_root_in_json = false if TreeMenuNodeDef.respond_to?(:include_root_in_json)
-
   acts_as_nested_set
-
-#***************************************************************************
-# needed for regular nested sets, but we're using the 'better_nested_set'
-# plugin, which provides this functionality with different method names
-#***************************************************************************
-#  def self.root_nodes
-#    self.roots
-#  end
-#  def children_count
-#    children.size
-#  end
+  include ErpTechSvcs::Utils::DefaultNestedSetMethods
 
   def refers_to_ar_class?
     return (self.resource_class != nil) 
@@ -33,7 +18,7 @@ class TreeMenuNodeDef < ActiveRecord::Base
   end
 
   def self.find_menu_roots( menu_short_name )
-    find( :all, :conditions => {:parent_id => nil, :menu_short_name  => menu_short_name})
+    where("parent_id = nil and menu_short_name  = menu_short_name")
   end
 
   def self.find_children(parent_id = nil)
@@ -41,7 +26,7 @@ class TreeMenuNodeDef < ActiveRecord::Base
   end
 
   def leaf
-    unknown? ||  children.size == 0
+    unknown? || children.size == 0
   end
 
   def to_json_with_leaf(options = {})

@@ -1,5 +1,6 @@
 class WorkEffort < ActiveRecord::Base
   acts_as_nested_set
+  include ErpTechSvcs::Utils::DefaultNestedSetMethods
 
   belongs_to :work_effort_record, :polymorphic => true
   belongs_to :facility, :polymorphic => true

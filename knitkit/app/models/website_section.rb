@@ -9,10 +9,8 @@ class WebsiteSection < ActiveRecord::Base
   @@types = ['Page']
   cattr_reader :types
 
-  #was deleting all records. Explore this..
-  #acts_as_nested_set :scope => :website_id if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
-
-  acts_as_nested_set if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
+  acts_as_nested_set #if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
+  include ErpTechSvcs::Utils::DefaultNestedSetMethods
   
   belongs_to :website
   has_many :website_section_contents, :dependent => :destroy

@@ -72,8 +72,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
             root: {
                 text: config['rootText'] || 'Files',
                 id:'root_node',
-                expanded: true,
-				contextMenuDisabled:true
+                expanded: true
             },
             fields:config['fields'] || [{name:'text'},{name:'downloadPath'},{name:'id'},{name:'leaf'}]
         });

@@ -20,7 +20,7 @@ module ErpTechSvcs
 
 			module ClassMethods
 				def find_roots
-					find( :all, :conditions => {:parent_id => nil })
+					where("parent_id = nil")
 				end
 
 				def find_children(parent_id = nil)

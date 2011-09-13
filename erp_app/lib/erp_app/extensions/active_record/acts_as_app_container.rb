@@ -51,17 +51,16 @@ module ErpApp
 				  end
 
 				  def initialize_app_container
-					if self.new_record? && self.app_container.nil?
-					  app_container = AppContainer.new
-					  self.app_container = app_container
-					  app_container.app_container_record = self
-					end
+					  if self.new_record? && self.app_container.nil?
+  					  app_container = AppContainer.new
+  					  self.app_container = app_container
+  					  app_container.app_container_record = self
+  					end
 				  end
 
 				  def destroy_app_container
 					  self.app_container.destroy if (self.app_container && !self.app_container.frozen?)
 					end
-				  end
 
 				  def setup_default_preferences
 					#this should be overidden by the app container itself IE Desktop

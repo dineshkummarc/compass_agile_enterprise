@@ -19,8 +19,8 @@ Knitkit::Engine.routes.draw do
   #Desktop Applications
   #knitkit
   match '/erp_app/desktop/:action' => 'erp_app/desktop/app'
-  match '/erp_app/desktop/image_assets/:action' => 'erp_app/desktop/image_assets'
-  match '/erp_app/desktop/file_assets/:action' => 'erp_app/desktop/file_assets'
+  match '/erp_app/desktop/image_assets/:context/:action' => 'erp_app/desktop/image_assets'
+  match '/erp_app/desktop/file_assets/:context/:action' => 'erp_app/desktop/file_assets'
   #article
   match '/erp_app/desktop/articles/:action/:section_id' => 'erp_app/desktop/articles'
   #content

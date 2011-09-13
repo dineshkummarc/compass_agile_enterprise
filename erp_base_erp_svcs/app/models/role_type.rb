@@ -1,6 +1,6 @@
 class RoleType < ActiveRecord::Base
-  unloadable
   acts_as_nested_set
+  include ErpTechSvcs::Utils::DefaultNestedSetMethods
   acts_as_erp_type
     
   has_many :party_roles

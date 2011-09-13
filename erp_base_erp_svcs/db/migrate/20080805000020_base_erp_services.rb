@@ -1,6 +1,14 @@
 class BaseErpServices < ActiveRecord::Migration
   def self.up
     
+    unless table_exists?(:compass_ae_instances)
+      create_table :compass_ae_instances do |t|
+        t.decimal :version
+        
+        t.timestamps
+      end
+    end
+    
     # Create parties table
     unless table_exists?(:parties)
       create_table :parties do |t|
@@ -452,7 +460,7 @@ class BaseErpServices < ActiveRecord::Migration
       :contacts, :individuals, :organizations, 
       :party_relationships, :relationship_types, :role_types, 
       :party_roles, :parties, :categories, :category_classifications,
-      :descriptive_assets, :view_types, :notes, :note_types, :valid_note_types
+      :descriptive_assets, :view_types, :notes, :note_types, :valid_note_types, :compass_ae_instances
     ].each do |tbl|
       if table_exists?(tbl)
         drop_table tbl

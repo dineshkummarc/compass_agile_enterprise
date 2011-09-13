@@ -2,22 +2,26 @@ module Knitkit
   module ErpApp
     module Desktop
       class FileAssetsController < ::ErpApp::Desktop::FileManager::BaseController
-        before_filter :set_website
+        before_filter :set_asset_model
         
         def base_path
           @base_path = nil
-          @base_path ||= File.join(Rails.root, "/public", "/sites/site-#{@website.id}", "file_assets") unless @website.nil?
+          if @context == :website
+            @base_path = File.join(Rails.root, "/public", "/sites/site-#{@assets_model.id}", "file_assets") unless @assets_model.nil?
+          else
+            @base_path = File.join(Rails.root, "/public", "file_assets") unless @assets_model.nil?
+          end
         end
 
         def expand_directory
-          @website.nil? ? (render :json => []) : expand_file_directory(params[:node], :folders_only => false)
+          @assets_model.nil? ? (render :json => []) : expand_file_directory(params[:node], :folders_only => false)
         end
         
         def create_file
           path = params[:path] == 'root_node' ? base_path : params[:path]
           name = params[:name]
 
-          @website.add_file('#Empty File', File.join(path,name))
+          @assets_model.add_file('#Empty File', File.join(path,name))
 
           render :json => {:success => true}
         end
@@ -29,7 +33,7 @@ module Knitkit
           data = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data] : request.raw_post
           
           begin
-            upload_path == 'root_node' ? @website.add_file(data, File.join(base_path,name)) : @website.add_file(data, upload_path)
+            upload_path == 'root_node' ? @assets_model.add_file(data, File.join(base_path,name)) : @assets_model.add_file(data, upload_path)
             result = {:success => true}
           rescue Exception=>ex
             logger.error ex.message
@@ -51,7 +55,7 @@ module Knitkit
             result = {:success => false, :msg => 'File does not exists'}
           else
             file_asset_path = path.gsub!(Rails.root.to_s,'')
-            file = @website.files.where('name = ? and directory = ?', ::File.basename(file_asset_path), ::File.dirname(file_asset_path)).first
+            file = @assets_model.files.where('name = ? and directory = ?', ::File.basename(file_asset_path), ::File.dirname(file_asset_path)).first
             file.move(new_parent_path.gsub(Rails.root.to_s,''))
             result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
           end
@@ -71,7 +75,7 @@ module Knitkit
               else
                 name = File.basename(path)
                 path = path.gsub!(Rails.root.to_s,'')
-                file = @website.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
+                file = @assets_model.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
                 file.destroy
                 result = {:success => true, :error => "#{name} was deleted successfully"}
               end
@@ -93,7 +97,7 @@ module Knitkit
             result = {:success => false, :data => {:success => false, :error => 'File does not exists'}}
           else
             path = path.gsub!(Rails.root.to_s,'')
-            file = @website.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
+            file = @assets_model.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
             file.rename(name)
           end
 
@@ -102,9 +106,10 @@ module Knitkit
         
         protected
 
-        def set_website
-          @website = params[:website_id].blank? ? nil : Website.find(params[:website_id])
-          ((render :json => {:success => false, :error => "No Website Selected"}) if (@website.nil?)) unless params[:action] = "base_path"
+        def set_asset_model
+          @context = params[:context].to_sym
+          @context == :website ? (@assets_model = params[:website_id].blank? ? nil : Website.find(params[:website_id])) : (@assets_model = CompassAeInstance.first)
+          ((render :inline => {:success => false, :error => "No Website Selected"}.to_json) if (@assets_model.nil?)) if (params[:action] != "base_path" and @context == :website)
         end
   
       end
