@@ -33,17 +33,10 @@ module ErpApp
 					  #:default [symbol which will set to default for preference type]
 					  #:preference_option_iid [the internal identifier for the preference option]
 					  #:value [the value of the preference_option]
-					  if preference_option_lookup == :default
-					    preference_option = preference_type.default_option
-					  end
-
-					  if preference_option.nil?
-					    preference_option = preference_type.preference_options.where('internal_identifier = ?', preference_option_lookup.to_s).first
-					  end
-
-					  if preference_option.nil?
-				 	    preference_option = preference_type.preference_options.find('value = ?', preference_option_lookup.to_s).first
-					  end
+					  
+					  preference_option = preference_type.default_option if preference_option_lookup == :default
+					  preference_option = preference_type.preference_options.where('internal_identifier = ?', preference_option_lookup.to_s).first if preference_option.nil?
+					  preference_option = preference_type.preference_options.where('value = ?', preference_option_lookup.to_s).first if preference_option.nil?
 
 					  if preference_option.nil?
 					    raise 'Invalid option for preference type'

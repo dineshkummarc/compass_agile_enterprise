@@ -5,11 +5,7 @@ class PublishedWebsite < ActiveRecord::Base
   def self.activate(website, version)
     published_websites = where('website_id = ?',website.id).all
     published_websites.each do |published_website|
-      if published_website.version == version
-        published_website.active = true
-      else
-        published_website.active = false
-      end
+      published_website.active = (published_website.version == version) ? true : false
       published_website.save
     end
   end
@@ -51,9 +47,7 @@ class PublishedWebsite < ActiveRecord::Base
     end
 
     #check if we want to auto active this publication
-    if new_publication.website.auto_activate_publication?
-      PublishedWebsite.activate(new_publication.website, new_publication.version)
-    end
+    PublishedWebsite.activate(new_publication.website, new_publication.version) if new_publication.website.auto_activate_publication?
   end
 
   def publish_element(comment, element, version)
@@ -73,9 +67,7 @@ class PublishedWebsite < ActiveRecord::Base
     end
 
     #check if we want to auto active this publication
-    if new_publication.website.auto_activate_publication?
-      PublishedWebsite.activate(new_publication.website, new_publication.version)
-    end
+    PublishedWebsite.activate(new_publication.website, new_publication.version) if new_publication.website.auto_activate_publication?
   end
 
   private
@@ -84,12 +76,7 @@ class PublishedWebsite < ActiveRecord::Base
     #create new PublishedWebsite with comment
     published_website = PublishedWebsite.new
     published_website.website = self.website
-    if version_increment == 1
-      published_website.version = (self.version = self.version.to_i + version_increment)
-    else
-      published_website.version = (self.version += version_increment)
-    end
-
+    published_website = version_increment == 1 ? (self.version = self.version.to_i + version_increment) : (self.version += version_increment)
     published_website.comment = comment
     published_website.save
     
