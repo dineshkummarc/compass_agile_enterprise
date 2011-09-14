@@ -54,7 +54,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
 
     editSectionLayout : function(sectionName, websiteId, websiteSectionId, content, tbarItems){
         var self = this;
-
         var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:sectionName,
@@ -84,8 +83,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 siteId:websiteId
             }
             ]
-        })
-
+        });
 
         this.workArea.add(centerRegionLayout);
         this.workArea.setActiveTab(this.workArea.items.length - 1);
@@ -178,8 +176,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     editExcerpt : function(title, id, content, siteId, contentGridStore){
-        var westRegion = Ext.getCmp('knitkitWestRegion');
-		westRegion.selectWebsite(websiteId);
 		var self = this;
         var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
@@ -187,36 +183,22 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             ckEditorConfig:{
                 extraPlugins:'compasssave,codemirror,jwplayer',
                 toolbar:[
-					{ name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
-					{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
-					{ name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
-					{ name: 'forms', items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
-					'/',
-					{ name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-					{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
-					{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-					{ name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
-					'/',
-					{ name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
-					{ name: 'colors', items : [ 'TextColor','BGColor' ] },
-					{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] }
-				]
-				/*toolbar:[
-                ['Source','-','CompassSave','Preview','-','Templates'],
-                ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
-                ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+				['Source','-','CompassSave','DocProps','Preview','Print','-','Templates'],
+                ['Cut','Copy','Paste','PasteText','PasteFromWord','Undo','Redo'],
+                ['Find','Replace','SpellChecker', 'Scayt','-','SelectAll'],
                 ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
                 '/',
-                ['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+                ['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','RemoveFormat'],
                 ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-                ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+                ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'],
                 ['BidiLtr', 'BidiRtl' ],
                 ['Link','Unlink','Anchor'],
                 ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
                 '/',
+				[ 'Styles','Format','Font','FontSize' ],
                 ['TextColor','BGColor'],
                 ['Maximize', 'ShowBlocks','-','About']
-                ]*/
+                ]
             },
             listeners:{
                 'save':function(ckEditor, content){
@@ -250,7 +232,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             }],
 			listeners:{
 				'activate':function(panel){
-					westRegion.selectWebsite(siteId);
+					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
 				}
 			}
         })
@@ -311,8 +293,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     editContent : function(title, id, content, siteId, contentType, contentGridStore){
-        var westRegion = Ext.getCmp('knitkitWestRegion');
-		westRegion.selectWebsite(siteId);
 		var self = this;
         var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
@@ -372,7 +352,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             ],
 			listeners:{
 				'activate':function(panel){
-					westRegion.selectWebsite(siteId);
+					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
 				}
 			}
         });
@@ -423,8 +403,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     viewWebsiteInquiries : function(websiteId, title){
-        var westRegion = Ext.getCmp('knitkitWestRegion');
-		westRegion.selectWebsite(websiteId);
 		var self = this;
         var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',

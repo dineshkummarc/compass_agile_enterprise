@@ -8,18 +8,15 @@
 
         def new
           @website = Website.find_by_host(request.host_with_port)
-          @user = User.create(
-            :first_name => params[:first_name],
-            :last_name => params[:last_name],
+          @user = User.new(
             :email => params[:email],
             :username => params[:username],
             :password => params[:password],
             :password_confirmation => params[:password_confirmation]
           )
           if @user.valid?
-            @user.activated_at = Time.now
             @user.roles << @website.role
-            individual = Individual.create(:current_first_name => @user.first_name, :current_last_name => @user.last_name)
+            individual = Individual.create(:current_first_name => params[:first_name], :current_last_name => params[:last_name])
             @user.party = individual.party
             @user.save
             render :view => :success

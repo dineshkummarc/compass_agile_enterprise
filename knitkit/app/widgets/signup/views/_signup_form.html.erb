@@ -1,6 +1,6 @@
 <div id="<%=widget_result_id%>"></div>
 <div> 
-  <%= form_tag build_widget_url(:new), :remote => true, :html => {:id => 'signup_form'} do %>
+  <%= form_tag build_widget_url(:new), :remote => true, :id => 'signup_form' do %>
     <div class="form_settings">
       <p>
         <span>First Name</span>
@@ -16,7 +16,7 @@
       </p>
       <p>
         <span>Username</span>
-        <%= text_field_tag :login %>
+        <%= text_field_tag :username %>
       </p>
       <p>
         <span>Password</span>
@@ -33,3 +33,13 @@
     </div>
   <% end %>
 </div>
+<script type="text/javascript">
+$('#signup_form').bind('ajaxComplete', function(e, xhr, settings){
+  var response = xhr.responseText;
+  if(response.search('Successful') != -1){
+    $('#<%=widget_result_id%>').html('<div class="sexysuccess">'+response+'</div>');
+  }else{
+    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response+'</div>');
+  }
+});
+</script>

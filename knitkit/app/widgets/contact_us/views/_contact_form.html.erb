@@ -37,8 +37,8 @@
 <script type="text/javascript">
 $('#contact_form').bind('ajaxComplete', function(e, xhr, settings){
   var response = xhr.responseText;
-  if(response.success){
-    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response+'</div>');
+  if(response.search('Thank you') != -1){
+    $('#<%=widget_result_id%>').html('<div class="sexysuccess">'+response+'</div>');
   }else{
     $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response+'</div>');
   }

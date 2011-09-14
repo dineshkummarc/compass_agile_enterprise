@@ -119,14 +119,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 
     editSectionLayout : function(sectionName, sectionId, websiteId){
         var self = this;
-        self.setWindowStatus('Loading section template...');
+        self.selectWebsite(websiteId);
+		self.setWindowStatus('Loading section template...');
         var conn = new Ext.data.Connection();
         conn.request({
             url: '/knitkit/erp_app/desktop/section/get_layout',
             method: 'POST',
-            params:{
-                id:sectionId
-            },
+            params:{id:sectionId},
             success: function(response) {
                 self.initialConfig['centerRegion'].editSectionLayout(
                     sectionName,
@@ -192,12 +191,16 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 
 	selectWebsite : function(websiteId){
 		var node = this.sitesTree.getStore().getNodeById("website_"+websiteId);
-		node.set('iconCls', 'icon-globe');
-		node.commit();
+		if(node.data.iconCls != 'icon-globe'){
+			node.set('iconCls', 'icon-globe');
+			node.commit();
+		}
 		node.parentNode.eachChild(function(child){
 			if(node.data.id != child.data.id){
-				child.set('iconCls', 'icon-globe_disconnected');
-				child.commit();
+				if(child.data.iconCls != 'icon-globe_disconnected'){
+					child.set('iconCls', 'icon-globe_disconnected');
+					child.commit();
+				}
 			}	
 		});
 		Ext.getCmp('knitkitEastRegion').fileAssetsPanel.selectWebsite(websiteId);
@@ -673,7 +676,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 id:sectionId
                                             },
                                             success: function(response) {
-                                                self.clearWindowStatus();
                                                 var obj =  Ext.decode(response.responseText);
                                                 if(obj.success){
                                                     record.data.hasLayout = true;
@@ -685,7 +687,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                                 }
                                             },
                                             failure: function(response) {
-                                                self.clearWindowStatus();
                                                 Ext.Msg.alert('Status', 'Error adding layout.');
                                             }
                                         });

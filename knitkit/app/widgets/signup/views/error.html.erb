@@ -1,8 +1,8 @@
 <div>
   <h1>Please address the following issues</h1>
   <ul>
-    <% @user.errors.collect do |e, m| %>
-      <li><%="#{e.humanize unless e == "base"} #{m}"%></li>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%=msg%></li>
     <% end %>
   </ul>
 </div>

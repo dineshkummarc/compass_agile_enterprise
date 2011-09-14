@@ -115,12 +115,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
 	this.selectWebsite = function(websiteId){
 		this.websiteId = websiteId;
 		this.websiteImageAssetsTreePanel.extraPostData = {website_id:websiteId};
-		this.websiteImageAssetsTreePanel.getStore().setProxy({
-			type: 'ajax',
-            url:'/knitkit/erp_app/desktop/image_assets/website/expand_directory',
-			extraParams:{website_id:websiteId}
-		});
-		this.websiteImageAssetsTreePanel.getStore().load();
+		var store = this.websiteImageAssetsTreePanel.getStore();
+		store.load({params:{website_id:websiteId}});
 		this.websiteImageAssetsDataView.getStore().removeAll();
 	}
 }

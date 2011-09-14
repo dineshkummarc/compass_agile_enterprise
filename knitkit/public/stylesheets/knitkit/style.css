@@ -364,5 +364,9 @@ ul#submenu li a:hover, ul#submenu li.selected a, ul#submenu li.selected a:hover
 
 
 div.sexyerror{
-	background: #FFEBE8 none repeat scroll 0;border: 1px solid #DD3C10;padding: 1em;font-weight: bold;
+	background: #FFEBE8 none repeat scroll 0;border: 1px solid #DD3C10;padding: 1em;font-weight: bold;font:16px;
+}
+
+div.sexysuccess{
+	background: #DDFED1 none repeat scroll 0;border: 1px solid #1FCB4A;padding: 1em;font-weight: bold;font:16px;
 }
