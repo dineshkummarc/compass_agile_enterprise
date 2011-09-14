@@ -12,7 +12,7 @@ module Knitkit
     websites.each do |website|
       website_hash = {
         :text => website.title,
-        :iconCls => 'icon-globe',
+        :iconCls => 'icon-globe_disconnected',
         :id => "website_#{website.id}",
         :leaf => false,
         :url => "http://#{website.hosts.first.host}",

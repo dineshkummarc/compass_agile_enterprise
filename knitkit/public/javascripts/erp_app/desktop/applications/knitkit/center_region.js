@@ -178,7 +178,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     editExcerpt : function(title, id, content, siteId, contentGridStore){
-        var self = this;
+        var westRegion = Ext.getCmp('knitkitWestRegion');
+		westRegion.selectWebsite(websiteId);
+		var self = this;
         var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             value:content,
@@ -245,8 +247,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 collapsible:true,
                 centerRegion:self,
                 siteId:siteId
-            }
-            ]
+            }],
+			listeners:{
+				'activate':function(panel){
+					westRegion.selectWebsite(siteId);
+				}
+			}
         })
 
         this.workArea.add(centerRegionLayout);
@@ -305,7 +311,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     editContent : function(title, id, content, siteId, contentType, contentGridStore){
-        var self = this;
+        var westRegion = Ext.getCmp('knitkitWestRegion');
+		westRegion.selectWebsite(siteId);
+		var self = this;
         var ckEditor = Ext.create("Compass.ErpApp.Shared.CKeditor",{
             autoHeight:true,
             //value:content,
@@ -361,7 +369,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self,
                 siteId:siteId
             }
-            ]
+            ],
+			listeners:{
+				'activate':function(panel){
+					westRegion.selectWebsite(siteId);
+				}
+			}
         });
 
         this.workArea.add(centerRegionLayout);
@@ -410,7 +423,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     },
 
     viewWebsiteInquiries : function(websiteId, title){
-        var self = this;
+        var westRegion = Ext.getCmp('knitkitWestRegion');
+		westRegion.selectWebsite(websiteId);
+		var self = this;
         var centerRegionLayout = Ext.create("Ext.panel.Panel",{
             layout:'border',
             title:title + " Inquiries",
@@ -432,7 +447,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 collapsible:true,
                 centerRegion:self
             }
-            ]
+            ],
+			listeners:{
+				'activate':function(panel){
+					westRegion.selectWebsite(siteId);
+				}
+			}
         });
 
         this.workArea.add(centerRegionLayout);

@@ -15,7 +15,7 @@ module Knitkit
         end
 
         def get_images
-          directory = (params[:directory] == 'root_node') ? base_path : params[:directory]
+          directory = (params[:directory] == 'root_node' or params[:directory].blank?) ? base_path : params[:directory]
           render :json => @assets_model.images.where("directory = ?", directory.gsub(Rails.root.to_s,'')).collect{|image|{:name => image.name, :shortName => image.name[0..20], :url => image.url}}
         end
         

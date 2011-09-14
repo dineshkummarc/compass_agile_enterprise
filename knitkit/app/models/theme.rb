@@ -18,9 +18,11 @@ class Theme < ActiveRecord::Base
     end
 
     def import(file, website)
-      name = file.original_filename.to_s.gsub(/(^.*(\\|\/))|(\.zip$)/, '').gsub(/[^\w\.\-]/, '_')
+      name_and_id = file.original_filename.to_s.gsub(/(^.*(\\|\/))|(\.zip$)/, '')
+      theme_name = name_and_id.split('[').first
+      theme_id = name_and_id.split('[').last.gsub(']','')
       return false unless valid_theme?(file)
-      Theme.create(:name => name, :website => website).tap do |theme|
+      Theme.create(:name => theme_name, :theme_id => theme_id, :website => website).tap do |theme|
         theme.import(file)
       end
     end
@@ -112,7 +114,7 @@ class Theme < ActiveRecord::Base
 
   def export
     tmp_dir = Theme.make_tmp_dir
-    (tmp_dir + "#{name}.zip").tap do |file_name|
+    (tmp_dir + "#{name}[#{theme_id}].zip").tap do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
         theme_path = self.path.gsub(Rails.root.to_s, '')

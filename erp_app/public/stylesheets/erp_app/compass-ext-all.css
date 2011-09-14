@@ -17,6 +17,11 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/globe/globe_16x16.png', sizingMethod='crop');
 }
 
+.icon-globe_disconnected {
+    background-image:url( /images/icons/globe_disconnected/globe_disconnected_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/globe_disconnected/globe_disconnected_16x16.png', sizingMethod='crop');
+}
+
 .icon-data {
     background-image:url( /images/icons/data/data_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/data/data_16x16.png', sizingMethod='crop');
