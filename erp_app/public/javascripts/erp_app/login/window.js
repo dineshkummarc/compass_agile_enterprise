@@ -66,6 +66,8 @@ Ext.define("Compass.ErpApp.Login.Window",{
 				xtype:'combo',
 				fieldLabel:'Login To',
 				allowBlank:false,
+				forceSelection:true,
+				editable:false,
 				id:'loginTo',
 	            name:'loginTo',
 				store:config.appContainers
