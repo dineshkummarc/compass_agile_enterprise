@@ -94,6 +94,17 @@
 	
 	<!-- compass extensions -->
     <%=include_code_mirror%>
+    <style type="text/css"> 
+          .CodeMirror {
+            border: 1px solid #eee;
+          }
+          .CodeMirror-scroll {
+            height: auto;
+            overflow-y: hidden;
+            overflow-x: auto;
+            width: 100%;
+          }
+        </style>
     <%=include_file_upload%>
     <%=setup_js_authentication(@user)%>
     

@@ -69,7 +69,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
                 });
 				
                 self.container.add(queryPanel);
-                self.container.setActiveTab(self.container.items.length - 1);
+                self.container.setActiveTab(queryPanel.id);
 		
                 queryPanel.gridContainer.add(readOnlyDataGrid);
                 queryPanel.gridContainer.getLayout().setActiveItem(0);

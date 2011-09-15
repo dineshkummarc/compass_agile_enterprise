@@ -65,7 +65,10 @@ ActionView::Base.class_eval do
   def include_code_mirror
     resources = ''
 
-    resources << static_javascript_include_tag("/erp_app/codemirror/codemirror.js", "/erp_app/shared/compass_codemirror.js")
+    resources << static_javascript_include_tag("erp_app/codemirror/lib/codemirror.js", 
+                                               "erp_app/shared/compass_codemirror.js")
+    resources << "<link rel=\"stylesheet\" type=\"text/css\" href=\"/javascripts/erp_app/codemirror/lib/codemirror.css\" />"
+    resources << "<link rel=\"stylesheet\" type=\"text/css\" href=\"/javascripts/erp_app/codemirror/theme/default.css\" />"
     
     raw resources
   end

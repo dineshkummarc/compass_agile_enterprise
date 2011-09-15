@@ -36,9 +36,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
         this.gridContainer = tableGridContainer;
         
         var codeMirrorPanel = new Ext.Panel({
-            height:300,
+            height:250,
             region:'north',
             margins : '0 0 0 0',
+			frame:false,
+			border:false,
             autoScroll:true,
             layout:'fit',
             items:[

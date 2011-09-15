@@ -11,42 +11,38 @@
 Ext.ns("Compass.ErpApp.Shared");
 Ext.ns("Compass.ErpApp.Shared.CodeMirrorConfig");
 Ext.apply(Compass.ErpApp.Shared.CodeMirrorConfig, {
-    cssPath: "/javascripts/erp_app/codemirror/",
-    jsPath: "/javascripts/erp_app/codemirror/"
-});
-Ext.apply(Compass.ErpApp.Shared.CodeMirrorConfig, {
     parser: {
         sql: {
-            parserfile: ["contrib/sql/js/parsesql.js"],
-            stylesheet: Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/sql/css/sqlcolors.css"
+			path:'plsql',
+			mode:'text/x-plsql'
         },
         rb:{
-            parserfile: ["contrib/ruby/js/parseruby.js","contrib/ruby/js/tokenizeruby.js"],
-            stylesheet: Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolors.css"
+            path:'ruby',
+			mode:'text/x-ruby'
         },
         rhtml:{
-            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js","contrib/ruby/js/parserubyhtmlmixed.js","contrib/ruby/js/tokenizeruby.js"],
-            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolorshtml.css",Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
+            path:'ruby',
+			mode:'text/x-ruby'
         },
         erb:{
-            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js","contrib/ruby/js/parseruby.js","contrib/ruby/js/parserubyhtmlmixed.js","contrib/ruby/js/tokenizeruby.js"],
-            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "contrib/ruby/css/rubycolorshtml.css",Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
-        },
-        dummy:{
-            parserfile: ["parsedummy.js"]
+          	path:'ruby',
+			mode:'text/x-ruby'
         },
         css: {
-            parserfile: ["parsecss.js"],
-            stylesheet: "/javascripts/erp_app/codemirror/csscolors.css"
+			path:'css',
+			mode:'text/css'
         },
         js: {
-            parserfile: ["tokenizejavascript.js", "parsejavascript.js"],
-            stylesheet: "/javascripts/erp_app/codemirror/jscolors.css"
+			path:'javascript',
+			mode:'text/javascript'
         },
+		yaml:{
+			path:'yaml',
+			mode:'text/x-yaml'
+		},
         html: {
-            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
-            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"]
-            
+            path:'htmlmixed',
+			mode:'text/html'
         }
     }
 });
@@ -116,7 +112,9 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
         }
 
         config = Ext.apply({
-            items: [{
+            layout:'fit',
+			autoScroll:true,
+			items: [{
                 xtype: 'textareafield',
                 readOnly: false,
                 hidden: true,
@@ -138,29 +136,31 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
         var textAreaComp = this.query('textareafield')[0];
         var self = this;
         this.initialConfig.codeMirrorConfig = Ext.apply({
-            content:textAreaComp.getValue(),
-            path: Compass.ErpApp.Shared.CodeMirrorConfig.jsPath,
             height: "100%",
             width: "100%",
-            passDelay: 300,
-            passTime: 35,
-            continuousScanning: 1000,
-            textWrapping: false,
             undoDepth: 3,
-            enterMode:'indent',
             lineNumbers: true,
+			tabMode: "indent",
             onChange: function() {
-                var code = self.codeMirrorInstance.getCode();
+                var code = self.codeMirrorInstance.getValue();
                 textAreaComp.setValue(code);
             }
         },this.initialConfig.codeMirrorConfig);
 		
-        var parserType = this.parser || 'dummy';
-        if(Compass.ErpApp.Utility.isBlank(Compass.ErpApp.Shared.CodeMirrorConfig.parser[parserType])){
-            parserType = 'dummy';
-        }
-        var editorConfig = Ext.applyIf(this.initialConfig.codeMirrorConfig, Compass.ErpApp.Shared.CodeMirrorConfig.parser[parserType]);
-        this.codeMirrorInstance = new CodeMirror.fromTextArea( Ext.getDom(textAreaComp.id).id, editorConfig);
+		//setup parser
+		var parserType = this.parser || 'html';
+		if(Compass.ErpApp.Shared.CodeMirrorConfig.parser[parserType]){
+			parserObj = Compass.ErpApp.Shared.CodeMirrorConfig.parser[parserType];
+			Compass.ErpApp.Utility.JsLoader.load('/javascripts/erp_app/codemirror/mode/'+parserObj.path+'/'+''+parserObj.path+'.js',function(){
+				var editorConfig = Ext.applyIf(self.initialConfig.codeMirrorConfig, {mode:parserObj.mode});
+		        self.codeMirrorInstance = CodeMirror.fromTextArea(Ext.getDom(textAreaComp.id), editorConfig);
+				self.setValue(textAreaComp.getValue());
+			});
+		}
+		else{
+			self.codeMirrorInstance = CodeMirror.fromTextArea( Ext.getDom(textAreaComp.id), self.initialConfig.codeMirrorConfig);
+			self.codeMirrorInstance.setValue(textAreaComp.getValue());
+		}
     },
 
     save : function(){
@@ -168,15 +168,15 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
     },
 
     setValue : function(value){
-        this.codeMirrorInstance.setCode(value);
+        this.codeMirrorInstance.setValue(value);
     },
 
     getValue : function(){
-        return this.codeMirrorInstance.getCode();
+        return this.codeMirrorInstance.getValue();
     },
 
     insertContent : function(value){
-        var currentCode = this.codeMirrorInstance.getCode();
-        this.codeMirrorInstance.setCode(currentCode + value);
+        var currentCode = this.codeMirrorInstance.getValue();
+        this.codeMirrorInstance.setValue(currentCode + value);
     }
 });

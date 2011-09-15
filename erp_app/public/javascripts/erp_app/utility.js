@@ -187,13 +187,13 @@ String.prototype.downcase = function (){
 }
 
 Compass.ErpApp.Utility.JsLoader = {
-    load : function(url,fireOnSuccess) {
-        var ss = document.getElementsByTagName("script");
+    load : function(url, successCallback) {
+        this.successCallBack = successCallback;
+		var ss = document.getElementsByTagName("script");
         for (i = 0;i < ss.length; i++) {
             if (ss[i].src && ss[i].src.indexOf(url) != -1)
             {
-                if (fireOnSuccess)
-                    this.onSuccess();
+                this.onSuccess();
                 return;
             }
         }
@@ -207,14 +207,13 @@ Compass.ErpApp.Utility.JsLoader = {
         {
             if (this.readyState && this.readyState == "loading")
                 return;
-            if (fireOnSuccess)
-                self.onSuccess();
+            self.onSuccess();
         }
         s.onerror = function() {
             head.removeChild(s);
             self.onFailure(); 
         }
     },
-    onSuccess : function() { },
+    onSuccess : function() { this.successCallBack(); },
     onFailure : function() { }
 }
