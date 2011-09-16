@@ -136,8 +136,6 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
         var textAreaComp = this.query('textareafield')[0];
         var self = this;
         this.initialConfig.codeMirrorConfig = Ext.apply({
-            height: "100%",
-            width: "100%",
             undoDepth: 3,
             lineNumbers: true,
 			tabMode: "indent",
@@ -153,13 +151,15 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
 			parserObj = Compass.ErpApp.Shared.CodeMirrorConfig.parser[parserType];
 			Compass.ErpApp.Utility.JsLoader.load('/javascripts/erp_app/codemirror/mode/'+parserObj.path+'/'+''+parserObj.path+'.js',function(){
 				var editorConfig = Ext.applyIf(self.initialConfig.codeMirrorConfig, {mode:parserObj.mode});
-		        self.codeMirrorInstance = CodeMirror.fromTextArea(Ext.getDom(textAreaComp.id), editorConfig);
+		        	self.codeMirrorInstance = CodeMirror.fromTextArea(Ext.getDom(textAreaComp.id), editorConfig);
 				self.setValue(textAreaComp.getValue());
+				self.codeMirrorInstance.setCursor(1);
 			});
 		}
 		else{
 			self.codeMirrorInstance = CodeMirror.fromTextArea( Ext.getDom(textAreaComp.id), self.initialConfig.codeMirrorConfig);
 			self.codeMirrorInstance.setValue(textAreaComp.getValue());
+			self.codeMirrorInstance.setCursor(1);
 		}
     },
 
