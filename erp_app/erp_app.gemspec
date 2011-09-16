@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   
   s.add_dependency "rails", "~> 3.1.0"
-  s.add_dependency('will_paginate','3.0.0')
+  #s.add_dependency('will_paginate','3.0.0')
   
   s.add_development_dependency("rspec-rails", "~> 2.5")
   s.add_development_dependency "sqlite3"
