@@ -186,34 +186,78 @@ String.prototype.downcase = function (){
     return this.toLowerCase();
 }
 
+Compass.ErpApp.Utility.isArray = function(o){
+  return Object.prototype.toString.call(o) === '[object Array]'; 
+}
+
+Compass.ErpApp.Utility.wait = function(ms) {
+	ms += new Date().getTime();
+	while (new Date() < ms){}
+}
+
 Compass.ErpApp.Utility.JsLoader = {
     load : function(url, successCallback) {
-        this.successCallBack = successCallback;
+		this.attempts = 0;
+		this.successCallBack = successCallback;
+		this.scriptsToLoad = [];
+		
+		if(!Compass.ErpApp.Utility.isArray(url)){
+			url = [url];
+		}
+		
+		for(var i=0; i < url.length; i++){
+			this.scriptsToLoad.push({url:url[i], status:'pending'});
+		}
+		
+		for(var t=0; t < this.scriptsToLoad.length; t++){
+			this.loadScript(this.scriptsToLoad[t]);
+		}
+    },
+	
+	allScriptsDone : function(){
+		for(var i=0; i < this.scriptsToLoad.length; i++){
+			if (this.scriptsToLoad[i].status == 'pending')
+				return false;
+		}
+		return true;
+	},
+	
+	scriptDone : function(){
+		if(this.allScriptsDone()){
+			this.onSuccess();
+		}
+	},
+
+	loadScript : function(scriptToLoad){
+		var self = this;
 		var ss = document.getElementsByTagName("script");
         for (i = 0;i < ss.length; i++) {
-            if (ss[i].src && ss[i].src.indexOf(url) != -1)
+            if (ss[i].src && ss[i].src.indexOf(scriptToLoad.url) != -1)
             {
-                this.onSuccess();
-                return;
+                scriptToLoad.status = 'success';
+				self.scriptDone();
+				return;
             }
         }
         var s = document.createElement("script");
         s.type = "text/javascript";
-        s.src = url;
+        s.src = scriptToLoad.url;
         var head = document.getElementsByTagName("head")[0];
         head.appendChild(s);
-        var self = this;
         s.onload = s.onreadystatechange = function()
         {
-            if (this.readyState && this.readyState == "loading")
+			if (this.readyState && this.readyState == "loading")
                 return;
-            self.onSuccess();
+			scriptToLoad.status = 'success';
+			self.scriptDone();
         }
         s.onerror = function() {
             head.removeChild(s);
-            self.onFailure(); 
+            scriptToLoad.status = 'failure';
+			self.scriptDone();
         }
-    },
+	},
+	
     onSuccess : function() { this.successCallBack(); },
     onFailure : function() { }
 }

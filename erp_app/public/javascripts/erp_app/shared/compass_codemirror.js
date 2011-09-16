@@ -36,7 +36,7 @@ Ext.apply(Compass.ErpApp.Shared.CodeMirrorConfig, {
 			path:'javascript',
 			mode:'text/javascript'
         },
-		yaml:{
+		yml:{
 			path:'yaml',
 			mode:'text/x-yaml'
 		},

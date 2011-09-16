@@ -24,26 +24,28 @@
                     editor.getCommand('maximize').setState(CKEDITOR.TRISTATE_DISABLED);
                     editor.getCommand('selectAll').setState(CKEDITOR.TRISTATE_DISABLED);
                     /* http://codemirror.net/manual.html */
-                    var codemirrorInit =
-                    CodeMirror.fromTextArea(
-                        editor.textarea.$, {
-                            stylesheet: [Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "xmlcolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "jscolors.css", Compass.ErpApp.Shared.CodeMirrorConfig.cssPath + "csscolors.css"],
-                            path: Compass.ErpApp.Shared.CodeMirrorConfig.jsPath,
-                            parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
-                            passDelay: 300,
-                            passTime: 35,
-                            continuousScanning: 1000, /* Numbers lower than this suck megabytes of memory very quickly out of firefox */
-                            height: holderHeight,//editor.config.height || holderHeight, /* Adapt to holder height */
-                            textWrapping: false,
-                            lineNumbers: false,
-                            enterMode: 'flat'
-                        }
-                        );
+                    var codemirrorInit = null;
+					Compass.ErpApp.Utility.JsLoader.load([
+						'/javascripts/erp_app/codemirror/mode/xml/xml.js',
+						'/javascripts/erp_app/codemirror/mode/javascript/javascript.js',
+						'/javascripts/erp_app/codemirror/mode/css/css.js',
+						'/javascripts/erp_app/codemirror/mode/htmlmixed/htmlmixed.js',
+						],function(){
+						codemirrorInit =
+	                    CodeMirror.fromTextArea(
+	                        editor.textarea.$, {
+	                            mode:'text/html',
+	                            lineNumbers: true,
+	                            enterMode: 'flat'
+	                        }
+	                        );
+					});
+					
                     // Commit source data back into 'source' mode.
                     editor.on( 'beforeCommandExec', function( e ){
                         // Listen to this event once.
                         e.removeListener();
-                        editor.textarea.setValue( codemirrorInit.getCode() );
+                        editor.textarea.setValue( codemirrorInit.getValue() );
                         editor.fire( 'dataReady' );
                     } );
 
