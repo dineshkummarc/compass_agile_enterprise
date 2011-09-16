@@ -49,8 +49,8 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
             base_path:'/javascripts/ckeditor/',
             toolbarStartupExpanded:false,
             shiftEnterMode:CKEDITOR.ENTER_P,
-            baseFloatZIndex:19062,
-            skin:'office2003',
+            baseFloatZIndex:20000,
+            //skin:'office2003',
             extraPlugins:'codemirror'
         });
         var editor = CKEDITOR.replace(this.inputEl.id, this.initialConfig.ckEditorConfig);
