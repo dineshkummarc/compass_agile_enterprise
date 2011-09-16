@@ -136,7 +136,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                             var codeMirror = btn.findParentByType('codemirror');
                             Ext.MessageBox.prompt('New File', 'Please enter content area name:', function(btn, text){
                                 if(btn == 'ok'){
-                                    codeMirror.setValue(codeMirror.getValue() + '<%=render_content_area(:'+text+')%>');
+									codeMirror.insertContent('<%=render_content_area(:'+text+')%>');
                                 }
 
                             });

@@ -176,7 +176,8 @@ Ext.define("Compass.ErpApp.Shared.CodeMirror",{
     },
 
     insertContent : function(value){
-        var currentCode = this.codeMirrorInstance.getValue();
-        this.codeMirrorInstance.setValue(currentCode + value);
+		var lineNumber = this.codeMirrorInstance.getCursor().line;
+		var lineText = this.codeMirrorInstance.lineInfo(lineNumber).text;
+		this.codeMirrorInstance.setLine(lineNumber,(lineText + value));
     }
 });
