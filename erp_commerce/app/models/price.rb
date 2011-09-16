@@ -3,7 +3,7 @@ class Price < ActiveRecord::Base
   belongs_to  :pricing_plan
   belongs_to  :priced_item, :polymorphic => true
   has_many    :price_components, :dependent => :destroy
-  belongs_to  :money, :class_name => "ErpBaseErpSvcs::Money"
+  belongs_to  :money
 
   alias :components :price_components
 

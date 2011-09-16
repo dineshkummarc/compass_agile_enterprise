@@ -6,7 +6,7 @@ class PricingPlanComponent < ActiveRecord::Base
   has_many   :valid_price_plan_components
   has_many   :pricing_plans, :through => :valid_price_plan_components
   belongs_to :price_component_type
-  belongs_to :currency, :class_name => 'ErpBaseErpSvcs::Currency'
+  belongs_to :currency
   
   def get_price_component( rule_ctx = nil )
     
@@ -21,7 +21,7 @@ class PricingPlanComponent < ActiveRecord::Base
       component_amount = eval(self.pricing_calculation)
     end
 
-    money = ErpBaseErpSvcs::Money.new(:description => self.description, :amount => component_amount, :currency => self.currency)
+    money = Money.new(:description => self.description, :amount => component_amount, :currency => self.currency)
 
     price_component = PriceComponent.new(
       :money => money,

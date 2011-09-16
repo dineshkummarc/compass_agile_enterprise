@@ -8,8 +8,8 @@ module ErpBaseErpSvcs
 
 				module ClassMethods
 				  def acts_as_note_type
-            extend ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsNoteType::SingletonMethods
-  					include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsNoteType::InstanceMethods
+            extend ActsAsNoteType::SingletonMethods
+  					include ActsAsNoteType::InstanceMethods
   					
 					  after_initialize :initialize_note_type
   					after_create :save_note_type

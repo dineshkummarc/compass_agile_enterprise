@@ -98,7 +98,7 @@ class PricingMigrations < ActiveRecord::Migration
 
       end
       add_index :pricing_plan_assignments, :pricing_plan_id
-      add_index :pricing_plan_assignments, [:priceable_item_id,:priceable_item_type]
+      add_index :pricing_plan_assignments, [:priceable_item_id,:priceable_item_type], :name => 'priceable_item_idx'
     end
    
     unless table_exists?(:prices)
@@ -120,7 +120,7 @@ class PricingMigrations < ActiveRecord::Migration
       end
       add_index :prices, :money_id
       add_index :prices, :pricing_plan_id
-      add_index :prices, [:priced_item_id,:priced_item_type]
+      add_index :prices, [:priced_item_id,:priced_item_type], :name => 'priced_item_idx'
     end
 
     unless table_exists?(:price_components)
@@ -141,7 +141,7 @@ class PricingMigrations < ActiveRecord::Migration
       add_index :price_components, :money_id
       add_index :price_components, :pricing_plan_component_id
       add_index :price_components, :price_id
-      add_index :price_components, [:priced_component_id,:priced_component_type]
+      add_index :price_components, [:priced_component_id,:priced_component_type], :name => 'priced_component_idx'
     end
 
   end

@@ -38,7 +38,7 @@ module ErpApp
 
               #get pricing plan and create charge lines
               pricing_plan = product_type.get_current_simple_plan
-              money = ErpBaseErpSvcs::Money.create(
+              money = Money.create(
                 :description => pricing_plan.description,
                 :amount => pricing_plan.money_amount,
                 :currency => pricing_plan.currency)
@@ -233,7 +233,7 @@ module ErpApp
             end
 
             financial_txn = FinancialTxn.create(
-              :money => ErpBaseErpSvcs::Money.create(:description => 'Order Payment', :amount => total_payment, :currency => currency)
+              :money => Money.create(:description => 'Order Payment', :amount => total_payment, :currency => currency)
             )
             financial_txn.description = 'Order Payment'
             financial_txn.txn_type = BizTxnType.iid('payment_txn')

@@ -8,8 +8,8 @@ module ErpBaseErpSvcs
 
 				module ClassMethods
 				  def acts_as_category
-            extend ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsCategory::SingletonMethods
-  					include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsCategory::InstanceMethods
+            extend ActsAsCategory::SingletonMethods
+  					include ActsAsCategory::InstanceMethods
   					
 					  after_initialize :initialize_category
   					after_create :save_category

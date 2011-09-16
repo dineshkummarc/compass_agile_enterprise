@@ -12,8 +12,8 @@ module ErpApp
 					def has_user_preferences()
 						has_many :user_preferences, :as => :preferenced_record
 
-						extend ErpApp::Extensions::ActiveRecord::HasUserPreferences::SingletonMethods
-						include ErpApp::Extensions::ActiveRecord::HasUserPreferences::InstanceMethods
+						extend HasUserPreferences::SingletonMethods
+						include HasUserPreferences::InstanceMethods
 					end
 				end
 

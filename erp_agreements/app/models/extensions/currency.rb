@@ -1,4 +1,4 @@
-ErpBaseErpSvcs::Currency.class_eval do
+Currency.class_eval do
 
 #  refactor for has_many_polymorphic. Not used at the moment
 #

@@ -1,3 +1,3 @@
-require 'erp_products/extensions/acts_as_product_instance'
-require 'erp_products/extensions/acts_as_product_offer'
-require 'erp_products/extensions/acts_as_product_type'
+require 'erp_products/extensions/active_record/acts_as_product_instance'
+require 'erp_products/extensions/active_record/acts_as_product_offer'
+require 'erp_products/extensions/active_record/acts_as_product_type'

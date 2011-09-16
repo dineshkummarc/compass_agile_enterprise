@@ -73,7 +73,7 @@ class VersionsController < Knitkit::ErpApp::Desktop::AppController
       end
 
       def published
-        !PublishedElement.where('published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version).nil?
+        !PublishedElement.where('published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version).first.nil?
       end
     end
 

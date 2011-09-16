@@ -8,7 +8,7 @@ module ErpForms
 
       		module ClassMethods
         		def has_dynamic_data
-      		  	include ErpForms::Extensions::ActiveRecord::HasDynamicData::InstanceMethods		
+      		  	include HasDynamicData::InstanceMethods		
       		  	
       		  	after_save       :save_dynamic_data
       		  	after_initialize :initialize_dynamic_data

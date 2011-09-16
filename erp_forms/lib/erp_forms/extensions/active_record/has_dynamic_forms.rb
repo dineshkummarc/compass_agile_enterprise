@@ -12,7 +12,7 @@ module ErpForms
         		def has_dynamic_forms
   		        attr_accessor :dynamic_form						
         		  
-        		  include ErpForms::Extensions::ActiveRecord::HasDynamicForms::InstanceMethods  
+        		  include HasDynamicForms::InstanceMethods  
 
 				def set_default(form_id)
 				  DynamicForm.update_all({ :default => false }, conditions={ :model_name => self.class_name.to_s })

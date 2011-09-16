@@ -31,7 +31,7 @@ class BaseOrders < ActiveRecord::Migration
       end
 
       add_index :order_txns, :order_txn_type_id
-      add_index :order_txns, [:order_txn_record_id, :order_txn_record_type]
+      add_index :order_txns, [:order_txn_record_id, :order_txn_record_type], :name => 'order_txn_record_idx'
     end
     
     unless table_exists?(:order_txn_types)
@@ -142,7 +142,7 @@ class BaseOrders < ActiveRecord::Migration
         t.timestamps
       end
 
-      add_index :charge_lines, [:charged_item_id, :charged_item_type]
+      add_index :charge_lines, [:charged_item_id, :charged_item_type], :name => 'charged_item_idx'
     end
     
     unless table_exists?(:charge_line_payment_txns)
@@ -155,7 +155,7 @@ class BaseOrders < ActiveRecord::Migration
         t.timestamps
       end
 
-      add_index :charge_line_payment_txns, [:payment_txn_id, :payment_txn_type]
+      add_index :charge_line_payment_txns, [:payment_txn_id, :payment_txn_type], :name => 'payment_txn_idx'
       add_index :charge_line_payment_txns, :charge_line_id
     end
   end

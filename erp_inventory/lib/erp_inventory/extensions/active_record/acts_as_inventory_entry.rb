@@ -1,4 +1,4 @@
-module ErpCommerce
+module ErpInventory
 	module Extensions
 		module ActiveRecord
 			module ActsAsInventoryEntry

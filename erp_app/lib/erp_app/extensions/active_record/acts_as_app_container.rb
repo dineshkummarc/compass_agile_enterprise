@@ -10,8 +10,8 @@ module ErpApp
 				module ClassMethods
 
 				def acts_as_app_container
-					extend ErpApp::Extensions::ActiveRecord::ActsAsAppContainer::SingletonMethods
-					include ErpApp::Extensions::ActiveRecord::ActsAsAppContainer::InstanceMethods
+					extend ActsAsAppContainer::SingletonMethods
+					include ActsAsAppContainer::InstanceMethods
 					
 					after_initialize :initialize_app_container
 					after_create :save_app_container

@@ -56,12 +56,12 @@
           <td>
             <div><img src="<%=product_type.images.empty? ? '/images/img_blank.png' : product_type.images.first.url%>" alt="Product Image" /></div>
             <div>
-              <span><%=link_to_remote product_type.description,:url => build_widget_url(:show, product_type.id)%></span><br/>
+              <span><%=link_to product_type.description, build_widget_url(:show, product_type.id), :remote => true%></span><br/>
               <span><%=product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : product_type.get_current_simple_amount_with_currency%></span>
             </div>
           </td>
           <td><%=product_type.inventory_entries.first.number_available%></td>
-          <td><%=link_to_remote'Add To Cart',:url => build_widget_url(:add_to_cart, product_type.id)%></td>
+          <td><%=link_to 'Add To Cart', build_widget_url(:add_to_cart, product_type.id), :remote => true %></td>
         </tr>
       <%end%>
     </tbody>

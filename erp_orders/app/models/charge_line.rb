@@ -1,7 +1,7 @@
 class ChargeLine < ActiveRecord::Base
   
    belongs_to :charged_item, :polymorphic => true
-   belongs_to :money, :class_name => "ErpBaseErpSvcs::Money", :dependent => :destroy
+   belongs_to :money, :dependent => :destroy
    has_many   :charge_line_payment_txns, :dependent => :destroy
    
    def payment_txns

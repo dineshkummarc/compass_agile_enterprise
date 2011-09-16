@@ -1,4 +1,4 @@
-module ErpApp
+module ErpOrders
 	module Extensions
 		module ActiveRecord
 			module ActsAsOrderTxn

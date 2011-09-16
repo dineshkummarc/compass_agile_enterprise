@@ -15,8 +15,8 @@ module ErpBaseErpSvcs
 							
             # this is at the class level
             # add any class level manipulations you need here, like has_many, etc.
-            extend ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType::ActsAsSingletonMethods
-            include ErpBaseErpSvcs::Extensions::ActiveRecord::ActsAsErpType::ActsAsInstanceMethods
+            extend ActsAsErpType::ActsAsSingletonMethods
+            include ActsAsErpType::ActsAsInstanceMethods
 							
             # find each valid value for the domain type (erp_type) in question
             # we will then create a class method with the name of the internal idenfifier

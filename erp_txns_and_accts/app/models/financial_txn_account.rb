@@ -5,8 +5,8 @@ class FinancialTxnAccount < ActiveRecord::Base
   scope :due, includes([:balance]).where("money.amount != 0")
 
   belongs_to :agreement
-  belongs_to :balance, :class_name => "ErpBaseErpSvcs::Money", :dependent => :destroy
-  belongs_to :payment_due, :class_name => "ErpBaseErpSvcs::Money", :dependent => :destroy
+  belongs_to :balance, :dependent => :destroy
+  belongs_to :payment_due, :dependent => :destroy
   belongs_to :financial_account, :polymorphic => true, :dependent => :destroy
   
   def financial_txns(result_set, options={})

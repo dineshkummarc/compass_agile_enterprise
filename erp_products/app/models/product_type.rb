@@ -8,7 +8,7 @@ class ProductType < ActiveRecord::Base
   
 	belongs_to :product_type_record, :polymorphic => true  
   has_one    :product_instance
-
+  
   def prod_type_relns_to
     ProdTypeReln.where('prod_type_id_to = ?',id)
   end

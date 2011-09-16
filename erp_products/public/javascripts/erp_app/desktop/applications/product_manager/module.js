@@ -86,17 +86,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.ProductDescriptio
                     width:750,
                     extraPlugins:'jwplayer',
                     toolbar:[
-                    ['Source','-','Preview','Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
-                    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-                    ['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
-                    ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-                    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-                    ['BidiLtr', 'BidiRtl' ],
-                    ['Link','Unlink','Anchor'],
-                    ['jwplayer','Flash','HorizontalRule'],
-                    ['Styles','Format','Font','FontSize'],
-                    ['TextColor','BGColor'],
-                    ['Maximize', 'ShowBlocks','-','About']
+                    ['Source','-','CompassSave','Preview','Print','-','Templates',
+				    'Cut','Copy','Paste','PasteText','PasteFromWord','Undo','Redo'],
+				    ['Find','Replace','SpellChecker', 'Scayt','-','SelectAll'],
+					['TextColor','BGColor'],
+					['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','RemoveFormat'],
+					['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
+				    '/',
+				    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'],
+				    ['BidiLtr', 'BidiRtl' ],
+				    ['Link','Unlink','Anchor'],
+				    ['jwplayer','Flash','Table','HorizontalRule',,'SpecialChar','PageBreak',],
+					[ 'Styles','Format','Font','FontSize' ],
+				    ['Maximize', 'ShowBlocks','-','About']
                     ]
                 }
             },

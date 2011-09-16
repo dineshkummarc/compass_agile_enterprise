@@ -3,7 +3,7 @@ class FinancialTxn < ActiveRecord::Base
   acts_as_biz_txn_event
   has_many   :charge_line_payment_txns, :as => :payment_txn,  :dependent => :destroy
   has_many   :charge_lines, :through => :charge_line_payment_txns
-  belongs_to :money, :class_name => "ErpBaseErpSvcs::Money"
+  belongs_to :money
   has_many   :payments
   	
   def authorize(credit_card, gateway_wrapper, gateway_options={})

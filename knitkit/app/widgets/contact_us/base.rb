@@ -79,6 +79,6 @@ module Widgets
           end
         end
         
-      end
-    end
-  end
+      end#Base
+    end#ContactUs
+  end#Widgets

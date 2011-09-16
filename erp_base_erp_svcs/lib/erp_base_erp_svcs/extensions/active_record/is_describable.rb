@@ -12,8 +12,8 @@ module ErpBaseErpSvcs
 					def is_describable
 						has_many :descriptions, :class_name => 'DescriptiveAsset', :as => :described_record, :dependent => :destroy
 					
-						extend ErpBaseErpSvcs::Extensions::ActiveRecord::IsDescribable::SingletonMethods
-						include ErpBaseErpSvcs::Extensions::ActiveRecord::IsDescribable::InstanceMethods
+						extend IsDescribable::SingletonMethods
+						include IsDescribable::InstanceMethods
 																		
 					end
 				end
