@@ -50,7 +50,6 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
             toolbarStartupExpanded:false,
             shiftEnterMode:CKEDITOR.ENTER_P,
             baseFloatZIndex:20000,
-            //skin:'office2003',
             extraPlugins:'codemirror'
         });
         var editor = CKEDITOR.replace(this.inputEl.id, this.initialConfig.ckEditorConfig);
@@ -72,18 +71,18 @@ Ext.define("Compass.ErpApp.Shared.CKeditor",{
                     var displayValue = toolBoxEl.getStyle('display');
                     if(displayValue != 'none'){
                         this.ckEditorInstance.execCommand( 'toolbarCollapse' );
-                        el.style.height = adjHeight - 51 + 'px';
+                        el.style.height = adjHeight - 70 + 'px';
 						el.style.width  = adjWidth + 'px';
                         this.ckEditorInstance.execCommand( 'toolbarCollapse' );
                     }
                     else{
-                        el.style.height = adjHeight - 51 + 'px';
+                        el.style.height = adjHeight - 70 + 'px';
 						el.style.width  = adjWidth + 'px';
                     }
 					
                 }
                 else{
-                    this.ckEditorInstance.config.height = adjHeight - 51;
+                    this.ckEditorInstance.config.height = adjHeight - 70;
                 }
             }
         }

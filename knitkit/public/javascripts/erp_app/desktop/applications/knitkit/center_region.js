@@ -1,7 +1,23 @@
 Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     extend:"Ext.panel.Panel",
     alias:'widget.knitkit_centerregion',
-    setWindowStatus : function(status){
+    ckEditorToolbar:[
+	['Source','-','CompassSave','Preview','Print','-','Templates',
+    'Cut','Copy','Paste','PasteText','PasteFromWord','Undo','Redo'],
+    ['Find','Replace','SpellChecker', 'Scayt','-','SelectAll'],
+	['TextColor','BGColor'],
+	['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','RemoveFormat'],
+	['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
+    '/',
+    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'],
+    ['BidiLtr', 'BidiRtl' ],
+    ['Link','Unlink','Anchor'],
+    ['jwplayer','Flash','Table','HorizontalRule',,'SpecialChar','PageBreak',],
+	[ 'Styles','Format','Font','FontSize' ],
+    ['Maximize', 'ShowBlocks','-','About']
+	],
+
+	setWindowStatus : function(status){
         this.findParentByType('statuswindow').setStatus(status);
     },
     
@@ -182,23 +198,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             value:content,
             ckEditorConfig:{
                 extraPlugins:'compasssave,codemirror,jwplayer',
-                toolbar:[
-				['Source','-','CompassSave','DocProps','Preview','Print','-','Templates'],
-                ['Cut','Copy','Paste','PasteText','PasteFromWord','Undo','Redo'],
-                ['Find','Replace','SpellChecker', 'Scayt','-','SelectAll'],
-                ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
-                '/',
-                ['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','RemoveFormat'],
-                ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-                ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'],
-                ['BidiLtr', 'BidiRtl' ],
-                ['Link','Unlink','Anchor'],
-                ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
-                '/',
-				[ 'Styles','Format','Font','FontSize' ],
-                ['TextColor','BGColor'],
-                ['Maximize', 'ShowBlocks','-','About']
-                ]
+                toolbar:self.ckEditorToolbar
             },
             listeners:{
                 'save':function(ckEditor, content){
@@ -299,23 +299,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             //value:content,
             ckEditorConfig:{
                 extraPlugins:'compasssave,codemirror,jwplayer',
-				toolbar:[
-                ['Source','-','CompassSave','DocProps','Preview','Print','-','Templates'],
-                ['Cut','Copy','Paste','PasteText','PasteFromWord','Undo','Redo'],
-                ['Find','Replace','SpellChecker', 'Scayt','-','SelectAll'],
-                ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
-                '/',
-                ['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','RemoveFormat'],
-                ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-                ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'],
-                ['BidiLtr', 'BidiRtl' ],
-                ['Link','Unlink','Anchor'],
-                ['jwplayer','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
-                '/',
-				[ 'Styles','Format','Font','FontSize' ],
-                ['TextColor','BGColor'],
-                ['Maximize', 'ShowBlocks','-','About']
-                ]
+				toolbar:self.ckEditorToolbar
             },
             listeners:{
                 'save':function(ckEditor, content){
