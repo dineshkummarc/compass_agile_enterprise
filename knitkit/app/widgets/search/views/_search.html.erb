@@ -12,6 +12,7 @@
       <%= hidden_field_tag :section_permalink, @section_permalink %>
       <%= hidden_field_tag :results_permalink, @results_permalink %>
       <%= hidden_field_tag :content_type, @content_type %>
+      <%= hidden_field_tag :widget_action, 'new' %>
       <%= hidden_field_tag :per_page, @per_page %>
       <%= text_field_tag :query %>
       <%= submit_tag "Search", :disable_with => "Please wait...", :class => "submit" %>
