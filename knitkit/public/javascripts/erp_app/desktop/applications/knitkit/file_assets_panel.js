@@ -81,7 +81,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
     
     this.layout = Ext.create('Ext.panel.Panel',{
         layout: 'fit',
-        title:'File Assets',
+        title:'Files',
         items: Ext.create('Ext.tab.Panel',{items:[this.sharedFileAssetsTreePanel, this.websiteFileAssetsTreePanel]})
     });
 

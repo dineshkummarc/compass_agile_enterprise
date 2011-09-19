@@ -2,19 +2,23 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
     extend:"Ext.panel.Panel",
     alias:'widget.knitkit_centerregion',
     ckEditorToolbar:[
-	['Source','-','CompassSave','Preview','Print','-','Templates',
-    'Cut','Copy','Paste','PasteText','PasteFromWord','Undo','Redo'],
-    ['Find','Replace','SpellChecker', 'Scayt','-','SelectAll'],
+	['Source','-','CompassSave','Preview','Print'],
+    ['Cut','Copy','Paste','PasteText','PasteFromWord'],
+	['Undo','Redo'],
+    ['Find','Replace'],
+	['SpellChecker','-','SelectAll'],
 	['TextColor','BGColor'],
-	['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','RemoveFormat'],
-	['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-    '/',
-    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl'],
-    ['BidiLtr', 'BidiRtl' ],
+	['Bold','Italic','Underline','Strike'],
+	['Subscript','Superscript','-','RemoveFormat'],
+	['NumberedList','BulletedList'],
+	['Outdent','Indent','Blockquote','CreateDiv'],
+    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+    ['BidiLtr','BidiRtl'],
     ['Link','Unlink','Anchor'],
-    ['jwplayer','Flash','Table','HorizontalRule',,'SpecialChar','PageBreak',],
-	[ 'Styles','Format','Font','FontSize' ],
-    ['Maximize', 'ShowBlocks','-','About']
+    ['jwplayer','Flash','Table'],
+	['HorizontalRule','SpecialChar','PageBreak'],
+	['Styles','Format','Font','FontSize' ],
+    ['Maximize','ShowBlocks','-','About']
 	],
 
 	setWindowStatus : function(status){
@@ -98,7 +102,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self,
                 siteId:websiteId
             }
-            ]
+            ],
+			listeners:{
+				'show':function(panel){
+					Ext.getCmp('knitkitWestRegion').selectWebsite(websiteId);
+				}
+			}
         });
 
         this.workArea.add(centerRegionLayout);
@@ -231,7 +240,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 siteId:siteId
             }],
 			listeners:{
-				'activate':function(panel){
+				'show':function(panel){
 					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
 				}
 			}
@@ -335,7 +344,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             }
             ],
 			listeners:{
-				'activate':function(panel){
+				'show':function(panel){
 					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
 				}
 			}

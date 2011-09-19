@@ -14,7 +14,7 @@
 <% if @ajax_results %>  
 <p>
   <%= will_paginate @results, :class => 'pagination ajax', :params => { :widget_name => 'search',
-                                                                        :widget_action => 'new', 
+                                                                        :widget_action => 'new',
                                                                         :uuid => @uuid,
                                                                         :query => params[:query],
                                                                         :content_type => params[:content_type],

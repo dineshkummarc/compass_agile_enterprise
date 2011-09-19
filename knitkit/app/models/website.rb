@@ -3,8 +3,6 @@ require 'nokogiri'
 class Website < ActiveRecord::Base
   has_file_assets
   
-  after_create :create_publication_and_role
-  
   has_many :published_websites, :dependent => :destroy
   has_many :website_hosts, :dependent => :destroy
   has_many :website_navs, :dependent => :destroy
@@ -108,6 +106,9 @@ class Website < ActiveRecord::Base
       website_section.title = widget_class.title
       website_section.in_menu = true unless ["Login", "Sign Up"].include?(widget_class.title)
       website_section.layout = widget_class.base_layout
+      website_section.save
+      #make manage profile secured
+      website_section.add_role(self.role) if widget_class.title == 'Manage Profile'
       self.website_sections << website_section
     end
   end
