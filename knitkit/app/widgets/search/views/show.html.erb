@@ -11,10 +11,7 @@
 </p>
 <% end %>
 
-<% if @ajax_results 
-  #scope = (request.post? ? erp_app : knitkit) 
-  #only_path = (request.post? ? true : false) 
-  %>  
+<% if @ajax_results %>  
 <p>
   <%= will_paginate @results, :class => 'pagination ajax', :params => { :widget_name => 'search',
                                                                         :widget_action => 'new', 
@@ -25,8 +22,7 @@
                                                                         :per_page => params[:per_page],
                                                                         :only_path => true,
                                                                         :use_route => :widget,
-                                                                        :scope => erp_app,
-                                                                        :authenticity_token => form_authenticity_token
+                                                                        :scope => erp_app
                                                                       } %>
 </p>
 <% else %>
