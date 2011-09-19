@@ -282,6 +282,17 @@ class BaseTxnsAndAccts < ActiveRecord::Migration
       end  
     end
     
+    unless table_exists?(:base_txn_contexts)
+      create_table :base_txn_contexts do |t|
+	      t.references  :biz_txn_event
+	      t.references	:txn_context_record, 	:polymorphic => true
+	      
+	      t.timestamps
+      end
+      
+      add_index :base_txn_contexts, [:txn_context_record_id, :txn_context_record_type], :name => 'txn_context_record_idx'
+    end
+    
   end
 
   def self.down
@@ -291,7 +302,7 @@ class BaseTxnsAndAccts < ActiveRecord::Migration
       :biz_txn_acct_rel_types, :biz_txn_acct_statuses, :biz_txn_acct_types, 
       :biz_txn_acct_status_types, :biz_txn_acct_roots, :biz_txn_party_role_types, 
       :biz_txn_party_roles, :biz_txn_task_types, :biz_txn_tasks, 
-      :biz_txn_statuses, :biz_txn_rel_types, :biz_txn_relationships, 
+      :biz_txn_statuses, :biz_txn_rel_types, :biz_txn_relationships,:base_txn_contexts,
       :biz_txn_types, :biz_txn_event_descs, :biz_txn_events,:financial_txn_accounts,:financial_txns
     ].each do |tbl|
       if table_exists?(tbl)

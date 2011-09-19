@@ -7,8 +7,12 @@ gem 'will_paginate', '3.0.0'
 
 # Compass AE engines
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
-gem 'erp_base_erp_svcs', :path => '../erp_agreements'
 gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
+gem 'erp_app', :path => '../erp_app'
+gem 'erp_agreements', :path => '../erp_agreements'
+gem 'erp_commerce', :path => '../erp_commerce'
+gem 'erp_products', :path => '../erp_products'
+gem 'erp_orders', :path => '../erp_orders'
 
 group :development, :test do
   gem 'rspec-rails', '2.5'

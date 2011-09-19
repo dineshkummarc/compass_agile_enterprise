@@ -57,11 +57,11 @@ module ErpTxnsAndAccts
 					end
 
         end
-      end
-
-      module SingletonMethods
-      end
-
-    end
-  end
-end
+        
+        module SingletonMethods
+        end
+        
+      end#ActsAsBizTxnAccount
+    end#ActiveRecord
+  end#Extensions
+end#ErpTxnsAndAccts
