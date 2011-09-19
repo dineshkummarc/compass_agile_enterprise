@@ -26,18 +26,6 @@ namespace :sunspot do
     puts "Done."
   end
 
-  task :reindex_roles => :environment do
-    puts "Indexing ..."
-    Role.solr_reindex
-    puts "Done."
-  end
-
-  task :delete_roles => :environment do
-    puts "Removing Indexes ..."
-    Role.solr_remove_all_from_index!
-    puts "Done."
-  end
-
   task :reindex_content => :environment do
     puts "Indexing ..."
     Content.solr_reindex
