@@ -7,9 +7,9 @@ module Knitkit
         def base_path
           @base_path = nil
           if @context == :website
-            @base_path = File.join(Rails.root, "/public", "/sites/site-#{@assets_model.id}", "file_assets") unless @assets_model.nil?
+            @base_path = File.join(Rails.root, "/public", "/sites/site-#{@assets_model.id}", "files") unless @assets_model.nil?
           else
-            @base_path = File.join(Rails.root, "/public", "file_assets") unless @assets_model.nil?
+            @base_path = File.join(Rails.root, "/public", "files") unless @assets_model.nil?
           end
         end
 

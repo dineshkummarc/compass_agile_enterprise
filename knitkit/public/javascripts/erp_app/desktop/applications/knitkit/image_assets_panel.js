@@ -108,7 +108,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
 
 	this.layout = Ext.create('Ext.panel.Panel',{
 		layout:'fit',
-        title:'Image Assets',
+        title:'Images',
         items: Ext.create('Ext.tab.Panel',{items: [sharedImagesLayout, websiteImagesLayout]})
 	});
 

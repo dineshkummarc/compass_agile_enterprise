@@ -8,15 +8,12 @@ module ErpTechSvcs
 				end
 
 				module ClassMethods
-
 					def has_file_assets
-						has_many :files, :as => :file_asset_holder, :class_name => 'FileAsset', :dependent => :delete_all 
-
-						extend ErpTechSvcs::Extensions::ActiveRecord::HasFileAssets::SingletonMethods
-						include ErpTechSvcs::Extensions::ActiveRecord::HasFileAssets::InstanceMethods
-																		
+						extend HasFileAssets::SingletonMethods
+						include HasFileAssets::InstanceMethods
+						
+						has_many :files, :as => :file_asset_holder, :class_name => 'FileAsset', :dependent => :delete_all 								
 					end
-
 				end
   		
 				module SingletonMethods
