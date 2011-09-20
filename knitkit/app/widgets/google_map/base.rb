@@ -5,6 +5,8 @@
         def index
           @uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(100).to_s)
           @drop_pins = params[:drop_pins]
+          @map_width = params[:map_width] || 500
+          @map_height = params[:map_height] || 500
           @zoom = params[:zoom] || 18
           @map_type = params[:map_type] || 'SATELLITE'
 
