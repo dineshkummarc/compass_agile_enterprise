@@ -23,7 +23,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
                     var node = this.fileTreePanel.selectedNode;
                     Ext.MessageBox.prompt('Display Name', 'Please enter display name:', function(btn, text){
                         if(btn == 'ok'){
-                            self.module.centerRegion.insertHtmlIntoActiveCkEditor('<a href="#" onclick="window.open(\'/erp_app/public/download_file/?path='+node.id+'\',\'mywindow\',\'width=400,height=200\');return false;">'+text+'</a>');
+                            self.module.centerRegion.insertHtmlIntoActiveCkEditor('<a href="#" onclick="window.open(\'/erp_app/public/download_file/?path='+node.data.downloadPath+'\',\'mywindow\',\'width=400,height=200\');return false;">'+text+'</a>');
                         }
                     });
                 }

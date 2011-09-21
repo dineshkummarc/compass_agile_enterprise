@@ -161,12 +161,12 @@ class Website < ActiveRecord::Base
       files << {:path => File.join(articles_path,entry), :name => File.join('articles/',File.basename(entry))}
     end
 
-    images.each do |src|
-      src = Website.clean_image_src(src)
-      file_path = File.join(Website.image_path, src)
-      file_name = File.basename(src)
-      files << {:path => file_path, :name => File.join('images',src)} if File.exists? file_path
-    end
+    # images.each do |src|
+    #       src = Website.clean_image_src(src)
+    #       file_path = File.join(Website.image_path, src)
+    #       file_name = File.basename(src)
+    #       files << {:path => file_path, :name => File.join('images',src)} if File.exists? file_path
+    #     end
 
     files.uniq!
 

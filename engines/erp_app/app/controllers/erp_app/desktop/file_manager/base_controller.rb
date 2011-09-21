@@ -189,12 +189,14 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
           leaf = true
         end
       end
+      path = (directory + '/' + entry).gsub('//', '/')
+      
       if File.directory?(directory + '/' + entry)
-        tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
+        tree_data << {:text => entry, :leaf => leaf, :downloadPath => path, :id => path}
       elsif !options[:included_file_extensions_regex].nil? && entry =~ options[:included_file_extensions_regex]
-        tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
+        tree_data << {:text => entry, :leaf => leaf, :downloadPath => path, :id => path}
       elsif options[:included_file_extensions_regex].nil?
-        tree_data << {:text => entry, :leaf => leaf, :id => (directory + '/' + entry).gsub('//', '/')}
+        tree_data << {:text => entry, :leaf => leaf, :downloadPath => path, :id => path}
       end 
     end if File.directory?(directory)
 
