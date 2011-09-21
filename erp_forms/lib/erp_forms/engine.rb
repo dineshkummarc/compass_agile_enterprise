@@ -4,8 +4,8 @@ module ErpForms
   class Engine < Rails::Engine
     isolate_namespace ErpForms
     
-	initializer "erp_app_assets.merge_public" do |app|
-      app.middleware.use ::ActionDispatch::Static, "#{root}/public"
+	  initializer "erp_forms.merge_public" do |app|
+      app.middleware.insert_before ::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public"
     end
 	
     ActiveSupport.on_load(:active_record) do
@@ -13,7 +13,7 @@ module ErpForms
       include ErpForms::Extensions::ActiveRecord::HasDynamicForms
     end
 	
-	#set engine to scope
+	  #set engine to scope
   	engine = self
   	config.to_prepare do 
       #load extensions for engine

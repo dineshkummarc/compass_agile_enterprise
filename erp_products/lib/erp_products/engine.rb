@@ -2,8 +2,8 @@ module ErpProducts
   class Engine < Rails::Engine
     isolate_namespace ErpProducts
 	
-	  initializer "erp_app_assets.merge_public" do |app|
-      app.middleware.use ::ActionDispatch::Static, "#{root}/public"
+	  initializer "erp_products.merge_public" do |app|
+      app.middleware.insert_before ::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public"
     end
 	  
 	  ActiveSupport.on_load(:active_record) do
