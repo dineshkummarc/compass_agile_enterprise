@@ -11,9 +11,9 @@ class AgreementsServices < ActiveRecord::Migration
         t.column  :agreement_date,    :date   
         t.column  :from_date,         :date
         t.column  :thru_date,         :date
-
 	      t.column 	:external_identifier, :string
 	      t.column 	:external_id_source, 	:string
+	      
         t.timestamps
       end  
     end
@@ -31,6 +31,7 @@ class AgreementsServices < ActiveRecord::Migration
 		    t.column 	:internal_identifier, :string
 		    t.column 	:external_identifier, :string
 		    t.column 	:external_id_source, 	:string
+		    
       	t.timestamps
       end
     end
@@ -43,6 +44,7 @@ class AgreementsServices < ActiveRecord::Migration
         t.column  :agreement_item_value,        :string
         t.column  :description,                 :string
         t.column  :agreement_item_rule_string,  :string
+        
         t.timestamps
       end
     end
@@ -60,6 +62,7 @@ class AgreementsServices < ActiveRecord::Migration
 		    t.column 	:internal_identifier, :string
 		    t.column 	:external_identifier, :string
 		    t.column 	:external_id_source, 	:string
+		    
       	t.timestamps
       end
     end
@@ -73,6 +76,7 @@ class AgreementsServices < ActiveRecord::Migration
         t.column  :role_type_id,     	  :integer
         t.column  :external_identifier, :string
         t.column  :external_id_source,  :string
+        
         t.timestamps
       end
     end
@@ -88,6 +92,7 @@ class AgreementsServices < ActiveRecord::Migration
         t.column  :status_type_id,          :integer
         t.column  :from_date,               :date
         t.column  :thru_date,               :date 
+        
         t.timestamps
       end
     end
@@ -105,6 +110,7 @@ class AgreementsServices < ActiveRecord::Migration
 		    t.column 	:internal_identifier, 	    :string
 		    t.column 	:external_identifier, 	    :string
 		    t.column 	:external_id_source, 	      :string
+		    
       	t.timestamps
       end
     end
@@ -121,6 +127,7 @@ class AgreementsServices < ActiveRecord::Migration
 		    t.column 	:internal_identifier, :string
 		    t.column 	:external_identifier, :string
 		    t.column 	:external_id_source, 	:string
+		    
         t.timestamps
       end  
     end
@@ -130,6 +137,7 @@ class AgreementsServices < ActiveRecord::Migration
         t.string :identifier
         t.string :name
         t.string :description
+        
         t.timestamps
       end  
     end

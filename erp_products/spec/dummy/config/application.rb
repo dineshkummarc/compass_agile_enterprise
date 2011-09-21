@@ -2,7 +2,14 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-Bundler.require *Rails.groups(:assets) if defined?(Bundler)
+Bundler.require
+require "erp_base_erp_svcs"
+require "erp_tech_svcs"
+require "erp_app"
+require "erp_agreements"
+require "erp_txns_and_accts"
+require "erp_commerce"
+require "erp_orders"
 require "erp_products"
 
 module Dummy
@@ -37,9 +44,6 @@ module Dummy
 
     # Enable the asset pipeline
     config.assets.enabled = true
-    
-    #set load models for has_many_polymorphic
-    RussellEdge::HasManyPolymorphic.options[:models] = %w(PreferenceType)
   end
 end
 

@@ -8,7 +8,6 @@ module ErpTxnsAndAccts
         end
 
         module ClassMethods
-
           def acts_as_biz_txn_account
             extend ActsAsBizTxnAccount::SingletonMethods
             include ActsAsBizTxnAccount::InstanceMethods
@@ -25,12 +24,12 @@ module ErpTxnsAndAccts
               :biz_txn_events,
               :biz_txn_acct_party_roles,
               :txn_events,
+              :description,:description=,
               :txns,
               :account_type
             ].each do |m| delegate m, :to => :biz_txn_acct_root end
 
           end
-
         end
 
         module InstanceMethods
@@ -41,21 +40,18 @@ module ErpTxnsAndAccts
           def initialize_biz_txn_account
             if (self.biz_txn_acct_root.nil?)
               t = BizTxnAcctRoot.new
-              t.description = self.description
               self.biz_txn_acct_root = t
               t.biz_txn_acct = self
             end
           end
 
           def save_biz_txn_account
-            self.biz_txn_acct_root.description = self.description
             self.biz_txn_acct_root.save
           end
 
           def destroy_biz_txn_account
 					  self.biz_txn_acct_root.destroy if (self.biz_txn_acct_root && !self.biz_txn_acct_root.frozen?)
 					end
-
         end
         
         module SingletonMethods

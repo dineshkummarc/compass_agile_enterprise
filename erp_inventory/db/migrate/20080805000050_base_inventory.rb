@@ -3,14 +3,16 @@ class BaseInventory < ActiveRecord::Migration
     
     unless table_exists?(:inventory_entries)
       create_table :inventory_entries do |t|
-        t.column  :description,                 :string
-        t.column  :inventory_entry_record_id,   :integer
-        t.column  :inventory_entry_record_type, :string
-        t.column 	:external_identifier, 	      :string
-        t.column 	:external_id_source, 	        :string
-        t.column  :product_type_id,             :integer
-        t.column  :number_available,            :integer
-        t.string  :sku
+        t.column   :description,                 :string
+        t.column   :inventory_entry_record_id,   :integer
+        t.column   :inventory_entry_record_type, :string
+        t.column 	 :external_identifier, 	      :string
+        t.column 	 :external_id_source, 	        :string
+        t.column   :product_type_id,             :integer
+        t.column   :number_available,            :integer
+        t.string   :sku
+        t.integer  :number_sold
+        
         t.timestamps
       end
     end
@@ -26,6 +28,7 @@ class BaseInventory < ActiveRecord::Migration
         t.column    :internal_identifier,   :string
         t.column    :external_identifier,   :string
         t.column    :external_id_source,    :string
+        
         t.timestamps
       end
     end
@@ -41,6 +44,7 @@ class BaseInventory < ActiveRecord::Migration
         t.column    :internal_identifier,   :string
         t.column    :external_identifier,   :string
         t.column    :external_id_source,    :string
+        
         t.timestamps
       end
     end
@@ -56,6 +60,7 @@ class BaseInventory < ActiveRecord::Migration
         t.column  :status_type_id,          :integer
         t.column  :from_date,               :date
         t.column  :thru_date,               :date 
+        
         t.timestamps
       end
     end
@@ -64,6 +69,7 @@ class BaseInventory < ActiveRecord::Migration
       create_table :prod_instance_inv_entries do |t|
         t.column  :product_instance_id,   :integer        
         t.column  :inventory_entry_id,    :integer  
+        
         t.timestamps
       end
     end

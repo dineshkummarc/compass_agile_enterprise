@@ -1,7 +1,6 @@
 require 'uuid'
 
 class CreditCardToken
-  
   @cc_token
   
   def initialize
@@ -10,6 +9,4 @@ class CreditCardToken
   end
   
   attr_accessor :cc_token
-  
-  
 end

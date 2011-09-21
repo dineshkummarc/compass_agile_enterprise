@@ -9,7 +9,12 @@ gem "aasm", "2.3.1"
 # Compass AE engines
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
 gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
+gem 'erp_app', :path => '../erp_app'
+gem 'erp_agreements', :path => '../erp_agreements'
+gem 'erp_txns_and_accts', :path => '../erp_txns_and_accts'
+gem 'erp_commerce', :path => '../erp_commerce'
 gem 'erp_orders', :path => '../erp_orders'
+gem 'erp_products', :path => '../erp_products'
 
 group :development, :test do
   gem 'rspec-rails', '2.5'

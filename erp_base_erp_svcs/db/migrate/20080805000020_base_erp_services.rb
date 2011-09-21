@@ -45,7 +45,7 @@ class BaseErpServices < ActiveRecord::Migration
     # Create role_types table
     unless table_exists?(:role_types)
       create_table :role_types do |t|
-        #these columns are required to support the behavior of the plugin 'better_nested_set'
+        #these columns are required to support the behavior of the plugin 'awesome_nested_set'
         t.column  	:parent_id,    :integer
         t.column  	:lft,          :integer
         t.column  	:rgt,          :integer

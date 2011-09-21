@@ -6,6 +6,8 @@ class Agreement < ActiveRecord::Base
 	has_many	 :parties, :through => :agreement_party_roles
   belongs_to :agreement_record, :polymorphic => true, :dependent => :destroy
   
+  alias :items :agreement_items
+  
   def agreement_relationships
     AgreementRelationship.where('agreement_id_from = ? OR agreement_id_to = ?',id,id)
   end
@@ -34,20 +36,12 @@ class Agreement < ActiveRecord::Base
   end
   
   def respond_to?(m)
-    result = true
-    if !super
-      result = get_item_by_item_type_internal_identifier(m.to_s).nil? ? true : false
-    end
-    result
+    ((get_item_by_item_type_internal_identifier(m.to_s).nil? ? false : true)) unless super
   end
   
   def method_missing(m, *args, &block)
-    begin
-      value = get_item_by_item_type_internal_identifier(m.to_s)
-      (value != nil) ? (return value) : super
-    rescue
-      super
-    end
+    value = get_item_by_item_type_internal_identifier(m.to_s)
+    (value.nil?) ? super : (return value)
   end
 
 end
