@@ -96,10 +96,6 @@ Compass.ErpApp.Organizer.Layout = function(config){
 
     var southToolbar = Ext.create("Ext.toolbar.Toolbar",{
         items:[
-        {
-            xtype:'tbtext',
-            html:"Version 1.0"
-        },
         "->",
         {
             xtype:"trayclock"

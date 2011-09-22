@@ -55,8 +55,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager",{
                     xtype:'ordermanager_ordersgridpanel',
                     listeners:{
                         'itemclick':function(view, record, item, index, e, options){
-                            Compass.ErpApp.Desktop.Applications.OrderManager.orderId = record.get("id");
-                            tabPanel.query('desktopordermanagement_orderlineitemsgridpanel')[0].getStore().load();
+							var orderId = record.get("id");
+                            Compass.ErpApp.Desktop.Applications.OrderManager.orderId = orderId;
+                            tabPanel.query('desktopordermanagement_orderlineitemsgridpanel')[0].getStore().load({params:{order_id:orderId}});
                             tabPanel.setActiveTab(0);
                         }
                     }

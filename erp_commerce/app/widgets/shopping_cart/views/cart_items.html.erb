@@ -60,12 +60,12 @@
             <td>
               <div><img src="<%=order_line_item.product_type.images.empty? ? '/images/img_blank.png' : order_line_item.product_type.images.first.url%>" alt="Product Image" /></div>
               <div>
-                <span><%= order_line_item.product_type.description %></span><br/>
+                <span><%= raw order_line_item.product_type.description %></span><br/>
               </div>
             </td>
-            <td><%=order_line_item.product_type.descriptions.find_by_internal_identifier('long_description').description%></td>
+            <td><%= raw order_line_item.product_type.descriptions.find_by_internal_identifier('long_description').description%></td>
             <td>1</td>
-            <td><%=link_to_remote 'Remove',:url => build_widget_url(:remove_from_cart, order_line_item.id)%></td>
+            <td><%=link_to_remote 'Remove', build_widget_url(:remove_from_cart, order_line_item.id)%></td>
             <td><span><%=order_line_item.product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : order_line_item.product_type.get_current_simple_amount_with_currency%></span></td>
           </tr>
         <%end%>
@@ -73,7 +73,7 @@
     </table>
     <hr />
     <div style="float:right"><h2>Total <%=@price%></h2></div>
-    <a href="<%=@products_url%>">Continue Shopping</a><%=link_to_remote ' | Check Out', :url => build_widget_url(:checkout_demographics) unless @order.order_line_items.empty?%>
+    <a href="<%=@products_url%>">Continue Shopping</a><%=link_to_remote ' | Check Out', build_widget_url(:checkout_demographics) unless @order.order_line_items.empty?%>
   <%else%>
     <h2>No items in cart.</h2>
   <%end%>

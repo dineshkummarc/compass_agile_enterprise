@@ -1,21 +1,25 @@
 module Widgets
   module ProductCatalog
-    class Base < ErpApp::Widgets::Base
+    class Base < ErpApp::Widgets::Base      
       def index
         render
+      end
+      
+      def back_to_catalog
+        render :update => {:id => "#{@uuid}_result", :view => 'index'}
       end
 
       def show
         @product_type = ProductType.find(params[:id])
-        render
-      end
+        render :update => {:id => "#{@uuid}_result", :view => 'show'}
+      end  
 
       def add_to_cart
         @product_type   = ProductType.find(params[:id])
         @cart_items_url = params[:cart_items_url]
-        ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).add_to_cart(@product_type)
+        ErpCommerce::OrderHelper.new(self).add_to_cart(@product_type)
     
-        render
+        render :update => {:id => "#{@uuid}_result", :view => 'add_to_cart'}
       end
   
       #should not be modified

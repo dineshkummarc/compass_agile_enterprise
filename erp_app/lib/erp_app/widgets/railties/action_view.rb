@@ -3,12 +3,9 @@ ActionView::Base.class_eval do
     action = opts[:action] || :index
     params = opts[:params].nil? ? '{}' : opts[:params].to_json
 
-    uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(100).to_s)
+    uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(10000).to_s)
 
-    raw "<div id='#{uuid}'><img src='/images/loading_icon.gif' alt='' />Loading Widget...</div><script type='text/javascript'>
-      Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params});
-      Compass.ErpApp.Widgets.LoadedWidgets.push({id:'#{uuid}', name:'#{name}', action:'#{action}', params:#{params}});
-     </script>"
+    raw "<div id='#{uuid}'>Loading Widget...<script type='text/javascript'>Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params}, true);</script></div>"
   end
 
   def build_widget_url(action,id=nil)

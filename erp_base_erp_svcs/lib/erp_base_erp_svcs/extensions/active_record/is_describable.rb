@@ -27,7 +27,7 @@ module ErpBaseErpSvcs
 				  end
 
 				  def find_description_by_iid(iid)
-					self.descriptions.where('internal_identifier = ?', iid)
+					self.descriptions.where('internal_identifier = ?', iid).first
 				  end
 
 				  def add_description(view_type, description)

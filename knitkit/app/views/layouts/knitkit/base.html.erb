@@ -13,9 +13,10 @@
     <title><%= @website.title %></title>
     <%= javascript_include_tag :application %>
     <%= include_extjs %>
+    <%= static_javascript_include_tag('erp_app/jquery_support.js') %>
+    <%= static_javascript_include_tag('erp_app/utility.js') %>
     <%= static_stylesheet_link_tag('extjs/resources/css/knitkit_extjs_4.css') %>
     <%= static_stylesheet_link_tag('knitkit/style.css') %>
-    <%= static_javascript_include_tag('erp_app/utility.js') %>
     <%= static_javascript_include_tag('erp_app/widgets.js') %>
     <%= static_javascript_include_tag('erp_app/shared/ajax_pagination.js') %>
     <%= static_javascript_include_tag('erp_app/shared/dynamic_forms/dynamic_forms_validation.js') %>
@@ -49,6 +50,6 @@
       <div id="content_footer"></div>
       <%= render :partial => 'shared/knitkit/footer'%>
       <%= yield :foot %>
-    </div>
+    </div>    
   </body>
 </html>

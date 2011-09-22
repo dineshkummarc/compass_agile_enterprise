@@ -15,10 +15,11 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   
   s.add_dependency "rails", "~> 3.1.0"
-  s.add_dependency('data_migrator','1.5')
+  s.add_dependency('data_migrator','1.6')
   s.add_dependency('has_many_polymorphic','0.5.0')
   s.add_dependency('attr_encrypted','1.2.0')
   s.add_dependency('awesome_nested_set','2.0.2')
+  s.add_dependency('uuid','2.3.4')
   
   s.add_development_dependency("rspec-rails", "~> 2.5")
   s.add_development_dependency "sqlite3"
