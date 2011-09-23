@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "TODO: Summary of ErpAgreements."
   s.description = "TODO: Description of ErpAgreements."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "rails", "~> 3.1.0"
