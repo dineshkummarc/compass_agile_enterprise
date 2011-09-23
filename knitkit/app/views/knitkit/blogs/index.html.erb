@@ -5,7 +5,7 @@
     <div class="blog_post" id="blog_<%=h content.id %>">
       <h4><%=h content.title %></h4>
       <p>
-        Posted: <%= content.created_at.to_s(:long) %> <%="by #{content.content.created_by.username}" rescue '' %><br />
+        Posted: <%= content.created_at.to_s(:long) %> <%=published_content_created_by %><br />
         Topics: <%=content.content.tag_list %>
       </p>
       <div class="blog_body">
@@ -21,22 +21,12 @@
 
 <div class="sidebar blog_tags">
   <h4>Topics</h4>
-  <% @website_section.get_topics.each do |tag| %>
-
-    <div class="tag_link">
-      <%= link_to tag.name, main_app.blog_tag_path(@website_section.id, tag.id) %>
-    </div>
-  
-  <% end %>
+  <%=blog_topics 'tag_link' %>
 </div>
 
 <div class="sidebar rss">  
   <h4>Links</h4>
-  <%  if params[:action] == 'tag' %>
-    <%= link_to "RSS Feed", main_app.blog_tag_url(params[:section_id], params[:tag_id], :rss) %>
-  <% else %>
-    <%= link_to "RSS Feed", main_app.blogs_url(params[:section_id], :rss) %>
-  <% end %>
+  <%=blog_rss_links 'RSS Feed' %>
 </div>
 
 <div class="sidebar blog_search">

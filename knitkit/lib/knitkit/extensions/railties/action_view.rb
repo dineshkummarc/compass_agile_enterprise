@@ -1,5 +1,48 @@
 ActionView::Base.class_eval do
 
+  def published_content_created_by
+    "by #{@published_content.content.created_by.username}" rescue ''
+  end
+
+  def blog_add_comment_form
+    render :partial => 'add_comment' unless current_user.nil?
+  end  
+
+  def blog_topics(css_class='tag_link')
+    html = ''
+    
+    @website_section.get_topics.each do |tag|
+      html += '<div class="'+tag_link+'">'+
+      html += link_to(tag.name, main_app.blog_tag_path(@website_section.id, tag.id))
+      html += '</div>'
+    end
+    
+    raw html
+  end
+  
+
+  def blog_rss_links(link_title='RSS Feed')
+    if params[:action] == 'tag'
+      return link_to link_title, main_app.blog_tag_url(params[:section_id], params[:tag_id], :rss)
+    else
+      return link_to link_title, main_app.blogs_url(params[:section_id], :rss)
+    end
+  end
+
+  def blog_recent_approved_comments
+    if @published_content.content.comments.recent.approved.empty?
+      return 'No Comments'
+    else
+      html = ''
+      
+      @published_content.content.comments.recent.approved.each do |comment|
+        html += render :partial => 'comment', :locals => {:comment => comment}
+      end
+      
+      return raw html
+    end
+  end
+
   def blog_pagination(css_class, params)
     return will_paginate @contents, :class => css_class, :params => { 
                                                                 :section_id => params[:section_id],                                            
