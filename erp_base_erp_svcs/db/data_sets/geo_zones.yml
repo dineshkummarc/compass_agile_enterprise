@@ -1,705 +1,1233 @@
----
-- zone_code: AL
-  geo_country_id: "223"
-  zone_name: Alabama
-
-- zone_code: AK
-  geo_country_id: "223"
-  zone_name: Alaska
-
-- zone_code: AS
-  geo_country_id: "223"
-  zone_name: American Samoa
-
-- zone_code: AZ
-  geo_country_id: "223"
-  zone_name: Arizona
-
-- zone_code: AR
-  geo_country_id: "223"
-  zone_name: Arkansas
-
-- zone_code: AF
-  geo_country_id: "223"
-  zone_name: Armed Forces
-
-- zone_code: CA
-  geo_country_id: "223"
-  zone_name: California
-
-- zone_code: CO
-  geo_country_id: "223"
-  zone_name: Colorado
-
-- zone_code: CT
-  geo_country_id: "223"
-  zone_name: Connecticut
-
-- zone_code: DE
-  geo_country_id: "223"
-  zone_name: Delaware
-
-- zone_code: DC
-  geo_country_id: "223"
-  zone_name: District of Columbia
-
-- zone_code: FM
-  geo_country_id: "223"
-  zone_name: Federated States Of Micronesia
-
-- zone_code: FL
-  geo_country_id: "223"
-  zone_name: Florida
-
-- zone_code: GA
-  geo_country_id: "223"
-  zone_name: Georgia
-
-- zone_code: GU
-  geo_country_id: "223"
-  zone_name: Guam
-
-- zone_code: HI
-  geo_country_id: "223"
-  zone_name: Hawaii
-
-- zone_code: ID
-  geo_country_id: "223"
-  zone_name: Idaho
-
-- zone_code: IL
-  geo_country_id: "223"
-  zone_name: Illinois
-
-- zone_code: IN
-  geo_country_id: "223"
-  zone_name: Indiana
-
-- zone_code: IA
-  geo_country_id: "223"
-  zone_name: Iowa
-
-- zone_code: KS
-  geo_country_id: "223"
-  zone_name: Kansas
-
-- zone_code: KY
-  geo_country_id: "223"
-  zone_name: Kentucky
-
-- zone_code: LA
-  geo_country_id: "223"
-  zone_name: Louisiana
-
-- zone_code: ME
-  geo_country_id: "223"
-  zone_name: Maine
-
-- zone_code: MH
-  geo_country_id: "223"
-  zone_name: Marshall Islands
-
-- zone_code: MD
-  geo_country_id: "223"
-  zone_name: Maryland
-
-- zone_code: MA
-  geo_country_id: "223"
-  zone_name: Massachusetts
-
-- zone_code: MI
-  geo_country_id: "223"
-  zone_name: Michigan
-
-- zone_code: MN
-  geo_country_id: "223"
-  zone_name: Minnesota
-
-- zone_code: MS
-  geo_country_id: "223"
-  zone_name: Mississippi
-
-- zone_code: MO
-  geo_country_id: "223"
-  zone_name: Missouri
-
-- zone_code: MT
-  geo_country_id: "223"
-  zone_name: Montana
-
-- zone_code: NE
-  geo_country_id: "223"
-  zone_name: Nebraska
-
-- zone_code: NV
-  geo_country_id: "223"
-  zone_name: Nevada
-
-- zone_code: NH
-  geo_country_id: "223"
-  zone_name: New Hampshire
-
-- zone_code: NJ
-  geo_country_id: "223"
-  zone_name: New Jersey
-
-- zone_code: NM
-  geo_country_id: "223"
-  zone_name: New Mexico
-
-- zone_code: NY
-  geo_country_id: "223"
-  zone_name: New York
-
-- zone_code: NC
-  geo_country_id: "223"
-  zone_name: North Carolina
-
-- zone_code: ND
-  geo_country_id: "223"
-  zone_name: North Dakota
-
-- zone_code: MP
-  geo_country_id: "223"
-  zone_name: Northern Mariana Islands
-
-- zone_code: OH
-  geo_country_id: "223"
-  zone_name: Ohio
-
-- zone_code: OK
-  geo_country_id: "223"
-  zone_name: Oklahoma
-
-- zone_code: OR
-  geo_country_id: "223"
-  zone_name: Oregon
-
-- zone_code: PW
-  geo_country_id: "223"
-  zone_name: Palau
-
-- zone_code: PA
-  geo_country_id: "223"
-  zone_name: Pennsylvania
-
-- zone_code: PR
-  geo_country_id: "223"
-  zone_name: Puerto Rico
-
-- zone_code: RI
-  geo_country_id: "223"
-  zone_name: Rhode Island
-
-- zone_code: SC
-  geo_country_id: "223"
-  zone_name: South Carolina
-
-- zone_code: SD
-  geo_country_id: "223"
-  zone_name: South Dakota
-
-- zone_code: TN
-  geo_country_id: "223"
-  zone_name: Tennessee
-
-- zone_code: TX
-  geo_country_id: "223"
-  zone_name: Texas
-
-- zone_code: UT
-  geo_country_id: "223"
-  zone_name: Utah
-
-- zone_code: VT
-  geo_country_id: "223"
-  zone_name: Vermont
-
-- zone_code: VI
-  geo_country_id: "223"
-  zone_name: Virgin Islands
-
-- zone_code: VA
-  geo_country_id: "223"
-  zone_name: Virginia
-
-- zone_code: WA
-  geo_country_id: "223"
-  zone_name: Washington
-
-- zone_code: WV
-  geo_country_id: "223"
-  zone_name: West Virginia
-
-- zone_code: WI
-  geo_country_id: "223"
-  zone_name: Wisconsin
-
-- zone_code: WY
-  geo_country_id: "223"
-  zone_name: Wyoming
-
-- zone_code: AB
-  geo_country_id: "38"
-  zone_name: Alberta
-
-- zone_code: BC
-  geo_country_id: "38"
-  zone_name: British Columbia
-
-- zone_code: MB
-  geo_country_id: "38"
-  zone_name: Manitoba
-
-- zone_code: NF
-  geo_country_id: "38"
-  zone_name: Newfoundland
-
-- zone_code: NB
-  geo_country_id: "38"
-  zone_name: New Brunswick
-
-- zone_code: NS
-  geo_country_id: "38"
-  zone_name: Nova Scotia
-
-- zone_code: NT
-  geo_country_id: "38"
-  zone_name: Northwest Territories
-
-- zone_code: NU
-  geo_country_id: "38"
-  zone_name: Nunavut
-
-- zone_code: "ON"
-  geo_country_id: "38"
-  zone_name: Ontario
-
-- zone_code: PE
-  geo_country_id: "38"
-  zone_name: Prince Edward Island
-
-- zone_code: QC
-  geo_country_id: "38"
-  zone_name: Quebec
-
-- zone_code: SK
-  geo_country_id: "38"
-  zone_name: Saskatchewan
-
-- zone_code: YT
-  geo_country_id: "38"
-  zone_name: Yukon Territory
-
-- zone_code: NDS
-  geo_country_id: "81"
-  zone_name: Niedersachsen
-
-- zone_code: BAW
-  geo_country_id: "81"
-  zone_name: "Baden-W\xC3\xBCrttemberg"
-
-- zone_code: BAY
-  geo_country_id: "81"
-  zone_name: Bayern
-
-- zone_code: BER
-  geo_country_id: "81"
-  zone_name: Berlin
-
-- zone_code: BRG
-  geo_country_id: "81"
-  zone_name: Brandenburg
-
-- zone_code: BRE
-  geo_country_id: "81"
-  zone_name: Bremen
-
-- zone_code: HAM
-  geo_country_id: "81"
-  zone_name: Hamburg
-
-- zone_code: HES
-  geo_country_id: "81"
-  zone_name: Hessen
-
-- zone_code: MEC
-  geo_country_id: "81"
-  zone_name: Mecklenburg-Vorpommern
-
-- zone_code: NRW
-  geo_country_id: "81"
-  zone_name: Nordrhein-Westfalen
-
-- zone_code: RHE
-  geo_country_id: "81"
-  zone_name: Rheinland-Pfalz
-
-- zone_code: SAR
-  geo_country_id: "81"
-  zone_name: Saarland
-
-- zone_code: SAS
-  geo_country_id: "81"
-  zone_name: Sachsen
-
-- zone_code: SAC
-  geo_country_id: "81"
-  zone_name: Sachsen-Anhalt
-
-- zone_code: SCN
-  geo_country_id: "81"
-  zone_name: Schleswig-Holstein
-
-- zone_code: THE
-  geo_country_id: "81"
-  zone_name: "Th\xC3\xBCringen"
-
-- zone_code: WI
-  geo_country_id: "14"
-  zone_name: Wien
-
-- zone_code: "NO"
-  geo_country_id: "14"
-  zone_name: "Nieder\xC3\xB6sterreich"
-
-- zone_code: OO
-  geo_country_id: "14"
-  zone_name: "Ober\xC3\xB6sterreich"
-
-- zone_code: SB
-  geo_country_id: "14"
-  zone_name: Salzburg
-
-- zone_code: KN
-  geo_country_id: "14"
-  zone_name: "K\xC3\xA4rnten"
-
-- zone_code: ST
-  geo_country_id: "14"
-  zone_name: Steiermark
-
-- zone_code: TI
-  geo_country_id: "14"
-  zone_name: Tirol
-
-- zone_code: BL
-  geo_country_id: "14"
-  zone_name: Burgenland
-
-- zone_code: VB
-  geo_country_id: "14"
-  zone_name: Voralberg
-
-- zone_code: AG
-  geo_country_id: "204"
-  zone_name: Aargau
-
-- zone_code: AI
-  geo_country_id: "204"
-  zone_name: Appenzell Innerrhoden
-
-- zone_code: AR
-  geo_country_id: "204"
-  zone_name: Appenzell Ausserrhoden
-
-- zone_code: BE
-  geo_country_id: "204"
-  zone_name: Bern
-
-- zone_code: BL
-  geo_country_id: "204"
-  zone_name: Basel-Landschaft
-
-- zone_code: BS
-  geo_country_id: "204"
-  zone_name: Basel-Stadt
-
-- zone_code: FR
-  geo_country_id: "204"
-  zone_name: Freiburg
-
-- zone_code: GE
-  geo_country_id: "204"
-  zone_name: Genf
-
-- zone_code: GL
-  geo_country_id: "204"
-  zone_name: Glarus
-
-- zone_code: JU
-  geo_country_id: "204"
-  zone_name: "Graub\xC3\xBCnden"
-
-- zone_code: JU
-  geo_country_id: "204"
-  zone_name: Jura
-
-- zone_code: LU
-  geo_country_id: "204"
-  zone_name: Luzern
-
-- zone_code: NE
-  geo_country_id: "204"
-  zone_name: Neuenburg
-
-- zone_code: NW
-  geo_country_id: "204"
-  zone_name: Nidwalden
-
-- zone_code: OW
-  geo_country_id: "204"
-  zone_name: Obwalden
-
-- zone_code: SG
-  geo_country_id: "204"
-  zone_name: St. Gallen
-
-- zone_code: SH
-  geo_country_id: "204"
-  zone_name: Schaffhausen
-
-- zone_code: SO
-  geo_country_id: "204"
-  zone_name: Solothurn
-
-- zone_code: SZ
-  geo_country_id: "204"
-  zone_name: Schwyz
-
-- zone_code: TG
-  geo_country_id: "204"
-  zone_name: Thurgau
-
-- zone_code: TI
-  geo_country_id: "204"
-  zone_name: Tessin
-
-- zone_code: UR
-  geo_country_id: "204"
-  zone_name: Uri
-
-- zone_code: VD
-  geo_country_id: "204"
-  zone_name: Waadt
-
-- zone_code: VS
-  geo_country_id: "204"
-  zone_name: Wallis
-
-- zone_code: ZG
-  geo_country_id: "204"
-  zone_name: Zug
-
-- zone_code: ZH
-  geo_country_id: "204"
-  zone_name: "Z\xC3\xBCrich"
-
-- zone_code: "A Coru\xC3\xB1a"
-  geo_country_id: "195"
-  zone_name: "A Coru\xC3\xB1a"
-
-- zone_code: Alava
-  geo_country_id: "195"
-  zone_name: Alava
-
-- zone_code: Albacete
-  geo_country_id: "195"
-  zone_name: Albacete
-
-- zone_code: Alicante
-  geo_country_id: "195"
-  zone_name: Alicante
-
-- zone_code: Almeria
-  geo_country_id: "195"
-  zone_name: Almeria
-
-- zone_code: Asturias
-  geo_country_id: "195"
-  zone_name: Asturias
-
-- zone_code: Avila
-  geo_country_id: "195"
-  zone_name: Avila
-
-- zone_code: Badajoz
-  geo_country_id: "195"
-  zone_name: Badajoz
-
-- zone_code: Baleares
-  geo_country_id: "195"
-  zone_name: Baleares
-
-- zone_code: Barcelona
-  geo_country_id: "195"
-  zone_name: Barcelona
-
-- zone_code: Burgos
-  geo_country_id: "195"
-  zone_name: Burgos
-
-- zone_code: Caceres
-  geo_country_id: "195"
-  zone_name: Caceres
-
-- zone_code: Cadiz
-  geo_country_id: "195"
-  zone_name: Cadiz
-
-- zone_code: Cantabria
-  geo_country_id: "195"
-  zone_name: Cantabria
-
-- zone_code: Castellon
-  geo_country_id: "195"
-  zone_name: Castellon
-
-- zone_code: Ceuta
-  geo_country_id: "195"
-  zone_name: Ceuta
-
-- zone_code: Ciudad Real
-  geo_country_id: "195"
-  zone_name: Ciudad Real
-
-- zone_code: Cordoba
-  geo_country_id: "195"
-  zone_name: Cordoba
-
-- zone_code: Cuenca
-  geo_country_id: "195"
-  zone_name: Cuenca
-
-- zone_code: Girona
-  geo_country_id: "195"
-  zone_name: Girona
-
-- zone_code: Granada
-  geo_country_id: "195"
-  zone_name: Granada
-
-- zone_code: Guadalajara
-  geo_country_id: "195"
-  zone_name: Guadalajara
-
-- zone_code: Guipuzcoa
-  geo_country_id: "195"
-  zone_name: Guipuzcoa
-
-- zone_code: Huelva
-  geo_country_id: "195"
-  zone_name: Huelva
-
-- zone_code: Huesca
-  geo_country_id: "195"
-  zone_name: Huesca
-
-- zone_code: Jaen
-  geo_country_id: "195"
-  zone_name: Jaen
-
-- zone_code: La Rioja
-  geo_country_id: "195"
-  zone_name: La Rioja
-
-- zone_code: Las Palmas
-  geo_country_id: "195"
-  zone_name: Las Palmas
-
-- zone_code: Leon
-  geo_country_id: "195"
-  zone_name: Leon
-
-- zone_code: Lleida
-  geo_country_id: "195"
-  zone_name: Lleida
-
-- zone_code: Lugo
-  geo_country_id: "195"
-  zone_name: Lugo
-
-- zone_code: Madrid
-  geo_country_id: "195"
-  zone_name: Madrid
-
-- zone_code: Malaga
-  geo_country_id: "195"
-  zone_name: Malaga
-
-- zone_code: Melilla
-  geo_country_id: "195"
-  zone_name: Melilla
-
-- zone_code: Murcia
-  geo_country_id: "195"
-  zone_name: Murcia
-
-- zone_code: Navarra
-  geo_country_id: "195"
-  zone_name: Navarra
-
-- zone_code: Ourense
-  geo_country_id: "195"
-  zone_name: Ourense
-
-- zone_code: Palencia
-  geo_country_id: "195"
-  zone_name: Palencia
-
-- zone_code: Pontevedra
-  geo_country_id: "195"
-  zone_name: Pontevedra
-
-- zone_code: Salamanca
-  geo_country_id: "195"
-  zone_name: Salamanca
-
-- zone_code: Santa Cruz de Tenerife
-  geo_country_id: "195"
-  zone_name: Santa Cruz de Tenerife
-
-- zone_code: Segovia
-  geo_country_id: "195"
-  zone_name: Segovia
-
-- zone_code: Sevilla
-  geo_country_id: "195"
-  zone_name: Sevilla
-
-- zone_code: Soria
-  geo_country_id: "195"
-  zone_name: Soria
-
-- zone_code: Tarragona
-  geo_country_id: "195"
-  zone_name: Tarragona
-
-- zone_code: Teruel
-  geo_country_id: "195"
-  zone_name: Teruel
-
-- zone_code: Toledo
-  geo_country_id: "195"
-  zone_name: Toledo
-
-- zone_code: Valencia
-  geo_country_id: "195"
-  zone_name: Valencia
-
-- zone_code: Valladolid
-  geo_country_id: "195"
-  zone_name: Valladolid
-
-- zone_code: Vizcaya
-  geo_country_id: "195"
-  zone_name: Vizcaya
-
-- zone_code: Zamora
-  geo_country_id: "195"
-  zone_name: Zamora
-
-- zone_code: Zaragoza
-  geo_country_id: "195"
-  zone_name: Zaragoza
-
+--- 
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 1
+    geo_country_id: 223
+    zone_code: AL
+    zone_name: Alabama
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 2
+    geo_country_id: 223
+    zone_code: AK
+    zone_name: Alaska
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 3
+    geo_country_id: 223
+    zone_code: AS
+    zone_name: American Samoa
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 4
+    geo_country_id: 223
+    zone_code: AZ
+    zone_name: Arizona
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 5
+    geo_country_id: 223
+    zone_code: AR
+    zone_name: Arkansas
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 6
+    geo_country_id: 223
+    zone_code: AF
+    zone_name: Armed Forces
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 7
+    geo_country_id: 223
+    zone_code: CA
+    zone_name: California
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 8
+    geo_country_id: 223
+    zone_code: CO
+    zone_name: Colorado
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 9
+    geo_country_id: 223
+    zone_code: CT
+    zone_name: Connecticut
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 10
+    geo_country_id: 223
+    zone_code: DE
+    zone_name: Delaware
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 11
+    geo_country_id: 223
+    zone_code: DC
+    zone_name: District of Columbia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 12
+    geo_country_id: 223
+    zone_code: FM
+    zone_name: Federated States Of Micronesia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 13
+    geo_country_id: 223
+    zone_code: FL
+    zone_name: Florida
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 14
+    geo_country_id: 223
+    zone_code: GA
+    zone_name: Georgia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 15
+    geo_country_id: 223
+    zone_code: GU
+    zone_name: Guam
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 16
+    geo_country_id: 223
+    zone_code: HI
+    zone_name: Hawaii
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 17
+    geo_country_id: 223
+    zone_code: ID
+    zone_name: Idaho
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 18
+    geo_country_id: 223
+    zone_code: IL
+    zone_name: Illinois
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 19
+    geo_country_id: 223
+    zone_code: IN
+    zone_name: Indiana
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 20
+    geo_country_id: 223
+    zone_code: IA
+    zone_name: Iowa
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 21
+    geo_country_id: 223
+    zone_code: KS
+    zone_name: Kansas
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 22
+    geo_country_id: 223
+    zone_code: KY
+    zone_name: Kentucky
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 23
+    geo_country_id: 223
+    zone_code: LA
+    zone_name: Louisiana
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 24
+    geo_country_id: 223
+    zone_code: ME
+    zone_name: Maine
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 25
+    geo_country_id: 223
+    zone_code: MH
+    zone_name: Marshall Islands
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 26
+    geo_country_id: 223
+    zone_code: MD
+    zone_name: Maryland
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 27
+    geo_country_id: 223
+    zone_code: MA
+    zone_name: Massachusetts
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 
+    geo_country_id: 223
+    zone_code: MI
+    zone_name: Michigan
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 29
+    geo_country_id: 223
+    zone_code: MN
+    zone_name: Minnesota
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 30
+    geo_country_id: 223
+    zone_code: MS
+    zone_name: Mississippi
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 31
+    geo_country_id: 223
+    zone_code: MO
+    zone_name: Missouri
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 32
+    geo_country_id: 223
+    zone_code: MT
+    zone_name: Montana
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 33
+    geo_country_id: 223
+    zone_code: NE
+    zone_name: Nebraska
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 34
+    geo_country_id: 223
+    zone_code: NV
+    zone_name: Nevada
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 35
+    geo_country_id: 223
+    zone_code: NH
+    zone_name: New Hampshire
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 36
+    geo_country_id: 223
+    zone_code: NJ
+    zone_name: New Jersey
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 37
+    geo_country_id: 223
+    zone_code: NM
+    zone_name: New Mexico
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 38
+    geo_country_id: 223
+    zone_code: NY
+    zone_name: New York
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 39
+    geo_country_id: 223
+    zone_code: NC
+    zone_name: North Carolina
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 40
+    geo_country_id: 223
+    zone_code: ND
+    zone_name: North Dakota
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 41
+    geo_country_id: 223
+    zone_code: MP
+    zone_name: Northern Mariana Islands
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 42
+    geo_country_id: 223
+    zone_code: OH
+    zone_name: Ohio
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 43
+    geo_country_id: 223
+    zone_code: OK
+    zone_name: Oklahoma
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 44
+    geo_country_id: 223
+    zone_code: OR
+    zone_name: Oregon
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 45
+    geo_country_id: 223
+    zone_code: PW
+    zone_name: Palau
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 46
+    geo_country_id: 223
+    zone_code: PA
+    zone_name: Pennsylvania
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 47
+    geo_country_id: 223
+    zone_code: PR
+    zone_name: Puerto Rico
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 48
+    geo_country_id: 223
+    zone_code: RI
+    zone_name: Rhode Island
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 49
+    geo_country_id: 223
+    zone_code: SC
+    zone_name: South Carolina
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 50
+    geo_country_id: 223
+    zone_code: SD
+    zone_name: South Dakota
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 51
+    geo_country_id: 223
+    zone_code: TN
+    zone_name: Tennessee
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 52
+    geo_country_id: 223
+    zone_code: TX
+    zone_name: Texas
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 53
+    geo_country_id: 223
+    zone_code: UT
+    zone_name: Utah
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 54
+    geo_country_id: 223
+    zone_code: VT
+    zone_name: Vermont
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 55
+    geo_country_id: 223
+    zone_code: VI
+    zone_name: Virgin Islands
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 56
+    geo_country_id: 223
+    zone_code: VA
+    zone_name: Virginia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 57
+    geo_country_id: 223
+    zone_code: WA
+    zone_name: Washington
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 58
+    geo_country_id: 223
+    zone_code: WV
+    zone_name: West Virginia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 59
+    geo_country_id: 223
+    zone_code: WI
+    zone_name: Wisconsin
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 60
+    geo_country_id: 223
+    zone_code: WY
+    zone_name: Wyoming
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 61
+    geo_country_id: 38
+    zone_code: AB
+    zone_name: Alberta
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 62
+    geo_country_id: 38
+    zone_code: BC
+    zone_name: British Columbia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 63
+    geo_country_id: 38
+    zone_code: MB
+    zone_name: Manitoba
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 64
+    geo_country_id: 38
+    zone_code: NF
+    zone_name: Newfoundland
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 65
+    geo_country_id: 38
+    zone_code: NB
+    zone_name: New Brunswick
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 66
+    geo_country_id: 38
+    zone_code: NS
+    zone_name: Nova Scotia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 67
+    geo_country_id: 38
+    zone_code: NT
+    zone_name: Northwest Territories
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 68
+    geo_country_id: 38
+    zone_code: NU
+    zone_name: Nunavut
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 69
+    geo_country_id: 38
+    zone_code: "ON"
+    zone_name: Ontario
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 70
+    geo_country_id: 38
+    zone_code: PE
+    zone_name: Prince Edward Island
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 71
+    geo_country_id: 38
+    zone_code: QC
+    zone_name: Quebec
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 72
+    geo_country_id: 38
+    zone_code: SK
+    zone_name: Saskatchewan
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 73
+    geo_country_id: 38
+    zone_code: YT
+    zone_name: Yukon Territory
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 74
+    geo_country_id: 81
+    zone_code: NDS
+    zone_name: Niedersachsen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 75
+    geo_country_id: 81
+    zone_code: BAW
+    zone_name: "Baden-W\xC3\xBCrttemberg"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 76
+    geo_country_id: 81
+    zone_code: BAY
+    zone_name: Bayern
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 77
+    geo_country_id: 81
+    zone_code: BER
+    zone_name: Berlin
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 78
+    geo_country_id: 81
+    zone_code: BRG
+    zone_name: Brandenburg
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 79
+    geo_country_id: 81
+    zone_code: BRE
+    zone_name: Bremen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 80
+    geo_country_id: 81
+    zone_code: HAM
+    zone_name: Hamburg
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 81
+    geo_country_id: 81
+    zone_code: HES
+    zone_name: Hessen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 82
+    geo_country_id: 81
+    zone_code: MEC
+    zone_name: Mecklenburg-Vorpommern
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 83
+    geo_country_id: 81
+    zone_code: NRW
+    zone_name: Nordrhein-Westfalen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 84
+    geo_country_id: 81
+    zone_code: RHE
+    zone_name: Rheinland-Pfalz
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 85
+    geo_country_id: 81
+    zone_code: SAR
+    zone_name: Saarland
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 86
+    geo_country_id: 81
+    zone_code: SAS
+    zone_name: Sachsen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 87
+    geo_country_id: 81
+    zone_code: SAC
+    zone_name: Sachsen-Anhalt
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 88
+    geo_country_id: 81
+    zone_code: SCN
+    zone_name: Schleswig-Holstein
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 89
+    geo_country_id: 81
+    zone_code: THE
+    zone_name: "Th\xC3\xBCringen"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 90
+    geo_country_id: 14
+    zone_code: WI
+    zone_name: Wien
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 91
+    geo_country_id: 14
+    zone_code: "NO"
+    zone_name: "Nieder\xC3\xB6sterreich"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 92
+    geo_country_id: 14
+    zone_code: OO
+    zone_name: "Ober\xC3\xB6sterreich"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 93
+    geo_country_id: 14
+    zone_code: SB
+    zone_name: Salzburg
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 94
+    geo_country_id: 14
+    zone_code: KN
+    zone_name: "K\xC3\xA4rnten"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 95
+    geo_country_id: 14
+    zone_code: ST
+    zone_name: Steiermark
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 96
+    geo_country_id: 14
+    zone_code: TI
+    zone_name: Tirol
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 97
+    geo_country_id: 14
+    zone_code: BL
+    zone_name: Burgenland
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 98
+    geo_country_id: 14
+    zone_code: VB
+    zone_name: Voralberg
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 99
+    geo_country_id: 204
+    zone_code: AG
+    zone_name: Aargau
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 100
+    geo_country_id: 204
+    zone_code: AI
+    zone_name: Appenzell Innerrhoden
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 101
+    geo_country_id: 204
+    zone_code: AR
+    zone_name: Appenzell Ausserrhoden
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 102
+    geo_country_id: 204
+    zone_code: BE
+    zone_name: Bern
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 103
+    geo_country_id: 204
+    zone_code: BL
+    zone_name: Basel-Landschaft
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 104
+    geo_country_id: 204
+    zone_code: BS
+    zone_name: Basel-Stadt
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 105
+    geo_country_id: 204
+    zone_code: FR
+    zone_name: Freiburg
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 106
+    geo_country_id: 204
+    zone_code: GE
+    zone_name: Genf
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 107
+    geo_country_id: 204
+    zone_code: GL
+    zone_name: Glarus
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 108
+    geo_country_id: 204
+    zone_code: JU
+    zone_name: "Graub\xC3\xBCnden"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 109
+    geo_country_id: 204
+    zone_code: JU
+    zone_name: Jura
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 110
+    geo_country_id: 204
+    zone_code: LU
+    zone_name: Luzern
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 111
+    geo_country_id: 204
+    zone_code: NE
+    zone_name: Neuenburg
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 112
+    geo_country_id: 204
+    zone_code: NW
+    zone_name: Nidwalden
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 113
+    geo_country_id: 204
+    zone_code: OW
+    zone_name: Obwalden
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 114
+    geo_country_id: 204
+    zone_code: SG
+    zone_name: St. Gallen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 115
+    geo_country_id: 204
+    zone_code: SH
+    zone_name: Schaffhausen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 116
+    geo_country_id: 204
+    zone_code: SO
+    zone_name: Solothurn
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 117
+    geo_country_id: 204
+    zone_code: SZ
+    zone_name: Schwyz
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 118
+    geo_country_id: 204
+    zone_code: TG
+    zone_name: Thurgau
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 119
+    geo_country_id: 204
+    zone_code: TI
+    zone_name: Tessin
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 120
+    geo_country_id: 204
+    zone_code: UR
+    zone_name: Uri
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 121
+    geo_country_id: 204
+    zone_code: VD
+    zone_name: Waadt
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 122
+    geo_country_id: 204
+    zone_code: VS
+    zone_name: Wallis
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 123
+    geo_country_id: 204
+    zone_code: ZG
+    zone_name: Zug
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 124
+    geo_country_id: 204
+    zone_code: ZH
+    zone_name: "Z\xC3\xBCrich"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 125
+    geo_country_id: 195
+    zone_code: "A Coru\xC3\xB1a"
+    zone_name: "A Coru\xC3\xB1a"
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 126
+    geo_country_id: 195
+    zone_code: Alava
+    zone_name: Alava
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 127
+    geo_country_id: 195
+    zone_code: Albacete
+    zone_name: Albacete
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 128
+    geo_country_id: 195
+    zone_code: Alicante
+    zone_name: Alicante
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 129
+    geo_country_id: 195
+    zone_code: Almeria
+    zone_name: Almeria
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 130
+    geo_country_id: 195
+    zone_code: Asturias
+    zone_name: Asturias
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 131
+    geo_country_id: 195
+    zone_code: Avila
+    zone_name: Avila
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 132
+    geo_country_id: 195
+    zone_code: Badajoz
+    zone_name: Badajoz
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 133
+    geo_country_id: 195
+    zone_code: Baleares
+    zone_name: Baleares
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 134
+    geo_country_id: 195
+    zone_code: Barcelona
+    zone_name: Barcelona
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 135
+    geo_country_id: 195
+    zone_code: Burgos
+    zone_name: Burgos
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 136
+    geo_country_id: 195
+    zone_code: Caceres
+    zone_name: Caceres
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 137
+    geo_country_id: 195
+    zone_code: Cadiz
+    zone_name: Cadiz
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 138
+    geo_country_id: 195
+    zone_code: Cantabria
+    zone_name: Cantabria
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 139
+    geo_country_id: 195
+    zone_code: Castellon
+    zone_name: Castellon
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 140
+    geo_country_id: 195
+    zone_code: Ceuta
+    zone_name: Ceuta
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 141
+    geo_country_id: 195
+    zone_code: Ciudad Real
+    zone_name: Ciudad Real
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 142
+    geo_country_id: 195
+    zone_code: Cordoba
+    zone_name: Cordoba
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 143
+    geo_country_id: 195
+    zone_code: Cuenca
+    zone_name: Cuenca
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 144
+    geo_country_id: 195
+    zone_code: Girona
+    zone_name: Girona
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 145
+    geo_country_id: 195
+    zone_code: Granada
+    zone_name: Granada
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 146
+    geo_country_id: 195
+    zone_code: Guadalajara
+    zone_name: Guadalajara
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 147
+    geo_country_id: 195
+    zone_code: Guipuzcoa
+    zone_name: Guipuzcoa
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 148
+    geo_country_id: 195
+    zone_code: Huelva
+    zone_name: Huelva
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 149
+    geo_country_id: 195
+    zone_code: Huesca
+    zone_name: Huesca
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 150
+    geo_country_id: 195
+    zone_code: Jaen
+    zone_name: Jaen
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 151
+    geo_country_id: 195
+    zone_code: La Rioja
+    zone_name: La Rioja
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 152
+    geo_country_id: 195
+    zone_code: Las Palmas
+    zone_name: Las Palmas
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 153
+    geo_country_id: 195
+    zone_code: Leon
+    zone_name: Leon
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 154
+    geo_country_id: 195
+    zone_code: Lleida
+    zone_name: Lleida
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 155
+    geo_country_id: 195
+    zone_code: Lugo
+    zone_name: Lugo
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 156
+    geo_country_id: 195
+    zone_code: Madrid
+    zone_name: Madrid
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 157
+    geo_country_id: 195
+    zone_code: Malaga
+    zone_name: Malaga
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 158
+    geo_country_id: 195
+    zone_code: Melilla
+    zone_name: Melilla
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 159
+    geo_country_id: 195
+    zone_code: Murcia
+    zone_name: Murcia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 160
+    geo_country_id: 195
+    zone_code: Navarra
+    zone_name: Navarra
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 161
+    geo_country_id: 195
+    zone_code: Ourense
+    zone_name: Ourense
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 162
+    geo_country_id: 195
+    zone_code: Palencia
+    zone_name: Palencia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 163
+    geo_country_id: 195
+    zone_code: Pontevedra
+    zone_name: Pontevedra
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 164
+    geo_country_id: 195
+    zone_code: Salamanca
+    zone_name: Salamanca
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 165
+    geo_country_id: 195
+    zone_code: Santa Cruz de Tenerife
+    zone_name: Santa Cruz de Tenerife
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 166
+    geo_country_id: 195
+    zone_code: Segovia
+    zone_name: Segovia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 167
+    geo_country_id: 195
+    zone_code: Sevilla
+    zone_name: Sevilla
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 168
+    geo_country_id: 195
+    zone_code: Soria
+    zone_name: Soria
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 169
+    geo_country_id: 195
+    zone_code: Tarragona
+    zone_name: Tarragona
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 170
+    geo_country_id: 195
+    zone_code: Teruel
+    zone_name: Teruel
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 171
+    geo_country_id: 195
+    zone_code: Toledo
+    zone_name: Toledo
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 172
+    geo_country_id: 195
+    zone_code: Valencia
+    zone_name: Valencia
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 173
+    geo_country_id: 195
+    zone_code: Valladolid
+    zone_name: Valladolid
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 174
+    geo_country_id: 195
+    zone_code: Vizcaya
+    zone_name: Vizcaya
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 175
+    geo_country_id: 195
+    zone_code: Zamora
+    zone_name: Zamora
+  attributes_cache: {}
+- !ruby/object:GeoZone 
+  attributes: 
+    id: 176
+    geo_country_id: 195
+    zone_code: Zaragoza
+    zone_name: Zaragoza
+  attributes_cache: {}

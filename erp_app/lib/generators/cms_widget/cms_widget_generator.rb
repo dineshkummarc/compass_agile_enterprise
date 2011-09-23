@@ -12,6 +12,10 @@ class CmsWidgetGenerator < Rails::Generators::NamedBase
     
     #views
     template "views/index.html.erb", "app/widgets/#{file_name}/views/index.html.erb"
+    
+    #helpers
+    template "helpers/view/view_helper_template.rb", "app/widgets/#{file_name}/helpers/view/#{file_name}_view_helper.rb"
+    template "helpers/controller/controller_helper_template.rb", "app/widgets/#{file_name}/helpers/controller/#{file_name}_controller_helper.rb"
   end
   
 end

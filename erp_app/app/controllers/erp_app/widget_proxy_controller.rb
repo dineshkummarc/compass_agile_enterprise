@@ -12,7 +12,7 @@ module ErpApp
   		widget_params = JSON.parse(params[:widget_params]) unless params[:widget_params].blank?
 
   		widget_obj = "::Widgets::#{@widget_name.camelize}::Base".constantize.new(self, @widget_name, @widget_action, @uuid, widget_params)
-		
+
   		render widget_obj.send(@widget_action)
 		end
 	  

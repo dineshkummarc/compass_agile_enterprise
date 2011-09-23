@@ -80,6 +80,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.PaymentsGridPanel",
             {
                 header: 'Created At',
                 sortable: true,
+				width:150,
                 dataIndex: 'created_at',
                 renderer: Ext.util.Format.dateRenderer('m/d/Y  H:i:s')
             }

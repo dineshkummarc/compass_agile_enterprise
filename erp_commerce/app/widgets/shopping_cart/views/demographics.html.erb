@@ -16,12 +16,12 @@
           <td>
             <div><img src="<%=order_line_item.product_type.images.empty? ? '/images/img_blank.png' : order_line_item.product_type.images.first.url%>" alt="Product Image" /></div>
             <div>
-              <span><%= order_line_item.product_type.description %></span><br/>
+              <span><%= raw order_line_item.product_type.description %></span><br/>
             </div>
           </td>
-          <td><%=order_line_item.product_type.descriptions.find_by_internal_identifier('long_description').description%></td>
+          <td><%= raw order_line_item.product_type.descriptions.find_by_internal_identifier('long_description').description%></td>
           <td>1</td>
-          <td><%=link_to_remote 'Remove',:url => build_widget_url(:remove_from_cart, order_line_item.id)%></td>
+          <td><%=link_to 'Remove', build_widget_url(:remove_from_cart, order_line_item.id), :remote => true, :class => 'ajax_replace'%></td>
           <td><span><%=order_line_item.product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : order_line_item.product_type.get_current_simple_amount_with_currency%></span></td>
         </tr>
       <%end%>
@@ -34,9 +34,9 @@
   <div>
     <h2>Step 1 of 3 Billing Information</h2>
     <div style="color:red">
-      <%=@billing_error_message%>
+      <%= raw @billing_error_message%>
     </div>
-    <% form_remote_tag :url => build_widget_url(:checkout_payment), :html => {:id => 'demographics_form'} do %>
+    <%= form_remote_tag build_widget_url(:checkout_payment), :id => 'demographics_form' do %>
       <div class="form_settings">
         <p>
           <span>First Name</span>
@@ -79,7 +79,7 @@
           <%= text_field_tag :bill_to_phone, params[:bill_to_phone] %>
         </p>
         <br/>
-        <input type="checkbox" name="ship_to_billing" style="width:10px;" <%=if params[:ship_to_billing] == 'on' then 'checked="checked"' end%> onclick="
+        <input type="checkbox" name="ship_to_billing" style="width:10px;" <%= if params[:ship_to_billing] == 'on' then raw('checked="checked"') end%> onclick="
           if(this.checked){
             Ext.get('shippingToBillingMessage').setStyle('display','');
             Ext.get('shippingInfoDiv').setStyle('display','none');
@@ -94,10 +94,10 @@
         <div class="form_settings">
           <h2>Step 2 of 3 Shipping Information</h2>
           <div style="color:red" id="shipToErrorMessages">
-            <%=@shipping_error_message%>
+            <%= raw @shipping_error_message%>
           </div>
-          <p id="shippingToBillingMessage" <%=if params[:ship_to_billing].blank? then 'style="display:none;"' end%>>Item(s) will be shipped to your billing address.</p>
-          <div id="shippingInfoDiv" <%=if params[:ship_to_billing] == 'on' then 'style="display:none;"' end%>>
+          <p id="shippingToBillingMessage" <%= if params[:ship_to_billing].blank? then raw('style="display:none;"') end%>>Item(s) will be shipped to your billing address.</p>
+          <div id="shippingInfoDiv" <%= if params[:ship_to_billing] == 'on' then raw('style="display:none;"') end%>>
             <p>
               <span>First Name</span>
               <%= text_field_tag :ship_to_first_name, params[:ship_to_first_name] %>
@@ -140,6 +140,3 @@
     <%end%>
   </div>
 </div>
-<script type="text/javascript">
-  Compass.ErpApp.Widgets.refreshWidget('shopping_cart', 'price_summary');
-</script>

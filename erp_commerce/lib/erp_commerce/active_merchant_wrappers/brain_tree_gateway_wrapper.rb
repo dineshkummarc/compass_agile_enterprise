@@ -21,7 +21,7 @@ module ErpCommerce
             :month              => credit_card_hash[:exp_month],
             :year               => credit_card_hash[:exp_year],
             :verification_value => credit_card_hash[:cvvs],
-            :type               => ActiveMerchantGatewayWrappers::CreditCardValidation.get_card_type(credit_card_hash[:number])
+            :type               => ErpCommerce::ActiveMerchantWrappers::CreditCardValidation.get_card_type(credit_card_hash[:number])
           })
 
         if credit_card.valid?

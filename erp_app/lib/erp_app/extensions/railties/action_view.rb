@@ -75,6 +75,19 @@ ActionView::Base.class_eval do
 
   #active_ext helper methods
   def active_ext_close_button(options={})
-    "<input type=\"button\" class=\"#{options[:class]}\" value=\"Close\" onclick=\"parent.Compass.ErpApp.Shared.ActiveExt.closeWindow('#{@model.class.to_s.underscore + "_" + @model.id.to_s}')\" />"
+    raw "<input type=\"button\" class=\"#{options[:class]}\" value=\"Close\" onclick=\"parent.Compass.ErpApp.Shared.ActiveExt.closeWindow('#{@model.class.to_s.underscore + "_" + @model.id.to_s}')\" />"
   end
+  
+  def link_to_remote(name, url, options={})
+    options.merge!({:class => 'ajax_replace', :remote => true})
+    link_to name, url, options
+  end
+  
+  def form_remote_tag(url, options={}, &block)
+    options.merge!({:class => 'ajax_replace', :remote => true})
+    form_tag url, options do
+      yield
+    end
+  end
+  
 end

@@ -1,5 +1,5 @@
 <div id="<%=widget_result_id%>">
-  <%=link_to_remote "<- Back To List",:url => build_widget_url(:index)%>
+  <%=link_to_remote "<- Back To List", build_widget_url(:back_to_catalog) %>
   <br/><br/>
   <ul style="margin: 0;padding: 0;list-style-type: none;">
     <% @product_type.images.each do |image| %>
@@ -16,8 +16,8 @@
   </h2>
   <hr/>
   <p>
-    <%=@product_type.find_description_by_iid('long_description').description%>
+    <%=raw @product_type.find_description_by_iid('long_description').description%>
   </p>
   <br/>
-  <%=link_to_remote'Add To Cart',:url => build_widget_url(:add_to_cart, @product_type.id)%>
+  <%=link_to_remote 'Add To Cart', build_widget_url(:add_to_cart, @product_type.id) %>
 </div>

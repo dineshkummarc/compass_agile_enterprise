@@ -15,7 +15,7 @@ module Widgets
         @cart_items_url = params[:cart_items_url]
 
         #if we have an order started get all charges
-        order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).get_order
+        order = ErpCommerce::OrderHelper.new(self).get_order
         @item_count = order.line_items.count unless order.nil?
         set_total_price(order)
 
@@ -25,7 +25,7 @@ module Widgets
       def cart_items
         @price = 0
         @products_url = params[:products_url]
-        @order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).get_order(true)
+        @order = ErpCommerce::OrderHelper.new(self).get_order(true)
         set_total_price(@order)
 
         render
@@ -33,29 +33,30 @@ module Widgets
 
       def remove_from_cart
         @products_url = params[:products_url]
-        @order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).remove_from_cart(params[:id])
+        @order = ErpCommerce::OrderHelper.new(self).remove_from_cart(params[:id])
         set_total_price(@order)
 
-        render :view => :cart_items
+        render :update => {:id => "#{@uuid}_result", :view => :cart_items}
       end
 
       def checkout_demographics
-        if self.authenticated?
+        unless self.current_user.nil?
           params[:ship_to_billing] = 'on'
           params[:bill_to_email] = current_user.email
           @products_url = params[:products_url]
-          @order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).get_order
+          @order = ErpCommerce::OrderHelper.new(self).get_order
           set_total_price(@order)
 
-          render :view => :demographics
+          render :update => {:id => "#{@uuid}_result", :view => :demographics}
         else
-          render :view => :login
+          render :update => {:id => "#{@uuid}_result", :view => :login}
         end
       end
 
       def checkout_payment
         @products_url = params[:products_url]
-        @order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).get_order
+        order_helper = ErpCommerce::OrderHelper.new(self)
+        @order = order_helper.get_order
         set_total_price(@order)
 
         messages = validate_demographics
@@ -69,23 +70,23 @@ module Widgets
           messages.select{|item| item =~ /^S/}.collect{|item| "<li>#{item}</li>"}.each do |html| @shipping_error_message << html end
           @shipping_error_message << '</ul>'
 
-          render :view => :demographics
+          render :update => {:id => "#{@uuid}_result", :view => :demographics}
         else
-          @order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).set_demographic_info(params)
+          @order = order_helper.set_demographic_info(params)
 
-          render :view => :payment
+          render :update => {:id => "#{@uuid}_result", :view => :payment}
         end
       end
 
       def checkout_finalize
         @products_url = params[:products_url]
-        success, @message, @order = ErpApp::Widget::ShoppingCart::Helpers::Order.new(self).complete_order(params)
+        success, @message, @order = ErpCommerce::OrderHelper.new(self).complete_order(params)
         set_total_price(@order)
 
         if success
-          render :view => :confirmation
+          render :update => {:id => "#{@uuid}_result", :view => :confirmation}
         else
-          render :view => :payment
+          render :update => {:id => "#{@uuid}_result", :view => :payment}
         end
       end
 

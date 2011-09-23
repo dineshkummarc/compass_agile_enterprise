@@ -17,11 +17,13 @@ module ErpApp
 	  
 	  IGNORED_PARAMS = %w{action controller uuid widget_name widget_action dynamic_form_id dynamic_form_model_id model_name use_dynamic_form authenticity_token is_html_form commit utf8}
     
-    delegate :config, :params, :session, :request, :logger, :user_signed_in?, :current_user, :flash, :to => :controller
+    delegate :config, :params, :session, :request, :logger, :user_signed_in?, :current_user, :flash, :update_div_id, :update_html, :to => :controller
 
     attr_accessor :controller
     attr_reader   :state_name
 		attr_accessor :name
+		attr_accessor :div_id
+		attr_accessor :html
 		attr_accessor :view
 		attr_accessor :uuid
 		attr_accessor :widget_params
@@ -44,14 +46,23 @@ module ErpApp
 
     def render(opts={})
       render_view_for(opts, self.view)
-    end
+    end 
     
     def render_view_for(opts, state)
       return '' if opts[:nothing]
-
       
-      ### TODO: dispatch dynamically:
-      if    opts[:text]   ### FIXME: generic option?
+      if opts[:update]
+        update_opts = opts[:update]
+        if opts[:text]
+          js = update_opts[:text]
+        else 
+          opts = defaultize_render_options_for(update_opts, state)
+          template = find_family_view_for_state(opts[:view])
+          opts[:template] = template
+          js = render_to_string(opts)
+        end
+        return {:json => {:htmlId => update_opts[:id], :html => js}}
+      elsif opts[:text]   ### FIXME: generic option?
       elsif opts[:inline]
       elsif opts[:file]
       elsif opts[:json]

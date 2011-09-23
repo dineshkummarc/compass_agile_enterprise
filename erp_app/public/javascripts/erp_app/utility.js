@@ -1,4 +1,11 @@
-Ext.ns("Compass.ErpApp.Utility.Data");
+Ext.ns("Compass.ErpApp.Utility");
+
+Compass.ErpApp.Utility.evaluateScriptTags = function(element){
+	var scriptTags = element.getElementsByTagName("script");
+    for(var i=0;i<scriptTags.length;i++){
+		eval(scriptTags[i].text);
+	}
+};
 
 Compass.ErpApp.Utility.promptReload = function(){
     Ext.MessageBox.confirm('Confirm', 'Page must reload for changes to take affect. Reload now?', function(btn){
@@ -22,12 +29,6 @@ Compass.ErpApp.Utility.handleFormFailure = function(action){
         case Ext.form.action.Action.SERVER_INVALID:
             Ext.Msg.alert('Failure', action.result.msg);
     }
-};
-
-Compass.ErpApp.Utility.getRootUrl = function(){
-    var url_pieces = location.href.split("/");
-    var root_url = url_pieces[0] + url_pieces[1] + "//" + url_pieces[2] + "/"
-    return root_url;
 };
 
 Compass.ErpApp.Utility.roundNumber = function(num, dec) {

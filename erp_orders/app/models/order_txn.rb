@@ -163,8 +163,9 @@ class OrderTxn < ActiveRecord::Base
   def set_shipping_info(party)
     self.ship_to_first_name = party.business_party.current_first_name
     self.ship_to_last_name = party.business_party.current_last_name
-    shipping_address = party.shipping_address || party.primary_address
+    shipping_address = party.find_contact_with_purpose(PostalAddress, ContactPurpose.shipping) || party.find_contact_with_purpose(PostalAddress, ContactPurpose.default)
     unless shipping_address.nil?
+      shipping_address = shipping_address.contact_mechanism
       self.ship_to_address_line_1 = shipping_address.address_line_1
       self.ship_to_address_line_2 = shipping_address.address_line_2
       self.ship_to_city = shipping_address.city
@@ -181,8 +182,9 @@ class OrderTxn < ActiveRecord::Base
 
     self.bill_to_first_name = party.business_party.current_first_name
     self.bill_to_last_name = party.business_party.current_last_name
-    billing_address = party.billing_address || party.primary_address
+    billing_address = party.find_contact_with_purpose(PostalAddress, ContactPurpose.billing) || party.find_contact_with_purpose(PostalAddress, ContactPurpose.default)
     unless billing_address.nil?
+      billing_address = billing_address.contact_mechanism
       self.bill_to_address_line_1 = billing_address.address_line_1
       self.bill_to_address_line_2 = billing_address.address_line_2
       self.bill_to_city = billing_address.city
