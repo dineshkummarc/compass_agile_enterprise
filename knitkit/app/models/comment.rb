@@ -2,6 +2,8 @@ class Comment < ActiveRecord::Base
   belongs_to :commented_record, :polymorphic => true
   belongs_to :user
 
+  validates_presence_of :comment
+
   alias :approved_by :user
 
   scope :in_order, order('created_at ASC')
