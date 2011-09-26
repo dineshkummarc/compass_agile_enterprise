@@ -3,7 +3,7 @@ module Widgets
     class Base < ErpApp::Widgets::Base
       def index
         @orders = OrderTxn.find_by_party_role('buyer', current_user.party)
-
+        @orders = @orders.select{|order| order.status != "Initialized"}
         render
       end
 

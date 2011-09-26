@@ -85,11 +85,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.OrderManager.PaymentsGridPanel",
                 renderer: Ext.util.Format.dateRenderer('m/d/Y  H:i:s')
             }
             ],
-            loadMask: true,
             autoScroll:true,
             stripeRows: true,
             store:store,
             viewConfig:{
+				loadMask:false,
                 forceFit:true
             },
             listeners:{
