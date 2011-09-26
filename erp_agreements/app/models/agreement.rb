@@ -25,14 +25,9 @@ class Agreement < ActiveRecord::Base
   end
 
   def get_item_by_item_type_internal_identifier(item_type_internal_identifier)
-    result = nil
-    agreement_items.each do |agreement_item|
-      if (agreement_item.agreement_item_type.internal_identifier == item_type_internal_identifier)
-        result = agreement_item.agreement_item_value
-        break
-      end
-    end
-    result
+    agreement_items.joins("join agreement_item_types on 
+                           agreement_item_types.id = 
+                           agreement_items.agreement_item_type_id").where("agreement_item_types.internal_identifier = '#{item_type_internal_identifier}'").first
   end
   
   def respond_to?(m)
@@ -40,8 +35,8 @@ class Agreement < ActiveRecord::Base
   end
   
   def method_missing(m, *args, &block)
-    value = get_item_by_item_type_internal_identifier(m.to_s)
-    (value.nil?) ? super : (return value)
+    agreement_item = get_item_by_item_type_internal_identifier(m.to_s)
+    (agreement_item.nil?) ? super : (return agreement_item.agreement_item_value)
   end
 
 end
