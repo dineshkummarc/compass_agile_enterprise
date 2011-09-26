@@ -23,9 +23,9 @@ module Knitkit
       include Knitkit::Extensions::ActionController::ThemeSupport::ActsAsThemedController
     end
     
-    # Add widgets to load path
-    config.autoload_paths << "#{root}/lib/erp_app/*"
-    
+    #add widgets to load path
+    config.autoload_paths << "#{root}/app/widgets/*"
+        
     #set engine to scope
   	engine = self
   	config.to_prepare do 

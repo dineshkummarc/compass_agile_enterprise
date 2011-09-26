@@ -10,6 +10,9 @@ module ErpCommerce
       include ErpCommerce::Extensions::ActiveRecord::ActsAsFee
       include ErpCommerce::Extensions::ActiveRecord::ActsAsPriceable
     end
+    
+    #add widgets to load path
+    config.autoload_paths << "#{root}/app/widgets/*"
       
 	  #set engine to scope
   	engine = self
