@@ -175,7 +175,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
                     self.initialConfig.tabPanel.add(
                     {
                         xtype:'usermanagement_personalinfopanel',
-                        entityInfo:response.entityInfo,
+                        businessParty:response.businessParty,
+						userInfo:response.userInfo,
                         entityType:response.entityType
                     });
                 }

@@ -32,10 +32,15 @@ module ErpApp
           options = params
           gender = options[:gender]
           options.delete_if{|k,v| ignored_params.include?(k.to_s)}
-          user = User.create(options)
+          user = User.new(
+            :email => params[:email],
+            :username => params[:username],
+            :password => params[:password],
+            :password_confirmation => params[:password_confirmation]
+          )
 
           if user.valid?
-            individual = Individual.create(:gender => gender, :current_first_name => user.first_name, :current_last_name => user.last_name)
+            individual = Individual.create(:gender => gender, :current_first_name => params[:first_name], :current_last_name => params[:last_name])
             user.party = individual.party
             user.save
             response = {:success => true}
@@ -54,12 +59,14 @@ module ErpApp
 			  def get_details
           entity_info = nil
           if @user.party.business_party.is_a?(Individual)
-            entity_info = @user.party.business_party.to_json(:only => [:current_first_name, :current_last_name, :gender, :total_years_work_experience])
+            business_party = @user.party.business_party.to_json(:only => [:current_first_name, :current_last_name, :gender, :total_years_work_experience])
           else
-            entity_info = @user.party.business_party.to_json(:only => [:description])
+            business_party = @user.party.business_party.to_json(:only => [:description])
           end
 
-          render :inline => "{entityType:'#{@user.party.business_party.class.to_s}', entityInfo:#{entity_info}}"
+          render :inline => "{entityType:'#{@user.party.business_party.class.to_s}', 
+                              businessParty:#{business_party},
+                              userInfo:#{@user.to_json(:only => [:username, :email, :last_sign_in_at, :sign_in_count])}}"
 			  end
 
 			  def update_user_password

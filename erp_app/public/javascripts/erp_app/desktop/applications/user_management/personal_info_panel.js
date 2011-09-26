@@ -11,61 +11,101 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel
   
     constructor : function(config) {
         var form;
-        if(config['entityType'] == 'Organization'){
+        var userInformationFieldset = {
+			xtype:'fieldset',
+			width:400,
+			title:'User Information',
+			items:[
+			{
+                xtype:'displayfield',
+                fieldLabel:'Username',
+				labelWidth:'110',
+				width:'150',
+                value:config['userInfo']['username']
+            },
+			{
+                xtype:'displayfield',
+                fieldLabel:'Email Address',
+				labelWidth:'110',
+				width:'150',
+                value:config['userInfo']['email']
+            },
+			{
+                xtype:'displayfield',
+                fieldLabel:'Last Login',
+				labelWidth:'110',
+                value:Ext.util.Format.date(config['userInfo']['last_sign_in_at'],'F j, Y, g:i a')
+            },
+			{
+                xtype:'displayfield',
+				labelWidth:'110',
+                fieldLabel:'# Times Logged In',
+                value:config['userInfo']['sign_in_count']
+            }
+			]
+		}
+
+		if(config['entityType'] == 'Organization'){
             form = new Ext.FormPanel({
-                labelWidth: 110,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
                 width: 425,
                 url:'./contacts/create_party',
-                defaults: {
-                    width: 225
-                },
                 items: [
-                {
-                    xtype:'textfield',
-                    fieldLabel:'Description',
-                    value:config['entityInfo']['description'],
-                    name:'description'
-                }
+				{
+						xtype:'displayfield',
+						width:400,
+						title:config['entityType'] + ' Information',
+						items:[
+                		{
+		                    xtype:'textfield',
+							labelWidth:'110',
+							width:'150',
+		                    fieldLabel:'Description',
+		                    value:config['businessParty']['description']
+		                }
+					]
+				},
+				userInformationFieldset
                 ]
             });
         }
         else{
             form = new Ext.FormPanel({
-                labelWidth: 110,
                 frame:false,
                 bodyStyle:'padding:5px 5px 0',
                 width: 425,
                 url:'./contacts/create_party',
-                defaults: {
-                    width: 225
-                },
                 items: [
                 {
-                    xtype:'textfield',
-                    fieldLabel:'First Name',
-                    value:config['entityInfo']['current_first_name'],
-                    name:'current_first_name'
-                },
-                {
-                    xtype:'textfield',
-                    fieldLabel:'Last Name',
-                    value:config['entityInfo']['current_last_name'],
-                    name:'current_last_name'
-                },
-                {
-                    xtype:'textfield',
-                    fieldLabel:'Gender',
-                    value:config['entityInfo']['gender'],
-                    name:'gender'
-                },
-                {
-                    xtype:'textfield',
-                    fieldLabel:'Total Yrs Work Exp',
-                    value:config['entityInfo']['total_years_work_experience'],
-                    name:'total_years_work_experience'
-                }
+					xtype:'fieldset',
+					width:400,
+					title:config['entityType'] + ' Information',
+					items:[
+					{
+	                    xtype:'displayfield',
+	                    labelWidth:'110',
+						width:'150',
+						fieldLabel:'First Name',
+	                    value:config['businessParty']['current_first_name']
+	                },
+	                {
+	                    xtype:'displayfield',
+	                    fieldLabel:'Last Name',
+						labelWidth:'110',
+						width:'150',
+	                    value:config['businessParty']['current_last_name']
+	                },
+	                {
+	                    xtype:'displayfield',
+	                    fieldLabel:'Gender',
+						labelWidth:'110',
+						width:'150',
+	                    value:config['businessParty']['gender']
+	                }
+					]
+				},
+				userInformationFieldset
                 ]
             });
         }
@@ -73,7 +113,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.PersonalInfoPanel
         config = Ext.apply({
             items:[form],
             layout:'fit',
-            title:config['entityType'] + ' Information'
+            title:'User Details'
             }, config);
 
         this.callParent([config]);
