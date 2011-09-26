@@ -106,7 +106,7 @@ module ErpProducts
 
               product_type = ProductType.find(params[:product_type_id])
               #build path
-              path = File.join(Rails.root,'public/images/products',name)
+              path = File.join(product_type.images_path,name)
 
               product_type.add_file(data, path)
               result = {:success => true}

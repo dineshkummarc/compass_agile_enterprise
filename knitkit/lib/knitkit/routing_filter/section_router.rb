@@ -3,7 +3,6 @@
 
 module RoutingFilter
   class SectionRouter < Filter
-
     def around_recognize(path, env, &block)
       website = Website.find_by_host(env["HTTP_HOST"])
       unless website.nil?

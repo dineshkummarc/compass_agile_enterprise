@@ -3,7 +3,7 @@ module Console
     isolate_namespace Console
     
     initializer "console.merge_public" do |app|
-      app.middleware.insert_before ::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public"
+      app.middleware.insert_before Rack::Lock, ::ActionDispatch::Static, "#{root}/public"
     end
     
   end

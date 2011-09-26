@@ -3,7 +3,7 @@ module ErpOrders
     isolate_namespace ErpOrders
     
     initializer "erp_orders_assets.merge_public" do |app|
-      app.middleware.insert_before ::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public"
+      app.middleware.insert_before Rack::Lock, ::ActionDispatch::Static, "#{root}/public"
     end
 	  
 	  ActiveSupport.on_load(:active_record) do

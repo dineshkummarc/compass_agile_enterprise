@@ -29,4 +29,8 @@ class ProductType < ActiveRecord::Base
     ProductInstance.count("product_type_id = #{product_type.id} and prod_availability_status_type_id = #{prod_availability_status_type.id}")
   end
   
+  def images_path
+    File.join(Rails.root,'public/products/images',"#{self.description.underscore}_#{self.id}") 
+  end
+  
 end

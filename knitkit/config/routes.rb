@@ -1,6 +1,3 @@
-require 'routing_filter'
-require "#{File.dirname(__FILE__)}/../lib/knitkit/routing_filter/section_router.rb"
-
 Rails.application.routes.draw do
   filter :section_router
   

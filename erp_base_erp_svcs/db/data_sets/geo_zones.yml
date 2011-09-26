@@ -190,7 +190,7 @@
   attributes_cache: {}
 - !ruby/object:GeoZone 
   attributes: 
-    id: 
+    id: 28
     geo_country_id: 223
     zone_code: MI
     zone_name: Michigan
