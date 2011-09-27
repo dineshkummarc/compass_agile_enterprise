@@ -9,8 +9,7 @@ class ContactObserver < ActiveRecord::Observer
 
   def after_destroy(contact)
     begin
-      party = Party.find(contact.party.id)
-      PartySearchFact.update_search_fact(party)
+      PartySearchFact.update_search_fact(contact.party)
     rescue
     end
   end

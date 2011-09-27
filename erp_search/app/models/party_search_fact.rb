@@ -1,4 +1,6 @@
 class PartySearchFact < ActiveRecord::Base
+  after_destroy :sunspot_commit
+  
   belongs_to :party
   
   searchable do
@@ -57,22 +59,22 @@ class PartySearchFact < ActiveRecord::Base
         :individual_current_middle_name => (party.business_party.current_middle_name rescue ''),
         :individual_birth_date => (party.business_party.birth_date rescue ''),
         :individual_ssn => (party.business_party.ssn_last_four rescue ''),
-        :party_phone_number => (party.primary_phone rescue ''),
-        :party_email_address => (party.primary_email rescue ''),
-        :party_address_1 => (party.primary_address.address_line_1 rescue ''),
-        :party_address_2 => (party.primary_address.address_line_2 rescue ''),
-        :party_primary_address_city => (party.primary_address.city rescue ''),
-        :party_primary_address_state => (party.primary_address.state rescue ''),
-        :party_primary_address_zip => (party.primary_address.zip rescue ''),
-        :party_primary_address_country => (party.primary_address.country rescue ''),
+        :party_phone_number => (party.personal_phone_number.phone_number rescue ''),
+        :party_email_address => (party.personal_email_address.email_address rescue ''),
+        :party_address_1 => (party.home_postal_address.address_line_1 rescue ''),
+        :party_address_2 => (party.home_postal_address.address_line_2 rescue ''),
+        :party_primary_address_city => (party.home_postal_address.city rescue ''),
+        :party_primary_address_state => (party.home_postal_address.state rescue ''),
+        :party_primary_address_zip => (party.home_postal_address.zip rescue ''),
+        :party_primary_address_country => (party.home_postal_address.country rescue ''),
         :user_enabled => (party.user.enabled rescue false),
         :user_type => (party.user.attributes['type'] rescue '')
         )
     Sunspot.commit
   end
 
-  def after_destroy
-    Sunspot.commit
+  def sunspot_commit
+    Sunspot.commit    
   end
 
 end

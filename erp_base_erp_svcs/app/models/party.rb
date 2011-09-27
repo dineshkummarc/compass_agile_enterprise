@@ -169,6 +169,37 @@ class Party < ActiveRecord::Base
     contact_mechanism_class.update(contact.contact_mechanism, contact_mechanism_args)
   end
 
+  def get_contact_by_method(m)
+    method_name = m.split('_')
+    return nil if method_name.size < 3 or method_name.size > 4
+    
+    # handles 1 or 2 segment contact purposes (i.e. home or employment_offer)
+    # contact mechanism must be 2 segments, (i.e. email_address, postal_address, phone_number)
+    if method_name.size == 4
+      purpose = method_name[0] + '_' + method_name[1]
+      klass = method_name[2] + '_' + method_name[3]
+    else
+      purpose = method_name[0]
+      klass = method_name[1] + '_' + method_name[2]
+    end
+    
+    contact_purpose = ContactPurpose.find_by_internal_identifier(purpose)
+    if contact_purpose.nil? or !Object.const_defined?(klass.camelize)
+      return nil
+    else
+      find_contact_mechanism_with_purpose(klass.camelize.constantize, contact_purpose)
+    end
+  end
+
+  def respond_to?(m)
+    ((get_contact_by_method(m.to_s).nil? ? false : true)) unless super
+  end
+  
+  def method_missing(m, *args, &block)
+    value = get_contact_by_method(m.to_s)
+    (value.nil?) ? super : (return value)
+  end
+  
   #************************************************************************************************
   #** End
   #************************************************************************************************

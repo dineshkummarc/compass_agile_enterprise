@@ -6,7 +6,7 @@ module ErpSearch
     
     #add observers
 	  #this is ugly need a better way
-	  observers = [:contact_observer, :email_address_observer, :organization_observer, :party_observer, :postal_address_observer]
+	  observers = [:party_observer, :contact_observer]
 	  (config.active_record.observers.nil?) ? config.active_record.observers = observers : config.active_record.observers += observers
 	  
 	  #set engine to scope
