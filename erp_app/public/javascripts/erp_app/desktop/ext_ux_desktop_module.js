@@ -602,6 +602,7 @@ Ext.define("Ext.ux.desktop.StartMenu",{
             cls:"ux-start-menu-body",
             border:false,
             floating:false,
+			autoScroll:true,
             items:b
         });
         a.menu.layout.align="stretch";
