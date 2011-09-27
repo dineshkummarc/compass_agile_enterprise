@@ -72,6 +72,17 @@ ActionView::Base.class_eval do
     
     raw resources
   end
+  
+  def include_compass_ae_instance_about
+    compass_ae_instance = CompassAeInstance.first
+    json_hash = {
+      :version => compass_ae_instance.version,
+      :installedAt => compass_ae_instance.created_at.strftime("%B %d, %Y at %I:%M%p"),
+      :lastUpdateAt => compass_ae_instance.updated_at.strftime("%B %d, %Y at %I:%M%p"),
+      :installedEngines => compass_ae_instance.installed_engines
+    }
+    raw "<script type=\"text/javascript\">var compassAeInstance = #{json_hash.to_json};</script>"
+  end
 
   #active_ext helper methods
   def active_ext_close_button(options={})

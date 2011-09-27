@@ -60,7 +60,6 @@
     
     <%= static_javascript_include_tag('erp_app/widgets.js')%>
     <%= include_widgets%>
- 
     <%= static_javascript_include_tag(
       "erp_app/shared/status_window.js",
       "erp_app/shared/preference_form.js",
@@ -84,6 +83,7 @@
 	<%@desktop.applications.each do |application| application.locate_resources('javascripts').each{|path|%>
 		<%=static_javascript_include_tag(path)%>
 	<%}end%>
+	<%=include_compass_ae_instance_about%>
 
     <!--stylesheets-->
     <%= static_stylesheet_link_tag('erp_app/compass-ext-all.css') %>
@@ -160,6 +160,12 @@
                   iconCls:"icon-key",
                   handler:b.onLogout,
                   scope:b
+                },  
+                {
+                  text:"About",
+                  iconCls:"icon-info",
+                  handler:b.onHelp,
+                  scope:b
                 }]
             }
           })
@@ -184,6 +190,32 @@
               window.location = '/users/sign_out';
             }
           })
+        },
+        onHelp:function(){
+           var tpl = new Ext.XTemplate("<table>",
+                                       "<tr><td style='width:100px;'>Version: </td><td>{version}</td></tr>",
+                                       "<tr><td>Installed at: </td><td>{installedAt}</td></tr>",
+                                       "<tr><td>Last Update: </td><td>{lastUpdateAt}</td></tr>",
+                                       "</table><br/>",
+                                       "<h3>Installed Engines</h3><br/>",
+                                       "<table>",
+                                       "<tr><th style='width:150px;font-weight:bold;'>Name</th><th style='font-weight:bold;'>Version</th></tr>",
+                                       '<tpl for="installedEngines">',
+                                       "<tr><td>{name}</td><td>{version}</td></tr>",
+                                       '</tpl>',
+                                       "</table>");
+          
+          var aboutWindow = Ext.create('Ext.window.Window',{
+            title: 'About Your Compass AE Instance',
+            height: 200,
+            width: 400,
+            layout: 'fit',
+            resizable:false,
+            autoScroll:true,
+            tpl:tpl,
+            data:compassAeInstance
+          });
+          aboutWindow.show();
         },
         onControlPanel:function(){
           var controlPanel = window.compassDesktop.getModule('control-panel-win');

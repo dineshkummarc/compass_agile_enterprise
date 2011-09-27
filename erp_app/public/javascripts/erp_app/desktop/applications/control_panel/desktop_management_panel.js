@@ -75,10 +75,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPa
         img.src = "../../images/wallpaper/" + selectedImage;
     },
 
-    initComponent: function() {
-        Compass.ErpApp.Desktop.Applications.ControlPanel.DesktopManagementPanel.superclass.initComponent.call(this, arguments);
-    },
-
     constructor : function(config) {
         var self = this;
         var backgroundImagePanel = {

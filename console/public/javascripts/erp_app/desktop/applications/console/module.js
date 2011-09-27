@@ -140,7 +140,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Console",{
     init : function(){
         this.launcher = {
             text: 'Desktop Console',
-            iconCls:'console_icon',
+            iconCls:'icon-console',
             handler: this.createWindow,
             scope: this
         }
