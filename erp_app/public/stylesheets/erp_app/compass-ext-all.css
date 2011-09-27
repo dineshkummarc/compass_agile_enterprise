@@ -2,6 +2,11 @@
     padding : 5px;
 }
 
+.icon-console {
+    background-image: url(/images/icons/console/console_16x16.png) !important;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/console/console_16x16.png', sizingMethod='crop');
+}
+
 .icon-credit_cards {
     background-image:url( /images/icons/creditcards/creditcards_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/creditcards/creditcards_16x16.png', sizingMethod='crop');
