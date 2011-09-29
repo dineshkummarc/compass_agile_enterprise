@@ -26,7 +26,7 @@ Content.class_eval do
     end
 
     # alias_method :search, :solr_search unless method_defined? :search
-    # the above line in sunspot plugin doesn't all you overwrite the search method in content base model.
+    # the above line in sunspot plugin doesn't allow you to overwrite the search method in content base model.
     # add this to force overwriting it.
     def self.search(options = {}, &block)
       self.solr_search(options = {}, &block)

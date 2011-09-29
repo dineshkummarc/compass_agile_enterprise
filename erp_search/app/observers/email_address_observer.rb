@@ -1,20 +1,5 @@
 class EmailAddressObserver < ActiveRecord::Observer
-  def after_save(email_address)
-    begin
-      #Rescued because callbacks on email create has a contact but
-      #may not have a party yet
-      PartySearchFact.update_search_fact(email_address.contact.party)
-    rescue
-    end
-  end
+  # NOTE: updating search fact here is redundant, 
+  #       Contact observer is being called via has_contact.after_save => Contact.save => ContactObserver.after_save
 
-  def after_destroy(email_address)
-    begin
-      party = Party.find(email_address.contact.party.id)
-      #Rescued because callbacks on email create has a contact but
-      #may not have a party yet
-      PartySearchFact.update_search_fact(party)
-    rescue
-    end
-  end
 end

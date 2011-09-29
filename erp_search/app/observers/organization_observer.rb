@@ -1,10 +1,6 @@
 class OrganizationObserver < ActiveRecord::Observer
 
-  def after_save(organization)
-    begin
-      PartySearchFact.update_search_fact(organization.business_party)
-    rescue
-    end
-  end
-
+# NOTE: updating search fact here is redundant, 
+#       Party observer is being called via Organization.after_save => Party.save => PartyObserver.after_save
+  
 end
