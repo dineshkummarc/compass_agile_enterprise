@@ -1,9 +1,1 @@
-.DS_Store
-Thumbs.db
-*~
-*.cache
-*.log
-*.pid
-*.sqlite3
-temp/*
-tmp/*
+*.swp
