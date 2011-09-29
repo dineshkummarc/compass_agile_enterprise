@@ -22,7 +22,7 @@ module ErpTechSvcs
 				module InstanceMethods
 				  
           def add_file(data, path=nil)
-						file_asset = FileAsset.create!(:file_asset_holder => self, :base_path => path, :data => data)
+						FileAsset.create!(:file_asset_holder => self, :base_path => path, :data => data)
           end
 
           def images

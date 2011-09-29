@@ -1,0 +1,46 @@
+<div id="menubar">
+  <ul id="menu">
+    <%
+    selected_section_parent = nil
+    unless section.nil?
+      section.positioned_children.each  do |child_section|
+      %>
+        <%if child_section.in_menu %>
+          <%if child_section.has_access?(current_user)%>
+            <% if (!@website_section.nil? && child_section.id == @website_section.id) or (!selected_section_parent.nil? and selected_section_parent.id == child_section.id) %>
+              <li class="selected">
+                <%
+                selected_section_parent = child_section
+              else
+              %>
+              <li>
+              <% end %>
+              <a href="/<%= child_section.permalink %>"><span><%= child_section.title %></span></a>
+            </li>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+<br/> 
+<%
+if !selected_section_parent.nil? and !selected_section_parent.children.empty?
+%>
+  <div id="submenubar">
+    <ul id="submenu">
+      <%
+      selected_section_parent.positioned_children.each do |child_section|
+      %>
+        <% if !@website_section.nil? && child_section.id == @website_section.id %>
+          <li class="selected">
+          <% else %>
+          <li>
+          <% end %>
+          <a href="/<%= child_section.permalink %>"><span><%= child_section.title %></span></a>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+

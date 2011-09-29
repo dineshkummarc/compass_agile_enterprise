@@ -2,7 +2,7 @@ class WebsiteNavItem < ActiveRecord::Base
   belongs_to :website_nav
   belongs_to :linked_to_item, :polymorphic => true
 
-  acts_as_nested_set #if ActiveRecord::Base.connection.tables.include?('website_nav_items') #better nested set tries to use this before the table is there...
+  acts_as_nested_set
   include ErpTechSvcs::Utils::DefaultNestedSetMethods
 
   def menu_url
@@ -15,6 +15,14 @@ class WebsiteNavItem < ActiveRecord::Base
     end
 
     link
+  end
+  
+  def positioned_children
+    children.sort_by{|child| [child.position]}
+  end
+
+  def website_nav
+    website_nav_id.nil? ? self.parent.website_nav : WebsiteNav.find(website_nav_id)
   end
 
 end

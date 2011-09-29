@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+
+begin
+  require 'erp_base_erp_svcs/command'
+rescue LoadError
+  puts "could not load erp_base_erp_svcs gem"
+  exit
+end
+
+ErpBaseErpSvcs::Command.run

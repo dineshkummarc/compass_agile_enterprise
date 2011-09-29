@@ -1,5 +1,5 @@
 class CreateCompassAeInstance < ActiveRecord::Migration
-  def up
+  def self.up
     unless table_exists?(:compass_ae_instances)
       create_table :compass_ae_instances do |t|
         t.decimal :version
@@ -9,7 +9,7 @@ class CreateCompassAeInstance < ActiveRecord::Migration
     end
   end
 
-  def down
+  def self.down
     drop_table :compass_ae_instances
   end
 end

@@ -10,6 +10,9 @@ Gem::Specification.new do |s|
   s.version = ErpBaseErpSvcs::VERSION
   s.summary = "Insert ErpBaseErpSvcs summary."
   s.description = "Insert ErpBaseErpSvcs description."
+  s.authors     = ["Russell"]
+  s.email       = ["rholmes@gmail.com"]
+  s.homepage    = "http://www.test.com"
   
   s.files = Dir["{app,config,db,lib}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]

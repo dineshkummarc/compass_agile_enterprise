@@ -420,8 +420,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             }
             ],
 			listeners:{
-				'activate':function(panel){
-					westRegion.selectWebsite(siteId);
+				'show':function(panel){
+					Ext.getCmp('knitkitWestRegion').selectWebsite(websiteId);
 				}
 			}
         });
