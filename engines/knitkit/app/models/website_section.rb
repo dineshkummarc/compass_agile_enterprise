@@ -29,6 +29,10 @@ class WebsiteSection < ActiveRecord::Base
     articles = Article.find_by_section_id(self.id)
     articles
   end
+
+  def website
+    website_id.nil? ? self.parent.website : Website.find(website_id)
+  end
   
   class << self
     def register_type(type)

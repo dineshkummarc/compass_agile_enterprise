@@ -138,7 +138,7 @@ class ErpApp::Desktop::ProductManager::BaseController < ErpApp::Desktop::BaseCon
       #build path
       path = File.join(product_type.images_path,name)
 
-      product_type.add_file(path, contents)
+      product_type.add_file(contents, path)
       result = {:success => true}
     rescue Exception=>ex
       logger.error ex.message

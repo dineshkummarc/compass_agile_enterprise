@@ -16,4 +16,12 @@ class WebsiteNavItem < ActiveRecord::Base
     link
   end
 
+  def positioned_children
+    children.sort_by{|child| [child.position]}
+  end
+
+  def website_nav
+    website_nav_id.nil? ? self.parent.website_nav : WebsiteNav.find(website_nav_id)
+  end
+
 end

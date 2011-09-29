@@ -1,6 +1,7 @@
 Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
     extend:"Ext.tree.Panel",
     alias:'widget.compassshared_filemanager',
+	extraPostData:{},
     /*
 	addtional config options
 	
@@ -13,8 +14,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
      */
 
     initComponent: function() {
-        Compass.ErpApp.Shared.FileManagerTree.superclass.initComponent.call(this, arguments);
-
+        this.callParent(arguments);
         this.addEvents(
             /**
          * @event fileDeleted
@@ -70,16 +70,11 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                 url:config['url'] || './file_manager/base/expand_directory'
             },
             root: {
-                text: 'Files',
+                text: config['rootText'] || 'Files',
                 id:'root_node',
                 expanded: true
             },
-            fields:config['fields'] || [
-			{name:'text'},
-			{name:'downloadPath'},
-			{name:'id'},
-			{name:'leaf'}
-			]
+            fields:config['fields'] || [{name:'text'},{name:'downloadPath'},{name:'id'},{name:'leaf'}]
         });
 
         var defaultListeners = {
@@ -87,13 +82,8 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
             'itemmove':function(node, oldParent, newParent, index, options){
                 Ext.MessageBox.confirm('Confirm', 'Are you sure you want to move this file?', function(btn){
                     if(btn == 'no'){
-                        store.load({
-                            node:oldParent
-                        });
-
-                        store.load({
-                            node:newParent
-                        });
+                        store.load({node:oldParent});
+                        store.load({node:newParent});
                         return false;
                     }
                     else
@@ -101,23 +91,20 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                     {
                         var msg = Ext.Msg.wait("Saving", "Saving move...");
                         var conn = new Ext.data.Connection();
-                        conn.request({
-                            url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/save_move',
+                        Ext.apply(self.extraPostData, {node:node.data.id, parent_node:newParent.data.id});
+						conn.request({
+							url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/save_move',
                             method: 'POST',
-                            params:{
-                                node:node.data.id,
-                                parent_node:newParent.data.id
-                            },
+                            params:self.extraPostData,
                             success: function(response) {
-                                var responseObj = Ext.decode(response.responseText);
                                 msg.hide();
-                            //newParent.reload();
-                            //Ext.Msg.alert('Status', responseObj.msg);
-
+								var responseObj = Ext.decode(response.responseText);
+                                Ext.Msg.alert('Status', responseObj.msg);
+								store.load({node:newParent});
                             },
                             failure: function(response) {
-                                var responseObj = Ext.decode(response.responseText);
                                 msg.hide();
+								var responseObj = Ext.decode(response.responseText);
                                 Ext.Msg.alert('Status', responseObj.msg);
                             }
                         });
@@ -190,26 +177,34 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                     handler: function(btn){
                                         var renameForm = btn.findParentByType('form');
                                         if(renameForm.getForm().isValid()){
-                                            renameForm.getForm().submit({
-                                                url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/rename_file',
-                                                waitMsg: 'Renaming your file to ...',
-                                                success: function(form, action){
-                                                    if(action.result.success){
-                                                        store.load({
-                                                            node:record.parentNode
-                                                        });
-                                                        var window = renameForm.findParentByType('window')
-                                                        window.close()
-                                                    }
-                                                    else{
-                                                        Ext.Msg.alert("Error", action.result.error);
-                                                    }
-
-                                                },
-                                                failure:function(form, action){
-                                                    Compass.ErpApp.Utility.HandleFormFailure(action);
-                                                }
-                                            });
+                                            Ext.apply(self.extraPostData, renameForm.getValues());
+											var msg = Ext.Msg.wait("Loading", "Renaming file...");
+		                                    var conn = new Ext.data.Connection();
+		                                    conn.request({
+		                                        url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/rename_file',
+		                                        method: 'POST',
+		                                        params:self.extraPostData,
+		                                        success: function(response) {
+		                                          msg.close();
+												  var responseObj =  Ext.decode(response.responseText);
+	                                              if(responseObj.success){
+                                                       store.load({
+                                                           node:record.parentNode
+                                                       });
+                                                       var window = renameForm.findParentByType('window');
+                                                       window.close()
+                                                   }
+                                                   else{
+                                                       Ext.Msg.alert("Error", responseObj.error);
+                                                   }
+		                                        },
+		                                        failure: function(response) {
+		                                          msg.close();
+												  var responseObj =  Ext.decode(response.responseText);
+			                                      msg.hide();
+			                                      Ext.Msg.alert('Status', responseObj.msg);
+		                                        }
+		                                    });
                                         }
                                     }
                                 },{
@@ -256,14 +251,13 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                                 else
                                 if(btn == 'yes')
                                 {
-                                    var msg = Ext.Msg.wait("Loading", "Deleting file...");
+                                    Ext.apply(self.extraPostData, {node:record.data.id});
+									var msg = Ext.Msg.wait("Loading", "Deleting file...");
                                     var conn = new Ext.data.Connection();
                                     conn.request({
                                         url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/delete_file',
                                         method: 'POST',
-                                        params:{
-                                            node:record.data.id
-                                        },
+                                        params:self.extraPostData,
                                         success: function(response) {
                                             var responseObj =  Ext.decode(response.responseText);
                                             msg.hide();
@@ -328,13 +322,12 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                         listeners:{
                             scope:self,
                             'click':function(){
-                                var uploadWindow = new Compass.ErpApp.Shared.UploadWindow({
+                                Ext.apply(self.extraPostData, {directory:record.data.id});
+								var uploadWindow = new Compass.ErpApp.Shared.UploadWindow({
                                     standardUploadUrl:this.initialConfig['standardUploadUrl'],
                                     flashUploadUrl:this.initialConfig['flashUploadUrl'],
                                     xhrUploadUrl:this.initialConfig['xhrUploadUrl'],
-                                    extraPostData:{
-                                        directory:record.data.id
-                                    },
+                                    extraPostData:self.extraPostData,
                                     listeners:{
                                         'fileuploaded':function(){
                                             store.load({
@@ -358,15 +351,13 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                             'click':function(){
                                 Ext.MessageBox.prompt('New File', 'Please enter new file name:', function(btn, text){
                                     if(btn == 'ok'){
-                                        var msg = Ext.Msg.wait("Processing", "Creating new file...");
+                                        Ext.apply(self.extraPostData, {path:record.data.id,name:text});
+										var msg = Ext.Msg.wait("Processing", "Creating new file...");
                                         var conn = new Ext.data.Connection();
                                         conn.request({
                                             url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/create_file',
                                             method: 'POST',
-                                            params:{
-                                                path:record.data.id,
-                                                name:text
-                                            },
+                                            params:self.extraPostData,
                                             success: function(response) {
                                                 msg.hide();
                                                 store.load({
@@ -393,15 +384,13 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
                             'click':function(){
                                 Ext.MessageBox.prompt('New Folder', 'Please enter new folder name:', function(btn, text){
                                     if(btn == 'ok'){
-                                        var msg = Ext.Msg.wait("Processing", "Creating new folder...");
+                                        Ext.apply(self.extraPostData, {path:record.data.id,name:text});
+										var msg = Ext.Msg.wait("Processing", "Creating new folder...");
                                         var conn = new Ext.data.Connection();
                                         conn.request({
                                             url: (self.initialConfig['controllerPath'] || './file_manager/base') + '/create_folder',
                                             method: 'POST',
-                                            params:{
-                                                path:record.data.id,
-                                                name:text
-                                            },
+                                            params:self.extraPostData,
                                             success: function(response) {
                                                 msg.hide();
                                                 store.load({
@@ -501,6 +490,6 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
             }
         }, config);
 		
-        Compass.ErpApp.Shared.FileManagerTree.superclass.constructor.call(this, config);
+        this.callParent([config]);
     }
 });

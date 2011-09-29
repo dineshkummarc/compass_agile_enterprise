@@ -44,7 +44,9 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
 
   def add_menu_item
     result = {}
-    website_nav = WebsiteNav.find(params[:website_nav_id])
+    klass = params[:klass].constantize
+    parent = klass.find(params[:id])
+    website_nav = parent.is_a?(WebsiteNav) ? parent : parent.website_nav
     website_nav_item = WebsiteNavItem.new(:title => params[:title])
 
     url = params[:url]
@@ -57,16 +59,30 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
       link_to_item = params[:link_to].constantize.find(linked_to_id)
       #setup link
       website_nav_item.url = '/' + link_to_item.permalink
-      website_nav_item.linked_to_item = link_to_item
+      website_nav_item.linked_to_item = link_to_item 
       url = "http://#{website_nav.website.hosts.first.host}/" + link_to_item.permalink
     else
       website_nav_item.url = url
     end
   
     if website_nav_item.save
-      website_nav.website_nav_items << website_nav_item
+      if parent.is_a?(WebsiteNav)
+        parent.website_nav_items << website_nav_item
+      else
+        website_nav_item.move_to_child_of(parent)
+      end
+
       result[:success] = true
-      result[:node] = {:text => params[:title], :linkToType => params[:link_to].underscore, :linkedToId => linked_to_id, :websiteId => website_nav.website.id, :url => url, :websiteNavItemId => website_nav_item.id, :iconCls => 'icon-document', :isWebsiteNavItem => true, :leaf => true, :children => []}
+      result[:node] = {:text => params[:title],
+        :linkToType => params[:link_to].underscore,
+        :linkedToId => linked_to_id,
+        :websiteId => website_nav.website.id,
+        :url => url,
+        :websiteNavItemId => website_nav_item.id,
+        :iconCls => 'icon-document',
+        :isWebsiteNavItem => true,
+        :leaf => true,
+        :children => []}
     else
       result[:success] = false
     end

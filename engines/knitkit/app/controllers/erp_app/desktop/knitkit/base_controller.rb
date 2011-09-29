@@ -9,7 +9,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
     websites.each do |website|
       website_hash = {
         :text => website.title,
-        :iconCls => 'icon-globe',
+        :iconCls => 'icon-globe_disconnected',
         :id => "website_#{website.id}",
         :leaf => false,
         :url => "http://#{website.hosts.first.host}",
@@ -44,19 +44,8 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       #handle menus
       menus_hash = {:text => 'Menus', :iconCls => 'icon-content', :isMenuRoot => true, :websiteId => website.id, :leaf => false, :children => []}
       website.website_navs.each do |website_nav|
-        menu_hash = {:text => website_nav.name, :websiteNavId => website_nav.id, :websiteId => website.id, :iconCls => 'icon-index', :isWebsiteNav => true, :leaf => false, :children => []}
-        website_nav.items.positioned.each do |item|
-          url = item.url
-          linked_to_item_id = nil
-          link_to_type = 'url'
-          unless item.linked_to_item.nil?
-            linked_to_item_id = item.linked_to_item_id
-            link_to_type = item.linked_to_item.class.to_s.underscore
-            url = "http://#{website.hosts.first.host}/" + item.linked_to_item.permalink
-          end
-          
-          menu_hash[:children] << {:text => item.title, :linkToType => link_to_type, :websiteId => website.id, :linkedToId => linked_to_item_id, :websiteNavItemId => item.id, :url => url, :iconCls => 'icon-document', :isWebsiteNavItem => true, :leaf => true, :children => []}
-        end
+        menu_hash = {:text => website_nav.name, :websiteNavId => website_nav.id, :websiteId => website.id, :canAddMenuItems => true, :iconCls => 'icon-index', :isWebsiteNav => true, :leaf => false, :children => []}
+        menu_hash[:children] = website_nav.website_nav_items.positioned.map{|item|build_menu_item_hash(website, item)}
         menus_hash[:children] << menu_hash
       end
 
@@ -88,6 +77,34 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       return 20
     end
   end
+
+  def build_menu_item_hash(website, item)
+    url = item.url
+    linked_to_item_id = nil
+    link_to_type = 'url'
+    unless item.linked_to_item.nil?
+      linked_to_item_id = item.linked_to_item_id
+      link_to_type = item.linked_to_item.class.to_s.underscore
+      url = "http://#{website.hosts.first.host}/" + item.linked_to_item.permalink
+    end
+
+    menu_item_hash = {
+      :text => item.title,
+      :linkToType => link_to_type,
+      :canAddMenuItems => true,
+      :websiteId => website.id,
+      :linkedToId => linked_to_item_id, 
+      :websiteNavItemId => item.id,
+      :url => url,
+      :iconCls => 'icon-document',
+      :isWebsiteNavItem => true,
+      :leaf => false
+    }
+    
+    menu_item_hash[:children] = item.positioned_children.map{ |child| build_menu_item_hash(website, child)}
+
+    menu_item_hash
+  end
   
   def build_section_hash(website_section, website)
     website_section_hash = {
@@ -108,11 +125,8 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       website_section_hash[:iconCls] = 'icon-blog'
       website_section_hash[:leaf] = true
     else
-      website_section_hash[:is_leaf] = false
-      website_section_hash[:children] = []
-      website_section.positioned_children.each do |child|
-        website_section_hash[:children] << build_section_hash(child, website)
-      end unless website_section.children.empty?
+      website_section_hash[:leaf] = false
+      website_section_hash[:children] = website_section.positioned_children.map {|child| build_section_hash(child, website)}
       website_section_hash[:isSecured] ? website_section_hash[:iconCls] = 'icon-document_lock' : website_section_hash[:iconCls] = 'icon-document'
     end
 

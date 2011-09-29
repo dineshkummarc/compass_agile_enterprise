@@ -27,13 +27,12 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
         else
           parent_website_section = WebsiteSection.find(params[:website_section_id])
           website = parent_website_section.website
-          website_section.website = website
           website_section.move_to_child_of(parent_website_section)
           parent_website_section.save
         end
         
         result[:success] = true
-        result[:node] = build_section_hash(website_section, website)
+        result[:node] = build_section_hash(website_section, website_section.website)
       else
         result[:success] = false
       end

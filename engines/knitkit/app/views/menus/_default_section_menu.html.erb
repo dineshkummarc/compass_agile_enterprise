@@ -1,6 +1,5 @@
 <div id="menubar">
-  <%
-  section_found = nil
+<%
   selected_section_parent = @website_section.nil? ? nil : @website_section.parent
 %>
   <% unless @website_sections.nil? %>
@@ -11,7 +10,6 @@
             <% if (!@website_section.nil? && section.id == @website_section.id) or (!selected_section_parent.nil? and selected_section_parent.id == section.id) %>
               <li class="selected">
                 <%
-                section_found = true
                 selected_section_parent = section
               else
               %>

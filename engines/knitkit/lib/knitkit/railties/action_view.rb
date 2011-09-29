@@ -48,18 +48,73 @@ ActionView::Base.class_eval do
     html
   end
 
-  def render_menu(contents, options=nil)
-    active_theme = @website.themes.active.first unless @website.themes.active.empty?
-    if !options.nil? && !options[:name].blank?
-      menu = WebsiteNav.find_by_name(options[:name].to_s)
-      raise "Menu with name #{options[:name]} does not exist" if menu.nil?
-      if !active_theme.nil? && active_theme.has_template?('templates/menus', "_#{options[:name]}.html.erb")
-        render :partial => "menus/#{options[:name]}", :locals => {:menu => menu}
-      else
-        render :partial => "menus/default", :locals => {:menu => menu}
-      end
+  #options
+  #nothing
+  # - uses current page to lookup section and go up tree
+  #menu
+  # - menu to look for menu title in
+  #menu_item
+  # - title of menu_item to start breadcrumbs at
+  #section_permalink
+  # - sections permalink to start breadcrumbs at
+  def build_crumbs(options={})
+    links = []
+    if options[:menu]
+      menu = WebsiteNav.find_by_name(options[:menu])
+      raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
+      menu_item = menu.children.find(:first, :conditions => ["title = ?", options[:menu_item]])
+      raise "Menu Item with name #{options[:menu]} does not exist" if menu_item.nil?
+      links = menu_item.self_and_ancestors.map{|child| {:url => child.menu_url, :title => child.title}}
+    elsif options[:section_permalink]
+      section = WebsiteSection.find_by_permalink(options[:section_permalink])
+      raise "Website Section with that permalink does not exist" if section.nil?
+      links = section.self_and_ancestors.map{|child| {:url => child.permalink, :title => child.title}}
     else
-      render :partial => "shared/default_section_menu", :locals => {:contents => contents}
+      links = @website_section.self_and_ancestors.map{|child| {:url => child.permalink, :title => child.title}}
     end
+    links
+
+    render :partial => 'shared/bread_crumb', :locals => {:links => links}
+  end
+  #options
+  #menu
+  # - use a designed layout not sections
+  #layout
+  # - use defined layout
+  def render_menu(contents, options={})
+    locals = {:contents => contents}
+    if options[:menu]
+      menu = WebsiteNav.find_by_name(options[:menu])
+      raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
+      layout = options[:layout] ? "menus/#{layout}" : "menus/default_menu"
+    else
+      layout = options[:layout] ? "menus/#{layout}" : "menus/default_section_menu"
+    end
+
+    render :partial => layout, :locals => locals
+  end
+
+  #options
+  #menu
+  # - use a designed layout not sections
+  #layout
+  # - use defined layout
+  def render_sub_menu(contents, start, options={})
+    locals = {:contents => contents}
+    if options[:menu]
+      menu = WebsiteNav.find_by_name(options[:menu])
+      raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
+      menu_item = menu.children.find(:first, :conditions => ["title = ?", start])
+      raise "Menu Item with name #{options[:menu]} does not exist" if menu_item.nil?
+      locals[:menu_item => menu_item]
+      layout = options[:layout] ? "menus/#{layout}" : "menus/default_sub_menu"
+    else
+      section = WebsiteSection.find_by_permalink(start)
+      raise "Website Section with that permalink does not exist" if section.nil?
+      locals[:section => section]
+      layout = options[:layout] ? "menus/#{layout}" : "menus/default_sub_section_menu"
+    end
+    
+    render :partial => layout, :locals => locals
   end
 end

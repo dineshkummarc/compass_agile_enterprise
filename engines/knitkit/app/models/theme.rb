@@ -103,7 +103,7 @@ class Theme < ActiveRecord::Base
             theme_file.data = data
             theme_file.save
           else
-            self.add_file(File.join(self.path,name), data) rescue next
+            self.add_file(data, File.join(self.path,name)) rescue next
           end
         end
       end
@@ -183,7 +183,7 @@ class Theme < ActiveRecord::Base
           contents.gsub!("<%= stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
           File.open(file, 'w+') {|f| f.write(contents) }
         end
-        self.add_file(file, IO.read(file))
+        self.add_file(IO.read(file), file)
       end
     end
   end
