@@ -7,7 +7,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     if website_nav.save
       website.website_navs << website_nav
       result[:success] = true
-      result[:node] = {:text => params[:name], :websiteNavId => website_nav.id, :websiteId => website.id, :iconCls => 'icon-index', :isWebsiteNav => true, :leaf => false, :children => []}
+      result[:node] = {:text => params[:name], :websiteNavId => website_nav.id, :websiteId => website.id, :iconCls => 'icon-index', :canAddMenuItems => true, :isWebsiteNav => true, :leaf => false, :children => []}
     else
       result[:success] = false
     end
@@ -78,6 +78,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
         :linkedToId => linked_to_id,
         :websiteId => website_nav.website.id,
         :url => url,
+        :canAddMenuItems => true,
         :websiteNavItemId => website_nav_item.id,
         :iconCls => 'icon-document',
         :isWebsiteNavItem => true,

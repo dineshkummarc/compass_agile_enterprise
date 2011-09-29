@@ -1,7 +1,7 @@
 <div id="menubar">
   <ul id="menu">
     <%
-    selected_section_parent = section.nil? ? nil : section.parent
+    selected_section_parent = nil
     unless section.nil?
       section.positioned_children.each  do |child_section|
       %>

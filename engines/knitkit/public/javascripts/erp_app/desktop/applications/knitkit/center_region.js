@@ -86,7 +86,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
             ],
 			listeners:{
 				'show':function(panel){
-					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
+					Ext.getCmp('knitkitWestRegion').selectWebsite(websiteId);
 				}
 			}
         })

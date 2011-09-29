@@ -220,9 +220,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                 expanded: true
             },
             fields:[
-			 {
+			{
 		          name:'canAddMenuItems'
-		        },
+		    },
             {
                 name:'isWebsiteNavItem'
             },
@@ -532,7 +532,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 			                      {
 			                        xtype:'hidden',
 			                        name:'klass',
-			                        value: ((record.data['isMenuRoot']) ? 'WebsiteNav' : 'WebsiteNavItem')
+			                        value: ((record.data['websiteNavId']) ? 'WebsiteNav' : 'WebsiteNavItem')
 			                      },
 			                      {
 			                        xtype:'hidden',

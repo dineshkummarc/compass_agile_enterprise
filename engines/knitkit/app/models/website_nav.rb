@@ -3,7 +3,7 @@ class WebsiteNav < ActiveRecord::Base
   
   has_many :website_nav_items, :dependent => :destroy do
     def positioned
-      find(:all, :order => 'position')
+      find(:all, :conditions => 'parent_id is null', :order => 'position')
     end
   end
 
