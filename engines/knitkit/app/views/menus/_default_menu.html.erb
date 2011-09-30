@@ -2,18 +2,20 @@
   <ul id="menu">
     <% 
       selected_menu_item = nil
-      menu.website_nav_items.positioned.each do |item| 
+      menu.website_nav_items.positioned.each do |menu_item| 
     %>
-      <% if menu_item_selected(item, true)
-          selected_menu_item = item
+      <%if menu_item.has_access?(current_user)%>
+      <% if menu_item_selected(menu_item, true)
+          selected_menu_item = menu_item
       %>
         <li class="selected">
         <% else %>
         <li>
         <% end %>
-        <a href="<%= item.menu_url %>"><span><%= item.title %></span></a>
+        <a href="<%= menu_item.menu_url %>"><span><%= menu_item.title %></span></a>
       </li>
     <% end %>
+  <% end %>
   </ul>
 </div>
 <br/>
@@ -25,6 +27,7 @@ if !selected_menu_item.nil? and !selected_menu_item.children.empty?
       <%
       selected_menu_item.positioned_children.each do |child_menu_item|
       %>
+        <%if child_menu_item.has_access?(current_user)%>
         <% if menu_item_selected(child_menu_item)%>
           <li class="selected">
           <% else %>
@@ -32,6 +35,7 @@ if !selected_menu_item.nil? and !selected_menu_item.children.empty?
           <% end %>
           <a href="<%= child_menu_item.url %>"><span><%= child_menu_item.title %></span></a>
         </li>
+      <%  end %>
       <% end %>
     </ul> 
   </div>

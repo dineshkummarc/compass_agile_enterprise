@@ -31,7 +31,8 @@ if !selected_section_parent.nil? and !selected_section_parent.children.empty?
       <%
       selected_section_parent.positioned_children.each do |child_section|
       %>
-      <% if !@website_section.nil? && child_section.id == @website_section.id %>
+    <%if child_section.has_access?(current_user)%>
+      <%if !@website_section.nil? && child_section.id == @website_section.id %>
       <li class="selected">
       <%else%>
         <li>
@@ -40,6 +41,7 @@ if !selected_section_parent.nil? and !selected_section_parent.children.empty?
         </li>
       <%
       end
+    end
     %>
     </ul>
   </div>

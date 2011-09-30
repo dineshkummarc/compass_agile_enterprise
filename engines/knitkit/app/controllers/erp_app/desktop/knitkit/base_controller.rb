@@ -93,6 +93,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       :linkToType => link_to_type,
       :canAddMenuItems => true,
       :websiteId => website.id,
+      :isSecured => !item.roles.empty?,
       :linkedToId => linked_to_item_id, 
       :websiteNavItemId => item.id,
       :url => url,

@@ -85,6 +85,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
         :linkedToId => linked_to_id,
         :websiteId => website_nav.website.id,
         :url => url,
+        :isSecure => false,
         :canAddMenuItems => true,
         :websiteNavItemId => website_nav_item.id,
         :iconCls => 'icon-document',
@@ -131,6 +132,18 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     end
 
     render :inline => result.to_json
+  end
+  
+  def update_security
+    website_nav_item = WebsiteNavItem.find(params[:id])
+    website = Website.find(params[:site_id])
+    if(params[:secure] == "true")
+      website_nav_item.add_role(website.role)
+    else
+      website_nav_item.remove_role(website.role)
+    end
+
+    render :inline => {:success => true}.to_json
   end
 
   def delete_menu_item

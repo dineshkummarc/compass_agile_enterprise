@@ -155,7 +155,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 
     changeSecurityOnSection : function(node, secure){
         var self = this;
-        self.setWindowStatus('Loading securing section...');
+        self.setWindowStatus('Updating section...');
         var conn = new Ext.data.Connection();
         conn.request({
             url: './knitkit/section/update_security',
@@ -163,6 +163,42 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
             params:{
                 id:node.data.id.split('_')[1],
                 site_id:node.data.siteId,
+                secure:secure
+            },
+            success: function(response) {
+                var obj = Ext.decode(response.responseText);
+                if(obj.success){
+                    self.clearWindowStatus();
+                    if(secure){
+						node.set('iconCls', 'icon-document_lock');
+                    }
+                    else{	
+						node.set('iconCls', 'icon-document');
+                    }
+                    node.set('isSecured',secure);
+					node.commit();
+                }
+                else{
+                    Ext.Msg.alert('Error', 'Error securing section');
+                }
+            },
+            failure: function(response) {
+                self.clearWindowStatus();
+                Ext.Msg.alert('Error', 'Error securing section.');
+            }
+        });
+    },
+
+	changeSecurityOnMenuItem : function(node, secure){
+        var self = this;
+        self.setWindowStatus('Updating section...');
+        var conn = new Ext.data.Connection();
+        conn.request({
+            url: './knitkit/website_nav/update_security',
+            method: 'POST',
+            params:{
+                id:node.data.websiteNavItemId,
+                site_id:node.data.websiteId,
                 secure:secure
             },
             success: function(response) {
@@ -1737,6 +1773,29 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                                 addMenuItemWindow.show();
                             }
                         });
+
+						if(record.data.isSecured){
+                            items.push({
+                                text:'Unsecure',
+                                iconCls:'icon-document',
+                                listeners:{
+                                    'click':function(){
+                                        self.changeSecurityOnMenuItem(record, false);
+                                    }
+                                }
+                            });
+                        }
+                        else{
+                            items.push({
+                                text:'Secure',
+                                iconCls:'icon-document_lock',
+                                listeners:{
+                                    'click':function(){
+                                        self.changeSecurityOnMenuItem(record, true);
+                                    }
+                                }
+                            });
+                        }
 
                         items.push({
                             text:'Delete',

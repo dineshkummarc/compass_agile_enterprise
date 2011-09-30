@@ -48,13 +48,16 @@ ActionView::Base.class_eval do
     html
   end
   
-  def menu_item_selected(menu_item, check_referer=false)
+  def menu_item_selected(menu_item)
     result = false
     url = menu_item.url.index('/') == 0 ? menu_item.url : "/#{menu_item.url}"
     result = request.path == url 
-    if !result and check_referer
-      referer = URI::parse(request.referer)
-      result = referer.path == url
+    unless result
+      menu_item.children.each do |child|
+        url = child.url.index('/') == 0 ? child.url : "/#{menu_item.url}"
+        result = request.path == url 
+        break if result
+      end
     end
     result
   end
