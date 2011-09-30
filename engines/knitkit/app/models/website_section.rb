@@ -3,7 +3,6 @@ class WebsiteSection < ActiveRecord::Base
 
   acts_as_versioned
   self.non_versioned_columns =  self.non_versioned_columns | %w{parent_id lft rgt}
-
   can_be_published
   has_security
   

@@ -10,7 +10,7 @@ class WebsiteNavItem < ActiveRecord::Base
     if linked_to_item.nil?
       link = url
     else
-      link = "/"+linked_to_item.permalink.to_s
+      link = linked_to_item.permalink.to_s
     end
 
     link

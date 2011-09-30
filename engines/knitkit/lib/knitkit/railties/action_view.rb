@@ -47,6 +47,17 @@ ActionView::Base.class_eval do
 
     html
   end
+  
+  def menu_item_selected(menu_item, check_referer=false)
+    result = false
+    url = menu_item.url.index('/') == 0 ? menu_item.url : "/#{menu_item.url}"
+    result = request.path == url 
+    if !result and check_referer
+      referer = URI::parse(request.referer)
+      result = referer.path == url
+    end
+    result
+  end
 
   #options
   #nothing
