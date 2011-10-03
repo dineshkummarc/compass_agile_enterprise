@@ -1,0 +1,34 @@
+<div id="side_menu_container">
+  <ul id="side_menu">
+    
+    <% menu_item.positioned_children.each do |item| %>
+      <%if item.has_access?(current_user)%>
+        <% if request.env['REQUEST_PATH'] == "/" + item.url or request.env['HTTP_REFERER'] == item.url %>
+          <li class="selected">
+        <% else %>
+          <li>
+        <% end %>
+          <a href="<%= item.menu_url %>" style="color:black;"><span><%= item.title %></span></a>
+        </li>
+        
+        <% unless item.positioned_children.nil? %>
+          <ul class="side_menu_children">
+          <% item.positioned_children.each do |sub_item| %>
+            <% if sub_item.has_access?(current_user)%>
+              <% if menu_item_selected(sub_item) %>
+                <li class="selected">
+              <% else %>
+                <li>
+              <% end %>
+              <a href="<%= sub_item.menu_url %>" style="color:black;"><span><%= sub_item.title %></span></a>
+              </li>
+            <% end %>
+          <% end %>
+          </ul>
+        <% end %>
+      <% end %>    
+    <% end %>
+      
+  </ul>
+</div>
+

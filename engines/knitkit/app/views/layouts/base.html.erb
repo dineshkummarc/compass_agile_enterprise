@@ -42,6 +42,12 @@
       %>
       </div>
       <div id="site_content">
+	    <%=
+	      ## Uncoment the line below and replace 'Home' with where you want the side menu ##
+	      ## to start in order to add a side menu                                         ##
+	
+		  #render_sub_menu(@contents, 'Home', {:menu => 'main', :layout => 'side_menu'})
+		%>
         <div id="content">
           <%= yield %>
         </div>
