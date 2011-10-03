@@ -53,7 +53,7 @@ ActionView::Base.class_eval do
     url = menu_item.url.index('/') == 0 ? menu_item.url : "/#{menu_item.url}"
     result = request.path == url 
     unless result
-      menu_item.children.each do |child|
+      menu_item.descendants.each do |child|
         url = child.url.index('/') == 0 ? child.url : "/#{menu_item.url}"
         result = request.path == url 
         break if result
@@ -101,7 +101,7 @@ ActionView::Base.class_eval do
       menu = WebsiteNav.find_by_name(options[:menu])
       raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_menu"
-      locals[:menu] = menu
+      locals[:menu_items] = menu.website_nav_items.positioned
     else
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_section_menu"
     end
@@ -112,20 +112,23 @@ ActionView::Base.class_eval do
   #options
   #menu
   # - use a designed layout not sections
+  #menu_item
+  # - menu item title to start at
+  #section_permalink
+  # - section to begin at
   #layout
   # - use defined layout
-  def render_sub_menu(contents, start, options={})
+  def render_sub_menu(contents, options={})
     locals = {:contents => contents}
     if options[:menu]
       menu = WebsiteNav.find_by_name(options[:menu])
       raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
-      menu_item = menu.website_nav_items.find(:first, :conditions => ["title = ?", start])
-      raise "Menu Item with Title #{start} does not exist" if menu_item.nil?
-      locals[:menu_item] = menu_item
+      locals[:menu_items] = (options[:menu_item].nil? ? menu.all_menu_items.find{|item| menu_item_selected(item)}.positioned_children : menu.all_menu_items.find{|item| item.title = options[:menu_item]}.positioned_children) 
+      raise "No menu items exist" if locals[:menu_items].nil?
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_sub_menu"
     else
-      section = WebsiteSection.find_by_permalink(start)
-      raise "Website Section with that permalink does not exist" if section.nil?
+      section = options[:section_permalink].nil? ? @website_section : WebsiteSection.find_by_permalink(options[:section_permalink])
+      raise "No website sections exist" if section.nil?
       locals[:section] = section
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_sub_section_menu"
     end

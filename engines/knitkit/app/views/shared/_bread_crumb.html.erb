@@ -1,3 +1,6 @@
 <% links.each do |link| %>
-<< <a href="<%= link[:url] %>"><%=link[:title]%></a>
+<% unless link[:title] == links.first[:title]%>
+<<
+<%end %>
+<a href="<%= link[:url] %>"><%=link[:title]%></a>
 <%  end %>

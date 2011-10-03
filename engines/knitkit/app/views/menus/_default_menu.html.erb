@@ -2,10 +2,10 @@
   <ul id="menu">
     <% 
       selected_menu_item = nil
-      menu.website_nav_items.positioned.each do |menu_item| 
+      menu_items.each do |menu_item| 
     %>
       <%if menu_item.has_access?(current_user)%>
-      <% if menu_item_selected(menu_item, true)
+      <% if menu_item_selected(menu_item)
           selected_menu_item = menu_item
       %>
         <li class="selected">
@@ -18,28 +18,6 @@
   <% end %>
   </ul>
 </div>
-<br/>
-<%
-if !selected_menu_item.nil? and !selected_menu_item.children.empty?
-%>
-  <div id="submenubar">
-    <ul id="submenu">
-      <%
-      selected_menu_item.positioned_children.each do |child_menu_item|
-      %>
-        <%if child_menu_item.has_access?(current_user)%>
-        <% if menu_item_selected(child_menu_item)%>
-          <li class="selected">
-          <% else %>
-          <li>
-          <% end %>
-          <a href="<%= child_menu_item.url %>"><span><%= child_menu_item.title %></span></a>
-        </li>
-      <%  end %>
-      <% end %>
-    </ul> 
-  </div>
-<% end %>
 
 
 

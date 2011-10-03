@@ -369,6 +369,7 @@ ul.side_menu_children{
 
 ul#side_menu li{
   list-style-type: none;
+  color:#1293EE;
 }
 
 #side_menu_container{
@@ -380,4 +381,10 @@ ul#side_menu li{
 
 ul#side_menu{
   margin: 4px 22px 22px;
+}
+
+ul#side_menu li a:hover, ul#side_menu li.selected a, ul#side_menu li.selected a:hover
+{ 
+	text-decoration:none;
+	color:black;
 }

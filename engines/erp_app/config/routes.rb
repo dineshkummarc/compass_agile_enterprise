@@ -37,10 +37,6 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/erp_app/desktop/tenancy/:action', :controller => 'erp_app/desktop/tenancy/base'
 
   #scaffold
-  map.connect '/erp_app/desktop/scaffold/note_type/:action', :controller => 'erp_app/desktop/scaffold/note_type'
-  map.connect '/erp_app/desktop/scaffold/individual/:action', :controller => 'erp_app/desktop/scaffold/individual'
-  map.connect '/erp_app/desktop/scaffold/party/:action', :controller => 'erp_app/desktop/scaffold/party'
-  map.connect '/erp_app/desktop/scaffold/party/:action', :controller => 'erp_app/desktop/scaffold/party'
   map.connect '/erp_app/desktop/scaffold/role/:action', :controller => 'erp_app/desktop/scaffold/role'
   map.connect '/erp_app/desktop/scaffold/:action', :controller => 'erp_app/desktop/scaffold/base'
 

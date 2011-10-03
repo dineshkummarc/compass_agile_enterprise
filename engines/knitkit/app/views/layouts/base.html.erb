@@ -14,7 +14,7 @@
     <%= javascript_include_tag 'prototype' %>
     <%= include_extjs %>
     <%= stylesheet_link_tag('extjs/resources/css/knitkit_extjs_4.css') %>
-    <%= stylesheet_link_tag('knitkit/style.css') %>
+    <%= theme_stylesheet_link_tag('base','style.css') %>
     <%= javascript_include_tag('erp_app/utility.js') %>
     <%= javascript_include_tag('erp_app/widgets.js') %>
     <%= javascript_include_tag('erp_app/shared/ajax_pagination.js') %>
@@ -36,18 +36,14 @@
             <h2><%= @website.subtitle %></h2>
           </div>
         </div>
-        <%= 
-        #render_menu(@contents, {:menu => 'my_menu'})
-        render_menu(@contents)
-      %>
+        <%=render_menu(@contents)%>
+        <%#=render_menu(@contents, :menu => 'main')%>
       </div>
       <div id="site_content">
-	    <%=
-	      ## Uncoment the line below and replace 'Home' with where you want the side menu ##
-	      ## to start in order to add a side menu                                         ##
-	
-		  #render_sub_menu(@contents, 'Home', {:menu => 'main', :layout => 'side_menu'})
-		%>
+      <%=build_crumbs %>
+      <br/>
+      <%=render_sub_menu(@contents)%>
+      <%#=render_sub_menu(@contents, :menu => 'main')%>
         <div id="content">
           <%= yield %>
         </div>
