@@ -11,6 +11,7 @@ gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
 
 group :development, :test do
   gem 'rspec-rails', '2.5'
+  gem 'factory_girl_rails', '1.2.0'
 end
 
 
