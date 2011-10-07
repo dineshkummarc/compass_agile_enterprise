@@ -26,7 +26,7 @@ Party.class_eval do
 
     #TODO: Log this instead of raising an exception
     #raise ArgumentError, "No relationships apply for the relationship_type passed" if @relationships == nil
-    if @relationships != nil
+    if relationships != nil
       @relationships.each do |item|
         if item.relationship_type.internal_identifier == relationship_type
           valid_relations_for_type << item
