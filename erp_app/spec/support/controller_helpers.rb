@@ -1,4 +1,14 @@
+
+
+#calls a function sets up basic user auth so devise won't cause
+#our controller tests to fail.  It's my understanding that we have to actually
+#persist these to the DB in order to auth to work, so make sure to call this in
+#the "before(:each)" part of your examples so that the records are
+#cleaned up properly
+#
+#TODO: Make this method only available to controller tests
 def basic_user_auth
+
   @business_party_type = Factory.create(:individual)
   @party = Factory.create(:individual_party, :business_party => @business_party_type)
 
