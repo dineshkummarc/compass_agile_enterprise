@@ -8,10 +8,10 @@ module RoutingFilter
       website = Website.find_by_host(env[:host_with_port])
       unless website.nil?
         paths = paths_for_website(website)
-        if path !~ %r(^/([\w]{2,4}/)?admin) and !paths.empty? and path =~ recognize_pattern(paths)
-          if website_section = website_section_by_path(website, $2)
+        if paths.include?(path)
+          if website_section = website_section_by_path(website, path)
             type = website_section.type.pluralize.downcase
-            path.sub! %r(^/([\w]{2,4}/)?(#{paths})(?=/|\.|$)), "/#{$1}#{type}/#{website_section.id}#{$3}"
+            path.sub!(path.to_s, "/#{type}/#{website_section.id}")
           end
         end
       end
@@ -30,23 +30,19 @@ module RoutingFilter
     
     protected
     def paths_for_website(website)
-      website ? website.website_sections.permalinks.sort{|a, b| b.size <=> a.size }.join('|') : []
+      website ? website.website_sections.paths : []
     end
 
     def website_section_by_path(website, path)
-      valid_section = website.website_sections.detect{|website_section| website_section.permalink == path }
+      valid_section = website.website_sections.detect{|website_section| website_section.path == path }
       if valid_section.nil?
         website.website_sections.each do |website_section|
-          valid_section = website_section.child_by_permalink(path)
+          valid_section = website_section.child_by_path(path)
           break unless valid_section.nil?
         end
       end
 
       valid_section
-    end
-
-    def recognize_pattern(paths)
-      %r(^/([\w]{2,4}/)?(#{paths})(?=/|\.|$))
     end
 
     def generate_pattern

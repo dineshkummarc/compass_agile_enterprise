@@ -78,13 +78,13 @@ ActionView::Base.class_eval do
       raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
       menu_item = menu.website_nav_items.find(:first, :conditions => ["title = ?", options[:menu_item]])
       raise "Menu Item with Title #{options[:menu]} does not exist" if menu_item.nil?
-      links = menu_item.self_and_ancestors.map{|child| {:url => child.menu_url, :title => child.title}}
+      links = menu_item.self_and_ancestors.map{|child| {:url => child.path, :title => child.title}}
     elsif options[:section_permalink]
       section = WebsiteSection.find_by_permalink(options[:section_permalink])
       raise "Website Section with that permalink does not exist" if section.nil?
-      links = section.self_and_ancestors.map{|child| {:url => child.permalink, :title => child.title}}
+      links = section.self_and_ancestors.map{|child| {:url => child.path, :title => child.title}}
     else
-      links = @website_section.self_and_ancestors.map{|child| {:url => child.permalink, :title => child.title}}
+      links = @website_section.self_and_ancestors.collect{|child| {:url => child.path, :title => child.title}}
     end
     links
 

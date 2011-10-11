@@ -85,7 +85,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
     unless item.linked_to_item.nil?
       linked_to_item_id = item.linked_to_item_id
       link_to_type = item.linked_to_item.class.to_s.underscore
-      url = "http://#{website.hosts.first.host}/" + item.linked_to_item.permalink
+      url = "http://#{website.hosts.first.host}/" + item.linked_to_item.path
     end
 
     menu_item_hash = {
@@ -118,7 +118,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       :inMenu => website_section.in_menu,
       :hasLayout => !website_section.layout.blank?,
       :id => "section_#{website_section.id}",
-      :url => "http://#{website.hosts.first.host}/#{website_section.permalink}"
+      :url => "http://#{website.hosts.first.host}/#{website_section.path}"
     }
 
     if website_section.is_a?(Blog) || website_section.type == 'Blog'

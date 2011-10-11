@@ -65,7 +65,7 @@ module ErpApp
         view_class  = Class.new(ErpApp::Widgets::View)
         view_paths = ActionView::PathSet.new
         #get the view path based on the location of the class being executed
-        view_paths << File.join(self.locate.gsub("#{RAILS_ROOT}/",''), 'views')
+        view_paths << File.join(self.locate, 'views')
         action_view = view_class.new(view_paths, {}, @controller)
         action_view
       end

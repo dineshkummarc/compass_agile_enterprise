@@ -97,12 +97,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         return false;
     },
 
-    saveTemplateFile : function(path, content){
+    saveTemplateFile : function(path, content, controller){
         var self = this;
         this.setWindowStatus('Saving...');
         var conn = new Ext.data.Connection();
+        controller = controller || './file_manager/base/'
         conn.request({
-            url: './file_manager/base/update_file',
+            url: controller + 'update_file',
             method: 'POST',
             params:{
                 node:path,
@@ -125,7 +126,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
         });
     },
 
-    editTemplateFile : function(node, content, tbarItems){
+    editTemplateFile : function(node, content, tbarItems, controller){
         var self = this;
         var file_name = node.data.id.split('/').pop().split('.')[0];
         var fileType = node.data.id.split('.').pop();
@@ -143,7 +144,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 closable:true,
                 listeners:{
                     'save':function(codeMirror, content){
-                        self.saveTemplateFile(node.data.id, content);
+                        self.saveTemplateFile(node.data.id, content, controller);
                     }
                 }
             }]

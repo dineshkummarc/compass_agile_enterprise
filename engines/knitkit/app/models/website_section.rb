@@ -1,34 +1,31 @@
 class WebsiteSection < ActiveRecord::Base
   before_destroy :destroy_content # only destroy content that does not belong to another section, NOTE: this callback must be declared before the associations or it will not work
 
+  has_permalink :title, :url_attribute => :permalink, :sync_url => true, :only_when_blank => true, :scope => [:website_id, :parent_id]
+  acts_as_nested_set if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
   acts_as_versioned
   self.non_versioned_columns =  self.non_versioned_columns | %w{parent_id lft rgt}
   can_be_published
   has_security
+
+  belongs_to :website
+  has_many :website_section_contents, :dependent => :destroy
+  has_many :contents, :through => :website_section_contents
   
+  validates_presence_of :title
+  validates_uniqueness_of :permalink, :scope => [:website_id, :parent_id]
+
+  after_create :update_paths
+  before_save  :update_path
+
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
   WEBSITE_SECTIONS_TEMP_LAYOUT_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views/website_sections/"
   
   @@types = ['Page']
   cattr_reader :types
   
-  acts_as_nested_set if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
-  
-  before_save  :update_path
-  after_create :update_paths
-
-  belongs_to :website
-  has_many :website_section_contents, :dependent => :destroy
-  has_many :contents, :through => :website_section_contents
-  has_permalink :title, :url_attribute => :permalink, :sync_url => true, :only_when_blank => true
-
-  validates_presence_of :title
-  validates_uniqueness_of :permalink, :scope => [ :website_id, :parent_id ]
-
-
   def articles 
-    articles = Article.find_by_section_id(self.id)
-    articles
+    Article.find_by_section_id(self.id)
   end
 
   def website
@@ -46,24 +43,18 @@ class WebsiteSection < ActiveRecord::Base
     children.sort_by{|child| [child.position]}
   end
 
-  def permalinks
-    links = [self.permalink]
-    links | self.descendants.collect(&:permalink)
+  def paths
+    all_paths = [self.path]
+    all_paths | self.descendants.collect(&:path)
   end
 
-  def full_path
-    self.self_and_ancestors.collect(&:permalink).join("/")
-  end
-
-  def child_by_permalink(path)
-    self.descendants.detect{|child| child.permalink == path}
+  def child_by_path(path)
+    self.descendants.detect{|child| child.path == path}
   end
   
   def type
     read_attribute(:type) || 'Page'
   end
-
-
 
   def create_layout
     self.layout = IO.read(File.join(KNIT_KIT_ROOT,"app/views/website_sections/index.html.erb"))
@@ -115,6 +106,12 @@ class WebsiteSection < ActiveRecord::Base
     end    
   end
 
+  def update_path!
+    new_path = build_path
+    self.path = new_path unless self.path == new_path
+    self.save
+  end
+
   protected
 
   def update_path
@@ -125,13 +122,13 @@ class WebsiteSection < ActiveRecord::Base
   end
 
   def build_path
-    self_and_ancestors.map(&:permalink).join('/')
+    "/#{self_and_ancestors.map(&:permalink).join('/')}"
   end
 
   def update_paths
     if parent_id
-      move_to_child_of(parent)
-      site.sections.update_paths!
+      move_to_child_of(WebsiteSection.find(parent_id))
+      website.sections.update_paths!
     end
   end
 

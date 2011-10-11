@@ -1,4 +1,5 @@
 require 'tech_services'
+#TechServices::FileSupport::S3Manager.setup
 #add the observers path to load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT + "#{File.dirname(__FILE__)}/app/observers"
 #remove this plugin for the load once paths

@@ -5,15 +5,21 @@ class ErpApp::Desktop::Knitkit::ImageAssetsController < ErpApp::Desktop::Knitkit
   def base_path
     @base_path = nil
     if @context == :website
-      @base_path = File.join(Rails.root, "/public", "/sites/site-#{@assets_model.id}", "images") unless @assets_model.nil?
+      @base_path = File.join("/sites/site-#{@assets_model.id}", "images") unless @assets_model.nil?
     else
-      @base_path = File.join(Rails.root, "/public", "images") unless @assets_model.nil?
+      @base_path = File.join("/images") unless @assets_model.nil?
     end
   end
 
   def get_images
     directory = (params[:directory] == 'root_node' or params[:directory].blank?) ? base_path : params[:directory]
-    render :json => @assets_model.images.select{|image| image.directory == directory.gsub(Rails.root.to_s,'')}.collect{|image|{:name => image.name, :shortName => image.name[0..20], :url => image.url}}
+    render :json => @assets_model.images.select{|image| image.directory == directory.gsub(Rails.root.to_s,'')}.collect{|image|{:name => image.name, :shortName => image.name[0..20], :url => image.data.url}}
+  end
+
+  protected
+  
+  def set_file_support
+    @file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
   end
   
 end

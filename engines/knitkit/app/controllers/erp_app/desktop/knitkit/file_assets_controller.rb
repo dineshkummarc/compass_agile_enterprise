@@ -1,27 +1,40 @@
 class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileManager::BaseController
 
-  before_filter :set_asset_model
+  before_filter :set_file_support
+  before_filter :set_asset_model, :except => [:download_file_asset]
+  before_filter :login_required, :except => [:download_file_asset]
   
   def base_path
     @base_path = nil
     if @context == :website
-      @base_path = File.join(Rails.root, "/public", "/sites/site-#{@assets_model.id}", "files") unless @assets_model.nil?
+      @base_path = File.join("/sites/site-#{@assets_model.id}", "files") unless @assets_model.nil?
     else
-      @base_path = File.join(Rails.root, "/public", "files") unless @assets_model.nil?
+      @base_path = "/files" unless @assets_model.nil?
     end
   end
 
   def expand_directory
-    @assets_model.nil? ? (render :json => []) : expand_file_directory(params[:node], :folders_only => false)
+    if @assets_model.nil?
+      render :json => []
+    else
+      path = (params[:node] == ROOT_NODE) ? base_path : params[:node]
+      render :json => @file_support.build_tree(path, :file_asset_holder => @assets_model)
+    end
   end
   
   def create_file
     path = params[:path] == 'root_node' ? base_path : params[:path]
     name = params[:name]
 
-    @assets_model.add_file('#Empty File', File.join(path,name))
+    @assets_model.add_file('#Empty File', File.join(@file_support.root, path, name))
 
     render :json => {:success => true}
+  end
+
+  def sync
+    result, message = @file_support.sync(base_path, @assets_model)
+
+    render :json => {:success => result, :message => message}
   end
 
   def upload_file
@@ -31,7 +44,7 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
     data = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data] : request.raw_post
     
     begin
-      upload_path == 'root_node' ? @assets_model.add_file(data, File.join(base_path,name)) : @assets_model.add_file(data, upload_path)
+      upload_path == 'root_node' ? @assets_model.add_file(data, File.join(@file_support.root,base_path,name)) : @assets_model.add_file(data, File.join(@file_support.root,upload_path,name))
       result = {:success => true}
     rescue Exception=>ex
       logger.error ex.message
@@ -52,7 +65,6 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
     unless File.exists? path
       result = {:success => false, :msg => 'File does not exists'}
     else
-      file_asset_path = path.gsub!(Rails.root.to_s,'')
       file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
       file.move(new_parent_path.gsub(Rails.root.to_s,''))
       result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
@@ -65,19 +77,13 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
     path = params[:node]
     result = {}
     begin
-      if File.directory? path
-        result = Dir.entries(path) == [".", ".."] ? (FileUtils.rm_rf(path);{:success => true, :error => "Directory deleted."}) : {:success => false, :error => "Directory is not empty."}
-      else
-        unless File.exists? path
-          result = {:success => false, :error => "File does not exists"}
-        else
-          name = File.basename(path)
-          path = path.gsub!(Rails.root.to_s,'')
-          file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
-          file.destroy
-          result = {:success => true, :error => "#{name} was deleted successfully"}
-        end
+      name = File.basename(path)
+      result, message, is_folder = @file_support.delete_file(path)
+      if result && !is_folder
+        file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
+        file.destroy
       end
+      result = {:success => result, :error => message}
     rescue Exception=>ex
       logger.error ex.message
       logger.error ex.backtrace.join("\n")
@@ -91,18 +97,27 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
     path = params[:node]
     name = params[:file_name]
 
-    unless File.exists? path
-      result = {:success => false, :data => {:success => false, :error => 'File does not exists'}}
-    else
-      path = path.gsub!(Rails.root.to_s,'')
+    result, message = @file_support.rename_file(path, name)
+    if result
       file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
-      file.rename(name)
+      file.name = name
+      file.save
     end
 
-    render :json => result
+    render :json =>  {:success => true, :message => message}
+  end
+
+  def download_file_asset
+    contents, message = @file_support.get_contents(params[:path])
+
+    send_data contents, :filename => File.basename(path)
   end
   
   protected
+  
+  def set_file_support
+    @file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
+  end
 
   def set_asset_model
     @context = params[:context].to_sym
