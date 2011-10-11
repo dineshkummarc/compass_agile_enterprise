@@ -21,7 +21,6 @@ class WebsiteSection < ActiveRecord::Base
   has_many :website_section_contents, :dependent => :destroy
   has_many :contents, :through => :website_section_contents
 
-  validates_uniqueness_of :title, :scope => :website_id
   has_permalink :title, :update => true
   
   def articles 
