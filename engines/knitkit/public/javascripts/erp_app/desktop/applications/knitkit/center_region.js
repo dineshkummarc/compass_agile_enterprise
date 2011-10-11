@@ -83,7 +83,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self,
                 siteId:websiteId
             }
-            ]
+            ],
+			listeners:{
+				'show':function(panel){
+					Ext.getCmp('knitkitWestRegion').selectWebsite(websiteId);
+				}
+			}
         })
 
 
@@ -230,7 +235,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self,
                 siteId:siteId
             }
-            ]
+            ],
+			listeners:{
+				'show':function(panel){
+					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
+				}
+			}
         })
 
         this.workArea.add(centerRegionLayout);
@@ -343,7 +353,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 centerRegion:self,
                 siteId:siteId
             }
-            ]
+            ],
+			listeners:{
+				'show':function(panel){
+					Ext.getCmp('knitkitWestRegion').selectWebsite(siteId);
+				}
+			}
         });
 
         this.workArea.add(centerRegionLayout);
@@ -416,7 +431,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.CenterRegion",{
                 collapsible:true,
                 centerRegion:self
             }
-            ]
+            ],
+			listeners:{
+				'show':function(panel){
+					Ext.getCmp('knitkitWestRegion').selectWebsite(websiteId);
+				}
+			}
         });
 
         this.workArea.add(centerRegionLayout);

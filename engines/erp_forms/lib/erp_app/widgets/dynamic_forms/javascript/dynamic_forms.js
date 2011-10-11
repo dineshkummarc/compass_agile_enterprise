@@ -27,7 +27,7 @@ Compass.ErpApp.Widgets.DynamicForms = {
                               type:'json',
                               root: 'dynamic_form_model'
                           },
-                          url:'./dynamic_forms/base/get_dynamic_form_models'
+                          url:'./dynamic_forms/models/index'
                         },
                         fields:[
                         {
@@ -76,14 +76,14 @@ Compass.ErpApp.Widgets.DynamicForms = {
                         var WidgetDynamicFormWidth = basicForm.findField('WidgetDynamicFormWidth');
                         data.WidgetDynamicFormWidth = WidgetDynamicFormWidth.getValue();
                         tpl = new Ext.XTemplate(
-                          "<% # Optional Parameters:\n",
-                          "   # internal_identifier: Models can have multiple forms\n",
-                          "   #                      Leave blank if you want to use the default form\n",
-                          "   #                      Specify internal_identifier to choose a specific form\n",
-                          "<%= render_widget :dynamic_forms,\n",
-                                                "   :params => {:model_name => '{WidgetDynamicFormModelName}',\n",
-                                                "               :internal_identifier => '',\n",
-                                                "               :width => '{WidgetDynamicFormWidth}'} %>");
+                            "<% # Optional Parameters:\n",
+                            "   # internal_identifier: Models can have multiple forms\n",
+                            "   #                      Leave blank if you want to use the default form\n",
+                            "   #                      Specify internal_identifier to choose a specific form %>\n",
+                            "<%= render_widget :dynamic_forms,\n",
+                            "   :params => {:model_name => '{WidgetDynamicFormModelName}',\n",
+                            "               :internal_identifier => '',\n",
+                            "               :width => '{WidgetDynamicFormWidth}'} %>");
                         content = tpl.apply(data);
 
                         //add rendered template to center region editor

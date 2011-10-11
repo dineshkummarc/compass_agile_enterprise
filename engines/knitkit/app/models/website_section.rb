@@ -3,7 +3,6 @@ class WebsiteSection < ActiveRecord::Base
 
   acts_as_versioned
   self.non_versioned_columns =  self.non_versioned_columns | %w{parent_id lft rgt}
-
   can_be_published
   has_security
   
@@ -28,6 +27,10 @@ class WebsiteSection < ActiveRecord::Base
   def articles 
     articles = Article.find_by_section_id(self.id)
     articles
+  end
+
+  def website
+    website_id.nil? ? self.parent.website : Website.find(website_id)
   end
   
   class << self

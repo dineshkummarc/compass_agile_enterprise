@@ -7,7 +7,14 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     if website_nav.save
       website.website_navs << website_nav
       result[:success] = true
-      result[:node] = {:text => params[:name], :websiteNavId => website_nav.id, :websiteId => website.id, :iconCls => 'icon-index', :isWebsiteNav => true, :leaf => false, :children => []}
+      result[:node] = {:text => params[:name], 
+        :websiteNavId => website_nav.id, 
+        :websiteId => website.id, 
+        :iconCls => 'icon-index', 
+        :canAddMenuItems => true, 
+        :isWebsiteNav => true, 
+        :leaf => false, 
+        :children => []}
     else
       result[:success] = false
     end
@@ -44,11 +51,13 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
 
   def add_menu_item
     result = {}
-    website_nav = WebsiteNav.find(params[:website_nav_id])
+    klass = params[:klass].constantize
+    parent = klass.find(params[:id])
+    website_nav = parent.is_a?(WebsiteNav) ? parent : parent.website_nav
     website_nav_item = WebsiteNavItem.new(:title => params[:title])
 
     url = params[:url]
-    if(params[:link_to] != 'Url')
+    if(params[:link_to] != 'url')
       #user wants to see Section so this is needed
       params[:link_to] = 'WebsiteSection' if params[:link_to] == 'website_section'
 
@@ -57,16 +66,32 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
       link_to_item = params[:link_to].constantize.find(linked_to_id)
       #setup link
       website_nav_item.url = '/' + link_to_item.permalink
-      website_nav_item.linked_to_item = link_to_item
+      website_nav_item.linked_to_item = link_to_item 
       url = "http://#{website_nav.website.hosts.first.host}/" + link_to_item.permalink
     else
       website_nav_item.url = url
     end
   
     if website_nav_item.save
-      website_nav.website_nav_items << website_nav_item
+      if parent.is_a?(WebsiteNav)
+        parent.website_nav_items << website_nav_item
+      else
+        website_nav_item.move_to_child_of(parent)
+      end
+
       result[:success] = true
-      result[:node] = {:text => params[:title], :linkToType => params[:link_to].underscore, :linkedToId => linked_to_id, :websiteId => website_nav.website.id, :url => url, :websiteNavItemId => website_nav_item.id, :iconCls => 'icon-document', :isWebsiteNavItem => true, :leaf => true, :children => []}
+      result[:node] = {:text => params[:title],
+        :linkToType => params[:link_to].underscore,
+        :linkedToId => linked_to_id,
+        :websiteId => website_nav.website.id,
+        :url => url,
+        :isSecure => false,
+        :canAddMenuItems => true,
+        :websiteNavItemId => website_nav_item.id,
+        :iconCls => 'icon-document',
+        :isWebsiteNavItem => true,
+        :leaf => false,
+        :children => []}
     else
       result[:success] = false
     end
@@ -81,7 +106,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
 
     url = params[:url]
     linked_to_id = nil
-    if(params[:link_to] != 'Url')
+    if(params[:link_to] != 'url')
       #user wants to see Section so this is needed
       params[:link_to] = 'WebsiteSection' if params[:link_to] == 'website_section'
 
@@ -107,6 +132,18 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     end
 
     render :inline => result.to_json
+  end
+  
+  def update_security
+    website_nav_item = WebsiteNavItem.find(params[:id])
+    website = Website.find(params[:site_id])
+    if(params[:secure] == "true")
+      website_nav_item.add_role(website.role)
+    else
+      website_nav_item.remove_role(website.role)
+    end
+
+    render :inline => {:success => true}.to_json
   end
 
   def delete_menu_item

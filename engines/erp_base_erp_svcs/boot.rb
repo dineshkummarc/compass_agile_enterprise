@@ -2,6 +2,7 @@ require "#{File.dirname(__FILE__)}/lib/rails_ext/railties/plugin"
 require "#{File.dirname(__FILE__)}/lib/core_ext/array"
 require "#{File.dirname(__FILE__)}/lib/core_ext/numbers"
 require "#{File.dirname(__FILE__)}/lib/core_ext/hash"
+require "#{File.dirname(__FILE__)}/lib/core_ext/object"
 
 Rails::Configuration.class_eval do
   @@dependencies = {}

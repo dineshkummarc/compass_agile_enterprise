@@ -21,7 +21,7 @@ module TechServices
 		end
 				
 		module InstanceMethods
-      def add_file(path, data)
+      def add_file(data, path=nil)
         FileAsset.create!(:file_asset_holder => self, :base_path => path, :data => data)
       end
 

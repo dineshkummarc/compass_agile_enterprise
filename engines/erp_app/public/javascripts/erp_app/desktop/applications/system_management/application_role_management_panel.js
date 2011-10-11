@@ -57,7 +57,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.SystemManagement.ApplicationRole
 
     saveRoles : function(){
         if(!Compass.ErpApp.Utility.isBlank(this.widgetId)){
-            var roleIds = []
+            var roleIds = [];
             var treeRoot = this.currentRolesTree.getRootNode();
             this.setWindowStatus('Saving...');
 

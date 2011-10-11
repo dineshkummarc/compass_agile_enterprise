@@ -1,98 +1,122 @@
 Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     var self = this;
-    this.imageAssetsDataView = Ext.create("Ext.view.View",{
-        id:'images',
-        autoDestroy:true,
-        style:'overflow:auto',
-        store: Ext.create('Ext.data.Store', {
-            proxy: {
-                type: 'ajax',
-                url: './knitkit/image_assets/get_images',
-                reader: {
-                    type: 'json',
-                    root: 'images'
-                }
-            },
-            fields:['name', 'url','shortName']
-        }),
-        tpl: new Ext.XTemplate(
-            '<tpl for=".">',
-            '<div class="thumb-wrap" id="{name}">',
-            '<div class="thumb"><img src="{url}" class="thumb-img"></div>',
-            '<span>{shortName}</span></div>',
-            '</tpl>'
-            )
-    });
+    this.websiteId = null;
+	this.sharedImageAssetsDataView = Ext.create("Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsDataView",{url: './knitkit/image_assets/shared/get_images'});
+	this.websiteImageAssetsDataView = Ext.create("Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsDataView",{url: './knitkit/image_assets/website/get_images'});
 
-    this.fileTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
+    this.sharedImageAssetsTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
         //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
-        viewConfig:{
-            loadMask: false
-        },
-        autoDestroy:true,
+        viewConfig:{loadMask: false},
+		region:'north',
+		rootText:'Images',
+		collapsible:true,
         allowDownload:false,
         addViewContentsToContextMenu:false,
         rootVisible:true,
-        controllerPath:'./knitkit/image_assets',
-        standardUploadUrl:'./knitkit/image_assets/upload_file',
-        xhrUploadUrl:'./knitkit/image_assets/upload_file',
-        url:'./knitkit/image_assets/expand_directory',
+        controllerPath:'./knitkit/image_assets/shared',
+        standardUploadUrl:'./knitkit/image_assets/shared/upload_file',
+        xhrUploadUrl:'./knitkit/image_assets/shared/upload_file',
+        url:'./knitkit/image_assets/shared/expand_directory',
         containerScroll: true,
         height:200,
-        title:'Images',
-        collapsible:true,
-        region:'north',
         listeners:{
             'itemclick':function(view, record, item, index, e){
-                e.stopEvent();
-                if(!record.data["leaf"])
-                {
-                    var store = self.imageAssetsDataView.getStore();
-                    store.setProxy({
-                        type: 'ajax',
-                        url: './knitkit/image_assets/get_images',
-                        reader: {
-                            type: 'json',
-                            root: 'images'
-                        },
-                        extraParams:{
-                            directory:record.data.id
-                        }
-                    });
-                    store.load();
+				e.stopEvent();
+                if(!record.data["leaf"]){
+                    var store = self.sharedImageAssetsDataView.getStore();
+                    store.load({params:{directory:record.data.id}});
                 }
                 else{
                     return false;
                 }
             },
             'fileDeleted':function(fileTreePanel, node){
-                var store = self.imageAssetsDataView.getStore();
+                var store = self.sharedImageAssetsDataView.getStore();
                 store.load();
             },
             'fileUploaded':function(fileTreePanel, node){
-                var store = self.imageAssetsDataView.getStore();
+                var store = self.sharedImageAssetsDataView.getStore();
                 store.load();
             }
         }
     });
 
-    var imagesPanel = new Ext.Panel({
-        id:'image-assets',
-        autoDestroy:true,
-        title:'Available Images',
+	this.websiteImageAssetsTreePanel = Ext.create("Compass.ErpApp.Shared.FileManagerTree",{
+        //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+        region:'north',
+		viewConfig:{loadMask: false},
+		rootText:'Images',
+		collapsible:true,
+        allowDownload:false,
+        addViewContentsToContextMenu:false,
+        rootVisible:true,
+        controllerPath:'./knitkit/image_assets/website',
+        standardUploadUrl:'./knitkit/image_assets/website/upload_file',
+        xhrUploadUrl:'./knitkit/image_assets/website/upload_file',
+        url:'./knitkit/image_assets/website/expand_directory',
+        containerScroll: true,
+        height:200,
+        listeners:{
+            'itemclick':function(view, record, item, index, e){
+                if(self.websiteId != null){
+					e.stopEvent();
+	                if(!record.data["leaf"]){
+	                    var store = self.websiteImageAssetsDataView.getStore();
+	                    store.load({params:{directory:record.data.id, website_id:self.websiteId}});
+	                }
+	                else{
+	                    return false;
+	                }
+				}
+            },
+            'fileDeleted':function(fileTreePanel, node){
+                self.websiteImageAssetsDataView.getStore().load({params:{directory:node.data.id, website_id:self.websiteId}});
+            },
+            'fileUploaded':function(fileTreePanel, node){
+                self.websiteImageAssetsDataView.getStore().load({params:{directory:node.data.id, website_id:self.websiteId}});
+            }
+        }
+    });
+
+    var sharedImagesPanel = Ext.create('Ext.panel.Panel',{
+        cls:'image-assets',
+		region:'center',
+        margins: '5 5 5 0',
+        layout:'fit',
+        items: this.sharedImageAssetsDataView
+    });
+
+	var websiteImagesPanel = Ext.create('Ext.panel.Panel',{
+		cls:'image-assets',
         region:'center',
         margins: '5 5 5 0',
         layout:'fit',
-        items: this.imageAssetsDataView
+        items: this.websiteImageAssetsDataView
     });
 
-    this.layout = new Ext.Panel({
-        layout: 'border',
-        autoDestroy:true,
-        title:'Image Assets',
-        items: [this.fileTreePanel, imagesPanel]
-    });
+	var sharedImagesLayout =  Ext.create('Ext.panel.Panel',{
+		layout: 'border',
+        title:'Shared',
+        items: [this.sharedImageAssetsTreePanel, sharedImagesPanel]
+	});
+	
+	var websiteImagesLayout =  Ext.create('Ext.panel.Panel',{
+		layout: 'border',
+        title:'Website',
+        items: [this.websiteImageAssetsTreePanel, websiteImagesPanel]
+	});
+
+	this.layout = Ext.create('Ext.panel.Panel',{
+		layout:'fit',
+        title:'Images',
+        items: Ext.create('Ext.tab.Panel',{items: [sharedImagesLayout, websiteImagesLayout]})
+	});
+
+	this.selectWebsite = function(websiteId){
+		this.websiteId = websiteId;
+		this.websiteImageAssetsTreePanel.extraPostData = {website_id:websiteId};
+		var store = this.websiteImageAssetsTreePanel.getStore();
+		store.load({params:{website_id:websiteId}});
+		this.websiteImageAssetsDataView.getStore().removeAll();
+	}
 }
-
-
-
