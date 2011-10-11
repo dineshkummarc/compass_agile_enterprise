@@ -26,9 +26,6 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
           website.save
         else
           parent_website_section = WebsiteSection.find(params[:website_section_id])
-          website = parent_website_section.website
-          website.website_sections << website_section
-          website.save
           website_section.move_to_child_of(parent_website_section)
           parent_website_section.save
         end
