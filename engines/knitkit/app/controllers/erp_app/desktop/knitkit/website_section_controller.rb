@@ -27,6 +27,8 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
         else
           parent_website_section = WebsiteSection.find(params[:website_section_id])
           website = parent_website_section.website
+          website.website_sections << website_section
+          website.save
           website_section.move_to_child_of(parent_website_section)
           parent_website_section.save
         end
@@ -100,7 +102,12 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
     WebsiteSection.include_root_in_json = false
 
     website = Website.find(params[:website_id])
-    render :inline => website.all_sections.to_json(:only => [:title, :id])
+    WebsiteSection.class_eval do
+      def title_permalink
+        "#{self.title} - #{self.full_path}"
+      end
+    end
+    render :inline => website.all_sections.to_json(:only => [:id], :methods => [:title_permalink])
   end
   
   protected
