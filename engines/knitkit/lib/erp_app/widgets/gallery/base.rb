@@ -7,6 +7,8 @@ class ErpApp::Widgets::Gallery::Base < ErpApp::Widgets::Base
   def index
     @website = Website.find_by_host(request.host_with_port)
     @images = @website.files
+    @showCredits = params[:showCredits]
+    @align = params[:align]
     render
   end
 

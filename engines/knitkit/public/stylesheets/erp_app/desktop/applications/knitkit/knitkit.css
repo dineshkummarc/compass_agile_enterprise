@@ -1,22 +1,22 @@
-#image-assets .thumb img {
+#image-assets .thumb img, #image-assets-gallery .thumb img {
     border: 1px solid white;
     height: 60px;
     width: 90px;
 }
 
-#image-assets .thumb-wrap {
+#image-assets .thumb-wrap, #image-assets-gallery .thumb-wrap {
     float: left;
     margin: 4px 0 4px 4px;
     padding: 5px;
     cursor: pointer;
 }
 
-#image-assets .thumb {
+#image-assets .thumb, #image-assets-gallery .thumb {
     background: none repeat scroll 0 0 #DDDDDD;
     padding: 3px;
 }
 
-#images-assets .thumb-wrap span {
+#images-assets .thumb-wrap span, #images-assets-gallery .thumb-wrap span {
     display: block;
     overflow: hidden;
     text-align: center;
@@ -47,6 +47,8 @@
     overflow: hidden;
     text-align: center;
 }
+
+img.miniThumb {height:40px; width:50px;}
 
 .approve-col{
     background-image:url( /images/icons/document_delete/document_delete_16x16.png ) !important;

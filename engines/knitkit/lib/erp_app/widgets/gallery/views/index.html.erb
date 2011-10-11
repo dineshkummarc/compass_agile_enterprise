@@ -2,8 +2,8 @@
 	
 <script type="text/javascript">
 	hs.graphicsDir = '../images/high_slide/graphics/';
-	hs.showCredits = false;
-	hs.align = 'center';
+	hs.showCredits = <%= @showCredits %>;
+	hs.align = '<%= @align %>';
 	hs.transitions = ['expand', 'crossfade'];
 	hs.outlineType = 'rounded-white';
 	hs.fadeInOut = true;
@@ -20,17 +20,22 @@
 			opacity: 0.75,
 			position: 'bottom center',
 			hideOnMouseOut: true
-		}
+		},
+		thumbstrip: {
+				mode: 'horizontal',
+				position: 'top right',
+				relativeTo: 'image'
+			}
 	});
 </script>
 
 <!-- High Slide  -->
-<div class="highslide-gallery">
-	<% @images.each do |image| %>
-		<%= link_to(image_tag(image.data.url(:thumb), :title => "Click to enlarge"), 
+<!-- <div class="highslide-gallery">
+	<%# @images.each do |image| %>
+		<%# link_to(image_tag(image.data.url(:thumb), :title => "Click to enlarge"), 
 			image.data.url, :class => "highslide", :onclick => "return hs.expand(this)") %>
 		<div class="highslide-caption">
 			Optional caption for images. This caption can be styled using CSS.
 		</div>
-	<% end %>
-</div>
+	<%# end %>
+</div> -->

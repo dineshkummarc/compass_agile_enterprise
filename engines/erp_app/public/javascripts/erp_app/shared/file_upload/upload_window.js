@@ -82,6 +82,7 @@ Ext.define("Compass.ErpApp.Shared.UploadWindow",{
                     }]);
                 },
                 uploadstart:function(awesomeUploader, file){
+						console.log(file.name);
                     self.updateFileUploadRecord(file.id, 'status', 'Sending');
                 },
                 uploadprogress:function(awesomeUploader, fileId, bytesComplete, bytesTotal){
@@ -102,7 +103,7 @@ Ext.define("Compass.ErpApp.Shared.UploadWindow",{
                     if(result.success){
                         self.updateFileUploadRecord(file.id, 'progress', 100 );
                         self.updateFileUploadRecord(file.id, 'status', 'Uploaded' );
-                        this.fireEvent('fileuploaded', this);
+                        this.fireEvent('fileuploaded', this, result, file);
                     }else{
                         return false;
                     }
