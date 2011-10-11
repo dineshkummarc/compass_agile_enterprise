@@ -11,18 +11,21 @@ class WebsiteSection < ActiveRecord::Base
   
   @@types = ['Page']
   cattr_reader :types
-
-  #was deleting all records. Explore this..
-  #acts_as_nested_set :scope => :website_id if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
-
+  
   acts_as_nested_set if ActiveRecord::Base.connection.tables.include?('website_sections') #better nested set tries to use this before the table is there...
   
+  before_save  :update_path
+  after_create :update_paths
+
   belongs_to :website
   has_many :website_section_contents, :dependent => :destroy
   has_many :contents, :through => :website_section_contents
+  has_permalink :title, :url_attribute => :permalink, :sync_url => true, :only_when_blank => true
 
-  has_permalink :title, :update => true
-  
+  validates_presence_of :title
+  validates_uniqueness_of :permalink, :scope => [ :website_id, :parent_id ]
+
+
   def articles 
     articles = Article.find_by_section_id(self.id)
     articles
@@ -48,6 +51,10 @@ class WebsiteSection < ActiveRecord::Base
     links | self.descendants.collect(&:permalink)
   end
 
+  def full_path
+    self.self_and_ancestors.collect(&:permalink).join("/")
+  end
+
   def child_by_permalink(path)
     self.descendants.detect{|child| child.permalink == path}
   end
@@ -55,6 +62,8 @@ class WebsiteSection < ActiveRecord::Base
   def type
     read_attribute(:type) || 'Page'
   end
+
+
 
   def create_layout
     self.layout = IO.read(File.join(KNIT_KIT_ROOT,"app/views/website_sections/index.html.erb"))
@@ -104,6 +113,26 @@ class WebsiteSection < ActiveRecord::Base
         c.destroy 
       end
     end    
+  end
+
+  protected
+
+  def update_path
+    if permalink_changed?
+      new_path = build_path
+      self.path = new_path unless self.path == new_path
+    end
+  end
+
+  def build_path
+    self_and_ancestors.map(&:permalink).join('/')
+  end
+
+  def update_paths
+    if parent_id
+      move_to_child_of(parent)
+      site.sections.update_paths!
+    end
   end
 
   private
