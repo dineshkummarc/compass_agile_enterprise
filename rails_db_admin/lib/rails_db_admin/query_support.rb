@@ -26,7 +26,8 @@ module RailsDbAdmin
 	  end
 	  
 	  def select_top_fifty(table)
-	    query = @connection.add_limit_offset!("SELECT * FROM #{table}", {:limit => 50})
+      #Actually, sanitizing here is pretty redundent since it's a constant...
+	    query = "SELECT * FROM #{table} LIMIT #{@connection.sanitize_limit(50)}"
 	    
 	    rows = @connection.select_all(query)
 	    records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
