@@ -61,6 +61,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
                 handler: function(button) {
                     var textarea = self.query('.codemirror')[0];
                     var sql = textarea.getValue();
+                    var selected_sql = textarea.getSelection();
+                    var cursor_pos = textarea.getCursor().line;
                     var database = self.module.getDatabase();
 					
                     messageBox = Ext.Msg.wait('Status', 'Executing..');
@@ -70,7 +72,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel",{
                         url: '/rails_db_admin/queries/execute_query',
                         params:{
                             sql:sql,
-                            database:database
+                            database:database,
+                            cursor_pos: cursor_pos,
+                            selected_sql : selected_sql
                         },
                         method:'post',
                         success: function(responseObject) {
