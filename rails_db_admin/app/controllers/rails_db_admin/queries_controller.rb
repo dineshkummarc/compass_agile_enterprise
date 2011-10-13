@@ -135,7 +135,7 @@ module RailsDbAdmin
       columns, values, exception = @query_support.execute_sql(sql_str)
 
       if !exception.nil?
-        exception.gsub!("\n"," ").gsub!('"','\\"')
+        exception = exception.gsub("\n"," ")
         result = {:success => false, :exception => exception}
       elsif columns.empty? || values.empty?
         result = {:success => false, :exception => "Empty result set"}
