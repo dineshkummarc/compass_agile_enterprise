@@ -103,7 +103,7 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
     website = Website.find(params[:website_id])
     WebsiteSection.class_eval do
       def title_permalink
-        "#{self.title} - #{self.full_path}"
+        "#{self.title} - #{self.path}"
       end
     end
     render :inline => website.all_sections.to_json(:only => [:id], :methods => [:title_permalink])

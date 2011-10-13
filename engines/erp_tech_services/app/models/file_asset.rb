@@ -1,6 +1,6 @@
 require 'fileutils'
 
-Paperclip.interpolates(:file_path) { |data, style|
+Paperclip.interpolates(:file_path){|data, style|
   case TechServices::FileSupport.options[:storage]
   when :filesystem
     File.join(Rails.root,'public',data.instance.directory,data.instance.name)
@@ -9,7 +9,7 @@ Paperclip.interpolates(:file_path) { |data, style|
   end
 }
 
-Paperclip.interpolates(:file_url) { |data, style|File.join(data.instance.directory,data.instance.name)}
+Paperclip.interpolates(:file_url){|data, style|File.join(data.instance.directory,data.instance.name)}
 
 class FileAsset < ActiveRecord::Base
   if respond_to?(:class_attribute)

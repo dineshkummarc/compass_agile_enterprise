@@ -12,25 +12,19 @@ module TechServices
       end
       
       def update_file(path, content)
-        path = prepend_root_if_needed(path)
         File.open(path, 'w+') {|f| f.write(content) }
       end
 
       def create_file(path, name, contents)
-        path = prepend_root_if_needed(path)
         FileUtils.mkdir_p path unless File.exists? path
         File.open(File.join(path,name), 'w+') {|f| f.write(contents) }
       end
 
       def create_folder(path, name)
-        path = prepend_root_if_needed(path)
         FileUtils.mkdir_p File.join(path,name)
       end
 
       def save_move(path, new_parent_path)
-        path = prepend_root_if_needed(path)
-        new_parent_path = prepend_root_if_needed(new_parent_path)
-        
         result = nil
         unless File.exists? path
           message = 'File does not exists'
@@ -47,7 +41,6 @@ module TechServices
       end
 
       def rename_file(path, name)
-        path = prepend_root_if_needed(path)
         result = nil
         unless File.exists? path
           message = 'File does not exists'
@@ -66,7 +59,6 @@ module TechServices
       end
 
       def delete_file(path)
-        path = prepend_root_if_needed(path)
         result = nil
         unless File.exists? path
           message = 'File does not exists'
@@ -82,7 +74,6 @@ module TechServices
       end
 
       def get_contents(path)
-        path = prepend_root_if_needed(path)
         contents = nil
         message = nil
         unless File.exists? path
@@ -94,7 +85,6 @@ module TechServices
       end
 
       def build_tree(starting_path, options={})
-        #starting_path = prepend_root_if_needed(starting_path)
         find_node(starting_path, options)
       end
 
@@ -127,7 +117,6 @@ module TechServices
         keep_full_path = nil
         if directory.index(Rails.root).nil?
           tree_data = {:text => directory.split('/').last, :id => directory, :leaf => false, :children => []}
-          directory = prepend_root_if_needed(directory)
         else
           keep_full_path = true
           tree_data = {:text => directory.split('/').last, :id => directory, :leaf => false, :children => []}
@@ -151,10 +140,6 @@ module TechServices
 
         tree_data[:children].sort_by{|item| [item[:id]]}
         tree_data
-      end
-
-      def prepend_root_if_needed(path)
-        path.index(Rails.root).nil? ? File.join(root, path) : path
       end
       
     end

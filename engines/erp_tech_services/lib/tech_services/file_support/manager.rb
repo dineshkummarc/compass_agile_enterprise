@@ -19,6 +19,8 @@ module TechServices
           end
         end
 
+        path.sub!(self.root,'') if parent[:id].scan(self.root).empty?
+        
         parent = [] if parent[:id] != path
         parent
       end
@@ -35,9 +37,11 @@ module TechServices
             current_items = []
             objects_this_depth = paths.collect{|item|
               text = item.split('/')[i - 1]
-              if item.split('/').count >= i && current_items.index(text).nil?
-                current_items << text
-                {:text => text, :path => item.split('/')[0..(i-1)].join('/')}
+              path = item.split('/')[0..(i-1)].join('/')
+              if item.split('/').count >= i && current_items.select{|item| item[:text] == text and item[:path] == path}.empty?
+                item_hash = {:text => text, :path => path}
+                current_items << item_hash
+                item_hash
               end
             }
             objects_this_depth.delete_if{|item| (item.nil? or item[:text].blank?)}
@@ -66,7 +70,7 @@ module TechServices
 
       def insert_folders(file_asset_nodes)
         file_asset_nodes.each do |child_asset_node|
-          node = find_node(child_asset_node[:id])
+          node = find_node(File.join(self.root,child_asset_node[:id]))
           folders = node[:children].select{|item| !item[:leaf]}
           folders.each do |folder|
             child_asset_node[:children] << folder unless child_asset_node[:children].collect{|child_node| child_node[:text] }.include?(folder[:text])

@@ -60,6 +60,10 @@ module TechServices
           tree_data
         end
       end
+
+      def initialize
+        S3Manager.setup
+      end
       
       def buckets
         AWS::S3::Service.buckets

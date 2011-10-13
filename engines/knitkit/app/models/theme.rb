@@ -80,6 +80,7 @@ class Theme < ActiveRecord::Base
   end
   
   def import(file)
+    file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
     file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
       f.write file.read
       f.original_path = file.original_path
@@ -103,7 +104,7 @@ class Theme < ActiveRecord::Base
             theme_file.data = data
             theme_file.save
           else
-            self.add_file(data, File.join(self.path,name)) rescue next
+            self.add_file(data, File.join(file_support.root,self.url,name)) rescue next
           end
         end
       end
@@ -111,14 +112,18 @@ class Theme < ActiveRecord::Base
   end
 
   def export
+    file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
     tmp_dir = Theme.make_tmp_dir
     returning(tmp_dir + "#{name}.zip") do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
-        theme_path = self.path.gsub(RAILS_ROOT, '')
         files.each {|file|
-          name = file.base_path.gsub(theme_path + '/','')
-          zip.add(name, file.path) if ::File.exists?(file.path)
+          contents = file_support.get_contents(File.join(file_support.root,file.directory,file.name))
+          relative_path = file.directory.sub("/#{url}",'')
+          path = FileUtils.mkdir_p(File.join(tmp_dir,relative_path))
+          full_path = File.join(path,file.name)
+          File.open(full_path, 'w+') {|f| f.write(contents) }
+          zip.add(File.join(relative_path[1..relative_path.length],file.name), full_path) if ::File.exists?(full_path)
         }
         ::File.open(tmp_dir + 'about.yml', 'w') { |f| f.write(about.to_yaml) }
         zip.add('about.yml', tmp_dir + 'about.yml')
@@ -166,9 +171,7 @@ class Theme < ActiveRecord::Base
 
   def delete_theme_files
     file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
-    self.files.each do |file|
-      file_support.delete_file(File.join(file.directory, file.name))
-    end
+    file_support.delete_file(File.join(file_support.root,self.url))
   end
 
   def create_theme_files

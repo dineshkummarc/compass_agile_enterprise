@@ -13,37 +13,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     viewConfig:{
       loadMask: false
     },
-    tbar:{
-      items:[
-      {
-        text:'Sync',
-        iconCls:'icon-recycle',
-        handler:function(btn){
-          var waitMsg = Ext.Msg.wait('Status...','Syncing');
-          var conn = new Ext.data.Connection();
-          conn.request({
-            url: './knitkit/image_assets/shared/sync',
-            method: 'POST',
-            success: function(response) {
-              waitMsg.hide();
-              var responseObj =  Ext.decode(response.responseText);
-              if(responseObj.success){
-                self.sharedImageAssetsTreePanel.getStore().load();
-                Ext.Msg.alert("Success", responseObj.message);
-              }
-              else{
-                Ext.Msg.alert("Error", responseObj.message);
-              }
-            },
-            failure: function(response) {
-              waitMsg.hide();
-              Ext.Msg.alert('Status', 'Error during sync.');
-            }
-          });
-        }
-      }
-      ]
-    },
     region:'north',
     rootText:'Images',
     collapsible:true,
@@ -87,44 +56,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
     region:'north',
     viewConfig:{
       loadMask: false
-    },
-    tbar:{
-      items:[
-      {
-        text:'Sync',
-        iconCls:'icon-recycle',
-        handler:function(btn){
-          var waitMsg = Ext.Msg.wait('Status...','Syncing');
-          var conn = new Ext.data.Connection();
-          conn.request({
-            url: './knitkit/image_assets/website/sync',
-            method: 'POST',
-            params:{
-              website_id:self.websiteId
-            },
-            success: function(response) {
-              waitMsg.hide();
-              var responseObj =  Ext.decode(response.responseText);
-              if(responseObj.success){
-                self.websiteImageAssetsTreePanel.getStore().load({
-                  params:{
-                    website_id:self.websiteId
-                  }
-                });
-                Ext.Msg.alert("Success", responseObj.message);
-              }
-              else{
-                Ext.Msg.alert("Error", responseObj.message);
-              }
-            },
-            failure: function(response) {
-              waitMsg.hide();
-              Ext.Msg.alert('Status', 'Error during sync.');
-            }
-          });
-        }
-      }
-      ]
     },
     rootText:'Images',
     collapsible:true,

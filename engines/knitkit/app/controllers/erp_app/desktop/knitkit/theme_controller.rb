@@ -83,13 +83,48 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
   ##############################################################
 
   def create_file
-    path = params[:path]
+    path = File.join(@file_support.root,params[:path])
     name = params[:name]
 
     theme = get_theme(path)
-    theme.add_file('#Empty File', File.join(@file_support.root, path, name))
+    theme.add_file('#Empty File', File.join(path, name))
 
     render :inline => {:success => true}.to_json
+  end
+
+  def create_folder
+    path = File.join(@file_support.root,params[:path])
+    name = params[:name]
+
+    @file_support.create_folder(path, name)
+    render :json => {:success => true}
+  end
+
+  def update_file
+    path = File.join(@file_support.root,params[:node])
+    content = params[:content]
+
+    @file_support.update_file(path, content)
+    render :json => {:success => true}
+  end
+
+
+  def download_file
+    path = File.join(@file_support.root,params[:path])
+    contents, message = @file_support.get_contents(path)
+
+    send_data contents, :filename => File.basename(path)
+  end
+
+  def get_contents
+    path = File.join(@file_support.root,params[:node])
+    contents, message = @file_support.get_contents(path)
+
+    if contents.nil?
+      render :text => message
+    else
+      render :text => contents
+    end
   end
 
   def upload_file
@@ -133,7 +168,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     result = {}
     begin
       name = File.basename(path)
-      result, message, is_folder = @file_support.delete_file(path)
+      result, message, is_folder = @file_support.delete_file(File.join(@file_support.root,path))
       if result && !is_folder
         theme_file = get_theme_file(path)
         theme_file.destroy

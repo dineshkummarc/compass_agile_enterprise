@@ -2039,7 +2039,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                         self.clearWindowStatus();
                         var obj =  Ext.decode(action.response.responseText);
                         if(obj.success){
-                          self.sitesTree.getRootNode().reload();
+                          self.sitesTree.getStore().load();
                           importWebsiteWindow.close();
                         }
                         else{

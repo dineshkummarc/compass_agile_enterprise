@@ -8,37 +8,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
     viewConfig:{
       loadMask: false
     },
-    tbar:{
-      items:[
-      {
-        text:'Sync',
-        iconCls:'icon-recycle',
-        handler:function(btn){
-          var waitMsg = Ext.Msg.wait('Status...','Syncing');
-          var conn = new Ext.data.Connection();
-          conn.request({
-            url: './knitkit/file_assets/shared/sync',
-            method: 'POST',
-            success: function(response) {
-              waitMsg.hide();
-              var responseObj =  Ext.decode(response.responseText);
-              if(responseObj.success){
-                self.sharedFileAssetsTreePanel.getStore().load();
-                Ext.Msg.alert("Success", responseObj.message);
-              }
-              else{
-                Ext.Msg.alert("Error", responseObj.message);
-              }
-            },
-            failure: function(response) {
-              waitMsg.hide();
-              Ext.Msg.alert('Status', 'Error during sync.');
-            }
-          });
-        }
-      }
-      ]
-    },
     title:'Shared',
     allowDownload:false,
     addViewContentsToContextMenu:false,
@@ -78,44 +47,6 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
     //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
     viewConfig:{
       loadMask: false
-    },
-    tbar:{
-      items:[
-      {
-        text:'Sync',
-        iconCls:'icon-recycle',
-        handler:function(btn){
-          var waitMsg = Ext.Msg.wait('Status...','Syncing');
-          var conn = new Ext.data.Connection();
-          conn.request({
-            url: './knitkit/file_assets/website/sync',
-            method: 'POST',
-            params:{
-              website_id:self.websiteId
-            },
-            success: function(response) {
-              waitMsg.hide();
-              var responseObj =  Ext.decode(response.responseText);
-              if(responseObj.success){
-                self.websiteFileAssetsTreePanel.getStore().load({
-                  params:{
-                    website_id:self.websiteId
-                  }
-                });
-                Ext.Msg.alert("Success", responseObj.message);
-              }
-              else{
-                Ext.Msg.alert("Error", responseObj.message);
-              }
-            },
-            failure: function(response) {
-              waitMsg.hide();
-              Ext.Msg.alert('Status', 'Error during sync.');
-            }
-          });
-        }
-      }
-      ]
     },
     title:'Website',
     allowDownload:false,

@@ -7,9 +7,9 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
   def base_path
     @base_path = nil
     if @context == :website
-      @base_path = File.join("/sites/site-#{@assets_model.id}", "files") unless @assets_model.nil?
+      @base_path = File.join(@file_support.root,"/sites/site-#{@assets_model.id}", "files") unless @assets_model.nil?
     else
-      @base_path = "/files" unless @assets_model.nil?
+      @base_path = File.join(@file_support.root,"/files") unless @assets_model.nil?
     end
   end
 
@@ -78,7 +78,7 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
     result = {}
     begin
       name = File.basename(path)
-      result, message, is_folder = @file_support.delete_file(path)
+      result, message, is_folder = @file_support.delete_file(File.join(@file_support.root,path))
       if result && !is_folder
         file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
         file.destroy
@@ -121,8 +121,16 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
 
   def set_asset_model
     @context = params[:context].to_sym
-    @context == :website ? (@assets_model = params[:website_id].blank? ? nil : Website.find(params[:website_id])) : (@assets_model = CompassAeInstance.first)
-    ((render :inline => {:success => false, :error => "No Website Selected"}.to_json) if (@assets_model.nil?)) if (params[:action] != "base_path" and @context == :website)
+
+    if @context == :website
+      #get website id this can be an xhr request or regular
+      website_id = request.env['HTTP_EXTRAPOSTDATA_WEBSITE_ID'].blank? ? params[:website_id] : request.env['HTTP_EXTRAPOSTDATA_WEBSITE_ID']
+      (@assets_model = website_id.blank? ? nil : Website.find(website_id))
+      
+      render :inline => {:success => false, :error => "No Website Selected"}.to_json if (@assets_model.nil? && params[:action] != "base_path")
+    else
+      @assets_model = CompassAeInstance.first
+    end
   end
   
 end
