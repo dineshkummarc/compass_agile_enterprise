@@ -27,7 +27,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueriesMenuTreePane
                 'itemclick':function(view, record, item, index, e){
                     e.stopEvent();
                     if(record.data.leaf){
-                        self.initialConfig.module.displayAndExecuteQuery(record.data.id);
+                        self.initialConfig.module.displayQuery(record.data.id);
                     }
                 },
                 'itemcontextmenu':function(view, record, item, index, e){

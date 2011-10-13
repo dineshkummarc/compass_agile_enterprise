@@ -227,6 +227,54 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
             scope: this
         }
     },
+    displayQuery : function(queryName){
+        this.setWindowStatus('Executing '+ queryName +'...');
+        var self = this;
+        var database = this.getDatabase();
+        var conn = new Ext.data.Connection();
+        conn.request({
+            url: '/rails_db_admin/queries/open_query/',
+            params:{
+                database:database,
+                query_name:queryName
+            },
+            success: function(responseObject) {
+                var response =  Ext.decode(responseObject.responseText);
+                var query = response.query;
+
+                var queryPanel = null;
+
+                if(response.success)
+                {
+                    self.clearWindowStatus();
+
+                    queryPanel = new Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel({
+                        module:self,
+                        sqlQuery:query
+                    });
+
+                    self.container.add(queryPanel);
+                    self.container.setActiveTab(self.container.items.length - 1);
+                }
+                else
+                {
+                    Ext.Msg.alert('Error', response.exception);
+                    queryPanel = new Compass.ErpApp.Desktop.Applications.RailsDbAdmin.QueryPanel({
+                        module:self,
+                        sqlQuery:query
+                    });
+
+                    self.container.add(queryPanel);
+                    self.container.setActiveTab(self.container.items.length - 1);
+                }
+
+            },
+            failure: function() {
+                self.clearWindowStatus();
+                Ext.Msg.alert('Status', 'Error loading query');
+            }
+        });
+    },
 
     createWindow : function(){
         var self = this;

@@ -63,12 +63,13 @@ module RailsDbAdmin
 	    FileUtils.rm("#{path}#{name}.sql") if File.exist?("#{path}#{name}.sql")
 	  end
 	  
-	  def get_query(name, database_connection_name)
-	    path = "#{@query_location}#{database_connection_name}/"
-	    
-	    query = ""
-	    query = File.open("#{path}#{name}.sql") { |f| f.read } if File.exist?("#{path}#{name}.sql")
-	    query.gsub("\r", " ").gsub("\n", " ")
-	  end
-	end
+    def get_query(name, database_connection_name)
+      path = "#{@query_location}#{database_connection_name}/"
+
+      query = ""
+      query = File.open("#{path}#{name}.sql") { |f| f.read } if File.exist?("#{path}#{name}.sql")
+
+      return query
+    end
+  end
 end
