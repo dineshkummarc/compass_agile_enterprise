@@ -333,6 +333,7 @@ class Website < ActiveRecord::Base
           article.body_html = entries.find{|entry| entry[:type] == 'articles' and entry[:name] == "#{article_hash[:name]}.html"}[:data]
         end
         section.contents << article
+        section.save
         article.update_content_area_and_position_by_section(section, article_hash[:content_area], article_hash[:position])
       end
       section.save
@@ -341,18 +342,6 @@ class Website < ActiveRecord::Base
         child_section.move_to_child_of(section)
       end
       section
-    end
-
-    def image_path
-      "#{RAILS_ROOT}/vendor/plugins/erp_app/public/images"
-    end
-
-    def file_assets_path
-      "#{RAILS_ROOT}/vendor/plugins/erp_app/public/file_assets"
-    end
-
-    def clean_image_src(src)
-      src.gsub!('../','')
     end
   end
 

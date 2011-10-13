@@ -2073,8 +2073,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
       }
     });
 
-    this.items = [layout, {
+    this.items = [layout,
+    {
       xtype:'knitkit_themestreepanel',
+      centerRegion:this.initialConfig['module'].centerRegion
+    },
+    {
+      xtype:'knitkit_articlesgridpanel',
       centerRegion:this.initialConfig['module'].centerRegion
     }];
         

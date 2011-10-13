@@ -2,6 +2,31 @@ module TechServices
   module FileSupport
     class Manager
 
+      class << self
+        def find_parent(item, parents)
+          parents.find do |parent|
+            path = item[:path].gsub(item[:text],'').split('/').join('/')
+            parent[:id] == path
+          end
+        end
+      end
+
+      def sync(path, model)
+        result = nil
+        message = nil
+
+        node = find_node(path)
+        if node.nil?
+          message = "Nothing to sync"
+        else
+          sync_node(node, model)
+          message = "Sync successful"
+          result = true
+        end
+
+        return result, message
+      end
+
       protected
 
       def find_node(path, options={})
@@ -79,15 +104,41 @@ module TechServices
         end unless file_asset_nodes.nil?
       end
 
-      class << self
-        def find_parent(item, parents)
-          parents.find do |parent|
-            path = item[:path].gsub(item[:text],'').split('/').join('/')
-            parent[:id] == path
+      private
+
+      def sync_node(node, model)
+        leaves = get_all_leaves(node)
+        leaves.each do |leaf|
+          create_file_asset_for_node(leaf, model)
+        end
+
+        model.files.find(:all, :conditions => "directory like '#{node[:id].sub(self.root, '')}%'").each do |file_asset|
+          unless self.exists? File.join(self.root, file_asset.directory, file_asset.name)
+            puts "File #{File.join(self.root, file_asset.directory, file_asset.name)} does not exists removing"
+            file_asset.destroy
           end
         end
       end
 
-    end
-  end
-end
+      def get_all_leaves(node)
+        node[:children].map{|child_node| child_node[:leaf] ? child_node : get_all_leaves(child_node) }.flatten
+      end
+
+      def create_file_asset_for_node(node, model)
+        name = File.basename(node[:id])
+        directory = File.dirname(node[:id])
+        file_asset = model.files.find(:first, :conditions => ['directory = ? and name = ?', directory, name])
+
+        if file_asset.nil?
+          contents = get_contents(node[:id]).to_s
+          begin
+            model.add_file(contents, node[:id])
+          rescue Exception=>ex
+            #the file might already exist if it is in the file system.
+          end
+        end
+      end
+      
+    end#Manager
+  end#FileSupport
+end#TechServices

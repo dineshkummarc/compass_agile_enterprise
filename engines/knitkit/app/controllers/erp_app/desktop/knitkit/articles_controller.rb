@@ -7,13 +7,15 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article = Article.new
 
     article = set_attributes(article)
-    article.website_sections << WebsiteSection.find(website_section_id)
+    article.website_sections << WebsiteSection.find(website_section_id) unless website_section_id.blank?
 
     article.created_by = current_user
     
     if article.save
-      website_section = WebsiteSection.find(website_section_id)
-      article.update_content_area_and_position_by_section(website_section, params['content_area'], params['position'])
+      unless website_section_id.blank?
+        website_section = WebsiteSection.find(website_section_id)
+        article.update_content_area_and_position_by_section(website_section, params['content_area'], params['position'])
+      end
       
       result[:success] = true
     else
@@ -33,8 +35,10 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article = set_attributes(article)
 
     if article.save
-      website_section = WebsiteSection.find(website_section_id)
-      article.update_content_area_and_position_by_section(website_section, params['content_area'], params['position'])
+      unless website_section_id.blank?
+        website_section = WebsiteSection.find(website_section_id)
+        article.update_content_area_and_position_by_section(website_section, params['content_area'], params['position'])
+      end
 
       result[:success] = true
     else
@@ -121,5 +125,31 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     end
 
     render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position], :methods => [:website_section_position])}}"
+  end
+
+  def all
+    Article.include_root_in_json = false
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'created_at'
+    dir  = sort_hash[:direction] || 'DESC'
+    limit = params[:limit] || 10
+    start = params[:start] || 0
+
+    articles = Article.find(:all,:order => "#{sort} #{dir}",:limit => limit,:offset => start)
+    total_count = Article.all.count
+
+    articles_array = []
+    articles.each do |a|
+      articles_hash = {}
+      articles_hash[:id] = a.id
+      articles_hash[:sections] = a.website_sections.collect{|section| section.title}.join(',')
+      articles_hash[:title] = a.title
+      articles_hash[:tag_list] = a.tag_list.join(', ')
+      articles_hash[:body_html] = a.body_html
+      articles_hash[:excerpt_html] = a.excerpt_html
+      articles_array << articles_hash
+    end
+
+    render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :sections])}}"
   end
 end

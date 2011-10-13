@@ -5,24 +5,26 @@ module TechServices
   module FileSupport
     class S3Manager < Manager
       class << self
-        def setup
+        def setup_connection
           @@configuration = YAML::load_file(File.join(Rails.root,'config','s3.yml'))[Rails.env]
 
           AWS::S3::Base.establish_connection!(
             :access_key_id     => @@configuration['access_key_id'],
             :secret_access_key => @@configuration['secret_access_key']
           )
+
           @@s3_bucket = AWS::S3::Bucket.find(@@configuration['bucket'])
           @@node_tree = build_node_tree
         end
         
         def reload
-          setup
+          AWS::S3::Base.connected? ? (@@node_tree = build_node_tree(true)) : setup_connection
         end
 
-        def build_node_tree
+        def build_node_tree(reload=false)
           tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
-          objects = @@s3_bucket.objects
+          objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
+
 
           nesting_depth = objects.collect{|object| object.key.split('/').count}.max
           unless nesting_depth.nil?
@@ -60,10 +62,6 @@ module TechServices
           tree_data
         end
       end
-
-      def initialize
-        S3Manager.setup
-      end
       
       def buckets
         AWS::S3::Service.buckets
@@ -93,21 +91,21 @@ module TechServices
         AWS::S3::S3Object.store(File.join(path,name) + "/", '', @@s3_bucket.name)
       end
 
-      def save_move(path, new_parent_path)
-        result = nil
-        unless File.exists? path
-          message = 'File does not exists'
-        else
-          name = File.basename(path)
-          #make sure path is there.
-          FileUtils.mkdir_p new_parent_path unless File.directory? new_parent_path
-          FileUtils.mv(path, new_parent_path + '/' + name)
-          message = "#{name} was moved to #{new_parent_path} successfully"
-          result = true
-        end
-
-        return result, message
-      end
+#      def save_move(path, new_parent_path)
+#        result = nil
+#        unless File.exists? path
+#          message = 'File does not exists'
+#        else
+#          name = File.basename(path)
+#          #make sure path is there.
+#          FileUtils.mkdir_p new_parent_path unless File.directory? new_parent_path
+#          FileUtils.mv(path, new_parent_path + '/' + name)
+#          message = "#{name} was moved to #{new_parent_path} successfully"
+#          result = true
+#        end
+#
+#        return result, message
+#      end
 
       def rename_file(path, name)
         result = nil
@@ -144,6 +142,10 @@ module TechServices
         return result, message, is_directory
       end
 
+      def exists?(path)
+        !AWS::S3::S3Object.find(path, @@s3_bucket.name).nil?
+      end
+
       def get_contents(path)
         contents = nil
         message = nil
@@ -165,46 +167,7 @@ module TechServices
         node_tree.nil? ? [] : node_tree
       end
 
-      def sync(path, model)
-        result = nil
-        message = nil
-
-        node = find_node(path)
-        if node.nil?
-          message = "Nothing to sync"
-        else
-          sync_node(node, model)
-          message = "Sync successful"
-          result = true
-        end
-
-        return result, message
-      end
-
       private
-
-      def sync_node(node, model)
-        leaves = get_all_leaves(node)
-        leaves.each do |leaf|
-          create_file_asset_for_node(leaf, model)
-        end
-      end
-
-      def get_all_leaves(node)
-        node[:children].map{|child_node| child_node[:leaf] ? child_node : get_all_leaves(child_node) }.flatten
-      end
-
-      def create_file_asset_for_node(node, model)
-        name = File.basename(node[:id])
-        directory = File.dirname(node[:id])
-        file_asset = model.files.find(:first,
-          :conditions => ['storage = ? and directory = ? and name = ?','s3', directory, name])
-
-        if file_asset.nil?
-          contents = get_contents(node[:id]).to_s
-          model.add_file(contents, node[:id])
-        end
-      end
 
       def find_node(path, options={})
         parent = if options[:file_asset_holder]
@@ -231,6 +194,6 @@ module TechServices
         parent
       end
       
-    end
-  end
-end
+    end#S3Manager
+  end#FileSupport
+end#TechServices

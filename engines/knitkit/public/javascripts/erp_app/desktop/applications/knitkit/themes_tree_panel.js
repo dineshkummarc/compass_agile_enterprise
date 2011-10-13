@@ -174,7 +174,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
               iconCls:'icon-delete',
               listeners:{
                 'click':function(){
-                  self.deleteTheme(node.data.id);
+                  Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this theme?', function(btn){
+                    if(btn == 'no'){return false;}
+                    else
+                    if(btn == 'yes')
+                    {self.deleteTheme(node.data.id);}
+                  });
                 }
               }
             });

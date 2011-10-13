@@ -3,10 +3,6 @@ module TechServices
     class FileSystemManager < Manager
       REMOVE_FILES_REGEX = /^\./
       
-      def initialize
-        
-      end
-      
       def root
         File.join(Rails.root,'public')
       end
@@ -38,6 +34,10 @@ module TechServices
         end
 
         return result, message
+      end
+
+      def exists?(path)
+        File.exists? path
       end
 
       def rename_file(path, name)
@@ -142,6 +142,6 @@ module TechServices
         tree_data
       end
       
-    end
-  end
-end
+    end#FileSystemManager
+  end#FileSupport
+end#TechServices
