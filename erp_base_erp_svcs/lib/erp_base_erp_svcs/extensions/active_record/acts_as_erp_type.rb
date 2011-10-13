@@ -25,10 +25,8 @@ module ErpBaseErpSvcs
 							
             # the class method will return a populated instance of the correct type
             valid_values.each do | vv |
-              proc = Proc.new{ vv }
-              self.class.send(:define_method, vv.internal_identifier, proc ) unless vv.internal_identifier.nil?
-            end
-								 
+              (class << self; self; end).instance_eval { define_method vv.internal_identifier, Proc.new{vv} }
+            end	 
 				  end
 
 				  def belongs_to_erp_type(model_id = nil, options = {})

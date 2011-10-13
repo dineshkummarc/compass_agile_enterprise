@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   
   s.add_dependency "rails", "~> 3.1.0"
-  s.add_dependency('devise','1.1.rc0')
+  s.add_dependency('devise',"~> 1.4.8")
   s.add_dependency('paperclip','2.4.1')
   s.add_dependency('delayed_job','2.1.4')
   
