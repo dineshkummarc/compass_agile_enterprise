@@ -41,6 +41,9 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
         });
         
         this.store = store;
+        this.setParams = function(params) {
+            this.store.proxy.extraParams.party_id = params.partyId;
+        };
 
         this.bbar = Ext.create("Ext.PagingToolbar",{
             pageSize: 30,
@@ -74,6 +77,10 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
                 }
                 ]
             });
+        }
+
+        if (config.columns === undefined) {
+            config.columns = [];
         }
 
         config.columns = config.columns.concat([
@@ -122,6 +129,10 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
             type: 'presence',
             field: 'contact_purpose_id'
         });
+
+        if (config.fields === undefined) {
+            config.fields = [];
+        }
 
         config.fields = config.fields.concat([
         {
@@ -183,5 +194,241 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",{
         }, config);
         
 		this.callParent([config]);
+    }
+});
+
+/**
+ * PhoneNbrGrid
+ * This grid extends the ContactMechanismGrid and sets it up with columns for
+ * displaying phone numbers
+ */
+Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.PhoneNbrGrid",{
+    extend:"Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",
+    alias:'widget.phone_nbr_grid',
+    initComponent: function () {
+        this.callParent(arguments);
+    },
+    constructor: function(config) {
+        config.title = 'Phone Numbers';
+        config.contactMechanism = 'PhoneNumber';
+        columns = [
+            {
+                header: 'Phone Number',
+                dataIndex: 'phone_number',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ];
+        config.fields = [
+            {
+                name:'phone_number'
+            }
+            ];
+        config.validations = [
+            {
+                type: 'presence',
+                field: 'phone_number'
+            }
+            ];
+        this.callParent([config]);
+    }
+});
+
+/**
+ * EmailAddrGrid
+ * This grid extends ContactMechanismGrid and provides a column configuration for
+ * displaying and editing email addresses for a given party
+ */
+Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.EmailAddrGrid",{
+    extend:"Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",
+    alias:'widget.email_addr_grid',
+    initComponent: function () {
+        this.callParent(arguments);
+    },
+    constructor: function(config) {
+        config.title = 'Email Addresses';
+        config.contactMechanism = 'EmailAddress';
+        config.columns = [
+            {
+                header: 'Email Address',
+                dataIndex: 'email_address',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            }
+            ];
+        config.fields = [
+            {
+                name:'email_address'
+            }
+            ];
+        config.validations = [
+            {
+                type: 'presence',
+                field: 'email_address'
+            }
+
+        ];
+
+        this.callParent([config]);
+    }
+});
+
+/**
+ * PostalAddrGrid
+ * This extends the ContactMechanismGrid and setups up configuration for 
+ * displaying and editing postal addresses for a given party
+ */
+Ext.define("Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid.PostalAddrGrid",{
+    extend:"Compass.ErpApp.Organizer.Applications.Crm.ContactMechanismGrid",
+    alias:'widget.postal_addr_grid',
+    initComponent: function () {
+        this.callParent(arguments);
+    },
+    constructor: function(config) {
+        config.title = 'Postal Addresses';
+        config.contactMechanism = 'PostalAddress';
+        config.columns = [
+            {
+                header: 'Address Line 1',
+                dataIndex: 'address_line_1',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Address Line 2',
+                dataIndex: 'address_line_2',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'City',
+                dataIndex: 'city',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'State',
+                dataIndex: 'state',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Zip',
+                dataIndex: 'zip',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                header: 'Country',
+                dataIndex: 'country',
+                editor: {
+                    xtype:'textfield'
+                },
+                width:200
+            },
+            {
+                menuDisabled:true,
+                resizable:false,
+                xtype:'actioncolumn',
+                header:'Map It',
+                align:'center',
+                width:60,
+                items:[{
+                    icon:'/images/icons/map/map_16x16.png',
+                    tooltip:'Revert',
+                    handler :function(grid, rowIndex, colIndex){
+                        var rec = grid.getStore().getAt(rowIndex);
+                        var addressLines;
+                        if(Compass.ErpApp.Utility.isBlank(rec.get('address_line_2'))){
+                            addressLines = rec.get('address_line_1');
+                        }
+                        else{
+                            addressLines = rec.get('address_line_1') + ' ,' + rec.get('address_line_2');
+                        }
+
+                        var fullAddress = addressLines + ' ,' + rec.get('city') + ' ,' + rec.get('state') + ' ,' + rec.get('zip') + ' ,' + rec.get('country');
+                        var mapwin = Ext.create('Ext.Window', {
+                            layout: 'fit',
+                            title: addressLines,
+                            width:450,
+                            height:450,
+                            border: false,
+                            items: {
+                                xtype: 'googlemappanel',
+                                zoomLevel: 17,
+                                mapType:'hybrid',
+                                dropPins: [{
+                                    address: fullAddress,
+                                    center:true,
+                                    title:addressLines
+                                }]
+                            }
+                        });
+                        mapwin.show();
+                    }
+                }]
+            }
+            ];
+        config.fields = [
+            {
+                name: 'address_line_1'
+            },
+            {
+                name: 'address_line_2'
+            },
+            {
+                name: 'city'
+            },
+            {
+                name: 'state'
+            },
+            {
+                name: 'zip'
+            },
+            {
+                name: 'country'
+            }
+            ];
+        config.validations = [
+            {
+                type: 'presence',
+                field: 'address_line_1'
+            },
+
+            {
+                type: 'presence',
+                field: 'city'
+            },
+
+            {
+                type: 'presence',
+                field: 'state'
+            },
+
+            {
+                type: 'presence',
+                field: 'zip'
+            },
+
+            {
+                type: 'presence',
+                field: 'country'
+            }
+            ];
+        this.callParent([config]);
     }
 });

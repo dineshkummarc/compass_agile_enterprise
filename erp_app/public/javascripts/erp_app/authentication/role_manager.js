@@ -49,6 +49,30 @@ ErpApp.Authentication.RoleManager = {
     },
 
     /**
+     * Checks to find valid widegts and returns their
+     * xtypes.  Optionally pass an object like so: {x_type : true},
+     * to filter those xtypes out of the return.
+     * @param {Array} array of widget role objects
+     */
+    findValidWidgets : function(widget_roles, filter){
+        var valid_xtypes, xtype, roles;
+
+        valid_xtypes = [];
+        for (var i = 0; i < widget_roles.length; i++) {
+            xtype = filter[widget_roles[i].xtype] ? false : widget_roles[i].xtype;
+            if (xtype === false) {
+                continue;
+            }
+
+            roles = widget_roles[i].roles;
+            if (this.hasRole(roles)) {
+                valid_xtypes.push(xtype);
+            }
+        }
+        return valid_xtypes;
+    },
+
+    /**
      * Use when role check fails, displays message add logging if needed.
      * @param {String} message to overwrite default
      * @param {fn} function to call when complete
@@ -63,5 +87,5 @@ ErpApp.Authentication.RoleManager = {
         });
     }
 
-}
+};
 
