@@ -36,7 +36,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
       layout:'fit',
       width:375,
       title:'Edit Article',
-      height:140,
       plain: true,
       buttonAlign:'center',
       items: {
@@ -58,11 +57,31 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
           value: record.get('title')
         },
         {
-          xtype:'hidden',
-          allowBlank:false,
-          name:'id',
-          id: 'record_id',
-          value: record.get('id')
+          xtype:'radiogroup',
+          fieldLabel:'Display title?',
+          name:'display_title',
+          columns:2,
+          items:[
+          {
+            boxLabel:'Yes',
+            name:'display_title',
+            inputValue: 'yes',
+            checked:record.get('display_title')
+          },
+
+          {
+            boxLabel:'No',
+            name:'display_title',
+            inputValue:'no',
+            checked:!record.get('display_title')
+          }]
+        },
+        {
+          xtype:'textfield',
+          fieldLabel:'Unique Name',
+          allowBlank:true,
+          name:'internal_identifier',
+          value: record.get('internal_identifier')
         },
         {
           xtype:'textfield',
@@ -71,7 +90,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
           name:'tags',
           id: 'tag_list',
           value: record.get('tag_list')
-        }
+        },
+        {
+          xtype:'hidden',
+          allowBlank:false,
+          name:'id',
+          id: 'record_id',
+          value: record.get('id')
+        },
         ]
       },
       buttons: [{
@@ -88,10 +114,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
                 var obj = Ext.decode(action.response.responseText);
                 if(obj.success){
                   self.getStore().load();
-                  if(formPanel.getForm().findField('tag_list')){
-                    var tag_list = formPanel.getForm().findField('tag_list').getValue();
-                    record.set('tag_list', tag_list);
-                  }
                   editArticleWindow.close();
                 }
                 else{
@@ -152,6 +174,18 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
       },
       {
         name:'sections'
+      },
+      {
+        name:'internal_identifier'
+      },
+      {
+        name:'display_title'
+      },
+      {
+        name:'created_by'
+      },
+      {
+        name:'last_update_by'
       }
       ]
     });
@@ -164,6 +198,29 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
         sortable:true,
         dataIndex:'title',
         width:110,
+        editable:false
+      },
+      {
+        header:'Unique Name',
+        sortable:true,
+        dataIndex:'internal_identifier',
+        width:110,
+        editable:false
+      },
+      {
+        header:'Created By',
+        sortable:false,
+        dataIndex:'created_by',
+        width:110,
+        menuDisabled:true,
+        editable:false
+      },
+      {
+        header:'Last Update By',
+        sortable:false,
+        dataIndex:'last_update_by',
+        width:110,
+        menuDisabled:true,
         editable:false
       },
       {
@@ -306,11 +363,50 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
               frame:false,
               bodyStyle:'padding:5px 5px 0',
               width: 425,
-              url:'./knitkit/articles/new/' + self.initialConfig['sectionId'],
+              url:'./knitkit/articles/new/',
               defaults: {
                 width: 225
               },
-              items: addFormItems
+              items: [
+              {
+                xtype:'textfield',
+                fieldLabel:'Title',
+                allowBlank:false,
+                name:'title'
+              },
+              {
+                xtype:'radiogroup',
+                fieldLabel:'Display title?',
+                name:'display_title',
+                columns:2,
+                items:[
+                {
+                  boxLabel:'Yes',
+                  name:'display_title',
+                  inputValue: 'yes',
+                  checked:true
+                },
+
+                {
+                  boxLabel:'No',
+                  name:'display_title',
+                  inputValue: 'no'
+                }]
+              },
+              {
+                xtype:'textfield',
+                fieldLabel:'Unique Name',
+                allowBlank:true,
+                name:'internal_identifier'
+              },
+              {
+                xtype:'textfield',
+                fieldLabel:'Tags',
+                allowBlank:true,
+                name:'tags',
+                id: 'tag_list'
+              }
+              ]
             }),
             buttons: [{
               text:'Submit',
@@ -348,6 +444,33 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
             }]
           });
           addArticleWindow.show();
+        }
+      },
+      '|',
+      {
+        xtype:'textfield',
+        hideLabel:true,
+        id:'global_article_search_field'
+      },
+      {
+        text: 'Search',
+        iconCls: 'icon-search',
+        handler: function(button) {
+          var iid = Ext.getCmp('global_article_search_field').getValue();
+          store.setProxy({
+            type: 'ajax',
+            url: './knitkit/articles/all/',
+            reader: {
+              type: 'json',
+              root: 'data',
+              idProperty: 'id',
+              totalProperty:'totalCount'
+            },
+            extraParams:{
+              iid:iid
+            }
+          });
+          store.loadPage(1);
         }
       }],
       bbar: new Ext.PagingToolbar({

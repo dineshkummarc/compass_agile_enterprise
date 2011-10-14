@@ -405,10 +405,7 @@ Ext.define("Compass.ErpApp.Shared.FileManagerTree",{
               'click':function(){
                 Ext.MessageBox.prompt('New Folder', 'Please enter new folder name:', function(btn, text){
                   if(btn == 'ok'){
-                    Ext.apply(self.extraPostData, {
-                      path:record.data.id,
-                      name:text
-                    });
+                    Ext.apply(self.extraPostData, {path:record.data.id,name:text});
                     var msg = Ext.Msg.wait("Processing", "Creating new folder...");
                     var conn = new Ext.data.Connection();
                     conn.request({

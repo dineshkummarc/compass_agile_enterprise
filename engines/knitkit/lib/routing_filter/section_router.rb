@@ -8,10 +8,28 @@ module RoutingFilter
       website = Website.find_by_host(env[:host_with_port])
       unless website.nil?
         paths = paths_for_website(website)
-        if paths.include?(path)
-          if website_section = website_section_by_path(website, path)
+        trimmed_path = nil
+        if path.split('/').length > 2
+          if path.scan('tag').empty?
+            trimmed_path = path.split('/')[0..(path.split('/').length - 2)].join('/')
+          else
+            trimmed_path = path.split('/')[0..(path.split('/').length - 3)].join('/')
+          end
+        end
+        
+        if paths.include?(path.split('.').first)
+          if website_section = website_section_by_path(website, path.split('.').first)
             type = website_section.type.pluralize.downcase
-            path.sub!(path.to_s, "/#{type}/#{website_section.id}")
+            path.sub!(path.split('.').first, "/#{$1}#{type}/#{website_section.id}#{$3}")
+          end
+        elsif paths.include?(trimmed_path.split('.').first)
+          if website_section = website_section_by_path(website, trimmed_path.split('.').first)
+            type = website_section.type.pluralize.downcase
+            if path.scan('tag').empty?
+              path.sub!(trimmed_path.split('.').first, "/#{$1}#{type}/#{website_section.id}#{$3}")
+            else
+              path.sub!(trimmed_path.split('.').first, "/#{$1}#{type}/#{website_section.id}#{$3}")
+            end
           end
         end
       end

@@ -193,7 +193,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 
   changeSecurityOnMenuItem : function(node, secure){
     var self = this;
-    self.setWindowStatus('Updating section...');
+    self.setWindowStatus('Updating menu item security...');
     var conn = new Ext.data.Connection();
     conn.request({
       url: './knitkit/website_nav/update_security',
@@ -217,12 +217,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
           node.commit();
         }
         else{
-          Ext.Msg.alert('Error', 'Error securing section');
+          Ext.Msg.alert('Error', 'Error securing menu item');
         }
       },
       failure: function(response) {
         self.clearWindowStatus();
-        Ext.Msg.alert('Error', 'Error securing section.');
+        Ext.Msg.alert('Error', 'Error securing menu item');
       }
     });
   },

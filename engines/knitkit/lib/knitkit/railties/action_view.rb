@@ -1,8 +1,8 @@
 ActionView::Base.class_eval do
   
   # render a piece of content by permalink regardless if it belongs to a section or not
-  def render_content(permalink)
-    content = Content.find_by_permalink(permalink.to_s)
+  def render_content(iid)
+    content = Content.find_by_internal_identifier(iid)
     content_version = Content.get_published_version(@active_publication, content)
     content_version.body_html.nil? ? '' : content_version.body_html
   end

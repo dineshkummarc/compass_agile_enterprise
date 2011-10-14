@@ -97,8 +97,6 @@ class WebsiteSection < ActiveRecord::Base
   # and destroy content that does NOT belong to any OTHER section
   def destroy_content
     self.contents.each do |c|
-      puts "ID: #{c.id}"
-      puts "count: #{c.website_sections.count}"
       unless c.website_sections.count > 1
         puts "destroying"
         c.destroy 

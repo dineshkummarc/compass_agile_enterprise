@@ -10,7 +10,7 @@ class Content < ActiveRecord::Base
   belongs_to :updated_by, :class_name => "User"
     
   validates_presence_of :type
-  validates_uniqueness_of :title
+  validates_uniqueness_of :internal_identifier
 
   def self.search(options = {})
     if options[:section_permalink].nil? or options[:section_permalink].empty?
@@ -81,6 +81,10 @@ class Content < ActiveRecord::Base
     end
 
     published_content
+  end
+
+  def display_title?
+    display_title
   end
 
   def find_website_sections_by_site_id( website_id )
