@@ -4,9 +4,7 @@ ActionView::Base.class_eval do
   def render_content(permalink)
     content = Content.find_by_permalink(permalink.to_s)
     content_version = Content.get_published_version(@active_publication, content)
-    body_html = content.body_html.nil? ? '' : content.body_html
-    
-    body_html
+    content_version.body_html.nil? ? '' : content_version.body_html
   end
 
   def render_content_area(name)
@@ -50,12 +48,10 @@ ActionView::Base.class_eval do
   
   def menu_item_selected(menu_item)
     result = false
-    url = menu_item.url.index('/') == 0 ? menu_item.url : "/#{menu_item.url}"
-    result = request.path == url 
+    result = request.path == menu_item.path
     unless result
       menu_item.descendants.each do |child|
-        url = child.url.index('/') == 0 ? child.url : "/#{menu_item.url}"
-        result = request.path == url 
+        result = request.path == child.path
         break if result
       end
     end
@@ -78,13 +74,13 @@ ActionView::Base.class_eval do
       raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
       menu_item = menu.website_nav_items.find(:first, :conditions => ["title = ?", options[:menu_item]])
       raise "Menu Item with Title #{options[:menu]} does not exist" if menu_item.nil?
-      links = menu_item.self_and_ancestors.map{|child| {:url => child.menu_url, :title => child.title}}
+      links = menu_item.self_and_ancestors.map{|child| {:url => child.path, :title => child.title}}
     elsif options[:section_permalink]
       section = WebsiteSection.find_by_permalink(options[:section_permalink])
       raise "Website Section with that permalink does not exist" if section.nil?
-      links = section.self_and_ancestors.map{|child| {:url => child.permalink, :title => child.title}}
+      links = section.self_and_ancestors.map{|child| {:url => child.path, :title => child.title}}
     else
-      links = @website_section.self_and_ancestors.map{|child| {:url => child.permalink, :title => child.title}}
+      links = @website_section.self_and_ancestors.collect{|child| {:url => child.path, :title => child.title}}
     end
     links
 

@@ -37,6 +37,7 @@ ActionController::Routing::Routes.draw do |map|
   #knitkit
   map.connect '/erp_app/desktop/knitkit/:action', :controller => 'erp_app/desktop/knitkit/base'
   map.connect '/erp_app/desktop/knitkit/image_assets/:context/:action', :controller => 'erp_app/desktop/knitkit/image_assets'
+  map.connect '/erp_app/desktop/knitkit/file_assets/download_file_asset/', :controller => 'erp_app/desktop/knitkit/file_assets', :action => 'download_file_asset'
   map.connect '/erp_app/desktop/knitkit/file_assets/:context/:action', :controller => 'erp_app/desktop/knitkit/file_assets'
   #article
   map.connect '/erp_app/desktop/knitkit/articles/:action/:section_id', :controller => 'erp_app/desktop/knitkit/articles'

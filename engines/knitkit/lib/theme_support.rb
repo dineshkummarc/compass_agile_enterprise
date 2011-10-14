@@ -1,6 +1,6 @@
 require 'theme_support/action_controller'
 require 'theme_support/active_record'
-# require 'theme_support/action_mailer'
+require 'theme_support/template'
 require 'theme_support/asset_tag_helper'
 
 module ThemeSupport

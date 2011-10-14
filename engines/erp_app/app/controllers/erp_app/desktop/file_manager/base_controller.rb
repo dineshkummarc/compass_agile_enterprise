@@ -1,104 +1,91 @@
 require 'fileutils'
 
 class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseController
-  REMOVE_FILES_REGEX = /^\./
+  before_filter :set_file_support
+  
   ROOT_NODE = 'root_node'
-
+  
   def base_path
     @base_path ||= Rails.root.to_s
   end
 
   def update_file
-    path     = params[:node]
+    path    = params[:node]
     content = params[:content]
-
-    File.open(path, 'w+') {|f| f.write(content) }
-
-    render :inline => {:success => true}.to_json
+    
+    @file_support.update_file(path, content)
+    render :json => {:success => true}
   end
 
   def create_file
-    path = params[:path]
+    path = (params[:path] == ROOT_NODE) ? base_path : params[:path]
     name = params[:name]
 
-    path = base_path if path == ROOT_NODE
-
-    FileUtils.mkdir_p path unless File.exists? path
-
-    File.open(File.join(path,name), 'w+') {|f| f.write('') }
-
-    render :inline => {:success => true}.to_json
+    @file_support.create_file(path, name, "#Empty File")
+    render :json => {:success => true}
   end
 
   def create_folder
-    path = params[:path]
+    path = (params[:path] == ROOT_NODE) ? base_path : params[:path]
     name = params[:name]
 
-    path = base_path if path == ROOT_NODE
-
-    FileUtils.mkdir_p File.join(path,name)
-
-    render :inline => {:success => true}.to_json
+    @file_support.create_folder(path, name)
+    render :json => {:success => true}
   end
 
   def download_file
     path = params[:path]
-
-    send_file path, :type=>"text/plain"
+    
+    contents, message = @file_support.get_contents(path)
+    
+    send_data contents, :filename => File.basename(path)
   end
 
   def save_move
     path            = params[:node]
-    new_parent_path = params[:parent_node]
-
-    new_parent_path = base_path if new_parent_path == ROOT_NODE
+    new_parent_path = (params[:parent_node] == ROOT_NODE) ? base_path : params[:parent_node]
+    new_parent_path = File.join(root, new_parent_path)
     
-    unless File.exists? path
-      json_str = "{success:false, msg:'File does not exists'}"
-    else
-      name = File.basename(path)
-      #make sure path is there.
-      FileUtils.mkdir_p new_parent_path unless File.directory? new_parent_path
-      FileUtils.mv(path, new_parent_path + '/' + name)
-      json_str = "{success:true, msg:'#{name} was moved to #{new_parent_path} successfully'}"
-    end
+    result, message = @file_support.save_move(path, new_parent_path)
 
-    render :inline => json_str
+    render :json => {:success => result, :msg => message}
   end
 
   def rename_file
     path = params[:node]
     name = params[:file_name]
+    
+    result, message = @file_support.rename_file(path, name)
 
-    unless File.exists? path
-      json_str = "{success:false, msg:'File does not exists'}"
-    else
-      old_name = File.basename(path)
-      path_pieces = path.split('/')
-      path_pieces.delete(path_pieces.last)
-      path_pieces.push(name)
-      new_path = path_pieces.join('/')
-      File.rename(path, new_path)
-      json_str = "{success:true, msg:'#{old_name} was renamed to #{name} successfully'}"
-    end
-
-    render :inline => json_str
+    render :json => {:success => result, :msg => message}
   end
 
   def delete_file
     path = params[:node]
     
-    unless File.exists? path
-      json_str = "{success:false, error:'File does not exists'}"
-    else
-      name = File.basename(path)
-      FileUtils.rm_rf(path)
-      json_str = "{success:true, error:'#{name} was deleted successfully'}"
-    end
-
-    render :inline => json_str
+    result, message = @file_support.delete_file(path)
+    
+    render :json => {:success => result, :msg => message}
   end
 
+  def expand_directory
+    path = (params[:node] == ROOT_NODE) ? base_path : params[:node]
+    
+    render :json => @file_support.build_tree(path)
+  end
+  
+  def get_contents
+    path = params[:node]
+    
+    contents, message = @file_support.get_contents(path)
+    
+    if contents.nil?
+      render :text => message
+    else
+      render :text => contents
+    end
+  end
+  
   def upload_file
     if request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank?
       upload_path = params[:directory]
@@ -110,18 +97,7 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
 
     result = upload_file_to_path(upload_path)
 
-    render :inline => result
-  end
-
-  def expand_directory
-    expand_file_directory(params[:node])
-  end
-  
-  def get_contents
-    contents = ''
-    path = params[:node]
-    contents = IO.read(path) unless path == ROOT_NODE
-    render :text => contents
+    render :json => result
   end
   
   protected
@@ -153,53 +129,14 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
       result[:success] = false
       result[:error]   = "file #{name} already exists"
     else
-      File.open("#{upload_path}/#{name}", 'wb'){|f| f.write(contents)}
+      @file_support.create_file(upload_path, name, contents)
       result[:success] = true
     end
 
-    result.to_json
+    result
   end
-
-  def expand_file_directory(path, options={})
-    #if path is root use root path else append it
-    if path == ROOT_NODE
-      path = base_path
-    end
-
-    render :inline => build_tree_for_directory(path, options)
-  end
-
-  def build_tree_for_directory(directory, options)
-    tree_data = []
-    
-    Dir.entries(directory).each do |entry|
-      #ignore .svn folders and any other folders starting with .
-      next if entry =~ REMOVE_FILES_REGEX
-
-      #check if we want folders only
-      if options[:folders_only]
-        if File.directory?(directory + '/' + entry)
-          leaf = false
-        end
-      else
-        #check if this is a directory
-        if File.directory?(directory + '/' + entry)
-          leaf = false
-        else
-          leaf = true
-        end
-      end
-      path = (directory + '/' + entry).gsub('//', '/')
-      
-      if File.directory?(directory + '/' + entry)
-        tree_data << {:text => entry, :leaf => leaf, :downloadPath => path, :id => path}
-      elsif !options[:included_file_extensions_regex].nil? && entry =~ options[:included_file_extensions_regex]
-        tree_data << {:text => entry, :leaf => leaf, :downloadPath => path, :id => path}
-      elsif options[:included_file_extensions_regex].nil?
-        tree_data << {:text => entry, :leaf => leaf, :downloadPath => path, :id => path}
-      end 
-    end if File.directory?(directory)
-
-    tree_data.sort_by{|item| [item[:id]]}.to_json
+  
+  def set_file_support
+    @file_support = TechServices::FileSupport::Base.new
   end
 end

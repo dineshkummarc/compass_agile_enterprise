@@ -11,7 +11,7 @@
          %>
           <li>
         <% end %>
-          <a href="<%= menu_item.menu_url %>"><span><%= menu_item.title %></span></a>
+          <a href="<%= menu_item.path %>"><span><%= menu_item.title %></span></a>
         </li>
         
         <% unless selected_menu_item.nil? %>
@@ -24,7 +24,7 @@
                 <% else %>
                   <li>
                 <% end %>
-                <a href="<%= child_menu_item.menu_url %>"><span><%= child_menu_item.title %></span></a>
+                <a href="<%= child_menu_item.path %>"><span><%= child_menu_item.title %></span></a>
                 </li>
               <% end %>
             <% end %>

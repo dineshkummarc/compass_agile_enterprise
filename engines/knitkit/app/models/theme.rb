@@ -53,8 +53,8 @@ class Theme < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :theme_id, :scope => :website_id
   
-  after_create  :create_theme_dir
-  after_destroy :delete_theme_dir
+  after_create  :create_theme_files
+  before_destroy :delete_theme_files
   
   def path
     "#{self.class.base_dir(website)}/#{theme_id}"
@@ -80,6 +80,7 @@ class Theme < ActiveRecord::Base
   end
   
   def import(file)
+    file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
     file = returning ActionController::UploadedTempfile.new("uploaded-theme") do |f|
       f.write file.read
       f.original_path = file.original_path
@@ -103,7 +104,7 @@ class Theme < ActiveRecord::Base
             theme_file.data = data
             theme_file.save
           else
-            self.add_file(data, File.join(self.path,name)) rescue next
+            self.add_file(data, File.join(file_support.root,self.url,name)) rescue next
           end
         end
       end
@@ -111,14 +112,18 @@ class Theme < ActiveRecord::Base
   end
 
   def export
+    file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
     tmp_dir = Theme.make_tmp_dir
     returning(tmp_dir + "#{name}.zip") do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
-        theme_path = self.path.gsub(RAILS_ROOT, '')
         files.each {|file|
-          name = file.base_path.gsub(theme_path + '/','')
-          zip.add(name, file.path) if ::File.exists?(file.path)
+          contents = file_support.get_contents(File.join(file_support.root,file.directory,file.name))
+          relative_path = file.directory.sub("/#{url}",'')
+          path = FileUtils.mkdir_p(File.join(tmp_dir,relative_path))
+          full_path = File.join(path,file.name)
+          File.open(full_path, 'w+') {|f| f.write(contents) }
+          zip.add(File.join(relative_path[1..relative_path.length],file.name), full_path) if ::File.exists?(full_path)
         }
         ::File.open(tmp_dir + 'about.yml', 'w') { |f| f.write(about.to_yaml) }
         zip.add('about.yml', tmp_dir + 'about.yml')
@@ -164,31 +169,39 @@ class Theme < ActiveRecord::Base
 
   protected
 
-  def create_theme_dir
-    #copy all layouts over to the theme
-    FileUtils.mkdir_p(path)
-    FileUtils.cp_r(BASE_LAYOUTS_VIEWS_PATH, path)
-    FileUtils.cp_r(KNITKIT_WEBSITE_STYLESHEETS_PATH, ::File.join(path,'stylesheets'))
-    #rename views to templates
-    ::File.rename(::File.join(path,'views'), ::File.join(path,'templates'))
+  def delete_theme_files
+    file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
+    file_support.delete_file(File.join(file_support.root,self.url))
+  end
 
-    #create FileAssets for all the files
-    Dir.glob(::File.join(path,'/*/*/*')).each do |file|
-      next if file =~ /^\./
-      unless ::File.directory? file
-        #if this is the base layout change stylesheets to point to theme
-        unless file.scan('base.html.erb').empty?
-          contents = IO.read(file)
-          contents.gsub!("<%= stylesheet_link_tag('knitkit/extjs_4.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','extjs_4.css') %>")
-          contents.gsub!("<%= stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
-          File.open(file, 'w+') {|f| f.write(contents) }
-        end
-        self.add_file(IO.read(file), file)
-      end
+  def create_theme_files
+    file_support = TechServices::FileSupport::Base.new
+    create_theme_files_for_directory_node(file_support.build_tree(BASE_LAYOUTS_VIEWS_PATH))
+    create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_STYLESHEETS_PATH))
+  end
+
+  private
+
+  def create_theme_files_for_directory_node(node)
+    node[:children].each do |child_node|
+      child_node[:leaf] ? save_theme_file(child_node[:id]) : create_theme_files_for_directory_node(child_node)
     end
   end
 
-  def delete_theme_dir
-    FileUtils.rm_rf(path)
+  def save_theme_file(path)
+    contents = IO.read(path)
+    unless path.scan('base.html.erb').empty?
+      contents.gsub!("<%= stylesheet_link_tag('knitkit/extjs_4.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','extjs_4.css') %>")
+      contents.gsub!("<%= stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
+    end
+
+    if !path.scan(BASE_LAYOUTS_VIEWS_PATH).empty?
+      path = path.gsub(BASE_LAYOUTS_VIEWS_PATH, "/#{self.url}/templates")
+    elsif !path.scan(KNITKIT_WEBSITE_STYLESHEETS_PATH).empty?
+      path = path.gsub(KNITKIT_WEBSITE_STYLESHEETS_PATH, "/#{self.url}/stylesheets")
+    end
+    
+    self.add_file(contents, path)
   end
+
 end

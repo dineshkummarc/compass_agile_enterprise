@@ -1,4 +1,8 @@
 module ThemeSupport
+  class Cache
+    cattr_accessor :theme_paths
+  end
+
   module ActionController
     def self.included(base)
       base.class_eval do
@@ -26,23 +30,36 @@ module ThemeSupport
     module InstanceMethods
       def current_themes
         @current_themes ||= case accessor = self.class.read_inheritable_attribute(:current_themes)
-          when Symbol then accessor == :current_themes ? raise("screwed") : send(accessor)
-          when Proc   then accessor.call(self)
-          else accessor
+        when Symbol then accessor == :current_themes ? raise("screwed") : send(accessor)
+        when Proc   then accessor.call(self)
+        else accessor
         end
       end
 
       def add_theme_view_paths
+        ThemeSupport::Cache.theme_paths = [] if ThemeSupport::Cache.theme_paths.nil?
         if respond_to?(:current_theme_paths)
-          paths = current_theme_paths.map do |path| 
-            ActionView::ReloadableTemplate::ReloadablePath.new("#{path}/templates")
+          paths = current_theme_paths.map do |theme|
+            case TechServices::FileSupport.options[:storage]
+            when :s3
+              TechServices::FileSupport::S3Manager.reload
+              path = "/#{theme[:url]}/templates"
+            when :filesystem
+              path = "#{theme[:path]}/templates"
+            end
+            theme = ThemeSupport::Cache.theme_paths.find{|path| path.path == path}
+            if theme.nil?
+              theme = ActionView::ReloadableTemplate::ReloadablePath.new(path)
+              ThemeSupport::Cache.theme_paths << theme
+            end
+            theme
           end
           prepend_view_path(paths) unless paths.empty?
         end
       end
 
       def current_theme_paths
-        current_themes ? current_themes.map { |theme| theme.path.to_s } : []
+        current_themes ? current_themes.map { |theme| {:path => theme.path.to_s, :url => theme.url.to_s}} : []
       end
 
       def authorize_template_extension!(template, ext)

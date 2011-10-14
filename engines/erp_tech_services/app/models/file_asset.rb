@@ -1,7 +1,15 @@
 require 'fileutils'
 
-Paperclip.interpolates(:file_url) { |data, style| data.instance.url  }
-Paperclip.interpolates(:file_path) { |data, style| data.instance.path }
+Paperclip.interpolates(:file_path){|data, style|
+  case TechServices::FileSupport.options[:storage]
+  when :filesystem
+    File.join(Rails.root,'public',data.instance.directory,data.instance.name)
+  when :s3
+    File.join(data.instance.directory,data.instance.name)
+  end
+}
+
+Paperclip.interpolates(:file_url){|data, style|File.join(data.instance.directory,data.instance.name)}
 
 class FileAsset < ActiveRecord::Base
   if respond_to?(:class_attribute)
@@ -11,20 +19,24 @@ class FileAsset < ActiveRecord::Base
     class_inheritable_accessor :file_type
     class_inheritable_writer :valid_extensions
   end
-  
+   
   after_create :set_sti
   after_save   :set_data_file_name
   
   belongs_to :file_asset_holder, :polymorphic => true
   instantiates_with_sti
-
+  
+  #paperclip
   has_attached_file :data,
-    :url => ":file_url",
+    :storage => TechServices::FileSupport.options[:storage],
+    :s3_credentials => "#{Rails.root}/config/s3.yml",
     :path => ":file_path",
+    :url => ":file_url",
     :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
+  
   validates_attachment_presence :data
   validates_attachment_size :data, :less_than => 5.megabytes
-    
+  
   validates_presence_of :name, :directory
   validates_uniqueness_of :name, :scope => [:directory]
   validates_each :directory, :name do |record, attr, value|
@@ -76,37 +88,14 @@ class FileAsset < ActiveRecord::Base
     base_path ||= data.original_filename if data.respond_to?(:original_filename)
     
     directory, name = FileAsset.split_path(base_path) if base_path and name.blank?
-    directory.gsub!(Rails.root.to_s,'')
+    directory.gsub!(File.join(Rails.root,'public'),'')
       
     @type ||= FileAsset.type_for(directory, name) if name
     data = StringIO.new(data) if data.is_a?(String)
     
     super attributes.merge(:directory => directory, :name => name, :data => data)
   end
-
-  def path
-    [Rails.root, directory, name].to_path if name
-  end
-
-  def base_path
-    [directory, name].to_path if name
-  end
-
-  def base_path=(base_path)
-    self.directory, self.name = self.class.split_path(base_path)
-  end
-
-  def url
-    #get everything past the public directory
-    path = [directory, name].to_path
-    split_path = path.split("/")
-    "/#{split_path[(split_path.index("public") + 1)..(split_path.count-1)].join('/')}"
-  end
-
-  def base_url
-    [directory.gsub(/^#{forced_directory}\/?/, ''), name].to_path if name
-  end
-
+  
   def basename
     data_file_name.gsub(/\.#{extname}$/, "")
   end
@@ -121,17 +110,6 @@ class FileAsset < ActiveRecord::Base
   
   def set_data_file_name
     update_attribute :data_file_name, name if data_file_name != name
-  end
-  
-  def rename(new_name)
-    old_name = File.basename(path)
-    path_pieces = path.split('/')
-    path_pieces.delete(path_pieces.last)
-    path_pieces.push(new_name)
-    new_path = path_pieces.join('/')
-    File.rename(path, new_path)
-    self.name = new_name
-    self.save
   end
   
   def move(new_parent_path)

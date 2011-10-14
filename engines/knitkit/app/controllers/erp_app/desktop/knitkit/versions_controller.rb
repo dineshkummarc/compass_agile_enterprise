@@ -32,6 +32,21 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :body_html, :excerpt_html, :created_at], :methods => [:active, :published])}}"
   end
 
+  def non_published_content_versions
+    Content::Version.include_root_in_json = false
+
+    content = Content.find(params[:id])
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'version'
+    dir  = sort_hash[:direction] || 'DESC'
+    limit = params[:limit] || 15
+    start = params[:start] || 0
+
+    versions = content.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+
+    render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :body_html, :excerpt_html, :created_at])}}"
+  end
+
   def publish_content
     content = Content.find(Content::Version.find(params[:id]).content_id)
     website = Website.find(params[:site_id])

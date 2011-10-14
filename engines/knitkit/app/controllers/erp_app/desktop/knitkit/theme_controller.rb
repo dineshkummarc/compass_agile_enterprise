@@ -1,4 +1,5 @@
 class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::BaseController
+  before_filter :set_file_support
   before_filter :set_website, :only => [:new, :change_status, :available_themes]
   before_filter :set_theme, :only => [:delete, :change_status, :copy]
   IGNORED_PARAMS = %w{action controller node_id theme_data}
@@ -7,7 +8,12 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     if params[:node] == ROOT_NODE
       setup_tree
     else
-      expand_file_directory(params[:node], :folders_only => false)
+      theme = get_theme(params[:node])
+      unless theme.nil?
+        render :json => @file_support.build_tree(params[:node], :file_asset_holder => theme)
+      else
+        render :json => {:success => false, :message => 'Could not find theme'}
+      end
     end
   end
 
@@ -32,6 +38,14 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     end
    
     render :inline => {:success => true}.to_json
+  end
+
+  def update_file
+    path    = params[:node]
+    content = params[:content]
+
+    @file_support.update_file(path, content)
+    render :json => {:success => true}
   end
 
   def delete
@@ -69,13 +83,48 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
   ##############################################################
 
   def create_file
-    path = params[:path]
+    path = File.join(@file_support.root,params[:path])
     name = params[:name]
 
     theme = get_theme(path)
-    theme.add_file('#Empty File', File.join(path,name))
+    theme.add_file('#Empty File', File.join(path, name))
 
     render :inline => {:success => true}.to_json
+  end
+
+  def create_folder
+    path = File.join(@file_support.root,params[:path])
+    name = params[:name]
+
+    @file_support.create_folder(path, name)
+    render :json => {:success => true}
+  end
+
+  def update_file
+    path = File.join(@file_support.root,params[:node])
+    content = params[:content]
+
+    @file_support.update_file(path, content)
+    render :json => {:success => true}
+  end
+
+
+  def download_file
+    path = File.join(@file_support.root,params[:path])
+    contents, message = @file_support.get_contents(path)
+
+    send_data contents, :filename => File.basename(path)
+  end
+
+  def get_contents
+    path = File.join(@file_support.root,params[:node])
+    contents, message = @file_support.get_contents(path)
+
+    if contents.nil?
+      render :text => message
+    else
+      render :text => contents
+    end
   end
 
   def upload_file
@@ -100,14 +149,14 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     end
 
     theme = get_theme(upload_path)
-    name = File.join(upload_path,name)
+    name = File.join(@file_support.root, upload_path, name)
 
     begin
       theme.add_file(contents, name)
       result = {:success => true}
     rescue Exception=>ex
       logger.error ex.message
-			logger.error ex.backtrace.join("\n")
+      logger.error ex.backtrace.join("\n")
       result = {:success => false, :error => "Error uploading #{name}"}
     end
 
@@ -116,26 +165,21 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   def delete_file
     path = params[:node]
-    json_str = ''
-
-    unless File.exists? path
-      json_str = "{success:false, error:'File does not exists'}"
-    else
-      begin
-        name = File.basename(path)
-        
-        theme_file = get_them_file(path)
+    result = {}
+    begin
+      name = File.basename(path)
+      result, message, is_folder = @file_support.delete_file(File.join(@file_support.root,path))
+      if result && !is_folder
+        theme_file = get_theme_file(path)
         theme_file.destroy
-        json_str = "{success:true, msg:'#{name} was deleted successfully'}"
-      rescue Exception=>ex
-        logger.error ex.message
-        logger.error ex.backtrace.join("\n")
-        json_str = "{success:false, error:'Error deleting #{name}'}"
       end
-
+      result = {:success => result, :error => message}
+    rescue Exception=>ex
+      logger.error ex.message
+      logger.error ex.backtrace.join("\n")
+      result = {:success => false, :error => "Error deleting #{name}"}
     end
-
-    render :inline => json_str
+    render :json => result
   end
 
   def rename_file
@@ -143,15 +187,14 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     path = params[:node]
     name = params[:file_name]
 
-    unless File.exists? path
-      result = {:success => false, :data => {:success => false, :error => 'File does not exists'}}
-    else
-      theme_file = get_them_file(path)
+    result, message = @file_support.rename_file(path, name)
+    if result
+      theme_file = get_theme_file(path)
       theme_file.name = name
       theme_file.save
     end
 
-    render :inline => result.to_json
+    render :json =>  {:success => true, :message => message}
   end
 
   private
@@ -170,9 +213,8 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     theme
   end
 
-  def get_them_file(path)
+  def get_theme_file(path)
     theme = get_theme(path)
-    path = path.gsub!(RAILS_ROOT,'')
     theme.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
   end
 
@@ -200,7 +242,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
           theme_hash[:iconCls] = 'icon-delete'
         end
         ['stylesheets', 'javascripts', 'images', 'templates'].each do |resource_folder|
-          theme_hash[:children] << {:text => resource_folder, :leaf => false, :id => "#{theme.path}/#{resource_folder}"}
+          theme_hash[:children] << {:text => resource_folder, :leaf => false, :id => "/#{theme.url}/#{resource_folder}"}
         end
         themes_hash[:children] << theme_hash
       end
@@ -219,6 +261,10 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
 
   def set_theme
     @theme = Theme.find(params[:id])
+  end
+  
+  def set_file_support
+    @file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
   end
   
 end
