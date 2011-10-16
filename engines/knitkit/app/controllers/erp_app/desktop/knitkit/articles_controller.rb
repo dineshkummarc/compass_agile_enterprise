@@ -137,7 +137,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
     sort = sort_hash[:property] || 'created_at'
     dir  = sort_hash[:direction] || 'DESC'
-    limit = params[:limit] || 10
+    limit = params[:limit] || 40
     start = params[:start] || 0
 
     if params[:iid].blank?

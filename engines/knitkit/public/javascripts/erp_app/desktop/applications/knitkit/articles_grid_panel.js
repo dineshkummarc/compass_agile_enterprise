@@ -474,7 +474,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
         }
       }],
       bbar: new Ext.PagingToolbar({
-        pageSize: 10,
+        pageSize: 40,
         store: store,
         displayInfo: true,
         displayMsg: '{0} - {1} of {2}',
