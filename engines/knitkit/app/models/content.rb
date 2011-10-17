@@ -13,10 +13,10 @@ class Content < ActiveRecord::Base
   validates_uniqueness_of :internal_identifier
 
   def self.search(options = {})
-    if options[:section_permalink].nil? or options[:section_permalink].empty?
+    if options[:section_unique_name].nil? or options[:section_unique_name].empty?
       section_scope = ''
     else
-      section_scope = "website_sections.permalink = '#{options[:section_permalink]}' AND"
+      section_scope = "website_sections.internal_identifier = '#{options[:section_unique_name]}' AND"
     end
 
     if options[:content_type].nil? or options[:content_type].empty?
@@ -139,10 +139,10 @@ class Content < ActiveRecord::Base
 
       results_hash = {}
       if section.attributes['type'] == 'Blog'
-        results_hash[:link] = section.permalink + '/' + content.permalink
+        results_hash[:link] = section.path + '/' + content.permalink
         results_hash[:title] = content.title
       else
-        results_hash[:link] = section.permalink
+        results_hash[:link] = section.path
         results_hash[:title] = section.title
       end
       results_hash[:section] = section

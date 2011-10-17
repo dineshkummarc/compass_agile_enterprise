@@ -317,7 +317,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
             layout:'fit',
             width:375,
             title:'New Article',
-            height:config['addFormHeight'],
             plain: true,
             buttonAlign:'center',
             items: new Ext.FormPanel({
@@ -377,7 +376,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
             layout:'fit',
             width:375,
             title:'Add Existing Article',
-            height:100,
             plain: true,
             buttonAlign:'center',
             items: new Ext.FormPanel({
@@ -509,7 +507,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PageArticlesGridPanel",{
           allowBlank: true
         })
       }],
-      addFormHeight:220,
       addFormItems:[
       {
         xtype:'hidden',
@@ -547,7 +544,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.BlogArticlesGridPanel",{
     var self = this;
     config['contentType'] = 'blog';
     config = Ext.apply({
-      addFormHeight:240,
       addFormItems:[
       {
         xtype:'hidden',

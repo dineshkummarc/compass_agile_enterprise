@@ -5,17 +5,12 @@ class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
   end
   
   def set_variables
-    @results_permalink = params[:results_permalink]
-    @section_permalink = params[:section_permalink]
+    @results_path = params[:results_path]
+    @section_unique_name = params[:section_unique_name]
     @content_type = params[:content_type]
     @per_page = params[:per_page]
     @css_class = params[:class]
-    
-    if @results_permalink.nil? or @results_permalink.blank?
-      @ajax_results = true
-    else
-      @ajax_results = false
-    end
+    @ajax_results = @results_path.blank? ? true : false
   end
 
   def index
@@ -31,7 +26,7 @@ class ErpApp::Widgets::Search::Base < ErpApp::Widgets::Base
       :website_id => @website.id,
       :query => params[:query],
       :content_type => params[:content_type],
-      :section_permalink => params[:section_permalink],
+      :section_unique_name => params[:section_unique_name],
       :page => (params[:page] || 1),
       :per_page => (params[:per_page] || 20)
     }
