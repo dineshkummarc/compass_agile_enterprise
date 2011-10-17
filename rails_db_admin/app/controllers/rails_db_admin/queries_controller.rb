@@ -88,23 +88,25 @@ module RailsDbAdmin
       sql = sql.rstrip
       cursor_pos = params[:cursor_pos].to_i
 
+      #append a semicolon as the last character if the 
+      #user forgot
+      if !sql.end_with?(";")
+        sql << ";"
+      end
+
       sql_arr = sql.split("\n")
       sql_stmt_arry = []
       sql_str = ""
 
       #search for the query to run based on cursor position if there
       #was nothing selected by the user
-      if (selection == "")
+      if (selection == nil || selection == "")
         last_stmt_end = 0
         sql_arr.each_with_index do |val,idx|
           if val.match(';')
             sql_stmt_arry << {:begin => (idx > 0) ? last_stmt_end + 1 : 0, :end => idx}
             last_stmt_end = idx
           end
-        end
-
-        sql_stmt_arry.each do |val|
-            puts val
         end
 
         last_sql_stmt = sql_stmt_arry.length-1

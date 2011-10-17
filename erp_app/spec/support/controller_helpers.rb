@@ -26,7 +26,7 @@ def basic_user_auth
                                :internal_identifier => "extjs_theme")
  
   #@request.env["devise.mapping"] = Devise.mappings[User.find(1)]
-  @user = Factory.create(:user, :party_id => @party)
+  @user = Factory.create(:user, :party => @party)
   sign_in @user
   @user
 end

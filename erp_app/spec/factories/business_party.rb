@@ -1,8 +1,8 @@
 FactoryGirl.define do
 
   factory :individual do |i|
-    i.current_last_name "John"
-    i.current_first_name "Doe"
+    i.current_last_name "Doe"
+    i.current_first_name "John"
     i.current_middle_name "Will"
     i.current_suffix "Jr"
     i.current_nickname "Billy"
