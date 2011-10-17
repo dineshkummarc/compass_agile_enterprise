@@ -5,14 +5,22 @@ class ErpApp::Desktop::UserManagement::BaseController < ErpApp::Desktop::BaseCon
   def index
     User.include_root_in_json = false
     login = params[:login]
+    sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+    sort = sort_hash[:property] || 'login'
+    dir  = sort_hash[:direction] || 'ASC'
+    limit = params[:limit] || 25
+    start = params[:start] || 0
+    total_count = 0
 
     if login.blank?
-      users = User.all
+      users = User.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+      total_count = User.count
     else
-      users = User.find(:all, :conditions => ['login like ?', "%#{login}%"])
+      users = User.find(:all, :conditions => ['login like ?', "%#{login}%"], :order => "#{sort} #{dir}", :offset => start, :limit => limit)
+      total_count = users.count
     end
 
-    ext_json = "{data:#{users.to_json(:only => [:id, :login, :email, :party_id])}}"
+    ext_json = "{\"totalCount\":#{total_count},data:#{users.to_json(:only => [:id, :login, :email, :party_id])}}"
 
     render :inline => ext_json
   end
