@@ -480,6 +480,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
         displayMsg: '{0} - {1} of {2}',
         emptyMsg: "Empty"
       }),
+      //TODO_EXTJS4 this is added to fix error should be removed when extjs 4 releases fix.
+      viewConfig:{
+        loadMask: false
+      },
       autoScroll:true
     }, config);
 
