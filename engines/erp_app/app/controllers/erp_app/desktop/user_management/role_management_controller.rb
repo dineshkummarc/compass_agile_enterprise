@@ -21,6 +21,7 @@ class ErpApp::Desktop::UserManagement::RoleManagementController < ErpApp::Deskto
   def save_roles
     role_ids = params[:role_ids]
     user_id  = params[:user_id]
+    roles = []
 
     user = User.find(user_id)
     roles = Role.find(:all, :conditions => ["id in (#{role_ids.join(',')})"])

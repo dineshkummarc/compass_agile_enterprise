@@ -9,11 +9,6 @@ ActionController::Routing::Routes.draw do |map|
     :action       => "index",
     :conditions => { :method => :get }
 
-  map.page_article 'pages/:section_id/:id',
-    :controller   => 'articles',
-    :action       => "show",
-    :conditions => { :method => :get }
-
   map.blogs 'blogs/:section_id.:format',
                     :controller => 'blogs',
                     :action => 'index',

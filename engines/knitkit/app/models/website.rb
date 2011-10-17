@@ -25,7 +25,7 @@ class Website < ActiveRecord::Base
     end
   end
   alias :sections :website_sections
-
+  
   def all_sections
     sections_array = sections
     sections_array.each do |section|
@@ -140,13 +140,13 @@ class Website < ActiveRecord::Base
     file_assets_path = Pathname.new(File.join(tmp_dir,'files'))
     FileUtils.mkdir_p(file_assets_path) unless file_assets_path.exist?
 
-    website_sections.each do |website_section|
+    all_sections.each do |website_section|
       unless website_section.layout.blank?
         File.open(File.join(sections_path,"#{website_section.title}.rhtml"), 'w+') {|f| f.write(website_section.layout) }
       end
     end
 
-    contents = website_sections.collect(&:contents).flatten.uniq
+    contents = all_sections.collect(&:contents).flatten.uniq
     contents.each do |content|
       File.open(File.join(articles_path,"#{content.title}.html"), 'w+') {|f| f.write(content.body_html) }
     end
@@ -188,8 +188,8 @@ class Website < ActiveRecord::Base
     returning(tmp_dir + "#{name}.zip") do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
-        files.each { |file| zip.add(file[:name], file[:path]) if ::File.exists?(file[:path]) }
-        ::File.open(tmp_dir + 'setup.yml', 'w') { |f| f.write(export_setup.to_yaml) }
+        files.each { |file| zip.add(file[:name], file[:path]) if File.exists?(file[:path]) }
+        File.open(tmp_dir + 'setup.yml', 'w') { |f| f.write(export_setup.to_yaml) }
         zip.add('setup.yml', tmp_dir + 'setup.yml')
       end
     end
@@ -198,7 +198,7 @@ class Website < ActiveRecord::Base
   class << self
     def make_tmp_dir
       random = Time.now.to_i.to_s.split('').sort_by { rand }
-      returning Pathname.new(Rails.root + "/tmp/website_export/tmp_#{random}/") do |dir|
+      returning Pathname.new(RAILS_ROOT + "/tmp/website_export/tmp_#{random}/") do |dir|
         FileUtils.mkdir_p(dir) unless dir.exist?
       end
     end
@@ -360,6 +360,7 @@ class Website < ActiveRecord::Base
       :articles => [],
       :path => section.path,
       :permalink => section.permalink,
+      :internal_identifier => section.internal_identifier,
       :position => section.position,
       :sections => section.children.each.map{|child| build_section_hash(child)}
     }
@@ -367,7 +368,7 @@ class Website < ActiveRecord::Base
     section.contents.each do |content|
       content_area = content.content_area_by_website_section(section)
       position = content.position_by_website_section(section)
-      section_hash[:articles] << {:name => content.title, :content_area => content_area, :position => position}
+      section_hash[:articles] << {:name => content.title, :content_area => content_area, :position => position, :internal_identifier => content.internal_identifier}
     end
 
     section_hash

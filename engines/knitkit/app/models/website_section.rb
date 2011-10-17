@@ -14,9 +14,10 @@ class WebsiteSection < ActiveRecord::Base
   
   validates_presence_of :title
   validates_uniqueness_of :permalink, :scope => [:website_id, :parent_id]
+  validates_uniqueness_of :internal_identifier
 
   after_create :update_paths
-  before_save  :update_path
+  before_save  :update_path, :check_internal_indentifier
 
   KNIT_KIT_ROOT = "#{RAILS_ROOT}/vendor/plugins/knitkit/"
   WEBSITE_SECTIONS_TEMP_LAYOUT_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views/website_sections/"
@@ -97,8 +98,6 @@ class WebsiteSection < ActiveRecord::Base
   # and destroy content that does NOT belong to any OTHER section
   def destroy_content
     self.contents.each do |c|
-      puts "ID: #{c.id}"
-      puts "count: #{c.website_sections.count}"
       unless c.website_sections.count > 1
         puts "destroying"
         c.destroy 
@@ -129,6 +128,12 @@ class WebsiteSection < ActiveRecord::Base
     if parent_id
       move_to_child_of(WebsiteSection.find(parent_id))
       website.sections.update_paths!
+    end
+  end
+
+  def check_internal_indentifier
+    if self.internal_identifier.blank?
+      self.internal_identifier = self.permalink
     end
   end
 

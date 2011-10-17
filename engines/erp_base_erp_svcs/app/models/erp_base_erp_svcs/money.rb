@@ -15,7 +15,7 @@ class ErpBaseErpSvcs::Money < ActiveRecord::Base
     unless currency_code.blank?
       case currency_code.downcase
         # Check for all iso currency types we support
-        when "usd" then self.currency = Currency.usd
+        when "usd" then self.currency = ErpBaseErpSvcs::Currency.usd
         # add additional currency types
       end
     end

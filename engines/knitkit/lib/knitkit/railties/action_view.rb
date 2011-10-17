@@ -1,8 +1,8 @@
 ActionView::Base.class_eval do
   
   # render a piece of content by permalink regardless if it belongs to a section or not
-  def render_content(permalink)
-    content = Content.find_by_permalink(permalink.to_s)
+  def render_content(iid)
+    content = Content.find_by_internal_identifier(iid)
     content_version = Content.get_published_version(@active_publication, content)
     content_version.body_html.nil? ? '' : content_version.body_html
   end
@@ -65,7 +65,7 @@ ActionView::Base.class_eval do
   # - menu to look for menu title in
   #menu_item
   # - title of menu_item to start breadcrumbs at
-  #section_permalink
+  #section_unique_name
   # - sections permalink to start breadcrumbs at
   def build_crumbs(options={})
     links = []
@@ -75,9 +75,9 @@ ActionView::Base.class_eval do
       menu_item = menu.website_nav_items.find(:first, :conditions => ["title = ?", options[:menu_item]])
       raise "Menu Item with Title #{options[:menu]} does not exist" if menu_item.nil?
       links = menu_item.self_and_ancestors.map{|child| {:url => child.path, :title => child.title}}
-    elsif options[:section_permalink]
-      section = WebsiteSection.find_by_permalink(options[:section_permalink])
-      raise "Website Section with that permalink does not exist" if section.nil?
+    elsif options[:section_unique_name]
+      section = WebsiteSection.find_by_internal_identifier(options[:section_unique_name])
+      raise "Website Section with that unique name does not exist" if section.nil?
       links = section.self_and_ancestors.map{|child| {:url => child.path, :title => child.title}}
     else
       links = @website_section.self_and_ancestors.collect{|child| {:url => child.path, :title => child.title}}
@@ -110,7 +110,7 @@ ActionView::Base.class_eval do
   # - use a designed layout not sections
   #menu_item
   # - menu item title to start at
-  #section_permalink
+  #section_unique_name
   # - section to begin at
   #layout
   # - use defined layout
@@ -123,7 +123,7 @@ ActionView::Base.class_eval do
       raise "No menu items exist" if locals[:menu_items].nil?
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_sub_menu"
     else
-      section = options[:section_permalink].nil? ? @website_section : WebsiteSection.find_by_permalink(options[:section_permalink])
+      section = options[:section_unique_name].nil? ? @website_section : WebsiteSection.find_by_internal_identifier(options[:section_unique_name])
       raise "No website sections exist" if section.nil?
       locals[:section] = section
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_sub_section_menu"

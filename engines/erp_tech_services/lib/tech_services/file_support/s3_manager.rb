@@ -163,6 +163,7 @@ module TechServices
       end
 
       def build_tree(starting_path, options={})
+        TechServices::FileSupport::S3Manager.reload
         node_tree = find_node(starting_path, options)
         node_tree.nil? ? [] : node_tree
       end
