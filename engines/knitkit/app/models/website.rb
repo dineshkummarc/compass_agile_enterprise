@@ -53,16 +53,16 @@ class Website < ActiveRecord::Base
     end
   end
 
-  def publish_element(comment, element, version)
-    self.published_websites.last.publish_element(comment, element, version)
+  def publish_element(comment, element, version, current_user)
+    self.published_websites.last.publish_element(comment, element, version, current_user)
   end
 
-  def publish(comment)
-    self.published_websites.last.publish(comment)
+  def publish(comment, current_user)
+    self.published_websites.last.publish(comment, current_user)
   end
 
-  def set_publication_version(version)
-    PublishedWebsite.activate(self, version)
+  def set_publication_version(version, current_user)
+    PublishedWebsite.activate(self, version, current_user)
   end
 
   def active_publication
