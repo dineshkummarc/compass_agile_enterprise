@@ -6,7 +6,7 @@
 
 <% @results.each do |r| %>
 <p>
-  <a href="/<%=r[:link] %>"><%= r[:title] %></a><br />
+  <a href="<%=r[:link] %>"><%= r[:title] %></a><br />
   <%= r[:content].body_html[0..100] unless r[:content].body_html.nil? %><br />
 </p>
 <% end %>
@@ -18,17 +18,17 @@
                                                                         :widget_action => 'new', 
                                                                         :query => params[:query],
                                                                         :content_type => params[:content_type],
-                                                                        :section_permalink => params[:section_permalink],
+                                                                        :section_unique_name => params[:section_unique_name],
                                                                         :per_page => params[:per_page]
                                                                       } %>
 </p>
 <% else %>
 <p>
-   <%= will_paginate @results, :params => { :controller => "/#{@results_permalink}", 
+   <%= will_paginate @results, :params => { :controller => "#{@results_path}",
                                             :widget_action => @widget_action, 
                                             :query => params[:query],
                                             :content_type => params[:content_type],
-                                            :section_permalink => params[:section_permalink],
+                                            :section_unique_name => params[:section_unique_name],
                                             :per_page => params[:per_page]                                            
                                           } %>
 </p>

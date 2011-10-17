@@ -193,7 +193,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
 
   changeSecurityOnMenuItem : function(node, secure){
     var self = this;
-    self.setWindowStatus('Updating section...');
+    self.setWindowStatus('Updating menu item security...');
     var conn = new Ext.data.Connection();
     conn.request({
       url: './knitkit/website_nav/update_security',
@@ -217,12 +217,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
           node.commit();
         }
         else{
-          Ext.Msg.alert('Error', 'Error securing section');
+          Ext.Msg.alert('Error', 'Error securing menu item');
         }
       },
       failure: function(response) {
         self.clearWindowStatus();
-        Ext.Msg.alert('Error', 'Error securing section.');
+        Ext.Msg.alert('Error', 'Error securing menu item');
       }
     });
   },
@@ -359,6 +359,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
       },
       {
         name:'websiteNavId'
+      },
+      {
+        name:'internal_identifier'
       }
       ]
     });
@@ -668,7 +671,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                     layout:'fit',
                     width:375,
                     title:'Add Section',
-                    height:150,
+                    height:175,
                     plain: true,
                     buttonAlign:'center',
                     items: new Ext.FormPanel({
@@ -685,6 +688,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                         fieldLabel:'Title',
                         allowBlank:false,
                         name:'title'
+                      },
+                      {
+                        xtype:'textfield',
+                        fieldLabel:'Unique Name',
+                        allowBlank:true,
+                        name:'internal_identifier'
                       },
                       {
                         xtype: 'combo',
@@ -768,7 +777,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                     layout:'fit',
                     width:375,
                     title:'Update Section',
-                    height:125,
+                    height:150,
                     plain: true,
                     buttonAlign:'center',
                     items: new Ext.FormPanel({
@@ -786,6 +795,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                         id:'knitkitUpdateWebsiteSectionTitle',
                         value:record.data.text,
                         name:'title'
+                      },
+                      {
+                        xtype:'textfield',
+                        fieldLabel:'Unique Name',
+                        allowBlank:true,
+                        name:'internal_identifier',
+                        value:record.data.internal_identifier
                       },
                       {
                         xtype:'radiogroup',
@@ -1316,7 +1332,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                     layout:'fit',
                     width:375,
                     title:'New Section',
-                    height:150,
+                    height:175,
                     plain: true,
                     buttonAlign:'center',
                     items: Ext.create("Ext.form.Panel",{
@@ -1333,6 +1349,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                         fieldLabel:'Title',
                         allowBlank:false,
                         name:'title'
+                      },
+                      {
+                        xtype:'textfield',
+                        fieldLabel:'Unique Name',
+                        allowBlank:true,
+                        name:'internal_identifier'
                       },
                       {
                         xtype: 'combo',

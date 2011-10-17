@@ -1,5 +1,5 @@
 class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::BaseController
-  IGNORED_PARAMS = %w{action controller id position section_id content_area}
+  IGNORED_PARAMS = %w{action controller id position section_id content_area display_title}
 
   def new
     result = {}
@@ -7,6 +7,8 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article = Article.new
 
     article = set_attributes(article)
+    article.display_title = params[:display_title] == 'yes'
+
     article.website_sections << WebsiteSection.find(website_section_id) unless website_section_id.blank?
 
     article.created_by = current_user
@@ -33,6 +35,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     article.updated_by = current_user
     
     article = set_attributes(article)
+    article.display_title = params[:display_title] == 'yes'
 
     if article.save
       unless website_section_id.blank?
@@ -81,7 +84,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
 
   def existing_articles
     Article.include_root_in_json = false
-    render :inline => Article.all.to_json(:only => [:title, :id])
+    render :inline => Article.all.to_json(:only => [:internal_identifier, :id])
   end
 
   def get
@@ -120,11 +123,13 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
       articles_hash[:tag_list] = a.tag_list.join(', ')
       articles_hash[:body_html] = a.body_html
       articles_hash[:excerpt_html] = a.excerpt_html
+      articles_hash[:internal_identifier] = a.internal_identifier
+      articles_hash[:display_title] = a.display_title
       articles_hash[:position] = a.position(website_section_id)
       articles_array << articles_hash
     end
 
-    render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position], :methods => [:website_section_position])}}"
+    render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position, :internal_identifier, :display_title], :methods => [:website_section_position])}}"
   end
 
   def all
@@ -132,11 +137,16 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
     sort = sort_hash[:property] || 'created_at'
     dir  = sort_hash[:direction] || 'DESC'
-    limit = params[:limit] || 10
+    limit = params[:limit] || 40
     start = params[:start] || 0
 
-    articles = Article.find(:all,:order => "#{sort} #{dir}",:limit => limit,:offset => start)
-    total_count = Article.all.count
+    if params[:iid].blank?
+      articles = Article.find(:all,:order => "#{sort} #{dir}",:limit => limit,:offset => start)
+      total_count = Article.all.count
+    else
+      articles = Article.find(:all,:conditions => ['internal_identifier like ?', "%#{params[:iid]}%"],:order => "#{sort} #{dir}",:limit => limit,:offset => start)
+      total_count = Article.all.count
+    end
 
     articles_array = []
     articles.each do |a|
@@ -146,10 +156,15 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
       articles_hash[:title] = a.title
       articles_hash[:tag_list] = a.tag_list.join(', ')
       articles_hash[:body_html] = a.body_html
+      articles_hash[:internal_identifier] = a.internal_identifier
+      articles_hash[:display_title] = a.display_title
       articles_hash[:excerpt_html] = a.excerpt_html
+      articles_hash[:created_by] = a.created_by.login rescue ''
+      articles_hash[:last_update_by] = a.updated_by.login rescue ''
+
       articles_array << articles_hash
     end
 
-    render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :sections])}}"
+    render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :sections, :internal_identifier, :display_title, :created_by, :last_update_by])}}"
   end
 end

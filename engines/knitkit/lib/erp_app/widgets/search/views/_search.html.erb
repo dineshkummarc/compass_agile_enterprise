@@ -1,16 +1,16 @@
 <div>
   <% if @ajax_results %>
     <% form_remote_tag :url => build_widget_url(:new), :html => {:id => 'search_form', :class => @css_class} do %>
-      <%= hidden_field_tag :section_permalink, @section_permalink %>
+      <%= hidden_field_tag :section_unique_name, @section_unique_name %>
       <%= hidden_field_tag :content_type, @content_type %>
       <%= hidden_field_tag :per_page, @per_page %>
       <%= text_field_tag :query %>
       <%= submit_tag "Search", :disable_with => "Please wait...", :class => "submit" %>
     <% end %>
   <% else %>
-    <% form_tag "/#{@results_permalink}", :id => 'search_form', :class => @css_class, :method => :get do %>
-      <%= hidden_field_tag :section_permalink, @section_permalink %>
-      <%= hidden_field_tag :results_permalink, @results_permalink %>
+    <% form_tag "#{@results_path}", :id => 'search_form', :class => @css_class, :method => :get do %>
+      <%= hidden_field_tag :section_unique_name, @section_unique_name %>
+      <%= hidden_field_tag :results_path, @results_path %>
       <%= hidden_field_tag :content_type, @content_type %>
       <%= hidden_field_tag :widget_action, 'new' %>
       <%= text_field_tag :query %>

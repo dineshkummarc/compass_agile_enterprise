@@ -118,7 +118,8 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       :inMenu => website_section.in_menu,
       :hasLayout => !website_section.layout.blank?,
       :id => "section_#{website_section.id}",
-      :url => "http://#{website.hosts.first.host}#{website_section.path}"
+      :url => "http://#{website.hosts.first.host}#{website_section.path}",
+      :internal_identifier => website_section.internal_identifier
     }
 
     if website_section.is_a?(Blog) || website_section.type == 'Blog'

@@ -27,7 +27,7 @@ class Theme < ActiveRecord::Base
 
     def make_tmp_dir
       random = Time.now.to_i.to_s.split('').sort_by { rand }
-      returning Pathname.new(Rails.root + "/tmp/themes/tmp_#{random}/") do |dir|
+      returning Pathname.new(RAILS_ROOT + "/tmp/themes/tmp_#{random}/") do |dir|
         FileUtils.mkdir_p(dir) unless dir.exist?
       end
     end
@@ -132,7 +132,7 @@ class Theme < ActiveRecord::Base
   end
 
   def has_template?(directory, name)
-    self.templates.find{|item| item.directory == ::File.join(path,directory).gsub(Rails.root, '') and item.name == name}
+    self.templates.find{|item| item.directory == ::File.join(path,directory).gsub(RAILS_ROOT, '') and item.name == name}
   end
 
   class << self
