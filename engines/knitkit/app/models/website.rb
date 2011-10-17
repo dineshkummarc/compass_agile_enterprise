@@ -198,7 +198,7 @@ class Website < ActiveRecord::Base
   class << self
     def make_tmp_dir
       random = Time.now.to_i.to_s.split('').sort_by { rand }
-      returning Pathname.new(Rails.root + "/tmp/website_export/tmp_#{random}/") do |dir|
+      returning Pathname.new(RAILS_ROOT + "/tmp/website_export/tmp_#{random}/") do |dir|
         FileUtils.mkdir_p(dir) unless dir.exist?
       end
     end
