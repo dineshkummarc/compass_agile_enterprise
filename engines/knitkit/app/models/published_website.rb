@@ -1,12 +1,14 @@
 class PublishedWebsite < ActiveRecord::Base
   belongs_to :website
+  belongs_to :published_by, :class_name => "User"
   has_many   :published_elements, :dependent => :destroy
 
-  def self.activate(website, version)
+  def self.activate(website, version, current_user)
     published_websites = self.find(:all, :conditions => ['website_id = ?', website.id])
     published_websites.each do |published_website|
       if published_website.version == version
         published_website.active = true
+        published_website.published_by = current_user
       else
         published_website.active = false
       end
@@ -14,8 +16,8 @@ class PublishedWebsite < ActiveRecord::Base
     end
   end
 
-  def publish(comment)
-    new_publication = clone_publication(1, comment)
+  def publish(comment, current_user)
+    new_publication = clone_publication(1, comment, current_user)
     elements = []
 
     #get a publish sections
@@ -28,6 +30,7 @@ class PublishedWebsite < ActiveRecord::Base
         published_element.published_website = new_publication
         published_element.published_element_record = website_section
         published_element.version = website_section.version
+        published_element.published_by = current_user
         published_element.save
       end
 
@@ -42,6 +45,7 @@ class PublishedWebsite < ActiveRecord::Base
         published_element.published_website = new_publication
         published_element.published_element_record = element
         published_element.version = element.version
+        published_element.published_by = current_user
         published_element.save
       end
     end
@@ -58,20 +62,22 @@ class PublishedWebsite < ActiveRecord::Base
     end
   end
 
-  def publish_element(comment, element, version)
-    new_publication = clone_publication(0.1, comment)
+  def publish_element(comment, element, version, current_user)
+    new_publication = clone_publication(0.1, comment, current_user)
 
     published_element = new_publication.published_elements.find(:first,
       :conditions => ['published_element_record_id = ? and (published_element_record_type = ? or published_element_record_type = ?)', element.id, element.class.to_s, element.class.superclass.to_s])
 
     unless published_element.nil?
       published_element.version = version
+      published_element.published_by = current_user
       published_element.save
     else
       new_published_element = PublishedElement.new
       new_published_element.published_website = new_publication
       new_published_element.published_element_record = element
       new_published_element.version = version
+      new_published_element.published_by = current_user
       new_published_element.save
     end
 
@@ -83,7 +89,7 @@ class PublishedWebsite < ActiveRecord::Base
 
   private
   
-  def clone_publication(version_increment, comment)
+  def clone_publication(version_increment, comment, current_user)
     #create new PublishedWebsite with comment
     published_website = PublishedWebsite.new
     published_website.website = self.website
@@ -92,7 +98,7 @@ class PublishedWebsite < ActiveRecord::Base
     else
       published_website.version = (self.version += version_increment)
     end
-
+    published_website.published_by = current_user
     published_website.comment = comment
     published_website.save
     
@@ -102,6 +108,7 @@ class PublishedWebsite < ActiveRecord::Base
       new_published_element.published_website = published_website
       new_published_element.published_element_record = published_element.published_element_record
       new_published_element.version = published_element.version
+      new_published_element.published_by = current_user
       new_published_element.save
     end
 

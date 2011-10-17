@@ -34,11 +34,16 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
       end
     end
 
-    render :inline => "{\"success\":true, \"results\":#{published_websites.count}, \"totalCount\":#{@website.published_websites.count}, \"data\":#{published_websites.to_json(:only => [:comment, :id, :version, :created_at, :active],:methods => [:viewing])} }"
+    render :inline => "{\"success\":true, \"results\":#{published_websites.count}, 
+                        \"totalCount\":#{@website.published_websites.count}, 
+                        \"data\":#{published_websites.to_json(
+                        :only => [:comment, :id, :version, :created_at, :active], 
+                        :include => {:published_by => {:only => [:name]}}, 
+                        :methods => [:viewing])} }"
   end
 
   def activate_publication
-    @website.set_publication_version(params[:version].to_f)
+    @website.set_publication_version(params[:version].to_f, current_user)
 
     render :inline => {:success => true}.to_json
   end

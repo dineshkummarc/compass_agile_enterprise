@@ -19,8 +19,8 @@ module Knitkit
     end
 
     module InstanceMethods
-      def publish(site, comment, version)
-        site.publish_element(comment, self, version)
+      def publish(site, comment, version, current_user)
+        site.publish_element(comment, self, version, current_user)
       end
 
       def destroy_published_elements

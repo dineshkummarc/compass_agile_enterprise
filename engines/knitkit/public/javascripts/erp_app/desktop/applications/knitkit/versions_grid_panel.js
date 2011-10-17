@@ -19,7 +19,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsGridPanel",{
         sortable:true,
         renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
         width:120
-      }];
+      },
+	  {
+		header:'Published By',
+		dataIndex: 'publisher'
+	  }];
 
     if(!Compass.ErpApp.Utility.isBlank(config['columns'])){
       overiddenColumns = overiddenColumns.concat(config['columns']);
@@ -238,10 +242,15 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel
           {
             name:'created_at',
             type:'date'
-          }
+          },
+		  {
+		  	name:'publisher'
+		  	// mapping: 'published.published_by.name'
+		  }
         ]
       })
     }, config);
+console.log(config)
 
     Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel.superclass.constructor.call(this, config);
   }
@@ -360,7 +369,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsBlogGridPanel",{
           },
           {
             name:'published'
-          }
+          },
+		  {
+		  	name:'published_by'
+		  // 	mapping: 'published.published_by.name'
+		  }
         ]
       }),
       columns:[
