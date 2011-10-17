@@ -188,8 +188,8 @@ class Website < ActiveRecord::Base
     returning(tmp_dir + "#{name}.zip") do |file_name|
       file_name.unlink if file_name.exist?
       Zip::ZipFile.open(file_name, Zip::ZipFile::CREATE) do |zip|
-        files.each { |file| zip.add(file[:name], file[:path]) if ::File.exists?(file[:path]) }
-        ::File.open(tmp_dir + 'setup.yml', 'w') { |f| f.write(export_setup.to_yaml) }
+        files.each { |file| zip.add(file[:name], file[:path]) if File.exists?(file[:path]) }
+        File.open(tmp_dir + 'setup.yml', 'w') { |f| f.write(export_setup.to_yaml) }
         zip.add('setup.yml', tmp_dir + 'setup.yml')
       end
     end
@@ -360,6 +360,7 @@ class Website < ActiveRecord::Base
       :articles => [],
       :path => section.path,
       :permalink => section.permalink,
+      :internal_identifier => section.internal_identifier,
       :position => section.position,
       :sections => section.children.each.map{|child| build_section_hash(child)}
     }
@@ -367,7 +368,7 @@ class Website < ActiveRecord::Base
     section.contents.each do |content|
       content_area = content.content_area_by_website_section(section)
       position = content.position_by_website_section(section)
-      section_hash[:articles] << {:name => content.title, :content_area => content_area, :position => position}
+      section_hash[:articles] << {:name => content.title, :content_area => content_area, :position => position, :internal_identifier => content.internal_identifier}
     end
 
     section_hash
