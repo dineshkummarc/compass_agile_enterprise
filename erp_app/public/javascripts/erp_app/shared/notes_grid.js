@@ -26,10 +26,16 @@ Ext.define("Compass.ErpApp.Shared.NotesGrid",{
         });
     },
 
+    //TODO: Deprecate this method in preference of 
+    //set params
     updateParty : function(partyId){
         this.partyId = partyId;
         this.store.proxy.url = '/erp_app/shared/notes/view/'+this.partyId;
         this.store.load();
+    },
+    setParams : function(params){
+        this.partyId = params.partyId;
+        this.store.proxy.url = '/erp_app/shared/notes/view/'+this.partyId;
     },
 
     initComponent: function() {
@@ -283,7 +289,7 @@ Ext.define("Compass.ErpApp.Shared.NotesGrid",{
                 displayMsg: 'Displaying {0} - {1} of {2}',
                 emptyMsg: "No Notes"
             })
-        }, config);
+        }, config, {title : "Notes"});
 
         this.callParent([config]);
     }

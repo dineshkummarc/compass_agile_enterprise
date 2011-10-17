@@ -20,6 +20,6 @@ class OrganizerApplicationGenerator < Rails::Generators::NamedBase
     route "match '/erp_app/organizer/#{file_name}/:action' => \"erp_app/organizer/#{file_name}/base#index\""
     
     #migration
-    template "migrate/migration_template.rb", "db/data_migrations/#{DataMigrator.next_migration_number}_create_#{file_name}_organizer_application.rb"
+    template "migrate/migration_template.rb", "db/data_migrations/#{RussellEdge::DataMigrator.next_migration_number}_create_#{file_name}_organizer_application.rb"
   end
 end

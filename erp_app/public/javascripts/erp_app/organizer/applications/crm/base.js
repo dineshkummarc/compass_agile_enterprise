@@ -3,7 +3,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
     alias:'widget.contactslayout',
     //private member partyId
     partyId:null,
-    
+    widget_xtypes:null,
+
     expandContacts : function(){
         this.southPanel.expand(true);
     },
@@ -24,7 +25,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
             region:'center',
             autoScroll:true,
             items:[config['centerComponent']]
-        })
+        });
+        this.widget_xtypes = config.widget_xtypes;
 
         config = Ext.apply({
             layout:'border',
@@ -59,22 +61,19 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.Layout",{
         else{
             var tabPanel = this.query('tabpanel')[0];
 
-            var notesGrid = tabPanel.query('shared_notesgrid');
-            if(notesGrid.length > 0)
-                notesGrid[0].updateParty(this.partyId);
-            
-            var contactMechanismGrids = tabPanel.query('contactmechanismgrid');
-            var numGrids = contactMechanismGrids.length;
-            for(var i=0;i<numGrids;i++){
-                contactMechanismGrids[i].store.proxy.extraParams.party_id = this.partyId;
-                contactMechanismGrids[i].store.load();
+            for (i=0; i < this.widget_xtypes.length; i++) {
+                var widget = tabPanel.query(this.widget_xtypes[i]);
+                if(widget.length > 0) {
+                    widget[0].setParams({partyId: this.partyId});
+                    widget[0].store.load();
+                }
             }
+
             this.query('tabpanel')[0].setActiveTab(0);
         }
     }
 
 });
-
 
 Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     
@@ -204,7 +203,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                             }
                         },
                         failure:function(form, action){
-                            var message = 'Error adding individual'
+                            var message = 'Error adding individual';
                             if(action.response != null){
                                 var response =  Ext.decode(action.response.responseText);
                                 message = response.message;
@@ -282,7 +281,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                             }
                         },
                         failure:function(form, action){
-                            var message = "Error adding organization"
+                            var message = "Error adding organization";
                             if(action.response != null){
                                 var response =  Ext.decode(action.response.responseText);
                                 message = response.message;
@@ -415,222 +414,21 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     });
 
     var individualsPanelSouthItems = [];
-    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "contactmechanismgrid"))
-    {
-        individualsPanelSouthItems = [
-        {
-            xtype:'contactmechanismgrid',
-            title:'Email Addresses',
-            contactMechanism:'EmailAddress',
-            columns:[
-            {
-                header: 'Email Address',
-                dataIndex: 'email_address',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            }
-            ],
-            fields:[
-            {
-                name:'email_address'
-            }
-            ],
-            validations:[
-            {
-                type: 'presence',
-                field: 'email_address'
-            }
-            ],
-            contactPurposeStore:contactPurposeStore
-        },
-        {
-            xtype:'contactmechanismgrid',
-            title:'Phone Numbers',
-            contactMechanism:'PhoneNumber',
-            columns:[
-            {
-                header: 'Phone Number',
-                dataIndex: 'phone_number',
-                width:200,
-                editor: {
-                    xtype:'textfield'
-                }
-            }
-            ],
-            fields:[
-            {
-                name:'phone_number'
-            }
-            ],
-            validations:[
-            {
-                type: 'presence',
-                field: 'phone_number'
-            }
-            ],
-            contactPurposeStore:contactPurposeStore
-        },
-        {
-            xtype:'contactmechanismgrid',
-            title:'Postal Addresses',
-            contactMechanism:'PostalAddress',
-            columns:[
-            {
-                header: 'Address Line 1',
-                dataIndex: 'address_line_1',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'Address Line 2',
-                dataIndex: 'address_line_2',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'City',
-                dataIndex: 'city',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'State',
-                dataIndex: 'state',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'Zip',
-                dataIndex: 'zip',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'Country',
-                dataIndex: 'country',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                menuDisabled:true,
-                resizable:false,
-                xtype:'actioncolumn',
-                header:'Map It',
-                align:'center',
-                width:60,
-                items:[{
-                    icon:'/images/icons/map/map_16x16.png',
-                    tooltip:'Revert',
-                    handler :function(grid, rowIndex, colIndex){
-                        var rec = grid.getStore().getAt(rowIndex);
-                        var addressLines;
-                        if(Compass.ErpApp.Utility.isBlank(rec.get('address_line_2'))){
-                            addressLines = rec.get('address_line_1');
-                        }
-                        else{
-                            addressLines = rec.get('address_line_1') + ' ,' + rec.get('address_line_2');
-                        }
-                        
-                        var fullAddress = addressLines + ' ,' + rec.get('city') + ' ,' + rec.get('state') + ' ,' + rec.get('zip') + ' ,' + rec.get('country')
-                        var mapwin = Ext.create('Ext.Window', {
-                            layout: 'fit',
-                            title: addressLines,
-                            width:450,
-                            height:450,
-                            border: false,
-                            items: {
-                                xtype: 'googlemappanel',
-                                zoomLevel: 17,
-                                mapType:'hybrid',
-                                dropPins: [{
-                                    address: fullAddress,
-                                    center:true,
-                                    title:addressLines
-                                }]
-                            }
-                        });
-                        mapwin.show();
-                    }
-                }]
-            }
-            ],
-            fields:[
-            {
-                name: 'address_line_1'
-            },
-            {
-                name: 'address_line_2'
-            },
-            {
-                name: 'city'
-            },
-            {
-                name: 'state'
-            },
-            {
-                name: 'zip'
-            },
-            {
-                name: 'country'
-            }
-            ],
-            validations:[
-            {
-                type: 'presence',
-                field: 'address_line_1'
-            },
 
-            {
-                type: 'presence',
-                field: 'city'
-            },
+    var xtypes = ErpApp.Authentication.RoleManager.findValidWidgets(config.widget_roles,
+        {partygrid : true});
 
-            {
-                type: 'presence',
-                field: 'state'
-            },
-
-            {
-                type: 'presence',
-                field: 'zip'
-            },
-
-            {
-                type: 'presence',
-                field: 'country'
-            }
-            ],
-            contactPurposeStore:contactPurposeStore
-        }
-        ]
-    }
-
-    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "shared_notesgrid"))
-    {
+    for (var i = 0; i < xtypes.length; i++) {
         individualsPanelSouthItems.push({
-            xtype:'shared_notesgrid',
-            partyId:0,
-            title:'Notes'
+            xtype: xtypes[i],
+            contactPurposeStore:contactPurposeStore
         });
     }
 
     var individualsPanel = {
         xtype:'contactslayout',
         id:'individuals_search_grid',
+        widget_xtypes: xtypes,
         southComponent:{
             xtype:'tabpanel',
             id:'individualsTabPanel',
@@ -640,223 +438,18 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     };
 
     var organizationsPanelSouthItems = [];
-    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "contactmechanismgrid"))
-    {
-        organizationsPanelSouthItems = [
-        {
-            xtype:'contactmechanismgrid',
-            title:'Email Addresses',
-            contactMechanism:'EmailAddress',
-            columns:[
-            {
-                header: 'Email Address',
-                dataIndex: 'email_address',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            }
-            ],
-            fields:[
-            {
-                name:'email_address'
-            }
-            ],
-            validations:[
-            {
-                type: 'presence',
-                field: 'email_address'
-            }
 
-            ],
-            contactPurposeStore:contactPurposeStore
-        },
-        {
-            xtype:'contactmechanismgrid',
-            title:'Phone Numbers',
-            contactMechanism:'PhoneNumber',
-            columns:[
-            {
-                header: 'Phone Number',
-                dataIndex: 'phone_number',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            }
-            ],
-            fields:[
-            {
-                name:'phone_number'
-            }
-            ],
-            validations:[
-            {
-                type: 'presence',
-                field: 'phone_number'
-            }
-            ],
-            contactPurposeStore:contactPurposeStore
-        },
-        {
-            xtype:'contactmechanismgrid',
-            title:'Postal Addresses',
-            contactMechanism:'PostalAddress',
-            columns:[
-            {
-                header: 'Address Line 1',
-                dataIndex: 'address_line_1',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'Address Line 2',
-                dataIndex: 'address_line_2',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'City',
-                dataIndex: 'city',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'State',
-                dataIndex: 'state',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'Zip',
-                dataIndex: 'zip',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                header: 'Country',
-                dataIndex: 'country',
-                editor: {
-                    xtype:'textfield'
-                },
-                width:200
-            },
-            {
-                menuDisabled:true,
-                resizable:false,
-                xtype:'actioncolumn',
-                header:'Map It',
-                align:'center',
-                width:60,
-                items:[{
-                    icon:'/images/icons/map/map_16x16.png',
-                    tooltip:'Revert',
-                    handler :function(grid, rowIndex, colIndex){
-                        var rec = grid.getStore().getAt(rowIndex);
-                        var addressLines;
-                        if(Compass.ErpApp.Utility.isBlank(rec.get('address_line_2'))){
-                            addressLines = rec.get('address_line_1');
-                        }
-                        else{
-                            addressLines = rec.get('address_line_1') + ' ,' + rec.get('address_line_2');
-                        }
-
-                        var fullAddress = addressLines + ' ,' + rec.get('city') + ' ,' + rec.get('state') + ' ,' + rec.get('zip') + ' ,' + rec.get('country')
-                        var mapwin = Ext.create('Ext.Window', {
-                            layout: 'fit',
-                            title: addressLines,
-                            width:450,
-                            height:450,
-                            border: false,
-                            items: {
-                                xtype: 'googlemappanel',
-                                zoomLevel: 17,
-                                mapType:'hybrid',
-                                dropPins: [{
-                                    address: fullAddress,
-                                    center:true,
-                                    title:addressLines
-                                }]
-                            }
-                        });
-                        mapwin.show();
-                    }
-                }]
-            }
-            ],
-            fields:[
-            {
-                name: 'address_line_1'
-            },
-            {
-                name: 'address_line_2'
-            },
-            {
-                name: 'city'
-            },
-            {
-                name: 'state'
-            },
-            {
-                name: 'zip'
-            },
-            {
-                name: 'country'
-            }
-            ],
-            validations:[
-            {
-                type: 'presence',
-                field: 'address_line_1'
-            },
-
-            {
-                type: 'presence',
-                field: 'city'
-            },
-
-            {
-                type: 'presence',
-                field: 'state'
-            },
-
-            {
-                type: 'presence',
-                field: 'zip'
-            },
-
-            {
-                type: 'presence',
-                field: 'country'
-            }
-            ],
-            contactPurposeStore:contactPurposeStore
-        }
-        ];
-    }
-
-    if(ErpApp.Authentication.RoleManager.hasAccessToWidget(config.widget_roles, "shared_notesgrid"))
-    {
+    for (i = 0; i < xtypes.length; i++) {
         organizationsPanelSouthItems.push({
-            xtype:'shared_notesgrid',
-            partyId:0,
-            title:'Notes'
+            xtype: xtypes[i]
         });
     }
+
 
     var organizationsPanel = {
         xtype:'contactslayout',
         id:'organizations_search_grid',
+        widget_xtypes: xtypes,
         southComponent:{
             xtype:'tabpanel',
             id:'organizationTabPanel',

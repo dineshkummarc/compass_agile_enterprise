@@ -19,6 +19,7 @@ ErpApp::Engine.routes.draw do
   match '/organizer(/:action)' => "organizer/base"
   
   #crm
+  match '/organizer/crm/relationship(/:action(/:id))' => "organizer/crm/relationship"
   match '/organizer/crm(/:action(/:id))' => "organizer/crm/base"
 
   ############################
