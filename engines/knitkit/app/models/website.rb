@@ -25,7 +25,7 @@ class Website < ActiveRecord::Base
     end
   end
   alias :sections :website_sections
-
+  
   def all_sections
     sections_array = sections
     sections_array.each do |section|
@@ -140,13 +140,13 @@ class Website < ActiveRecord::Base
     file_assets_path = Pathname.new(File.join(tmp_dir,'files'))
     FileUtils.mkdir_p(file_assets_path) unless file_assets_path.exist?
 
-    website_sections.each do |website_section|
+    all_sections.each do |website_section|
       unless website_section.layout.blank?
         File.open(File.join(sections_path,"#{website_section.title}.rhtml"), 'w+') {|f| f.write(website_section.layout) }
       end
     end
 
-    contents = website_sections.collect(&:contents).flatten.uniq
+    contents = all_sections.collect(&:contents).flatten.uniq
     contents.each do |content|
       File.open(File.join(articles_path,"#{content.title}.html"), 'w+') {|f| f.write(content.body_html) }
     end
