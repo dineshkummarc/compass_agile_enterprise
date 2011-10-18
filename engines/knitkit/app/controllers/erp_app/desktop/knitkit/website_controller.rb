@@ -147,7 +147,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def import
-    result, message = Website.import(params[:website_data])
+    result, message = Website.import(params[:website_data], current_user)
 
     render :inline => {:success => result, :message => message}.to_json
   ensure

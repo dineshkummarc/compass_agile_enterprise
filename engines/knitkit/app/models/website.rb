@@ -203,7 +203,7 @@ class Website < ActiveRecord::Base
       end
     end
 
-    def import(file)
+    def import(file, current_user)
       file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
       message = ''
       success = true
@@ -248,6 +248,11 @@ class Website < ActiveRecord::Base
           :email_inquiries => setup_hash[:email_inquiries],
           :auto_activate_publication => setup_hash[:auto_activate_publication]
         )
+
+        #set default publication published by user
+        first_publication = website.published_websites.first
+        first_publication.published_by = current_user
+        first_publication.save
 
         begin
 
