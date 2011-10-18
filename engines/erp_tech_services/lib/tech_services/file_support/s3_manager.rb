@@ -16,7 +16,7 @@ module TechServices
           @@s3_bucket = AWS::S3::Bucket.find(@@configuration['bucket'])
           @@node_tree = build_node_tree
         end
-        
+
         def reload
           AWS::S3::Base.connected? ? (@@node_tree = build_node_tree(true)) : setup_connection
         end
@@ -62,36 +62,33 @@ module TechServices
           tree_data
         end
       end
-      
+
       def buckets
         AWS::S3::Service.buckets
       end
-      
+
       def bucket=(name)
         @@s3_bucket = AWS::S3::Bucket.find(name)
       end
-      
+
       def bucket
         @@s3_bucket
       end
-      
+
       def root
         ''
       end
-      
+
       def update_file(path, content)
         AWS::S3::S3Object.store(path, content, bucket.name)
-        TechServices::FileSupport::S3Manager.reload
       end
 
       def create_file(path, name, contents)
         AWS::S3::S3Object.store(File.join(path,name), contents, @@s3_bucket.name)
-        TechServices::FileSupport::S3Manager.reload
       end
 
       def create_folder(path, name)
         AWS::S3::S3Object.store(File.join(path,name) + "/", '', @@s3_bucket.name)
-        TechServices::FileSupport::S3Manager.reload
       end
 
 #      def save_move(path, new_parent_path)
@@ -124,8 +121,7 @@ module TechServices
         else
           message = "#Error renaming {old_name}"
         end
-        TechServices::FileSupport::S3Manager.reload
-        
+
         return result, message
       end
 
@@ -134,6 +130,7 @@ module TechServices
         message = nil
 
         node = find_node(path)
+
         if node[:children].empty?
           is_directory = File.extname(path).blank?
           AWS::S3::S3Object.delete path, @@s3_bucket.name, :force => true
@@ -141,8 +138,7 @@ module TechServices
           result = true
         else
           message = "Folder is not empty"
-        end
-        TechServices::FileSupport::S3Manager.reload
+        end unless node.nil?
 
         return result, message, is_directory
       end
@@ -161,18 +157,17 @@ module TechServices
         rescue AWS::S3::NoSuchKey => error
           message = 'File does not exists'
         end
-        
+
         contents = object.value if message.nil?
 
         return contents, message
       end
 
       def build_tree(starting_path, options={})
+        TechServices::FileSupport::S3Manager.reload
         node_tree = find_node(starting_path, options)
         node_tree.nil? ? [] : node_tree
       end
-
-      private
 
       def find_node(path, options={})
         parent = if options[:file_asset_holder]
@@ -192,13 +187,13 @@ module TechServices
             end
             parent = nil if parent[:id] != path
           end
-          
+
           parent
         end
 
         parent
       end
-      
+
     end#S3Manager
   end#FileSupport
 end#TechServices

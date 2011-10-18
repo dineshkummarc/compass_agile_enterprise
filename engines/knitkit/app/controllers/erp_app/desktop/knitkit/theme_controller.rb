@@ -31,7 +31,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     else
       theme = Theme.create(:website => @website, :name => params[:name], :theme_id => params[:theme_id])
       params.each do |k,v|
-        next if k.to_s == 'name' || k.to_s == 'site_id'
+        next if k.to_s == 'name' || k.to_s == 'site_id' || k.to_s == 'theme_id'
         theme.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
       end
       theme.save

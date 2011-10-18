@@ -141,7 +141,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     start = params[:start] || 0
 
     if params[:iid].blank?
-      articles = Article.find(:all,:order => "#{sort} #{dir}",:limit => limit,:offset => start)
+      articles = Article.find(:all,:order => "contents.#{sort} #{dir}",:limit => limit,:offset => start)
       total_count = Article.all.count
     else
       articles = Article.find(:all,:conditions => ['internal_identifier like ?', "%#{params[:iid]}%"],:order => "#{sort} #{dir}",:limit => limit,:offset => start)

@@ -27,8 +27,6 @@ module TechServices
         return result, message
       end
 
-      protected
-
       def find_node(path, options={})
         node_tree = build_file_assets_tree_for_model(options[:file_asset_holder])
 
@@ -45,7 +43,7 @@ module TechServices
         end
 
         path.sub!(self.root,'') if parent[:id].scan(self.root).empty?
-        
+
         parent = [] if parent[:id] != path
         parent
       end

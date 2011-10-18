@@ -67,7 +67,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
       #setup link
       website_nav_item.url = '/' + link_to_item.permalink
       website_nav_item.linked_to_item = link_to_item 
-      url = "http://#{website_nav.website.hosts.first.host}/" + link_to_item.permalink
+      url = "http://#{website_nav.website.hosts.first.attributes['host']}/" + link_to_item.permalink
     else
       website_nav_item.url = url
     end
@@ -116,7 +116,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
       #setup link
       website_nav_item.url = '/' + link_to_item.permalink
       website_nav_item.linked_to_item = link_to_item
-      url = "http://#{website_nav_item.website_nav.website.hosts.first.host}/" + link_to_item.permalink
+      url = "http://#{website_nav_item.website_nav.website.hosts.first.attributes['host']}/" + link_to_item.permalink
     else
       website_nav_item.url = url
     end

@@ -12,7 +12,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :iconCls => 'icon-globe_disconnected',
         :id => "website_#{website.id}",
         :leaf => false,
-        :url => "http://#{website.hosts.first.host}",
+        :url => "http://#{website.hosts.first.attributes['host']}",
         :name => website.name,
         :title => website.title,
         :subtitle => website.subtitle,
@@ -27,7 +27,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       #handle hosts
       hosts_hash = {:text => 'Hosts', :iconCls => 'icon-gear', :isHostRoot => true, :websiteId => website.id, :leaf => false, :children => []}
       website.hosts.each do |website_host|
-        hosts_hash[:children] << {:text => website_host.host, :websiteHostId => website_host.id, :host => website_host.host, :iconCls => 'icon-globe', :url => "http://#{website_host.host}", :isHost => true, :leaf => true, :children => []}
+        hosts_hash[:children] << {:text => website_host.attributes['host'], :websiteHostId => website_host.id, :host => website_host.attributes['host'], :iconCls => 'icon-globe', :url => "http://#{website_host.attributes['host']}", :isHost => true, :leaf => true, :children => []}
       end
 
       website_hash[:children] << hosts_hash
@@ -85,7 +85,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
     unless item.linked_to_item.nil?
       linked_to_item_id = item.linked_to_item_id
       link_to_type = item.linked_to_item.class.to_s.underscore
-      url = "http://#{website.hosts.first.host}" + item.linked_to_item.path
+      url = "http://#{website.hosts.first.attributes['host']}" + item.linked_to_item.path
     end
 
     menu_item_hash = {
@@ -118,7 +118,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
       :inMenu => website_section.in_menu,
       :hasLayout => !website_section.layout.blank?,
       :id => "section_#{website_section.id}",
-      :url => "http://#{website.hosts.first.host}#{website_section.path}",
+      :url => "http://#{website.hosts.first.attributes['host']}#{website_section.path}",
       :internal_identifier => website_section.internal_identifier
     }
 
