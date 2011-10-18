@@ -2,14 +2,15 @@ require "spec_helper"
 
 describe RailsDbAdmin::QueriesController do
 
+  #handle devise user auth
+  before(:each) do
+    basic_user_auth
+  end
+
   describe "POST execute_query" do
 
     before(:all) do 
       Factory.create(:role_type, :internal_identifier => "execute_query_test_role")
-    end
-
-    before(:each) do
-      basic_user_auth
     end
 
     it "returns unsuccessful because of an empty result set" do
@@ -33,5 +34,27 @@ describe RailsDbAdmin::QueriesController do
       RoleType.where(:internal_identifier => "execute_query_test_role").destroy_all
     end
 
+  end
+
+  describe "POST open_and_execute_query" do
+
+    it "should return success" do
+      @db_connection_class =
+        RailsDbAdmin::ConnectionHandler.create_connection_class("spec")
+      @query_support = double("RailsDbAdmin::QuerySupport")
+      @query_support.should_receive(:get_query).and_return("SELECT 1 FROM dual;")
+      columns = ["columns_a", "columns_b", "columns_c"]
+      values = ["A", "B", "C"]
+
+      @query_support.should_receive(:execute_sql).and_return([columns, values, nil])
+      RailsDbAdmin::QuerySupport.should_receive(:new).and_return(@query_support)
+
+      post :queries, {:use_route => :rails_db_admin,
+                      :action => "open_and_execute_query",
+                      :query_name => "some_query"}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+    end
   end
 end

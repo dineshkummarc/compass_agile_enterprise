@@ -32,7 +32,7 @@ module RailsDbAdmin
 	    result = {:success => true}
 		table = params[:table]
 
-		if @table_support.table_contains_column(table, :id) 
+		if @table_support.table_contains_column(table, :id)
 		  result[:columns] = build_grid_columns(table)
 		  result[:model] = table
 		  result[:fields] = build_store_fields(table)
