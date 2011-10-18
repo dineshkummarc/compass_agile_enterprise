@@ -176,7 +176,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
 
   def update_host
     website_host = WebsiteHost.find(params[:id])
-    website_host.attributes['host'] = params[:host]
+     website_host.host = params[:host]
     website_host.save
 
     render :inline => {:success => true}.to_json
