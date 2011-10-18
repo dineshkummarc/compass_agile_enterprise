@@ -163,11 +163,11 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     render :inline => {
       :success => true,
       :node => {
-        :text => website_host.host,
+        :text => website_host.attributes['host'],
         :websiteHostId => website_host.id,
-        :host => website_host.host,
+        :host => website_host.attributes['host'],
         :iconCls => 'icon-globe',
-        :url => "http://#{website_host.host}",
+        :url => "http://#{website_host.attributes['host']}",
         :isHost => true,
         :leaf => true,
         :children => []}
@@ -176,7 +176,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
 
   def update_host
     website_host = WebsiteHost.find(params[:id])
-    website_host.host = params[:host]
+    website_host.attributes['host'] = params[:host]
     website_host.save
 
     render :inline => {:success => true}.to_json
