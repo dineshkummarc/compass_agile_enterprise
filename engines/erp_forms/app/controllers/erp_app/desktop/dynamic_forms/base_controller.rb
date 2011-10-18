@@ -13,7 +13,8 @@ class ErpApp::Desktop::DynamicForms::BaseController < ErpApp::Desktop::BaseContr
       :inMenu => website_section.in_menu,
       :hasLayout => !website_section.layout.blank?,
       :id => "section_#{website_section.id}",
-      :url => "http://#{website.hosts.first.host}/#{website_section.permalink}"
+      #have to use attributes .host has issues
+      :url => "http://#{website.hosts.first.attributes['host']}/#{website_section.permalink}"
     }
 
     if website_section.is_a?(Blog) || website_section.type == 'Blog'

@@ -4,7 +4,7 @@ ActionView::Template.class_eval do
     file_name = filename
     if file_name.to_s.scan(Rails.root).empty?
       file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
-      node = file_support.build_tree(file_name)
+      node = file_support.find_node(file_name)
       (node.nil? or node.empty?) ? File.read(file_name) : file_support.get_contents(file_name).to_s
     else
       File.read(file_name)
@@ -23,7 +23,7 @@ ActionView::ReloadableTemplate.class_eval do
     file_name = filename
     if file_name.to_s.scan(Rails.root).empty?
       file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
-      node = file_support.build_tree(file_name)
+      node = file_support.find_node(file_name)
       (node.nil? or node.empty?) ? File.mtime(file_name) : node[:last_modified]
     else
       File.mtime(file_name)
@@ -50,7 +50,7 @@ ActionView::ReloadableTemplate::ReloadablePath.class_eval do
   def template_files_from_dir(dir)
     if dir.to_s.scan(Rails.root).empty?
       file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
-      node = file_support.build_tree(dir)
+      node = file_support.find_node(dir)
       (node.nil? or node.empty?) ? Dir.glob(File.join(dir, '*')) : node[:children].select{|child| child[:leaf]}.collect{|child| child[:id]}
     else
       Dir.glob(File.join(dir, '*'))
