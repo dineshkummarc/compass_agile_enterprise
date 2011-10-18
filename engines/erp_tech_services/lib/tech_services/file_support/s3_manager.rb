@@ -81,14 +81,17 @@ module TechServices
       
       def update_file(path, content)
         AWS::S3::S3Object.store(path, content, bucket.name)
+        TechServices::FileSupport::S3Manager.reload
       end
 
       def create_file(path, name, contents)
         AWS::S3::S3Object.store(File.join(path,name), contents, @@s3_bucket.name)
+        TechServices::FileSupport::S3Manager.reload
       end
 
       def create_folder(path, name)
         AWS::S3::S3Object.store(File.join(path,name) + "/", '', @@s3_bucket.name)
+        TechServices::FileSupport::S3Manager.reload
       end
 
 #      def save_move(path, new_parent_path)
@@ -121,6 +124,7 @@ module TechServices
         else
           message = "#Error renaming {old_name}"
         end
+        TechServices::FileSupport::S3Manager.reload
         
         return result, message
       end
@@ -138,6 +142,7 @@ module TechServices
         else
           message = "Folder is not empty"
         end
+        TechServices::FileSupport::S3Manager.reload
 
         return result, message, is_directory
       end
@@ -163,7 +168,6 @@ module TechServices
       end
 
       def build_tree(starting_path, options={})
-        TechServices::FileSupport::S3Manager.reload
         node_tree = find_node(starting_path, options)
         node_tree.nil? ? [] : node_tree
       end

@@ -15,13 +15,15 @@ class FileAsset < ActiveRecord::Base
   if respond_to?(:class_attribute)
     class_attribute :file_type
     class_attribute :valid_extensions
+    class_attribute :content_type
   else
     class_inheritable_accessor :file_type
+    class_inheritable_accessor :content_type
     class_inheritable_writer :valid_extensions
   end
    
   after_create :set_sti
-  after_save   :set_data_file_name
+  after_save   :set_data_file_name, :reload_storage
   
   belongs_to :file_asset_holder, :polymorphic => true
   instantiates_with_sti
@@ -34,6 +36,8 @@ class FileAsset < ActiveRecord::Base
     :url => ":file_url",
     :validations => { :extension => lambda { |data, file| validate_extension(data, file) } }
   
+  before_post_process :set_content_type
+
   validates_attachment_presence :data
   validates_attachment_size :data, :less_than => 5.megabytes
   
@@ -49,7 +53,7 @@ class FileAsset < ActiveRecord::Base
       valid_extensions.include?(::File.extname(name))
     end
 
-    def type_for(directory, name)
+    def type_for(name)
       classes = all_subclasses.uniq
       classes.detect{ |k| k.acceptable?(name) }.try(:name)
     end
@@ -90,7 +94,7 @@ class FileAsset < ActiveRecord::Base
     directory, name = FileAsset.split_path(base_path) if base_path and name.blank?
     directory.gsub!(File.join(Rails.root,'public'),'')
       
-    @type ||= FileAsset.type_for(directory, name) if name
+    @type ||= FileAsset.type_for(name) if name
     data = StringIO.new(data) if data.is_a?(String)
     
     super attributes.merge(:directory => directory, :name => name, :data => data)
@@ -101,15 +105,30 @@ class FileAsset < ActiveRecord::Base
   end
 
   def extname
-    ::File.extname(data_file_name).gsub(/^\.+/, '')
+    File.extname(self.name).gsub(/^\.+/, '')
   end
   
   def set_sti
     update_attribute :type, @type
   end
+
+  def set_content_type
+    klass = FileAsset.type_for(self.name).constantize
+    content_type = klass == Image ? "image/#{self.extname.downcase}" : klass.content_type
+    self.data.instance_write(:content_type, content_type)
+  end
   
   def set_data_file_name
     update_attribute :data_file_name, name if data_file_name != name
+  end
+
+  def reload_storage
+    case TechServices::FileSupport.options[:storage]
+    when :filesystem
+      #no need to reload storage
+    when :s3
+      TechServices::FileSupport::S3Manager.reload
+    end
   end
   
   def move(new_parent_path)
@@ -128,6 +147,8 @@ class Image < FileAsset
 end
 
 class TextFile < FileAsset
+  self.file_type = :textfile
+  self.content_type = 'text/plain'
   self.valid_extensions = %w(.txt .text)
   
   def data=(data)
@@ -142,15 +163,24 @@ end
 
 class Javascript < TextFile
   self.file_type = :javascript
+  self.content_type = 'text/javascript'
   self.valid_extensions = %w(.js)
 end
 
 class Stylesheet < TextFile
   self.file_type = :stylesheet
+  self.content_type = 'text/css'
   self.valid_extensions = %w(.css)
 end
 
 class Template < TextFile
   self.file_type = :template
+  self.content_type = 'text/plain'
   self.valid_extensions = %w(.erb .haml .liquid .builder)
+end
+
+class HtmlFile < TextFile
+  self.file_type = :html
+  self.content_type = 'text/html'
+  self.valid_extensions = %w(.html)
 end
