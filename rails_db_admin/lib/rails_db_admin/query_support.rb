@@ -24,17 +24,17 @@ module RailsDbAdmin
 	    
 	    return columns, values, nil
 	  end
-	  
-	  def select_top_fifty(table)
+
+    def select_top_fifty(table)
       #Actually, sanitizing here is pretty redundent since it's a constant...
-	    query = "SELECT * FROM #{table} LIMIT #{@connection.sanitize_limit(50)}"
-	    
-	    rows = @connection.select_all(query)
-	    records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
-	    
-	    return query, records
-	  end
-	  
+      query = "SELECT * FROM #{table} LIMIT #{@connection.sanitize_limit(50)}"
+
+      rows = @connection.select_all(query)
+      records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
+
+      return query, records
+    end
+
 	  def get_saved_query_names(database_connection_name)
 	    path = "#{@query_location}#{database_connection_name}/"
 	    

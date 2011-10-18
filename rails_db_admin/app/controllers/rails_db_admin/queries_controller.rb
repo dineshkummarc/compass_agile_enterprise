@@ -84,8 +84,8 @@ module RailsDbAdmin
 		
       render :json => {:success => true, :sql => sql, :columns => build_grid_columns(table), :fields => build_store_fields(table), :data => results}
 	  end
-	  
-	  def execute_query
+
+    def execute_query
       sql = params[:sql]
       selection = params[:selected_sql]
       sql = sql.rstrip

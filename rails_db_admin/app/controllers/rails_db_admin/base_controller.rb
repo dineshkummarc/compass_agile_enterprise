@@ -28,33 +28,33 @@ module RailsDbAdmin
 		render :json => tables_hash
 	  end
 
-	  def setup_table_grid
-	    result = {:success => true}
-		table = params[:table]
+    def setup_table_grid
+      result = {:success => true}
+      table = params[:table]
 
-		if @table_support.table_contains_column(table, :id)
-		  result[:columns] = build_grid_columns(table)
-		  result[:model] = table
-		  result[:fields] = build_store_fields(table)
-		  result[:validations] = []
-		else
-		  result[:success] = false
-		end
-		
-		render :json => result
-	  end
+      if @table_support.table_contains_column(table, :id)
+        result[:columns] = build_grid_columns(table)
+        result[:model] = table
+        result[:fields] = build_store_fields(table)
+        result[:validations] = []
+      else
+        result[:success] = false
+      end
 
-	  def table_data
-		render :json => if request.get?
-		  get_table_data
-		elsif request.post?
-		  create_table_row
-		elsif request.put?
-		  update_table_data
-		elsif request.delete?
-		  delete_table_row
-		end
-	  end
+      render :json => result
+    end
+
+    def table_data
+      render :json => if request.get?
+        get_table_data
+      elsif request.post?
+        create_table_row
+      elsif request.put?
+        update_table_data
+      elsif request.delete?
+        delete_table_row
+      end
+    end
 
 	  private
 
@@ -84,16 +84,16 @@ module RailsDbAdmin
 		{:success => true, :data => record}
 	  end
 
-	  def update_table_data
-		table = params[:table]
-		id = params[:data]['id']
-		params[:data].delete('id')
+    def update_table_data
+      table = params[:table]
+      id = params[:data]['id']
+      params[:data].delete('id')
 
-		@table_support.update_table(table, id, params[:data])
-		record = @json_data_builder.get_row_data(table, id)
-		
-		{:success => true, :data => record}
-	  end
+      @table_support.update_table(table, id, params[:data])
+      record = @json_data_builder.get_row_data(table, id)
+
+      {:success => true, :data => record}
+    end
 
 	  def delete_table_row
 		table = params[:table]
