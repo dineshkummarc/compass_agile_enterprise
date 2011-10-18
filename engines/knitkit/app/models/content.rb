@@ -1,4 +1,6 @@
 class Content < ActiveRecord::Base
+  default_scope :order => "#{self.table_name}.created_at DESC"
+  
   acts_as_taggable
   acts_as_commentable
   acts_as_versioned

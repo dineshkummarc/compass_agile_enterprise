@@ -1,7 +1,4 @@
 class Article < Content
-  
-  default_scope :order => "#{self.table_name}.created_at DESC"
-
   has_permalink :title
 
   before_save :check_internal_indentifier

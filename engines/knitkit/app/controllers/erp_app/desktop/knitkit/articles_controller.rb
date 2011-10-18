@@ -99,7 +99,7 @@ class ErpApp::Desktop::Knitkit::ArticlesController < ErpApp::Desktop::Knitkit::B
     articles = Article.find(:all,
       :joins => "INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id",
       :conditions => "website_section_id = #{website_section_id}",
-      :order => "#{sort} #{dir}",
+      :order => "contents.#{sort} #{dir}",
       :limit => limit,
       :offset => start)
 
