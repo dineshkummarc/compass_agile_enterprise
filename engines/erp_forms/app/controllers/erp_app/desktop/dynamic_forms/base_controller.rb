@@ -5,7 +5,7 @@ class ErpApp::Desktop::DynamicForms::BaseController < ErpApp::Desktop::BaseContr
   def build_section_hash(website_section, website)
     website_section_hash = {
       :text => website_section.title,
-      :siteName => website.title,
+      :siteName => website.name,
       :siteId => website.id,
       :type => website_section.type,
       :isSecured => !website_section.roles.empty?,

@@ -86,7 +86,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
       },
       fields: [
       {
-        name:'title'
+        name:'name'
       },
       {
         name:'id'
@@ -234,7 +234,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                   emptyText:'Select Site...',
                   typeAhead: false,
                   mode: 'remote',
-                  displayField:'title',
+                  displayField:'name',
                   valueField:'id',
                   triggerAction: 'all',
                   allowBlank:false

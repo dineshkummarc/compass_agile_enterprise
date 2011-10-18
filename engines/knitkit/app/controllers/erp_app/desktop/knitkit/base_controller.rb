@@ -8,7 +8,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
 
     websites.each do |website|
       website_hash = {
-        :text => website.title,
+        :text => website.name,
         :iconCls => 'icon-globe_disconnected',
         :id => "website_#{website.id}",
         :leaf => false,
@@ -18,7 +18,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
         :subtitle => website.subtitle,
         :isWebsite => true,
         :email => website.email,
-        :siteName => website.title,
+        :siteName => website.name,
         :emailInquiries =>  website.email_inquiries?,
         :autoActivatePublication => website.auto_activate_publication?,
         :children => []
@@ -110,7 +110,7 @@ class ErpApp::Desktop::Knitkit::BaseController < ErpApp::Desktop::BaseController
   def build_section_hash(website_section, website)
     website_section_hash = {
       :text => website_section.title,
-      :siteName => website.title,
+      :siteName => website.name,
       :siteId => website.id,
       :type => website_section.type,
       :isSecured => !website_section.roles.empty?,

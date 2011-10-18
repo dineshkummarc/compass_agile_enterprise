@@ -223,7 +223,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     sites = Website.all
     sites.each do |site|
       site_hash = {
-        :text => site.title,
+        :text => site.name,
         :browseable => true,
         :contextMenuDisabled => true,
         :iconCls => 'icon-globe',
