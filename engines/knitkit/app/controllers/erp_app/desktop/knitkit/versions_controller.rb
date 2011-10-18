@@ -30,16 +30,14 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
       
       def publisher
         if published
-          published_element = PublishedElement.find_by_published_element_record_type_and_published_element_record_id('Content', self.content_id)
-          published_element.published_by_username
+          PublishedElement.find_by_published_element_record_type_and_published_element_record_id('Content', self.content_id).published_by_username
         end
       end
     end
 
     render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(
-    :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at],
-    # :include => {:published_by => {:only => [:name]}},
-    :methods => [:active, :published, :publisher])}}"
+                        :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at],
+                        :methods => [:active, :published, :publisher])}}"
   end
 
   def non_published_content_versions
@@ -54,7 +52,8 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
     versions = content.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
 
-    render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :body_html, :excerpt_html, :created_at])}}"
+    render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(
+                        :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at])}}"
   end
 
   def publish_content
@@ -108,13 +107,14 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
 
       def publisher
         if published
-          published_element = PublishedElement.find_by_published_element_record_type_and_published_element_record_id('WebsiteSection', self.website_section_id)
-          published_element.published_by_username
+          PublishedElement.find_by_published_element_record_type_and_published_element_record_id('WebsiteSection', self.website_section_id).published_by_username
         end
       end
     end
 
-    render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :created_at], :methods => [:active, :published, :publisher])}}"
+    render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(
+                        :only => [:id, :version, :title, :created_at], 
+                        :methods => [:active, :published, :publisher])}}"
   end
 
   def get_website_section_version

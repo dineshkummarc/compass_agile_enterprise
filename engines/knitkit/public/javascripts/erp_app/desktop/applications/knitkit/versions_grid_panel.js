@@ -245,12 +245,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel
                 },
                 {
                     name:'publisher'
-                // mapping: 'published.published_by.name'
                 }
                 ]
             })
         }, config);
-        console.log(config)
 
         Compass.ErpApp.Desktop.Applications.Knitkit.VersionsArticleGridPanel.superclass.constructor.call(this, config);
     }
