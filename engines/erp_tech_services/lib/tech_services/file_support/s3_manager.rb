@@ -141,7 +141,7 @@ module TechServices
           result = true
         else
           message = "Folder is not empty"
-        end
+        endend unless node.nil?
         TechServices::FileSupport::S3Manager.reload
 
         return result, message, is_directory
