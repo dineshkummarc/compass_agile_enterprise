@@ -284,7 +284,7 @@ class Website < ActiveRecord::Base
             website.website_navs << website_nav
           end
 
-          website.publish("Website Imported")
+          website.publish("Website Imported", current_user)
 
         rescue Exception=>ex
           website.destroy unless website.nil?

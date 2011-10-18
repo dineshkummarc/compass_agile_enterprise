@@ -81,7 +81,7 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
   def save_layout
     @website_section.layout = params[:content]
     
-    if @website_section.save
+    if @website_section.save!
       render :inline => {:success => true}.to_json
     else
       render :inline => {:success => false}.to_json

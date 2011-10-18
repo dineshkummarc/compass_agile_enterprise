@@ -19,26 +19,27 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
       def active
         published_site_id = @@website.active_publication.id
         !PublishedElement.find(:first,
-          :include => [:published_website, :published_by],
+          :include => [:published_website],
           :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version]).nil?
       end
 
       def published
         !PublishedElement.find(:first,
-          :include => :published_by,
           :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.content_id, 'Content', self.version]).nil?
       end
       
       def publisher
-        published_element = PublishedElement.find_by_published_element_record_type_and_published_element_record_id('Content', self.content.id)
-        published_element.published_by.name if published_element && published_element.published_by
+        if published
+          published_element = PublishedElement.find_by_published_element_record_type_and_published_element_record_id('Content', self.content_id)
+          published_element.published_by_username
+        end
       end
     end
 
     render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(
-                        :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at], 
-                        # :include => {:published_by => {:only => [:name]}},
-                        :methods => [:active, :published, :publisher])}}"
+    :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at],
+    # :include => {:published_by => {:only => [:name]}},
+    :methods => [:active, :published, :publisher])}}"
   end
 
   def non_published_content_versions
@@ -104,9 +105,16 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
         !PublishedElement.find(:first,
           :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version]).nil?
       end
+
+      def publisher
+        if published
+          published_element = PublishedElement.find_by_published_element_record_type_and_published_element_record_id('WebsiteSection', self.website_section_id)
+          published_element.published_by_username
+        end
+      end
     end
 
-    render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :created_at], :methods => [:active, :published])}}"
+    render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :created_at], :methods => [:active, :published, :publisher])}}"
   end
 
   def get_website_section_version
@@ -119,7 +127,7 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     version = params[:version]
     comment = params[:comment]
 
-    website_section.publish(website, comment, version)
+    website_section.publish(website, comment, version, current_user)
 
     render :inline => {:success => true}.to_json
   end

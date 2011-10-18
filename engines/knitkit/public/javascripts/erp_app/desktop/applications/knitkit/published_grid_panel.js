@@ -65,7 +65,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
                     type:'json',
                     root:'data'
                 },
-                extraParams:{id:config['siteId']}
+                extraParams:{
+                    id:config['siteId']
+                    }
             },
             idProperty: 'id',
             remoteSort: true,
@@ -81,10 +83,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
                 name:'created_at',
                 type: 'date'
             },
-			{
-				name:'published_by',
-				mapping: 'published_by.name'
-			},
+            {
+                name:'published_by_username'
+            },
             {
                 name:'comment'
             },
@@ -103,7 +104,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
                 }
             }
         });
-console.log(store);
+        
         config = Ext.apply({
             store:store,
             columns: [
@@ -120,12 +121,12 @@ console.log(store);
                 renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
                 dataIndex: 'created_at'
             },
-			{
-				header: "Published By",
-				width: 130,
-				sortable:true,
-				dataIndex: 'published_by'
-			},
+            {
+                header: "Published By",
+                width: 130,
+                sortable:true,
+                dataIndex: 'published_by_username'
+            },
             {
                 menuDisabled:true,
                 resizable:false,

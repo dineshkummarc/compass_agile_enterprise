@@ -3,6 +3,10 @@ class PublishedWebsite < ActiveRecord::Base
   belongs_to :published_by, :class_name => "User"
   has_many   :published_elements, :dependent => :destroy
 
+  def published_by_username
+    self.published_by.login rescue ''
+  end
+
   def self.activate(website, version, current_user)
     published_websites = self.find(:all, :conditions => ['website_id = ?', website.id])
     published_websites.each do |published_website|
@@ -58,7 +62,7 @@ class PublishedWebsite < ActiveRecord::Base
 
     #check if we want to auto active this publication
     if new_publication.website.auto_activate_publication?
-      PublishedWebsite.activate(new_publication.website, new_publication.version)
+      PublishedWebsite.activate(new_publication.website, new_publication.version, current_user)
     end
   end
 
@@ -83,7 +87,7 @@ class PublishedWebsite < ActiveRecord::Base
 
     #check if we want to auto active this publication
     if new_publication.website.auto_activate_publication?
-      PublishedWebsite.activate(new_publication.website, new_publication.version)
+      PublishedWebsite.activate(new_publication.website, new_publication.version, current_user)
     end
   end
 

@@ -38,8 +38,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
                         \"totalCount\":#{@website.published_websites.count}, 
                         \"data\":#{published_websites.to_json(
                         :only => [:comment, :id, :version, :created_at, :active], 
-                        :include => {:published_by => {:only => [:name]}}, 
-                        :methods => [:viewing])} }"
+                        :methods => [:viewing, :published_by_username])} }"
   end
 
   def activate_publication
@@ -61,7 +60,7 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
   end
 
   def publish
-    @website.publish(params[:comment])
+    @website.publish(params[:comment], current_user)
 
     render :inline => {:success => true}.to_json
   end
@@ -100,11 +99,16 @@ class ErpApp::Desktop::Knitkit::WebsiteController < ErpApp::Desktop::Knitkit::Ba
     end
 
     if website.save
-      website.hosts << WebsiteHost.create(:host => params[:host])      
+      #set default publication published by user
+      first_publication = website.published_websites.first
+      first_publication.published_by = current_user
+      first_publication.save
+
+      website.hosts << WebsiteHost.create(:host => params[:host])
       website.save
 
-      website.publish("Publish Default Sections")
-      PublishedWebsite.activate(website, 1)
+      website.publish("Publish Default Sections", current_user)
+      PublishedWebsite.activate(website, 1, current_user)
       
       result[:success] = true
     else
