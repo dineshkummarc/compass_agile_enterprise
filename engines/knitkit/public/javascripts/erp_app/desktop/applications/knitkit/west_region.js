@@ -661,7 +661,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                 }
               });
             }
-
             items.push({
               text:'Add Section',
               iconCls:'icon-add',
@@ -731,6 +730,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
                         xtype:'hidden',
                         name:'website_section_id',
                         value:record.data.id.split('_')[1]
+                      },
+                      {
+                        xtype:'hidden',
+                        name:'websiteId',
+                        value:record.data.siteId
                       }
                       ]
                     }),

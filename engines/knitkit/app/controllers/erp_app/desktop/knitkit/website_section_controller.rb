@@ -20,13 +20,15 @@ class ErpApp::Desktop::Knitkit::WebsiteSectionController < ErpApp::Desktop::Knit
       website_section.in_menu = params[:in_menu] == 'yes'
       
       if website_section.save
-        unless params[:websiteId].blank?
+        unless params[:website_section_id]
           website = Website.find(params[:websiteId])
           website.website_sections << website_section
           website.save
         else
           parent_website_section = WebsiteSection.find(params[:website_section_id])
           website_section.move_to_child_of(parent_website_section)
+          # Setting website_id so website_section children also get delete with website delete.
+          website_section.website_id = params[:websiteId]
           parent_website_section.save
           website_section.save
           website_section.update_path!
