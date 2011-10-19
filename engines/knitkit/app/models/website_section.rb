@@ -14,7 +14,7 @@ class WebsiteSection < ActiveRecord::Base
   
   validates_presence_of :title
   validates_uniqueness_of :permalink, :scope => [:website_id, :parent_id]
-  validates_uniqueness_of :internal_identifier
+  validates_uniqueness_of :internal_identifier, :scope => :website_id
 
   after_create :update_paths
   before_save  :update_path, :check_internal_indentifier
