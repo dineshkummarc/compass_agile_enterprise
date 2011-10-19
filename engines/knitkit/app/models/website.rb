@@ -17,7 +17,7 @@ class Website < ActiveRecord::Base
     end
 
     def positioned
-      find(:all, :order => 'position')
+      find(:all, :conditions => 'parent_id is null', :order => 'position')
     end
     
     def update_paths!
