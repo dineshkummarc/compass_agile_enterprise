@@ -241,7 +241,7 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
         else
           theme_hash[:iconCls] = 'icon-delete'
         end
-        ['stylesheets', 'javascripts', 'images', 'templates'].each do |resource_folder|
+        ['stylesheets', 'javascripts', 'images', 'templates', 'widgets'].each do |resource_folder|
           theme_hash[:children] << {:text => resource_folder, :leaf => false, :id => "/#{theme.url}/#{resource_folder}"}
         end
         themes_hash[:children] << theme_hash

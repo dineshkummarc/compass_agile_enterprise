@@ -99,7 +99,7 @@ class Theme < ActiveRecord::Base
           data = ''
           entry.get_input_stream { |io| data = io.read }
           data = StringIO.new(data) if data.present?
-          theme_file = self.files.find(:first, :conditions => ["name = ?", ::File.basename(name)])
+          theme_file = self.files.find(:first, :conditions => ["name = ? and directory = ?", File.basename(name), File.join("",self.url,File.dirname(name))])
           unless theme_file.nil?
             theme_file.data = data
             theme_file.save

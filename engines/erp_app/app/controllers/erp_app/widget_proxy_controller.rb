@@ -1,4 +1,6 @@
 class ErpApp::WidgetProxyController < ErpApp::ApplicationController
+  before_filter :set_website
+
   attr_accessor :performed_redirect
 
   def index
@@ -33,6 +35,19 @@ class ErpApp::WidgetProxyController < ErpApp::ApplicationController
 
   def authenticated?
     authorized?
+  end
+
+  protected
+  def set_website
+    @website = Website.find_by_host(request.host_with_port)
+  end
+
+  def current_themes
+    @website.themes.active if @website
+  end
+
+  def current_theme_paths
+    current_themes ? current_themes.map { |theme| {:path => theme.path.to_s, :url => theme.url.to_s}} : []
   end
    
 end

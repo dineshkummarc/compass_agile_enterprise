@@ -43,6 +43,7 @@ module TechServices
         end
 
         path.sub!(self.root,'') if parent[:id].scan(self.root).empty?
+        path = File.join(self.root, path) if !parent[:id].scan(self.root).empty? and path.scan(self.root).empty?
 
         parent = [] if parent[:id] != path
         parent

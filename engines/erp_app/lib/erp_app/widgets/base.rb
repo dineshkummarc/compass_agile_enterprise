@@ -45,7 +45,7 @@ module ErpApp
       class_inheritable_accessor :default_template_format
       self.default_template_format = :html
 
-      delegate :params, :session, :request, :logger, :authenticated?, :current_user, :to => :controller
+      delegate :params, :session, :request, :logger, :authenticated?, :current_user, :current_theme_paths, :to => :controller
 
       attr_accessor :controller
       attr_reader   :state_name
@@ -62,8 +62,20 @@ module ErpApp
       end
 
       def setup_action_view
-        view_class  = Class.new(ErpApp::Widgets::View)
         view_paths = ActionView::PathSet.new
+        current_theme_paths.each do |theme|
+          file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
+          case TechServices::FileSupport.options[:storage]
+          when :s3
+            TechServices::FileSupport::S3Manager.reload
+            path = "/#{theme[:url]}/widgets/#{self.name}"
+          when :filesystem
+            path = "#{theme[:path]}/widgets/#{self.name}" 
+          end
+          view_paths << path if file_support.exists?(path)
+        end
+
+        view_class  = Class.new(ErpApp::Widgets::View)
         #get the view path based on the location of the class being executed
         view_paths << File.join(self.locate, 'views')
         action_view = view_class.new(view_paths, {}, @controller)
@@ -131,7 +143,7 @@ module ErpApp
         widgets = Dir.entries(File.join(Rails.root,"/vendor/plugins/knitkit/lib/erp_app/widgets/"))
         widgets.delete('.')
         widgets.delete('..')
-        widgets      
+        widgets
       end
 
       protected
