@@ -1,3 +1,11 @@
+Ext.override(Ext.data.Store, {
+  setExtraParam: function (name, value){
+    this.proxy.extraParams = this.proxy.extraParams || {};
+    this.proxy.extraParams[name] = value;
+    this.proxy.applyEncoding(this.proxy.extraParams);
+  }
+});
+
 Ext.ns("Compass.ErpApp.Utility.Data");
 
 Compass.ErpApp.Utility.promptReload = function(){
