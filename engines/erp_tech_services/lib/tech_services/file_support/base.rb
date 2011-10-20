@@ -1,7 +1,7 @@
 module TechServices
   module FileSupport
     DEFAULT_OPTIONS = {
-      :knitkit_storage => :filesystem
+      :storage => :filesystem
     }
       
     mattr_accessor :options

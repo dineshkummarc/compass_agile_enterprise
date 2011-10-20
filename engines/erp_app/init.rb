@@ -7,7 +7,7 @@ require 'erp_app/setup/data'
 require 'erp_app/widgets.rb'
 
 #add the observers path to load_paths
-ActiveSupport::Dependencies.autoload_paths << "#{File.dirname(__FILE__)}/app/observers"
+ActiveSupport::Dependencies.load_once_paths << "#{File.dirname(__FILE__)}/app/observers"
 
 #remove this plugin for the load once paths
 ActiveSupport::Dependencies.load_once_paths -= ActiveSupport::Dependencies.load_once_paths.select{|path| path =~ %r(^#{File.dirname(__FILE__)}) }
