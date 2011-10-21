@@ -57,4 +57,26 @@ describe RailsDbAdmin::QueriesController do
       parsed_body["success"].should eq(true)
     end
   end
+
+  describe "POST select_top_fifty" do
+
+
+    it "should return true, a sql statement, grid columns & fields, and data" do
+
+      post :queries, {:use_route => :rails_db_admin,
+                      :action => "select_top_fifty",
+                      :table => "role_types"}
+
+      expected_sql = "SELECT * FROM role_types LIMIT 50"
+
+      expected_column = {"header"=>"id", "type"=>"number",
+                         "dataIndex"=>"id", "width"=>150}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body["sql"].should eq(expected_sql)
+      parsed_body["columns"][0].should include(expected_column)
+      parsed_body["fields"][0].should include({"name"=>"id"})
+    end
+  end
 end

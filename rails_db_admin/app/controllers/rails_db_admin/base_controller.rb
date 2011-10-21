@@ -31,23 +31,23 @@ module RailsDbAdmin
     def setup_table_grid
       result = {:success => true}
       table = params[:table]
+      columns = @database_connection_class.connection.columns(table)
+
 
       if @table_support.table_contains_column(table, :id)
-        result[:columns] = build_grid_columns(table)
+        result[:columns] =
+          RailsDbAdmin::Extjs::JsonColumnBuilder.build_grid_columns(columns)
         result[:model] = table
-        result[:fields] = build_store_fields(table)
+        result[:fields] =
+          RailsDbAdmin::Extjs::JsonColumnBuilder.build_store_fields(columns)
         result[:validations] = []
         result[:id_property] = "id"
       else
-        #TODO: Refactor this to make the controller skinnier
-        result[:columns] = build_grid_columns(table)
-        result[:columns] << {:header => "fake_id",
-                             :type => "number",
-                             :dataIndex => "fake_id",
-                             :hidden => true}
+        result[:columns] =
+          RailsDbAdmin::Extjs::JsonColumnBuilder.build_grid_columns(columns, true)
         result[:model] = table
-        result[:fields] = build_store_fields(table)
-        result[:fields] << {:name =>"fake_id"}
+        result[:fields] =
+          RailsDbAdmin::Extjs::JsonColumnBuilder.build_store_fields(columns, true)
         result[:validations] = []
         result[:id_property] = "fake_id"
       end
@@ -121,17 +121,6 @@ module RailsDbAdmin
 		{:success => true, :data => []}
 	  end
 
-	  def build_grid_columns(table)
-		@database_connection_class.connection.columns(table).collect do |column|
-		  RailsDbAdmin::Extjs::JsonColumnBuilder.build_column_from_column_obj(column)
-		end
-	  end
-
-	  def build_store_fields(table)
-		@database_connection_class.connection.columns(table).collect do |column|
-		  {:name => column.name}
-		end
-	  end
 
 	  def build_table_tree(table)
 		columns = @database_connection_class.connection.columns(table[:name])
