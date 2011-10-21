@@ -10,6 +10,7 @@ module RailsDbAdmin
 	
 	    sql = "update #{table} set "
 	
+      #TODO: Should make sure all values are strings, otherwise gsub could fail here
 	    data.each do |k,v|
 	      columns.each do |column|
 	        if column.name == k
@@ -28,6 +29,62 @@ module RailsDbAdmin
 	    
 	    @connection.execute(sql)
 	  end
+
+    def update_table_without_id(table, data)
+      columns = @connection.columns(table)
+      sql = "UPDATE #{table} SET"
+
+
+      #makes all values strings
+      data.map! do |item|
+        item.each do |k,v|
+          item[k] = v.to_s
+        end
+        item
+      end
+
+      changed_values = data[0].diff(data[1])
+
+      changed_values.each do |k,v|
+        columns.each do |column|
+          if column.name == k
+            sql << if column.type == :string or column.type == :text
+              " #{k} = '#{v.gsub("'","''")}',"
+            else
+              (v.blank? ? " #{k} = null," : " #{k} = '#{v.gsub("'","''")}',")
+            end
+          end
+        end
+      end
+
+      sql = sql[0..sql.length - 2]
+
+
+      sql << RailsDbAdmin::TableSupport.build_where_clause(data[1], columns)
+
+      @connection.execute(sql)
+    end
+
+    def self.build_where_clause(row_hash, columns)
+
+      where_sql = " WHERE 1=1 "
+
+      #now build the WHERE clause
+      row_hash.each do |k,v|
+        columns.each do |column|
+          if column.name == k
+            where_sql << "AND"
+            where_sql << if column.type == :string or column.type == :text
+              " #{k} = '#{v.gsub("'","''")}' "
+            else
+              (v.blank? ? " #{k} IS NULL " : " #{k} = '#{v.gsub("'","''")}' ")
+            end
+          end
+        end
+      end
+
+      where_sql
+    end
 	
 	  def delete_row(table, id)
 	    sql = "delete from #{table} where id = #{id}"
@@ -94,5 +151,19 @@ module RailsDbAdmin
 	
 	    records.reverse
 	  end
-	end
+
+    #Accepts an array of table row hashes and adds a 'fake_id'
+    #field to each one with a generated number.  Useful
+    #for prepraring many-to-many data to be edited in ExtJS
+    #grids
+    def self.add_fake_id_col(rows_hash)
+
+      nums = (1..(rows_hash.length)).to_a
+      result = rows_hash.map do |item|
+        item[:fake_id] = nums.shift
+        item
+      end
+      return result
+    end
+  end
 end

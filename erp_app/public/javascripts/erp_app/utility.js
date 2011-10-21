@@ -64,7 +64,7 @@ Compass.ErpApp.Utility.numbersOnly = function(e, decimal) {
         return false;
 };
 
-
+//FIXME: This is broken; missing the Ext.ux.util.clone file
 Compass.ErpApp.Utility.clone = function(o) {
     if(!o || 'object' !== typeof o) {
         return o;

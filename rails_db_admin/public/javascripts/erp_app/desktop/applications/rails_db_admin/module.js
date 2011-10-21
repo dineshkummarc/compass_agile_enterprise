@@ -30,7 +30,50 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
             closable:true,
             params:{
                 database:database
-            }
+            },
+            grid_listeners:{
+                validateedit:{
+                    fn:function(editor,e) {
+                        this.store.proxy.setOldModel(e.record);
+                    }
+                }
+            },
+            proxy:{
+               type: 'rest',
+               url:'/rails_db_admin/base/table_data/' + table,
+               //private var to store the previous model in an
+               //update operation
+               oldModel: null,
+               setOldModel: function(old_model) {
+                   this.oldModel = old_model.copy();
+               },
+               update: function(operation, callback, scope){
+                   operation.records.push(this.oldModel);
+                   //[CB:2011-Oct] this.callParent wasn't working, so did the old (explicit) way
+                   Ext.data.proxy.Rest.superclass.update.call(this, operation,callback,scope);
+               },
+               reader: {
+                   type: 'json',
+                   successProperty: 'success',
+                   root: 'data',
+                   messageProperty: 'message'
+               },
+               writer: {
+                   type: 'json',
+                   writeAllFields:true,
+                   root: 'data'
+               },
+               listeners: {
+                   exception: function(proxy, response, operation){
+                       Ext.MessageBox.show({
+                           title: 'REMOTE EXCEPTION',
+                           msg: operation.getError(),
+                           icon: Ext.MessageBox.ERROR,
+                           buttons: Ext.Msg.OK
+                       });
+                   }
+               }
+           }
         });
 
         this.container.add(grid);

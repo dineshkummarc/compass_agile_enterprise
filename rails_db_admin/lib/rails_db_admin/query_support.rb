@@ -2,6 +2,7 @@ module RailsDbAdmin
 	class QuerySupport
 	  def initialize(database_connection_class)
 	   @connection = database_connection_class.connection
+     #TODO: This needs to be initalized as a constant
 	   @query_location = "#{Rails.root}/public/rails_db_admin/queries/"
 	  end
 	

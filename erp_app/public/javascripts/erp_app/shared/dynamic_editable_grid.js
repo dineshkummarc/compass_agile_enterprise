@@ -3,36 +3,44 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
     alias:'widget.shared_dynamiceditablegrid',
     initComponent: function() {
         var config = this.initialConfig;
+        //set a default proxy if none provided
+        if (config.proxy === undefined ||
+            config.proxy === null)
+        {
+           config.proxy =  {
+               type: 'rest',
+               url:config.url,
+               reader: {
+                   type: 'json',
+                   successProperty: 'success',
+                   root: 'data',
+                   messageProperty: 'message'
+               },
+               writer: {
+                   type: 'json',
+                   writeAllFields:true,
+                   root: 'data'
+               },
+               listeners: {
+                   exception: function(proxy, response, operation){
+                       Ext.MessageBox.show({
+                           title: 'REMOTE EXCEPTION',
+                           msg: operation.getError(),
+                           icon: Ext.MessageBox.ERROR,
+                           buttons: Ext.Msg.OK
+                       });
+                   }
+               }
+           };
+        }
+
         var store = Ext.create('Ext.data.Store', {
+            model: ((config.editable) ? config.model : undefined),
             fields:config['fields'],
             autoLoad: true,
             autoSync: true,
             pageSize: config['pageSize'],
-            proxy: {
-                type: 'rest',
-                url:config.url,
-                reader: {
-                    type: 'json',
-                    successProperty: 'success',
-                    root: 'data',
-                    messageProperty: 'message'
-                },
-                writer: {
-                    type: 'json',
-                    writeAllFields:true,
-                    root: 'data'
-                },
-                listeners: {
-                    exception: function(proxy, response, operation){
-                        Ext.MessageBox.show({
-                            title: 'REMOTE EXCEPTION',
-                            msg: operation.getError(),
-                            icon: Ext.MessageBox.ERROR,
-                            buttons: Ext.Msg.OK
-                        });
-                    }
-                }
-            }
+            proxy: config.proxy
         });
 
         this.store = store;
@@ -55,12 +63,13 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
         });
 
         var plugins = [];
-        var tbar = {}
+        var tbar = {};
         if(config['editable']){
             var Model = Ext.define(config.model,{
                 extend:'Ext.data.Model',
                 fields:config.fields,
-                validations:config.validations
+                validations:config.validations,
+                idProperty: ((config.id_property != undefined) ? config.id_property : "id")
             });
             plugins.push(this.editing);
             tbar = {

@@ -37,8 +37,19 @@ module RailsDbAdmin
         result[:model] = table
         result[:fields] = build_store_fields(table)
         result[:validations] = []
+        result[:id_property] = "id"
       else
-        result[:success] = false
+        #TODO: Refactor this to make the controller skinnier
+        result[:columns] = build_grid_columns(table)
+        result[:columns] << {:header => "fake_id",
+                             :type => "number",
+                             :dataIndex => "fake_id",
+                             :hidden => true}
+        result[:model] = table
+        result[:fields] = build_store_fields(table)
+        result[:fields] << {:name =>"fake_id"}
+        result[:validations] = []
+        result[:id_property] = "fake_id"
       end
 
       render :json => result
@@ -56,23 +67,23 @@ module RailsDbAdmin
       end
     end
 
-	  private
+    private
 
-	  def get_table_data
-		start = params[:start] || 0
-		limit = params[:limit] || 30
-		table = params[:table]
+    def get_table_data
+      start = params[:start] || 0
+      limit = params[:limit] || 30
+      table = params[:table]
 
-		order = nil
-		
-		if @table_support.table_contains_column(table, :id)
-		  order = 'id desc'
-		elsif @table_support.table_contains_column(table, :created_at)
-		  order = 'created_at desc'
-		end
-		
-		@json_data_builder.build_json_data(:table => table, :limit => limit, :offset => start, :order => order)
-	  end
+      order = nil
+
+      if @table_support.table_contains_column(table, :id)
+        order = 'id desc'
+      elsif @table_support.table_contains_column(table, :created_at)
+        order = 'created_at desc'
+      end
+
+      @json_data_builder.build_json_data(:table => table, :limit => limit, :offset => start, :order => order)
+    end
 
 	  def create_table_row
 		table = params[:table]
@@ -86,11 +97,17 @@ module RailsDbAdmin
 
     def update_table_data
       table = params[:table]
-      id = params[:data]['id']
-      params[:data].delete('id')
+      id = params[:data][0]['id']
 
-      @table_support.update_table(table, id, params[:data])
-      record = @json_data_builder.get_row_data(table, id)
+      if id != nil
+        params[:data][0].delete('id')
+
+        @table_support.update_table(table, id, params[:data][0])
+        record = @json_data_builder.get_row_data(table, id)
+      else
+        @table_support.update_table_without_id(table, params[:data])
+        record = @json_data_builder.get_row_data_no_id(table, params[:data][0])
+      end
 
       {:success => true, :data => record}
     end

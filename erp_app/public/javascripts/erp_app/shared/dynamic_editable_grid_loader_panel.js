@@ -23,14 +23,18 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel",{
                         columns:response.columns,
                         fields:response.fields,
                         model:response.model,
-                        validations:response.validations
+                        id_property: response.id_property,
+                        validations:response.validations,
+                        proxy:config.proxy,
+                        listeners: config.grid_listeners
                     });
                     self.getLayout().setActiveItem(0);
+
                 }
                 else{
-                    var message = response.message
+                    var message = response.message;
                     if(Compass.ErpApp.Utility.isBlank(message)){
-                        message = config['loadErrorMessage']
+                        message = config['loadErrorMessage'];
                     }
                     Ext.Msg.alert('Error', message);
                 }
