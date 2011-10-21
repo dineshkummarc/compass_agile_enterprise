@@ -14,11 +14,12 @@ module RailsDbAdmin
         total_count = self.get_total_count(options[:table])
 
         if options[:limit] && options[:offset] && options[:order]
-          query = @connection.add_limit_offset!("SELECT * FROM #{options[:table]} order by #{options[:order]}", {:limit => options[:limit], :offset => options[:offset], :order => options[:order]})
+          limit = @connection.sanitize_limit(options[:limit])
+          query = "SELECT * FROM #{options[:table]} order by #{options[:order]} LIMIT #{limit} OFFSET #{options[:offset].to_i}"
         elsif options[:limit] && options[:order]
-          query = @connection.add_limit_offset!("SELECT * FROM #{options[:table]} order by #{options[:order]}", {:limit => options[:limit], :order => options[:order]})
+          query = "SELECT * FROM #{options[:table]} order by #{options[:order]} LIMIT #{@connection.sanitize_limit(options[:limit])}"
         elsif options[:limit] && !options[:order]
-          query = @connection.add_limit_offset!("SELECT * FROM #{options[:table]}", {:limit => options[:limit]})
+          query = "SELECT * FROM #{options[:table]} LIMIT #{@connection.sanitize_limit(options[:limit])}"
         elsif !options[:limit] && options[:order]
           query = "SELECT * FROM #{options[:table]} order by #{options[:order]}"
         else

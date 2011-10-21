@@ -95,6 +95,7 @@ describe RailsDbAdmin::BaseController do
   describe "GET table_data" do
 
     it "should return JSON to display in an ExtJS data grid for Rails tables with an Id column" do
+
       get :base, {:use_route => :rails_db_admin,
                   :action => "table_data",
                   :table => "role_types"}
@@ -104,6 +105,7 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should return 1 row because start is increased by 1, but totalCount should remain 2" do
+
       get :base, {:use_route => :rails_db_admin,
                   :action => "table_data",
                   :table => "role_types",
@@ -181,6 +183,7 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should return success" do
+
       @table_support.should_receive(:update_table).with(
         "role_types", "2", @mod_role_types_data)
       @json_data_builder.should_receive(:get_row_data).with(
@@ -196,8 +199,13 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should update table data and return success even if there is not an 'id' column" do
+
       @table_support.should_receive(:update_table_without_id).with(
         "preference_options_preference_types",  [@pref_opt_types_data, @pref_opt_types_data])
+
+      @json_data_builder.should_receive(:get_row_data_no_id).with(
+        "preference_options_preference_types", @pref_opt_types_data).and_return(
+        @pref_opt_types_data)
 
       put :base, {:use_route => :rails_db_admin,
                   :action => "table_data",
