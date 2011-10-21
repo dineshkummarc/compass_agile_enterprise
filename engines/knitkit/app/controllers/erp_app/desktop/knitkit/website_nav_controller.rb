@@ -3,7 +3,7 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     result = {}
     website = Website.find(params[:website_id])
     website_nav = WebsiteNav.new(:name => params[:name])
-
+   
     if website_nav.save
       website.website_navs << website_nav
       result[:success] = true
@@ -77,6 +77,12 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
         parent.website_nav_items << website_nav_item
       else
         website_nav_item.move_to_child_of(parent)
+      end
+      
+      ## Ensures that all menu items have a website_nav_id
+      unless website_nav_item.website_nav_id
+        website_nav_item.website_nav_id = website_nav_item.parent.website_nav_id
+        website_nav_item.save
       end
 
       result[:success] = true

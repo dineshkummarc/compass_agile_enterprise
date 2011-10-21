@@ -83,6 +83,12 @@ ActionView::Base.class_eval do
       links = @website_section.self_and_ancestors.collect{|child| {:url => child.path, :title => child.title}}
     end
     links
+    
+    puts '***********************************'
+    links.each do |k|
+      puts k
+    end
+    puts '***********************************'
 
     render :partial => 'shared/bread_crumb', :locals => {:links => links}
   end
