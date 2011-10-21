@@ -220,6 +220,168 @@ describe RailsDbAdmin::BaseController do
 
   end
 
+  describe "POST table_data" do
+    before(:each) do
+      @table_support = double("RailsDbAdmin::TableSupport")
+      @json_data_builder = double("RailsDbAdmin::Extjs::JsonDataBuilder")
+
+
+      RailsDbAdmin::TableSupport.should_receive(
+        :new).and_return(@table_support)
+      RailsDbAdmin::Extjs::JsonDataBuilder.should_receive(
+        :new).and_return(@json_data_builder)
+
+    end
+
+    it "should return success and the row that was created" do
+      @role_types_data = {"id" => 3,
+                          "parent_id" => "",
+                          "lft" => "3",
+                          "rgt" => "4",
+                          "description" => "Partner-Test",
+                          "comments" => "",
+                          "internal_identifier" => "partner",
+                          "external_identifier" => "",
+                          "external_id_source" => "",
+                          "created_at" => "2011-10-11 00:54:56.137144",
+                          "updated_at" => "2011-10-11 00:54:56.137144"}
+
+      @mod_types_data = {"parent_id" => "",
+                          "lft" => "3",
+                          "rgt" => "4",
+                          "description" => "Partner-Test",
+                          "comments" => "",
+                          "internal_identifier" => "partner",
+                          "external_identifier" => "",
+                          "external_id_source" => "",
+                          "created_at" => "2011-10-11 00:54:56.137144",
+                          "updated_at" => "2011-10-11 00:54:56.137144"}
+
+      @table_support.should_receive(:insert_row).with("role_types", @mod_types_data).
+        and_return(3)
+      @json_data_builder.should_receive(:get_row_data).with("role_types",3).
+        and_return(@role_types_data)
+
+      post :base, {:use_route => :rails_db_admin,
+                  :action => "table_data",
+                  :table => "role_types",
+                  :data => @role_types_data}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body[:data].should eq(@roles_types_data)
+    end
+
+    it "should return success even with empty row hashed passed in" do
+      @role_types_data = {"id" => "",
+                          "parent_id" => "",
+                          "lft" => "",
+                          "rgt" => "",
+                          "description" => "",
+                          "comments" => "",
+                          "internal_identifier" => "",
+                          "external_identifier" => "",
+                          "external_id_source" => "",
+                          "created_at" => "",
+                          "updated_at" => ""}
+
+      @mod_types_data = {"parent_id" => "",
+                          "lft" => "",
+                          "rgt" => "",
+                          "description" => "",
+                          "comments" => "",
+                          "internal_identifier" => "",
+                          "external_identifier" => "",
+                          "external_id_source" => "",
+                          "created_at" => "",
+                          "updated_at" => ""}
+
+      @table_support.should_receive(:insert_row).with("role_types", @mod_types_data).
+        and_return(3)
+      @json_data_builder.should_receive(:get_row_data).with("role_types",3).
+        and_return(@role_types_data)
+
+      post :base, {:use_route => :rails_db_admin,
+                  :action => "table_data",
+                  :table => "role_types",
+                  :data => @role_types_data}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body[:data].should eq(@roles_types_data)
+    end
+
+    it "should return success and the inserted data, with a row with a 'fake_id'" do
+
+      @pref_opt_types_data = {"preference_type_id" => "1",
+                              "preference_option_id" => "2",
+                              "created_at" => "2011-10-11 00:54:56.137144",
+                              "updated_at" => "2011-10-11 00:54:56.137144",
+                              "fake_id" => "5"}
+
+      @mod_data = {"preference_type_id" => "1",
+                              "preference_option_id" => "2",
+                              "created_at" => "2011-10-11 00:54:56.137144",
+                              "updated_at" => "2011-10-11 00:54:56.137144"}
+
+      @final_data = {"preference_type_id" => "1",
+                              "preference_option_id" => "2",
+                              "created_at" => "2011-10-11 00:54:56.137144",
+                              "updated_at" => "2011-10-11 00:54:56.137144",
+                              "fake_id" => 300}
+
+      @table_support.should_receive(:insert_row).with("preference_options_preference_types", @mod_data, true).and_return(300)
+
+      @json_data_builder.should_receive(:get_row_data_no_id).with(
+        "preference_options_preference_types", @mod_data).and_return(
+        @pref_opt_types_data)
+
+      post :base, {:use_route => :rails_db_admin,
+                  :action => "table_data",
+                  :table => "preference_options_preference_types",
+                  :data => @pref_opt_types_data}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body["data"].should eq(@final_data)
+    end
+
+    it "should return success and the inserted data, with a row with a 'fake_id', with empty data passed in" do
+
+      @pref_opt_types_data = {"preference_type_id" => "",
+                              "preference_option_id" => "",
+                              "created_at" => "",
+                              "updated_at" => "",
+                              "fake_id" => ""}
+
+      @mod_data = {"preference_type_id" => "",
+                              "preference_option_id" => "",
+                              "created_at" => "",
+                              "updated_at" => ""}
+
+      @final_data = {"preference_type_id" => "",
+                              "preference_option_id" => "",
+                              "created_at" => "",
+                              "updated_at" => "",
+                              "fake_id" => 300}
+
+      @table_support.should_receive(:insert_row).with("preference_options_preference_types", @mod_data, true).and_return(300)
+
+      @json_data_builder.should_receive(:get_row_data_no_id).with(
+        "preference_options_preference_types", @mod_data).and_return(
+        @pref_opt_types_data)
+
+      post :base, {:use_route => :rails_db_admin,
+                  :action => "table_data",
+                  :table => "preference_options_preference_types",
+                  :data => @pref_opt_types_data}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body["data"].should eq(@final_data)
+    end
+  end
+
   after(:all) do
     RoleType.where(:internal_identifier => "execute_query_test_role").destroy_all
     RoleType.where(:internal_identifier => "execute_query_test_role_2").destroy_all

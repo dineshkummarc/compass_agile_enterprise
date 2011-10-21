@@ -85,15 +85,23 @@ module RailsDbAdmin
       @json_data_builder.build_json_data(:table => table, :limit => limit, :offset => start, :order => order)
     end
 
-	  def create_table_row
-		table = params[:table]
-		params[:data].delete('id')
+    def create_table_row
+      table = params[:table]
+      params[:data].delete('id')
+      record = nil
 
-		inserted_id = @table_support.insert_row(table, params[:data])
-		record = @json_data_builder.get_row_data(table, inserted_id)
+      if params[:data].has_key?("fake_id")
+        params[:data].delete('fake_id')
+        fake_id = @table_support.insert_row(table, params[:data],true)
+        record = @json_data_builder.get_row_data_no_id(table, params[:data])
+        record[:fake_id] = fake_id
+      else
+        inserted_id = @table_support.insert_row(table, params[:data])
+        record = @json_data_builder.get_row_data(table, inserted_id)
+      end
 
-		{:success => true, :data => record}
-	  end
+      {:success => true, :data => record}
+    end
 
     def update_table_data
       table = params[:table]

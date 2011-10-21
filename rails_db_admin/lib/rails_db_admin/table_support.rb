@@ -92,43 +92,55 @@ module RailsDbAdmin
 	    @connection.execute(sql)
 	  end
 	
-	  def insert_row(table, data)
-	    columns = @connection.columns(table)
-	
-	    sql = "insert into #{table} ("
-	
-	    columns.delete_at(0)
-	
-	    column_names = columns.map{|column| column.name}
-	    column_names = column_names.join(", ")
-	
-	    sql << column_names
-	    sql << ") values ( "
-	
-	    columns.each do |column|
-	      found = false
-	      data.each do |k,v|
-	        if column.name == k
-	          found = true
-	          sql << v.blank? ? "null," : "'#{v}',"
-	        end
-	      end
-	      sql << "null,"  unless found
-	    end
-	
-	    sql = sql[0..sql.length - 2]
-	
-	    sql << ")"
-	
-	    @connection.execute(sql)
-	    
-	    query = "select MAX(id) as max_id from #{table}"
-	
-	    rows = @connection.select_all(query)
-	    records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
-	    records[0][:max_id]
-	
-	  end
+
+    def insert_row(table, data, no_id=false)
+
+      columns = @connection.columns(table)
+
+      sql = "insert into #{table} ("
+
+      unless no_id
+        columns.delete_at(0)
+      end
+
+      column_names = columns.map{|column| column.name}
+      column_names = column_names.join(", ")
+
+      sql << column_names
+      sql << ") values ( "
+
+      columns.each do |column|
+        found = false
+        data.each do |k,v|
+          if column.name == k
+            found = true
+            sql << ((v.blank?) ? "null," : "'#{v}',")
+          end
+        end
+        sql << "null,"  unless found
+      end
+
+      sql = sql[0..sql.length - 2]
+
+      sql << ")"
+
+      @connection.execute(sql)
+
+      id = 0
+      if !no_id
+        query = "select MAX(id) as max_id from #{table}"
+
+        rows = @connection.select_all(query)
+        records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
+        id = records[0][:max_id]
+      else
+        #need to gen a random number for fake_id...
+        id = Random.rand(500-100) + 100
+      end
+
+      id
+    end
+
 	  
 	  def table_contains_column(table, column_name)
 	    columns = @connection.columns(table)

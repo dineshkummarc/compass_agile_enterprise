@@ -72,6 +72,46 @@ describe RailsDbAdmin::TableSupport do
 
   end
 
+  describe "insert_row" do
+    it "should return an id" do
+      mod_types_data = {"parent_id" => "",
+                          "lft" => "3",
+                          "rgt" => "4",
+                          "description" => "Partner-Test",
+                          "comments" => "",
+                          "internal_identifier" => "partner",
+                          "external_identifier" => "",
+                          "external_id_source" => "",
+                          "created_at" => "2011-10-11 00:54:56.137144",
+                          "updated_at" => "2011-10-11 00:54:56.137144"}
+
+      col = [ActiveRecord::ConnectionAdapters::Column.new("id", "INTEGER"),
+             ActiveRecord::ConnectionAdapters::Column.new("parent_id", "integer"),
+             ActiveRecord::ConnectionAdapters::Column.new("lft", "integer"),
+             ActiveRecord::ConnectionAdapters::Column.new("rgt", "integer"),
+             ActiveRecord::ConnectionAdapters::Column.new("description", "varchar(255)"),
+             ActiveRecord::ConnectionAdapters::Column.new("comments", "varchar(255)"),
+             ActiveRecord::ConnectionAdapters::Column.new("internal_identifier", "varchar(255)"),
+             ActiveRecord::ConnectionAdapters::Column.new("external_identifier", "varchar(255)"),
+             ActiveRecord::ConnectionAdapters::Column.new("external_id_source", "varchar(255)"),
+             ActiveRecord::ConnectionAdapters::Column.new("created_at", "datetime"),
+             ActiveRecord::ConnectionAdapters::Column.new("updated_at", "datetime")]
+
+      sql = "insert into role_types (parent_id, lft, rgt, description, comments, internal_identifier, external_identifier, external_id_source, created_at, updated_at) values ( null,'3','4','Partner-Test',null,'partner',null,null,'2011-10-11 00:54:56.137144','2011-10-11 00:54:56.137144')"
+
+      @connection_class.should_receive(:connection).and_return(@adapter)
+      @instance = RailsDbAdmin::TableSupport.new(@connection_class)
+      @adapter.should_receive(:columns).with("role_types").and_return(col)
+      @adapter.should_receive(:execute).with(sql)
+      @adapter.should_receive(:select_all).and_return([{:max_id => 30}])
+
+      returned = @instance.insert_row("role_types",mod_types_data)
+      returned.should eq(30)
+    end
+
+
+  end
+
 
 
 end
