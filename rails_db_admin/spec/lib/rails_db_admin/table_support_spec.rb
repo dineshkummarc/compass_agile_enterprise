@@ -73,7 +73,9 @@ describe RailsDbAdmin::TableSupport do
   end
 
   describe "insert_row" do
+
     it "should return an id" do
+
       mod_types_data = {"parent_id" => "",
                           "lft" => "3",
                           "rgt" => "4",
@@ -108,10 +110,34 @@ describe RailsDbAdmin::TableSupport do
       returned = @instance.insert_row("role_types",mod_types_data)
       returned.should eq(30)
     end
-
-
   end
 
+  describe "delete_fake_id_row" do
 
+    it "should execute a valid sql statment to delete a row" do 
 
+      data = {"preference_type_id" => "1",
+              "preference_option_id" => "2",
+              "created_at" => "2011-10-11 00:54:56.137144",
+              "updated_at" => "2011-10-11 00:54:56.137144",
+              "fake_id" => 1}
+
+      sql = "DELETE FROM preference_options_preference_types WHERE 1=1 AND preference_type_id = '1' AND preference_option_id = '2' AND created_at = '2011-10-11 00:54:56.137144' AND updated_at = '2011-10-11 00:54:56.137144' "
+      table = "preference_options_preference_types"
+      col = [ActiveRecord::ConnectionAdapters::Column.new("preference_type_id", "INTEGER"),
+             ActiveRecord::ConnectionAdapters::Column.new("preference_option_id", "INTEGER"),
+             ActiveRecord::ConnectionAdapters::Column.new("created_at", "datetime"),
+             ActiveRecord::ConnectionAdapters::Column.new("updated_at", "datetime")]
+
+      @connection_class.should_receive(:connection).and_return(@adapter)
+      @instance = RailsDbAdmin::TableSupport.new(@connection_class)
+      @adapter.should_receive(:columns).with(table).and_return(col)
+      @adapter.should_receive(:execute).with(sql)
+      @instance.delete_fake_id_row(table, data)
+
+    end
+  end
 end
+
+
+

@@ -65,9 +65,16 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
                },
                listeners: {
                    exception: function(proxy, response, operation){
+                       var msg;
+                       if (operation.getError() === undefined) {
+                           responseObject = Ext.JSON.decode(response.responseText);
+                           msg = responseObject.exception;
+                       } else {
+                           msg = operation.getError();
+                       }
                        Ext.MessageBox.show({
                            title: 'REMOTE EXCEPTION',
-                           msg: operation.getError(),
+                           msg: msg,
                            icon: Ext.MessageBox.ERROR,
                            buttons: Ext.Msg.OK
                        });

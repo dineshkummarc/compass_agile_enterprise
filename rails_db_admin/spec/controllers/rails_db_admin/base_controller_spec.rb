@@ -382,6 +382,49 @@ describe RailsDbAdmin::BaseController do
     end
   end
 
+
+  describe "DELETE table_data" do
+
+    it "should process the request successfully" do
+      @table_support = double("RailsDbAdmin::TableSupport")
+      RailsDbAdmin::TableSupport.should_receive(
+        :new).and_return(@table_support)
+
+      id = "2"
+
+      @table_support.should_receive(:delete_row).with(
+        "role_types", id)
+
+      delete :base, {:use_route => :rails_db_admin,
+                     :action => "table_data",
+                     :table => "role_types",
+                     :id => id}
+    end
+
+
+    it "should fail because we don't send an id parameter" do
+
+      id = "2"
+      @table_support = double("RailsDbAdmin::TableSupport")
+      RailsDbAdmin::TableSupport.should_receive(
+        :new).and_return(@table_support)
+      @table_support.should_receive(:delete_row).with(
+        "role_types", id).and_raise(ActiveRecord::StatementInvalid)
+
+
+      delete :base, {:use_route => :rails_db_admin,
+                     :action => "table_data",
+                     :table => "role_types",
+                     :id => id}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(false)
+      parsed_body["exception"].should eq("Delete operation not supported on tables without an ID column")
+
+    end
+
+  end
+
   after(:all) do
     RoleType.where(:internal_identifier => "execute_query_test_role").destroy_all
     RoleType.where(:internal_identifier => "execute_query_test_role_2").destroy_all

@@ -120,14 +120,25 @@ module RailsDbAdmin
       {:success => true, :data => record}
     end
 
-	  def delete_table_row
-		table = params[:table]
-		id = params[:id]
+    def delete_table_row
+      table = params[:table]
+      id = params[:id]
+      exception = nil
 
-		@table_support.delete_row(table.pluralize.underscore, id)
+      begin
+        @table_support.delete_row(table.pluralize.underscore, id)
+      rescue ActiveRecord::StatementInvalid => exception
+        exception = "Delete operation not supported on tables without an ID column"
+        #@table_support.delete_fake_id_row(table, params[:data])
+      end
 
-		{:success => true, :data => []}
-	  end
+
+      if (exception == nil)
+        {:success => true, :data => []}
+      else
+        {:success => false, :data => [], :exception => exception}
+      end
+    end
 
 
 	  def build_table_tree(table)

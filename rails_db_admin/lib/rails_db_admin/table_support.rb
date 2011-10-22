@@ -85,13 +85,22 @@ module RailsDbAdmin
 
       where_sql
     end
-	
-	  def delete_row(table, id)
-	    sql = "delete from #{table} where id = #{id}"
-	
-	    @connection.execute(sql)
-	  end
-	
+
+    def delete_row(table, id)
+      sql = "delete from #{table} where id = #{id}"
+
+      @connection.execute(sql)
+    end
+
+    def delete_fake_id_row(table, data)
+      columns = @connection.columns(table)
+
+      sql = "DELETE FROM #{table}"
+      sql << RailsDbAdmin::TableSupport.build_where_clause(data, columns)
+
+      @connection.execute(sql)
+    end
+
 
     def insert_row(table, data, no_id=false)
 
