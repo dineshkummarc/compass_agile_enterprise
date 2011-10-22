@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("watchr")
   s.add_development_dependency("spork", "~> 0.9.0.rc")
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency("simplecov", ">= 0.5.4")
 end

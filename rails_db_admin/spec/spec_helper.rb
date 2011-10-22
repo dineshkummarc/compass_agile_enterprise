@@ -8,10 +8,13 @@ Spork.prefork do
   ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
   DUMMY_APP_ROOT=File.join(File.dirname(__FILE__), '/dummy')
 
+
+
   require 'active_support'
   require 'active_model'
   require 'active_record'
   require 'action_controller'
+  #only need to be required if looking to generate code coverage reports
 
   # Configure Rails Envinronment
   ENV["RAILS_ENV"] = "spec"
@@ -31,9 +34,16 @@ Spork.prefork do
     config.use_transactional_fixtures = true
     config.include Devise::TestHelpers, :type => :controller
   end
+
 end
 
 Spork.each_run do
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter "spec/"
+    add_group "Controllers", "app/controllers"
+    add_group "Lib", "lib/"
+  end
   # This code will be run each time you run your specs.
 
   #Need to explictly load the files in lib/ until we figure out how to 
