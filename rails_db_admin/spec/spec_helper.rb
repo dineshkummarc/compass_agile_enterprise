@@ -30,6 +30,25 @@ Spork.prefork do
   Dir[File.join(ENGINE_RAILS_ROOT, "spec/support/**/*.rb")].each {|f| require f }
 
   require 'rspec/rails'
+
+
+  # Don't need passwords in test DB to be secure, but we would like 'em to be
+  # fast -- and the stretches mechanism is intended to make passwords
+  # computationally expensive.
+  module Devise
+    module Models
+      module DatabaseAuthenticatable
+        protected
+
+        def password_digest(password)
+          password
+        end
+      end
+    end
+  end
+  Devise.setup do |config|
+    config.stretches = 0
+  end
   RSpec.configure do |config|
     config.use_transactional_fixtures = true
     config.include Devise::TestHelpers, :type => :controller
