@@ -14,6 +14,7 @@ describe RailsDbAdmin::QueriesController do
     end
 
     it "returns unsuccessful because of an empty result set" do
+
       post :queries, {:use_route => :rails_db_admin, :action => "execute_query",
                       :cursor_pos => "0",:sql => "SELECT * FROM relationship_types;"}
 
@@ -23,11 +24,42 @@ describe RailsDbAdmin::QueriesController do
     end
 
     it "should not throw exception if there is 1 statement and no semi-colon" do
-      post :queries, {:use_route => :rails_db_admin, :action => "execute_query",
-                      :cursor_pos => "0", :sql => "SELECT * FROM role_types WHERE internal_identifier = 'execute_query_test_role'"}
+
+      post :queries, {:use_route => :rails_db_admin,
+                      :action => "execute_query",
+                      :cursor_pos => "0",
+                      :sql => "SELECT * FROM role_types "\
+                              "WHERE internal_identifier"\
+                              " = 'execute_query_test_role'"}
 
       parsed_body = JSON.parse(response.body)
       parsed_body["success"].should eq(true)
+    end
+
+    it "should work on multi-line queries" do
+
+      post :queries, {:use_route => :rails_db_admin, :action => "execute_query",
+                      :cursor_pos => "1", 
+                      :sql => "SELECT * FROM role_types \n"\
+                              "WHERE internal_identifier ="\
+                              "'execute_query_test_role';"}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body["exception"].should eq(nil)
+    end
+
+    it "should work on input of multiple queries spanning several lines each " do
+
+      post :queries, {:use_route => :rails_db_admin, :action => "execute_query",
+                      :cursor_pos => "1", 
+                      :sql => "SELECT * FROM role_types \n"\
+                              "WHERE internal_identifier = 'execute_query_test_role';\n"\
+                              "SELECT * FROM widgets"}
+
+      parsed_body = JSON.parse(response.body)
+      parsed_body["success"].should eq(true)
+      parsed_body["exception"].should eq(nil)
     end
 
     after(:all) do
@@ -39,6 +71,7 @@ describe RailsDbAdmin::QueriesController do
   describe "POST open_and_execute_query" do
 
     it "should return success" do
+
       @db_connection_class =
         RailsDbAdmin::ConnectionHandler.create_connection_class("spec")
       @query_support = double("RailsDbAdmin::QuerySupport")

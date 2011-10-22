@@ -113,7 +113,7 @@ module RailsDbAdmin
         last_stmt_end = 0
         sql_arr.each_with_index do |val,idx|
           if val.match(';')
-            sql_stmt_arry << {:begin => (idx > 0) ? last_stmt_end + 1 : 0, :end => idx}
+            sql_stmt_arry << {:begin => (sql_stmt_arry.length > 0) ? last_stmt_end +1 : 0, :end => idx}
             last_stmt_end = idx
           end
         end
