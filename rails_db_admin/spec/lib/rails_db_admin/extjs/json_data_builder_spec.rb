@@ -116,7 +116,49 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
 
   describe "get_row_data_no_id" do
 
-  end
+    it "should return a row with a fake_id column added to it" do
 
+      @table = "preference_options_preference_types"
+
+      row_hash = {"preference_type_id" => "1",
+                  "preference_option_id" => "2",
+                  "created_at" => "2011-10-11 00:54:56.137144",
+                  "updated_at" => "2011-10-11 00:54:56.137144"}
+
+      @result = {:preference_type_id => "1",
+                 :preference_option_id => "2",
+                 :created_at => "2011-10-11 00:54:56.137144",
+                 :updated_at => "2011-10-11 00:54:56.137144",
+                 :fake_id => 1}
+
+      @rows = [{"preference_type_id" => "1",
+                  "preference_option_id" => "2",
+                  "created_at" => "2011-10-11 00:54:56.137144",
+                  "updated_at" => "2011-10-11 00:54:56.137144"}]
+
+      @sql = "SELECT * FROM preference_options_preference_types "\
+             "WHERE 1=1 AND preference_type_id = '1' "\
+             "AND preference_option_id = '2' "\
+             "AND created_at = '2011-10-11 00:54:56.137144' "\
+             "AND updated_at = '2011-10-11 00:54:56.137144' "
+
+      @col = [ActiveRecord::ConnectionAdapters::Column.new("preference_type_id", "INTEGER"),
+             ActiveRecord::ConnectionAdapters::Column.new("preference_option_id", "INTEGER"),
+             ActiveRecord::ConnectionAdapters::Column.new("created_at", "datetime"),
+             ActiveRecord::ConnectionAdapters::Column.new("updated_at", "datetime")]
+
+      @adapter.should_receive(:columns).with(@table).and_return(@col)
+      @adapter.should_receive(:select_all).with(@sql).and_return(@rows)
+
+      returns = @instance.get_row_data_no_id("preference_options_preference_types", row_hash)
+
+      returns.should eq(@result)
+
+    end
+
+
+
+
+  end
 
 end
