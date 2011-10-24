@@ -65,8 +65,9 @@ class ErpApp::Desktop::Knitkit::FileAssetsController < ErpApp::Desktop::FileMana
     unless File.exists? path
       result = {:success => false, :msg => 'File does not exists'}
     else
+      path = path[1..path.length] if path[0] == "/"
       file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
-      file.move(new_parent_path.gsub(Rails.root.to_s,''))
+      file.move(new_parent_path)
       result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
     end
 

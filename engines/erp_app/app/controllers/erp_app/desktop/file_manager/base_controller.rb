@@ -44,7 +44,6 @@ class ErpApp::Desktop::FileManager::BaseController < ErpApp::Desktop::BaseContro
   def save_move
     path            = params[:node]
     new_parent_path = (params[:parent_node] == ROOT_NODE) ? base_path : params[:parent_node]
-    new_parent_path = File.join(root, new_parent_path)
     
     result, message = @file_support.save_move(path, new_parent_path)
 

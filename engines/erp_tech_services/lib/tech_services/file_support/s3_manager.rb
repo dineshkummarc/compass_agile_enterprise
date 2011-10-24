@@ -146,6 +146,7 @@ module TechServices
 
       def exists?(path)
         begin
+          path = path[1..path.length] if path.first == '/'
           !AWS::S3::S3Object.find(path, @@s3_bucket.name).nil?
         rescue AWS::S3::NoSuchKey
           return false

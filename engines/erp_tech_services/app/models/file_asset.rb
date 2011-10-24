@@ -123,9 +123,8 @@ class FileAsset < ActiveRecord::Base
   end
 
   def move(new_parent_path)
-    full_path = File.join(Rails.root,new_parent_path)
-    FileUtils.mkdir_p full_path unless File.directory? full_path
-    FileUtils.mv(path, full_path)
+    file_support = TechServices::FileSupport::Base.new(:storage => TechServices::FileSupport.options[:storage])
+    file_support.save_move(File.join(self.directory,self.name), new_parent_path)
     self.directory = new_parent_path
     self.save
   end

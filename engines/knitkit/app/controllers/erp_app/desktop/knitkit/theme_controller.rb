@@ -40,14 +40,6 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     render :inline => {:success => true}.to_json
   end
 
-  def update_file
-    path    = params[:node]
-    content = params[:content]
-
-    @file_support.update_file(path, content)
-    render :json => {:success => true}
-  end
-
   def delete
     @theme.destroy
     render :inline => {:success => true}.to_json
@@ -108,6 +100,22 @@ class ErpApp::Desktop::Knitkit::ThemeController < ErpApp::Desktop::FileManager::
     render :json => {:success => true}
   end
 
+  def save_move
+    result          = {}
+    path            = params[:node]
+    new_parent_path = params[:parent_node]
+    new_parent_path = base_path if new_parent_path == ROOT_NODE
+
+    unless @file_support.exists? path
+      result = {:success => false, :msg => 'File does not exists'}
+    else
+      theme_file = get_theme_file(path)
+      theme_file.move(new_parent_path)
+      result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
+    end
+
+    render :json => result
+  end
 
   def download_file
     path = File.join(@file_support.root,params[:path])
