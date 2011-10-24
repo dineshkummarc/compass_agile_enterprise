@@ -3,9 +3,9 @@ class ErpApp::Desktop::Knitkit::WebsiteNavController < ErpApp::Desktop::Knitkit:
     result = {}
     website = Website.find(params[:website_id])
     website_nav = WebsiteNav.new(:name => params[:name])
-   
+    website.website_navs << website_nav
+    
     if website_nav.save
-      website.website_navs << website_nav
       result[:success] = true
       result[:node] = {:text => params[:name], 
         :websiteNavId => website_nav.id, 
