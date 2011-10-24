@@ -27,12 +27,14 @@ module RailsDbAdmin
 
     def select_top_fifty(table)
       #Actually, sanitizing here is pretty redundent since it's a constant...
-      query = "SELECT * FROM #{table} LIMIT #{@connection.sanitize_limit(50)}"
+      ar = Arel::Table::new(table)
+      query = ar.project(Arel.sql('*')).take(50)
+      #query = "SELECT * FROM #{table} LIMIT #{@connection.sanitize_limit(50)}"
 
-      rows = @connection.select_all(query)
+      rows = @connection.select_all(query.to_sql)
       records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
 
-      return query, records
+      return query.to_sql, records
     end
 
 	  def get_saved_query_names(database_connection_name)

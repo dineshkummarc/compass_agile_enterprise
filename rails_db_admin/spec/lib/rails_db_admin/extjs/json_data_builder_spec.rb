@@ -12,7 +12,6 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
 
   describe "build_json_data" do
     before(:each) do
-      @instance.should_receive(:get_total_count).and_return(25)
 
     end
 
@@ -23,7 +22,9 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
                  :limit  => 30,
                  :order  => 'id desc'}
 
-      sql = "SELECT * FROM test_table order by id desc LIMIT 30 OFFSET 2"
+      sql = "SELECT  * FROM \"test_table\"  ORDER BY id desc LIMIT 30 OFFSET 2"
+
+      @instance.should_receive(:get_total_count).and_return(25)
 
       @adapter.should_receive(:select_all).with(sql).and_return([])
 
@@ -42,13 +43,15 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
                  :limit  => "30",
                  :order  => 'id desc'}
 
-      sql = "SELECT * FROM test_table order by id desc LIMIT 30 OFFSET 2"
+      sql = "SELECT  * FROM \"test_table\"  ORDER BY id desc LIMIT 30 OFFSET 2"
       @adapter.should_receive(:select_all).with(sql).and_return([])
 
       @adapter.should_receive(:sanitize_limit).with("30").and_return(30)
 
       RailsDbAdmin::TableSupport.should_receive(
         :database_rows_to_hash).with([]).and_return([])
+
+      @instance.should_receive(:get_total_count).and_return(25)
 
       @instance.build_json_data(options)
     end
@@ -59,13 +62,15 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
                  :limit => 30,
                  :order => 'id desc'}
 
-      sql = "SELECT * FROM test_table order by id desc LIMIT 30"
+      sql = "SELECT  * FROM \"test_table\"  ORDER BY id desc LIMIT 30"
       @adapter.should_receive(:select_all).with(sql).and_return([])
 
       @adapter.should_receive(:sanitize_limit).with(30).and_return(30)
 
       RailsDbAdmin::TableSupport.should_receive(
         :database_rows_to_hash).with([]).and_return([])
+
+      @instance.should_receive(:get_total_count).and_return(25)
 
       @instance.build_json_data(options)
 
@@ -76,15 +81,58 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       options = {:table => "test_table",
                  :limit => 30}
 
-      sql = "SELECT * FROM test_table LIMIT 30"
+      sql = "SELECT  * FROM \"test_table\"  LIMIT 30"
       @adapter.should_receive(:select_all).with(sql).and_return([])
 
       @adapter.should_receive(:sanitize_limit).with(30).and_return(30)
+
+      @instance.should_receive(:get_total_count).and_return(25)
 
       RailsDbAdmin::TableSupport.should_receive(
         :database_rows_to_hash).with([]).and_return([])
 
       @instance.build_json_data(options)
+
+    end
+
+    it "should create well-formed sql, only passing :order option" do
+
+      options = {:table => "test_table",
+                 :order => "id asc"}
+
+      sql = "SELECT * FROM \"test_table\"  ORDER BY id asc"
+      @adapter.should_receive(:select_all).with(sql).and_return([])
+
+      RailsDbAdmin::TableSupport.should_receive(
+        :database_rows_to_hash).with([]).and_return([])
+
+      @instance.should_receive(:get_total_count).and_return(25)
+
+      @instance.build_json_data(options)
+
+    end
+
+    it "should create well-formed sql, only passing :table option" do
+
+      options = {:table => "test_table"}
+
+      sql = "SELECT * FROM \"test_table\" "
+      @adapter.should_receive(:select_all).with(sql).and_return([])
+
+      RailsDbAdmin::TableSupport.should_receive(
+        :database_rows_to_hash).with([]).and_return([])
+
+      @instance.should_receive(:get_total_count).and_return(25)
+
+      @instance.build_json_data(options)
+
+    end
+
+    it "should raise an exception if missing :table option" do
+
+      options = {:limit => 30}
+
+      expect {@instance.build_json_data(options) }.to raise_error
 
     end
 
@@ -95,7 +143,7 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
                  :limit => 30,
                  :order => 'id desc'}
 
-      sql = "SELECT * FROM test_table order by id desc LIMIT 30"
+      sql = "SELECT  * FROM \"test_table\"  ORDER BY id desc LIMIT 30"
       @adapter.should_receive(:select_all).with(sql).and_return([])
 
       test_data = [{"column_a" => "blah1", "column_b" => "blah2"},
@@ -108,6 +156,8 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
 
       RailsDbAdmin::TableSupport.should_receive(:add_fake_id_col).with(
         test_data).and_return(test_data)
+
+      @instance.should_receive(:get_total_count).and_return(25)
 
       @instance.build_json_data(options)
     end

@@ -12,22 +12,26 @@ module RailsDbAdmin
         end
 
         total_count = self.get_total_count(options[:table])
+        arel_table = Arel::Table::new(options[:table])
 
         if options[:limit] && options[:offset] && options[:order]
-          limit = @connection.sanitize_limit(options[:limit])
-          query = "SELECT * FROM #{options[:table]} order by #{options[:order]} LIMIT #{limit} OFFSET #{options[:offset].to_i}"
+          query = arel_table.project(Arel.sql('*')).order(options[:order]).
+            take(@connection.sanitize_limit(options[:limit])).
+            skip(options[:offset].to_i)
         elsif options[:limit] && options[:order]
-          query = "SELECT * FROM #{options[:table]} order by #{options[:order]} LIMIT #{@connection.sanitize_limit(options[:limit])}"
+          query = arel_table.project(Arel.sql('*')).order(options[:order]).
+            take(@connection.sanitize_limit(options[:limit]))
         elsif options[:limit] && !options[:order]
-          query = "SELECT * FROM #{options[:table]} LIMIT #{@connection.sanitize_limit(options[:limit])}"
+          query = arel_table.project(Arel.sql('*')).
+            take(@connection.sanitize_limit(options[:limit]))
         elsif !options[:limit] && options[:order]
-          query = "SELECT * FROM #{options[:table]} order by #{options[:order]}"
+          query = arel_table.project(Arel.sql('*')).order(options[:order])
         else
-          query = "SELECT * FROM #{options[:table]}"
+          query = arel_table.project(Arel.sql('*'))
         end
 
 
-        rows = @connection.select_all(query)
+        rows = @connection.select_all(query.to_sql)
         records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
         if !records.empty? && !records[0].has_key?("id")
           records = RailsDbAdmin::TableSupport.add_fake_id_col(records)

@@ -100,7 +100,7 @@ describe RailsDbAdmin::QueriesController do
                       :action => "select_top_fifty",
                       :table => "role_types"}
 
-      expected_sql = "SELECT * FROM role_types LIMIT 50"
+      expected_sql = "SELECT  * FROM \"role_types\"  LIMIT 50"
 
       expected_column = {"header"=>"id", "type"=>"number",
                          "dataIndex"=>"id", "width"=>150}
