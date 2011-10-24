@@ -104,7 +104,7 @@ ol li
 { width: 825px;
   position: relative;
   height: 168px;
-  background: #025587 url(/images/knitkit/logo.png) no-repeat;}
+  background: #025587 url(../../images/knitkit/logo.png) no-repeat;}
 
 #logo #logo_text 
 { position: absolute; 
@@ -135,7 +135,7 @@ ol li
 { width: 877px;
   height: 72px;
   padding: 0;
-  background: #29415D url(/images/knitkit/menu.png) repeat-x;}
+  background: #29415D url(../../images/knitkit/menu.png) repeat-x;}
 
 ul#menu, ul#menu li
 { float: left;
@@ -160,14 +160,14 @@ ul#menu li a
 
 ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 { color: #FFF;
-  background: #1C2C3E url(/images/knitkit/menu_select.png) repeat-x;}
+  background: #1C2C3E url(../../images/knitkit/menu_select.png) repeat-x;}
 
 #site_content
 { width: 837px;
   overflow: hidden;
   margin: 0 auto 0 auto;
   padding: 40px 24px 20px 37px;
-  background: #FFF url(/images/knitkit/content.png) repeat-y;}
+  background: #FFF url(../../images/knitkit/content.png) repeat-y;}
 
 .sidebar
 { float: right;
@@ -186,7 +186,7 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 .sidebar li a, .sidebar li a:hover
 { padding: 0 0 0 40px;
   display: block;
-  background: transparent url(/images/knitkit/link.png) no-repeat left center;}
+  background: transparent url(../../images/knitkit/link.png) no-repeat left center;}
 
 .sidebar li a.selected
 { color: #444;
@@ -203,7 +203,7 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 
 #content ul li
 { list-style-type: none;
-  background: url(/images/knitkit/bullet.png) no-repeat;
+  background: url(../../images/knitkit/bullet.png) no-repeat;
   margin: 0 0 6px 0; 
   padding: 0 0 4px 25px;
   line-height: 1.5em;}
@@ -214,7 +214,7 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
   height: 33px;
   padding: 24px 0 5px 0;
   text-align: center; 
-  background: #29425E url(/images/knitkit/footer.png) repeat-x;
+  background: #29425E url(../../images/knitkit/footer.png) repeat-x;
   color: #FFF;
   text-transform: uppercase;
   letter-spacing: 0.1em;}
@@ -374,7 +374,7 @@ ul#side_menu li{
 
 #side_menu_container{
   float: left;
-  background-image: url('/images/knitkit/greyFadeDown.png');
+  background-image: url('../../images/knitkit/greyFadeDown.png');
   margin: 20px 20px 0 0;
   width: 125px;
 }

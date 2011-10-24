@@ -5,6 +5,7 @@ class Theme < ActiveRecord::Base
   THEME_STRUCTURE = ['stylesheets', 'javascripts', 'images', 'templates']
   BASE_LAYOUTS_VIEWS_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/app/views"
   KNITKIT_WEBSITE_STYLESHEETS_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/public/stylesheets/knitkit"
+  KNITKIT_WEBSITE_IMAGES_PATH = "#{RAILS_ROOT}/vendor/plugins/knitkit/public/images/knitkit"
 
   has_file_assets
 
@@ -178,6 +179,7 @@ class Theme < ActiveRecord::Base
     file_support = TechServices::FileSupport::Base.new
     create_theme_files_for_directory_node(file_support.build_tree(BASE_LAYOUTS_VIEWS_PATH))
     create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_STYLESHEETS_PATH))
+    create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_IMAGES_PATH))
   end
 
   private
@@ -190,6 +192,10 @@ class Theme < ActiveRecord::Base
 
   def save_theme_file(path)
     contents = IO.read(path)
+    unless path.scan('style.css').empty?
+      contents.gsub!("../../images/knitkit","../images")
+    end
+
     unless path.scan('base.html.erb').empty?
       contents.gsub!("<%= stylesheet_link_tag('knitkit/extjs_4.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','extjs_4.css') %>")
       contents.gsub!("<%= stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
@@ -199,6 +205,8 @@ class Theme < ActiveRecord::Base
       path = path.gsub(BASE_LAYOUTS_VIEWS_PATH, "/#{self.url}/templates")
     elsif !path.scan(KNITKIT_WEBSITE_STYLESHEETS_PATH).empty?
       path = path.gsub(KNITKIT_WEBSITE_STYLESHEETS_PATH, "/#{self.url}/stylesheets")
+    elsif !path.scan(KNITKIT_WEBSITE_IMAGES_PATH).empty?
+      path = path.gsub(KNITKIT_WEBSITE_IMAGES_PATH, "/#{self.url}/images")
     end
     
     self.add_file(contents, path)

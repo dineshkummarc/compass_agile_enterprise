@@ -80,32 +80,33 @@ module TechServices
       end
 
       def update_file(path, content)
-        AWS::S3::S3Object.store(path, content, bucket.name)
+        AWS::S3::S3Object.store(path, content, bucket.name, :access => :public_read)
       end
 
       def create_file(path, name, contents)
-        AWS::S3::S3Object.store(File.join(path,name), contents, @@s3_bucket.name)
+        AWS::S3::S3Object.store(File.join(path,name), contents, @@s3_bucket.name, :access => :public_read)
       end
 
       def create_folder(path, name)
-        AWS::S3::S3Object.store(File.join(path,name) + "/", '', @@s3_bucket.name)
+        AWS::S3::S3Object.store(File.join(path,name) + "/", '', @@s3_bucket.name, :access => :public_read)
       end
 
-#      def save_move(path, new_parent_path)
-#        result = nil
-#        unless File.exists? path
-#          message = 'File does not exists'
-#        else
-#          name = File.basename(path)
-#          #make sure path is there.
-#          FileUtils.mkdir_p new_parent_path unless File.directory? new_parent_path
-#          FileUtils.mv(path, new_parent_path + '/' + name)
-#          message = "#{name} was moved to #{new_parent_path} successfully"
-#          result = true
-#        end
-#
-#        return result, message
-#      end
+      def save_move(path, new_parent_path)
+        result = nil
+        unless self.exists? path
+          message = 'File does not exists'
+        else
+          name = File.basename(path)
+          if AWS::S3::S3Object.rename path, File.join(new_parent_path,name), @@s3_bucket.name, :copy_acl => true
+            message = "#{name} was moved to #{new_parent_path} successfully"
+            result = true
+          else
+            message = "#Error renaming {old_name}"
+          end
+        end
+
+        return result, message
+      end
 
       def rename_file(path, name)
         result = nil
@@ -144,7 +145,11 @@ module TechServices
       end
 
       def exists?(path)
-        !AWS::S3::S3Object.find(path, @@s3_bucket.name).nil?
+        begin
+          !AWS::S3::S3Object.find(path, @@s3_bucket.name).nil?
+        rescue AWS::S3::NoSuchKey
+          return false
+        end
       end
 
       def get_contents(path)
