@@ -94,7 +94,7 @@ ActionView::Base.class_eval do
   def render_menu(contents, options={})
     locals = {:contents => contents}
     if options[:menu]
-      menu = WebsiteNav.find_by_name(options[:menu])
+      menu = WebsiteNav.find_by_name_and_website_id(options[:menu], @website.id)
       raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
       layout = options[:layout] ? "menus/#{options[:layout]}" : "menus/default_menu"
       locals[:menu_items] = menu.website_nav_items.positioned
@@ -117,7 +117,7 @@ ActionView::Base.class_eval do
   def render_sub_menu(contents, options={})
     locals = {:contents => contents}
     if options[:menu]
-      menu = WebsiteNav.find_by_name(options[:menu])
+      menu = WebsiteNav.find_by_name_and_website_id(options[:menu], @website.id)
       raise "Menu with name #{options[:menu]} does not exist" if menu.nil?
       locals[:menu_items] = (options[:menu_item].nil? ? menu.all_menu_items.find{|item| menu_item_selected(item)}.positioned_children : menu.all_menu_items.find{|item| item.title = options[:menu_item]}.positioned_children) 
       raise "No menu items exist" if locals[:menu_items].nil?
