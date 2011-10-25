@@ -1,2 +1,4 @@
 *.swp
 tags
+coverage/
+spec.sqlite3-journal
