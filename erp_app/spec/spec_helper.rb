@@ -14,7 +14,6 @@ Spork.prefork do
   require 'active_model'
   require 'active_record'
   require 'action_controller'
-  #require 'rails/generators'
 
   # Configure Rails Envinronment
   ENV["RAILS_ENV"] = "spec"
@@ -83,6 +82,8 @@ Spork.each_run do
   #Dir[File.join(ENGINE_RAILS_ROOT, "lib/**/*.rb")].each {|f| load f}
   Dir[File.join(ENGINE_RAILS_ROOT, "lib/active_ext/**/*.rb")].each {|f| load f}
   Dir[File.join(ENGINE_RAILS_ROOT, "lib/erp_app/**/*.rb")].each {|f| load f}
+  #model extensions need to be explictely loaded each time as well
+  Dir[File.join(ENGINE_RAILS_ROOT, "app/models/extensions/**/*.rb")].each {|f| load f}
 
 end
 
