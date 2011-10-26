@@ -384,7 +384,7 @@ class Website < ActiveRecord::Base
       :title => menu_item.title,
       :url => menu_item.url,
       :linked_to_item_type => menu_item.linked_to_item_type,
-      :linked_to_item_path => menu_item.linked_to_item_type.nil? ? nil : menu_item.linked_to_item.path,
+      :linked_to_item_path => menu_item.linked_to_item.nil? ? nil : menu_item.linked_to_item.path,
       :position => menu_item.position,
       :items => menu_item.children.collect{|child| build_menu_item_hash(child)}
     }
