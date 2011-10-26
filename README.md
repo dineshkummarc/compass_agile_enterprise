@@ -1,4 +1,10 @@
-![Logo](http://github.com/portablemind/compass_agile_enterprise/raw/master/engines/erp_app/public/images/art/compass-logo-1-medium.png)
+![Logo](http://github.com/portablemind/compass_agile_enterprise/raw/master/erp_app/public/images/art/compass-logo-1-medium.png)
+
+
+===Update 10/26/2011====
+
+If you have been tracking us we just recently moved our master branch to rails 3 if you are using rails 2 you can still use the rails_2.3.14 branch.
+
 
 ===Welcome to Compass Agile Enterprise===
 
