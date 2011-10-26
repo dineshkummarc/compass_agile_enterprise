@@ -27,4 +27,5 @@ class Blog < WebsiteSection
   def find_published_blog_post(active_publication, permalink)
     Article.find_published_by_section(active_publication, self).find{|item| item.permalink == permalink}
   end
+  
 end

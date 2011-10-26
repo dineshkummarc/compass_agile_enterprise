@@ -5,13 +5,11 @@ module RoutingFilter
   class SectionRouter < Filter
     def around_recognize(path, env, &block)
       website = Website.find_by_host(env["HTTP_HOST"])
-      unless website.nil?
-        paths = paths_for_website(website)
-        if path !~ %r(^/([\w]{2,4}/)?admin) and !paths.empty? and path =~ recognize_pattern(paths)
-          if website_section = website_section_by_path(website, $2)
-            type = website_section.type.pluralize.downcase
-            path.sub! %r(^/([\w]{2,4}/)?(#{paths})(?=/|\.|$)), "/#{$1}#{type}/#{website_section.id}#{$3}"
-          end
+      paths = paths_for_website(website)
+      if path !~ %r(^/([\w]{2,4}/)?admin) and !paths.empty? and path =~ recognize_pattern(paths)
+        if section = website_section_by_path(website, $2)
+          type = section.type.pluralize.downcase
+          path.sub! %r(^/([\w]{2,4}/)?(#{paths})(?=/|\.|$)), "/#{$1}#{type}/#{section.id}#{$3}"
         end
       end
       yield
@@ -19,24 +17,25 @@ module RoutingFilter
     
     def around_generate(params, &block)      
       yield.tap do |path|
-        path = path.first if path.is_a?(Array)
-        if path !~ %r(^/([\w]{2,4}/)?admin) and path =~ generate_pattern
-          website_section = WebsiteSection.find $2.to_i
-          path.sub! "#{$1}/#{$2}", "#{website_section.permalink}#{$3}"
+        result = result.first if result.is_a?(Array)
+        if result !~ %r(^/([\w]{2,4}/)?admin) and result =~ generate_pattern
+          section = WebsiteSection.find $2.to_i
+          result.sub! "#{$1}/#{$2}", "#{section.path[1..section.path.length]}#{$3}"
         end
       end
     end
     
     protected
     def paths_for_website(website)
-      website ? website.website_sections.permalinks.sort{|a, b| b.size <=> a.size }.join('|') : []
+      website ? website.sections.paths.map{|path| path[1..path.length]}.sort{|a, b| b.size <=> a.size }.join('|') : []
     end
 
     def website_section_by_path(website, path)
-      valid_section = website.website_sections.detect{|website_section| website_section.permalink == path }
+      path = "/#{path}"
+      valid_section = website.website_sections.detect{|website_section| website_section.path == path }
       if valid_section.nil?
         website.website_sections.each do |website_section|
-          valid_section = website_section.child_by_permalink(path)
+          valid_section = website_section.child_by_path(path)
           break unless valid_section.nil?
         end
       end

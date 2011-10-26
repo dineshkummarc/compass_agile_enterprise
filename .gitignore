@@ -2,3 +2,7 @@
 tags
 coverage/
 spec.sqlite3-journal
+.DS_Store
+*.sqlite3
+*.log
+Thumbs.db

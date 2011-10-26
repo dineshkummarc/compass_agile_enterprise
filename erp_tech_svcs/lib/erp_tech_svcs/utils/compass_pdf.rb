@@ -51,7 +51,7 @@ module CompassPDF
     end
 
     def write_html_response(body)
-      File.open("#{html_filename}", "w") { |f| f.write(body) }      
+      File.open("#{html_filename}", "w") { |f| f.puts(body) }
     end
 
     def get_pdf_generated

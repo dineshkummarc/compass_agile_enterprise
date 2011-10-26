@@ -2,6 +2,7 @@ module Knitkit
   module ErpApp
     module Desktop
       class CommentsController < Knitkit::ErpApp::Desktop::AppController
+        
         def index
           content = Content.find(params[:content_id])
           sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
@@ -35,7 +36,8 @@ module Knitkit
           
           render :json => {:success => true}
         end
-      end
-    end
-  end
-end
+
+      end#CommentsController
+    end#Desktop
+  end#ErpApp
+end#Knitkit

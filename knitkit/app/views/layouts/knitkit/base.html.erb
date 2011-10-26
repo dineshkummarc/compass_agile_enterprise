@@ -37,19 +37,21 @@
             <h2><%= @website.subtitle %></h2>
           </div>
         </div>
-        <%= 
-        #render_menu(@contents, {:name => 'my_menu'})
-        render_menu(@contents)
-      %>
+        <%= content_for?(:menu) ? yield(:menu) : render_menu(@contents) %>
+        <%#=render_menu(@contents, :menu => 'main')%>
       </div>
       <div id="site_content">
+      <%=build_crumbs %>
+      <br/>
+      <%= content_for?(:sub_menu) ? yield(:sub_menu) : render_sub_menu(@contents) %>
+      <%#=render_sub_menu(@contents, :menu => 'main')%>
         <div id="content">
           <%= yield %>
         </div>
       </div>
       <div id="content_footer"></div>
-      <%= render :partial => 'shared/knitkit/footer'%>
+      <%= content_for?(:footer) ? yield(:footer) : (render :partial => 'shared/knitkit/footer') %>
       <%= yield :foot %>
-    </div>    
+    </div>
   </body>
 </html>

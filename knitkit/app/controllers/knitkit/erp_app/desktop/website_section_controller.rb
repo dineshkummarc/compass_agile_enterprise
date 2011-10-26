@@ -23,20 +23,23 @@ module Knitkit
             website_section.in_menu = params[:in_menu] == 'yes'
       
             if website_section.save
-              unless params[:websiteId].blank?
+              unless params[:website_section_id]
                 website = Website.find(params[:websiteId])
                 website.sections << website_section
                 website.save
               else
                 parent_website_section = WebsiteSection.find(params[:website_section_id])
-                website = parent_website_section.website
-                website_section.website = website
                 website_section.move_to_child_of(parent_website_section)
+                # Setting website_id so website_section children also get delete with website delete.
+                website_section.website_id = params[:websiteId]
                 parent_website_section.save
               end
+
+              website_section.save
+              website_section.update_path!
         
               result[:success] = true
-              result[:node] = build_section_hash(website_section, website)
+              result[:node] = build_section_hash(website_section, website_section.website)
             else
               result[:success] = false
             end
@@ -65,6 +68,7 @@ module Knitkit
         def update
           @website_section.in_menu = params[:in_menu] == 'yes'
           @website_section.title = params[:title]
+          @website_section.internal_identifier = params[:internal_identifier]
           @website_section.save
 
           render :json => {:success => true}
@@ -88,12 +92,17 @@ module Knitkit
           current_articles = Article.joins("INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id").where("website_section_id = #{params[:section_id]}")
           available_articles = Article.all - current_articles
 
-          render :inline => available_articles.to_json(:only => [:title, :id])
+          render :inline => available_articles.to_json(:only => [:internal_identifier, :id])
         end
   
         def existing_sections
           website = Website.find(params[:website_id])
-          render :inline => website.all_sections.to_json(:only => [:title, :id])
+          WebsiteSection.class_eval do
+            def title_permalink
+              "#{self.title} - #{self.path}"
+            end
+          end
+          render :inline => website.sections.to_json(:only => [:id], :methods => [:title_permalink])
         end
   
         protected
@@ -102,7 +111,7 @@ module Knitkit
           @website_section = WebsiteSection.find(params[:id])
         end
   
-      end
-    end
-  end
-end
+      end#WebsiteSectionController
+    end#Desktop
+  end#ErpApp
+end#Knitkit

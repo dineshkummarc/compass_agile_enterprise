@@ -2,10 +2,9 @@ module Knitkit
   class BaseController < ::ErpApp::ApplicationController
     before_filter :set_website
     before_filter :set_active_publication, :load_sections, :set_section, :except => [:view_current_publication]
-    
-    layout 'knitkit/base'
-    
     acts_as_themed_controller :current_themes => lambda {|c| c.website.themes.active if c.website }
+
+    layout 'knitkit/base'
 
     def website
       @website

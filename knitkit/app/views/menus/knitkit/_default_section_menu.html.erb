@@ -15,7 +15,7 @@
               %>
               <li>
               <%end%>
-              <a href="/<%= section.permalink %>"><span><%= section.title %></span></a>
+              <a href="<%= section.path %>"><span><%= section.title %></span></a>
             </li>
           <%end%>
         <% end %>
@@ -23,27 +23,5 @@
     </ul>
   </div>
   <br/>
-<% end
-if !selected_section_parent.nil? and !selected_section_parent.children.empty?
-%>
-  <div id="submenubar">
-    <ul id="submenu">
-      <%
-      selected_section_parent.positioned_children.each do |child_section|
-      %>
-      <% if !@website_section.nil? && child_section.id == @website_section.id %>
-      <li class="selected">
-      <%else%>
-        <li>
-      <%end%>
-          <a href="/<%= child_section.permalink %>"><span><%= child_section.title %></span></a>
-        </li>
-      <%
-      end
-    %>
-    </ul>
-  </div>
-<%
-end
-%>
+<% end %>
 

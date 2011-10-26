@@ -45,6 +45,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.text :layout
         t.boolean :in_menu
         t.integer :position, :default => 0
+        t.string :internal_identifier
 
         #better nested set columns
         t.integer :parent_id
@@ -60,6 +61,7 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :website_sections, :parent_id
       add_index :website_sections, :lft
       add_index :website_sections, :rgt
+      add_index :website_sections, :internal_identifier, :name => 'section_iid_idx'
 
       WebsiteSection.create_versioned_table
     end
@@ -73,6 +75,8 @@ class SetupKnitkit < ActiveRecord::Migration
         t.text :body_html
         t.integer :created_by_id
         t.integer :updated_by_id
+        t.string :internal_identifier
+        t.boolean :display_title
 
         t.timestamps
       end
@@ -81,6 +85,7 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :contents, :created_by_id
       add_index :contents, :updated_by_id
       add_index :contents, :permalink
+      add_index :contents, :internal_identifier, :name => 'contents_iid_idx'
 
       Content.create_versioned_table
     end
@@ -125,6 +130,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.text :comment
         t.decimal :version
         t.boolean :active
+        t.integer :published_by_id
 
         t.timestamps
       end
@@ -133,6 +139,7 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :published_websites, :website_id
       add_index :published_websites, :version
       add_index :published_websites, :active
+      add_index :published_websites, :published_by_id
     end
 
     unless table_exists?(:published_elements)
@@ -140,6 +147,7 @@ class SetupKnitkit < ActiveRecord::Migration
         t.references :published_website
         t.references :published_element_record, :polymorphic => true
         t.integer :version
+        t.integer :published_by_id
 
         t.timestamps
       end
@@ -148,6 +156,7 @@ class SetupKnitkit < ActiveRecord::Migration
       add_index :published_elements, [:published_element_record_id, :published_element_record_type], :name => 'published_elm_idx'
       add_index :published_elements, :published_website_id
       add_index :published_elements, :version
+      add_index :published_elements, :published_by_id
     end
 
     unless table_exists?(:comments)

@@ -8,11 +8,11 @@ def patch_file(path, current, insert, options = {})
 
   content = File.open(path) { |f| f.read }
   content.gsub!(old_text, new_text) unless content =~ /#{Regexp.escape(insert)}/mi
-  File.open(path, 'w') { |f| f.write(content) }
+  File.open(path, 'w') { |f| f.puts(content) }
 end
 
 def append_file(path, content)
-  File.open(path, 'a') { |f| f.write(content) }
+  File.open(path, 'a') { |f| f.puts(content) }
 end
 
 def patch_string(current, insert, mode = :insert_after)

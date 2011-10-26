@@ -6,35 +6,34 @@ module Knitkit
           result = {}
           website = Website.find(params[:website_id])
           website_nav = WebsiteNav.new(:name => params[:name])
+          website.website_navs << website_nav
 
           if website_nav.save
-            website.website_navs << website_nav
             result[:success] = true
             result[:node] = {:text => params[:name], 
-              :websiteNavId => website_nav.id, 
-              :websiteId => website.id, 
-              :iconCls => 'icon-index', 
-              :canAddMenuItems => true, 
-              :isWebsiteNav => true, 
-              :leaf => false, 
+              :websiteNavId => website_nav.id,
+              :websiteId => website.id,
+              :iconCls => 'icon-index',
+              :canAddMenuItems => true,
+              :isWebsiteNav => true,
+              :leaf => false,
               :children => []}
           else
             result[:success] = false
           end
 
-          render :json=> result
+          render :json => result
         end
 
         def update
-          result = {}
           website_nav = WebsiteNav.find(params[:website_nav_id])
           website_nav.name = params[:name]
-	
-          render :json => website_nav.save ? {:success => true} : {:success => false}
+
+          render :json => (website_nav.save ? {:success => true} : {:success => false})
         end
 
         def delete
-          render :json => WebsiteNav.find(params[:id]).destroy ? {:success => true} : {:success => false}
+          render :json => (WebsiteNav.destroy(params[:id]) ? {:success => true} : {:success => false})
         end
 
         def add_menu_item
@@ -54,28 +53,30 @@ module Knitkit
             link_to_item = params[:link_to].constantize.find(linked_to_id)
             #setup link
             website_nav_item.url = '/' + link_to_item.permalink
-            website_nav_item.linked_to_item = link_to_item
+            website_nav_item.linked_to_item = link_to_item 
             url = "http://#{website_nav.website.hosts.first.host}/" + link_to_item.permalink
           else
             website_nav_item.url = url
           end
-  
+
           if website_nav_item.save
             if parent.is_a?(WebsiteNav)
               parent.website_nav_items << website_nav_item
             else
               website_nav_item.move_to_child_of(parent)
             end
+
             result[:success] = true
             result[:node] = {:text => params[:title],
-               :linkToType => params[:link_to].underscore, 
-              :linkedToId => linked_to_id, 
-              :websiteId => website_nav.website.id, 
-              :url => url, 
+              :linkToType => params[:link_to].underscore,
+              :linkedToId => linked_to_id,
+              :websiteId => website_nav.website.id,
+              :url => url,
+              :isSecure => false,
               :canAddMenuItems => true,
-              :websiteNavItemId => website_nav_item.id, 
-              :iconCls => 'icon-document', 
-              :isWebsiteNavItem => true, 
+              :websiteNavItemId => website_nav_item.id,
+              :iconCls => 'icon-document',
+              :isWebsiteNavItem => true,
               :leaf => false,
               :children => []}
           else
@@ -120,11 +121,23 @@ module Knitkit
           render :json => result
         end
 
-        def delete_menu_item
-          render :json => WebsiteNavItem.find(params[:id]).destroy ? {:success => true} : {:success => false}
+        def update_security
+          website_nav_item = WebsiteNavItem.find(params[:id])
+          website = Website.find(params[:site_id])
+          if(params[:secure] == "true")
+            website_nav_item.add_role(website.role)
+          else
+            website_nav_item.remove_role(website.role)
+          end
+
+          render :json => {:success => true}
         end
 
-      end
-    end
-  end
-end
+        def delete_menu_item
+          render :json => (WebsiteNavItem.destroy(params[:id]) ? {:success => true} : {:success => false})
+        end
+
+      end#WebsiteNavController
+    end#Desktop
+  end#ErpApp
+end#Knitkit

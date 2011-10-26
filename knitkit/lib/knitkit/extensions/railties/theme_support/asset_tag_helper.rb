@@ -11,7 +11,8 @@ module ActionView
     module AssetTagHelper
       def theme_javascript_path(theme, source)
         theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
-        theme_compute_public_path(theme, source, theme.url + '/javascripts', 'js')
+        file = theme.files.where('name = ? and directory = ?', source, "/#{theme.url}/javascripts").first
+        file.nil? ? '' : file.data.url
       end
       alias_method :theme_path_to_javascript, :theme_javascript_path
 
@@ -40,7 +41,8 @@ module ActionView
 
       def theme_stylesheet_path(theme, source)
         theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
-        theme_compute_public_path(theme, source, theme.url + '/stylesheets', 'css')
+        file = theme.files.where('name = ? and directory = ?', source, "/#{theme.url}/stylesheets").first
+        file.nil? ? '' : file.data.url
       end
       alias_method :theme_path_to_stylesheet, :theme_stylesheet_path
 
@@ -69,7 +71,8 @@ module ActionView
 
       def theme_image_path(theme, source)
         theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
-        theme_compute_public_path(theme, source, theme.url + '/images')
+        file = theme.files.where('name = ? and directory = ?', source, "/#{theme.url}/images").first
+        file.nil? ? '' : file.data.url
       end
       alias_method :theme_path_to_image, :theme_image_path # aliased to avoid conflicts with an image_path named route
 

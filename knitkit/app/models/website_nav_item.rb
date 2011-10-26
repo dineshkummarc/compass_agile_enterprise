@@ -1,20 +1,13 @@
 class WebsiteNavItem < ActiveRecord::Base
   belongs_to :website_nav
   belongs_to :linked_to_item, :polymorphic => true
-
+  
+  has_security
   acts_as_nested_set
   include ErpTechSvcs::Utils::DefaultNestedSetMethods
 
-  def menu_url
-    link = nil
-
-    if linked_to_item.nil?
-      link = url
-    else
-      link = "/"+linked_to_item.permalink.to_s
-    end
-
-    link
+  def path
+    linked_to_item.nil? ? url : linked_to_item.path
   end
   
   def positioned_children

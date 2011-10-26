@@ -2,12 +2,22 @@ module Knitkit
   module ErpApp
     module Desktop
       class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
+        before_filter :set_file_support
         before_filter :set_website, :only => [:new, :change_status, :available_themes]
         before_filter :set_theme, :only => [:delete, :change_status, :copy]
         IGNORED_PARAMS = %w{action controller node_id theme_data}
 
         def index
-          render :json => (params[:node] == ROOT_NODE) ? setup_tree : build_tree_for_directory(params[:node])
+          if params[:node] == ROOT_NODE
+            setup_tree
+          else
+            theme = get_theme(params[:node])
+            unless theme.nil?
+              render :json => @file_support.build_tree(params[:node], :file_asset_holder => theme)
+            else
+              render :json => {:success => false, :message => 'Could not find theme'}
+            end
+          end
         end
 
         def available_themes
@@ -24,19 +34,17 @@ module Knitkit
           else
             theme = Theme.create(:website => @website, :name => params[:name], :theme_id => params[:theme_id])
             params.each do |k,v|
-              next if (k.to_s == 'name' or k.to_s == 'site_id' or k.to_s == 'theme_id')
+              next if k.to_s == 'name' || k.to_s == 'site_id' || k.to_s == 'theme_id'
               theme.send(k + '=', v) unless IGNORED_PARAMS.include?(k.to_s)
             end
             theme.save
           end
-          
-          #issue with chrome and response headers leave it render :inline
+
           render :inline => {:success => true}.to_json
         end
 
         def delete
-          @theme.destroy
-          render :json => {:success => true}
+          render :json => @theme.destroy ? {:success => true} : {:success => false}
         end
 
         def export
@@ -50,9 +58,8 @@ module Knitkit
         def change_status
           #clear active themes
           @website.deactivate_themes! if (params[:active] == 'true')
-
           (params[:active] == 'true') ? @theme.activate! : @theme.deactivate!
- 
+
           render :json => {:success => true}
         end
 
@@ -63,77 +70,118 @@ module Knitkit
         ##############################################################
 
         def create_file
-          path = params[:path]
+          path = File.join(@file_support.root,params[:path])
           name = params[:name]
 
           theme = get_theme(path)
-          theme.add_file('#Empty File', File.join(path,name))
+          theme.add_file('#Empty File', File.join(path, name))
 
           render :json => {:success => true}
         end
 
-        def upload_file
-          result = {}
-          
-          upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
-          name = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data].original_filename : request.env['HTTP_X_FILE_NAME']          
-          data = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data] : request.raw_post
+        def create_folder
+          path = File.join(@file_support.root,params[:path])
+          name = params[:name]
 
-          theme = get_theme(upload_path)
-          begin
-            theme.add_file(data, File.join(upload_path,name))
-            result = {:success => true}
-          rescue Exception=>ex
-            logger.error ex.message
-            logger.error ex.backtrace.join("\n")
-            result = {:success => false, :error => "Error uploading #{name}"}
-          end
-          
-          #the awesome uploader widget whats this to mime type text, leave it render :inline
-          render :inline => result.to_json
+          @file_support.create_folder(path, name)
+          render :json => {:success => true}
         end
-        
+
+        def update_file
+          path = File.join(@file_support.root,params[:node])
+          content = params[:content]
+
+          @file_support.update_file(path, content)
+          render :json => {:success => true}
+        end
+
         def save_move
           result          = {}
           path            = params[:node]
           new_parent_path = params[:parent_node]
           new_parent_path = base_path if new_parent_path == ROOT_NODE
 
-          unless File.exists? path
+          unless @file_support.exists? path
             result = {:success => false, :msg => 'File does not exists'}
           else
             theme_file = get_theme_file(path)
-            theme_file.move(new_parent_path.gsub(Rails.root.to_s,''))
+            theme_file.move(new_parent_path)
             result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
           end
 
           render :json => result
-			  end
+        end
+
+        def download_file
+          path = File.join(@file_support.root,params[:path])
+          contents, message = @file_support.get_contents(path)
+
+          send_data contents, :filename => File.basename(path)
+        end
+
+        def get_contents
+          path = File.join(@file_support.root,params[:node])
+          contents, message = @file_support.get_contents(path)
+
+          if contents.nil?
+            render :text => message
+          else
+            render :text => contents
+          end
+        end
+
+        def upload_file
+          result = {}
+          if request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank?
+            upload_path = params[:directory]
+          else
+            upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
+          end
+
+          unless request.env['HTTP_X_FILE_NAME'].blank?
+            contents = request.raw_post
+            name     = request.env['HTTP_X_FILE_NAME']
+          else
+            file_contents = params[:file_data]
+            name = file_contents.original_path
+            if file_contents.respond_to?(:read)
+              contents = file_contents.read
+            elsif file_contents.respond_to?(:path)
+              contents = File.read(file_contents.path)
+            end
+          end
+
+          theme = get_theme(upload_path)
+          name = File.join(@file_support.root, upload_path, name)
+
+          begin
+            theme.add_file(contents, name)
+            result = {:success => true}
+          rescue Exception=>ex
+            logger.error ex.message
+            logger.error ex.backtrace.join("\n")
+            result = {:success => false, :error => "Error uploading #{name}"}
+          end
+
+          render :json => result
+        end
 
         def delete_file
           path = params[:node]
           result = {}
-
-          unless File.exists? path
-            result = {:success => false, :error => "File does not exists"}
-          else
-            begin
-              if File.directory? path
-                result = Dir.entries(path) == [".", ".."] ? (FileUtils.rm_rf(path);{:success => true, :error => "Directory deleted."}) : {:success => false, :error => "Directory is not empty."}
-              else
-                name = File.basename(path)
-                theme_file = get_theme_file(path)
-                theme_file.destroy
-                result = {:success => true, :error => "#{name} was deleted successfully"}
-              end
-            rescue Exception=>ex
-              logger.error ex.message
-              logger.error ex.backtrace.join("\n")
-              result = {:success => false, :error => "Error deleting #{name}"}
+          begin
+            name = File.basename(path)
+            result, message, is_folder = @file_support.delete_file(File.join(@file_support.root,path))
+            if result && !is_folder
+              theme_file = get_theme_file(path)
+              theme_file.destroy
             end
-
+            result = {:success => result, :error => message}
+          rescue Exception=>ex
+            logger.error ex.message
+            logger.error ex.backtrace.join("\n")
+            result = {:success => false, :error => "Error deleting #{name}"}
           end
-
           render :json => result
         end
 
@@ -142,17 +190,17 @@ module Knitkit
           path = params[:node]
           name = params[:file_name]
 
-          unless File.exists? path
-            result = {:success => false, :data => {:success => false, :error => 'File does not exists'}}
-          else
+          result, message = @file_support.rename_file(path, name)
+          if result
             theme_file = get_theme_file(path)
-            theme_file.rename(name)
+            theme_file.name = name
+            theme_file.save
           end
 
-          render :json => result
+          render :json =>  {:success => true, :message => message}
         end
 
-        private
+        protected
 
         def get_theme(path)
           sites_index = path.index('sites')
@@ -163,12 +211,13 @@ module Knitkit
           themes_index = path.index('themes')
           path = path[themes_index..path.length]
           theme_name = path.split('/')[1]
-          site.themes.find_by_theme_id(theme_name)
+          theme = site.themes.find_by_theme_id(theme_name)
+
+          theme
         end
 
         def get_theme_file(path)
           theme = get_theme(path)
-          path = path.gsub!(Rails.root.to_s,'')
           theme.files.where('name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)).first
         end
 
@@ -177,7 +226,7 @@ module Knitkit
           sites = Website.all
           sites.each do |site|
             site_hash = {
-              :text => site.title,
+              :text => site.name,
               :browseable => true,
               :contextMenuDisabled => true,
               :iconCls => 'icon-globe',
@@ -195,8 +244,8 @@ module Knitkit
               else
                 theme_hash[:iconCls] = 'icon-delete'
               end
-              ['stylesheets', 'javascripts', 'images', 'templates'].each do |resource_folder|
-                theme_hash[:children] << {:text => resource_folder, :leaf => false, :id => "#{theme.path}/#{resource_folder}"}
+              ['stylesheets', 'javascripts', 'images', 'templates', 'widgets'].each do |resource_folder|
+                theme_hash[:children] << {:text => resource_folder, :leaf => false, :id => "/#{theme.url}/#{resource_folder}"}
               end
               themes_hash[:children] << theme_hash
             end
@@ -204,10 +253,8 @@ module Knitkit
             tree << site_hash
           end
 
-          tree
+          render :json => tree
         end
-
-        protected
 
         def set_website
           @website = Website.find(params[:site_id])
@@ -216,8 +263,12 @@ module Knitkit
         def set_theme
           @theme = Theme.find(params[:id])
         end
+
+        def set_file_support
+          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+        end
   
-      end
-    end
-  end
-end
+      end#ThemeController
+    end#Desktop
+  end#ErpApp
+end#Knitkit

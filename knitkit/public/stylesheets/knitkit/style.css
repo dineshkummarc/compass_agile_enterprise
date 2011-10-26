@@ -17,7 +17,7 @@ strong{
 em{
   font-style: italic;
 }
-  
+
 p
 { padding: 0 0 20px 0;
   line-height: 1.7em;}
@@ -25,7 +25,7 @@ p
 img
 { border: 0;}
 
-h1, h2, h3, h4, h5, h6 
+h1, h2, h3, h4, h5, h6
 { font: normal 175% 'century gothic', arial, sans-serif;
   color: #43423F;
   margin: 0 0 15px 0;
@@ -63,7 +63,7 @@ a:hover
   margin-right: 10px;}
 
 .right
-{ float: right; 
+{ float: right;
   width: auto;
   margin-left: 10px;}
 
@@ -73,7 +73,7 @@ a:hover
   margin: 20px auto;}
 
 blockquote
-{ margin: 20px 0; 
+{ margin: 20px 0;
   padding: 10px 20px 0 20px;
   border: 1px solid #E5E5DB;
   background: #FFF;}
@@ -83,7 +83,7 @@ ul
 
 ul li
 { list-style-type: circle;
-  margin: 0 0 6px 0; 
+  margin: 0 0 6px 0;
   padding: 0 0 4px 5px;}
 
 ol
@@ -93,7 +93,7 @@ ol li
 { margin: 0 0 11px 0;}
 
 #main, #logo, #menubar, #site_content, #footer
-{ margin-left: auto; 
+{ margin-left: auto;
   margin-right: auto;}
 
 #header
@@ -104,10 +104,10 @@ ol li
 { width: 825px;
   position: relative;
   height: 168px;
-  background: #025587 url(/images/knitkit/logo.png) no-repeat;}
+  background: #025587 url(../../images/knitkit/logo.png) no-repeat;}
 
-#logo #logo_text 
-{ position: absolute; 
+#logo #logo_text
+{ position: absolute;
   top: 20px;
   left: 0;}
 
@@ -117,7 +117,7 @@ ol li
   text-transform: none;
   margin: 0;}
 
-#logo_text h1, #logo_text h1 a, #logo_text h1 a:hover 
+#logo_text h1, #logo_text h1 a, #logo_text h1 a:hover
 { padding: 22px 0 0 0;
   color: #FFF;
   letter-spacing: 0.1em;
@@ -135,11 +135,11 @@ ol li
 { width: 877px;
   height: 72px;
   padding: 0;
-  background: #29415D url(/images/knitkit/menu.png) repeat-x;}
+  background: #29415D url(../../images/knitkit/menu.png) repeat-x;}
 
 ul#menu, ul#menu li
 { float: left;
-  margin: 0; 
+  margin: 0;
   padding: 0;}
 
 ul#menu li
@@ -148,26 +148,26 @@ ul#menu li
 ul#menu li a
 { letter-spacing: 0.1em;
   font: normal 100% 'lucida sans unicode', arial, sans-serif;
-  display: block; 
-  float: left; 
+  display: block;
+  float: left;
   height: 37px;
   padding: 29px 26px 6px 26px;
   text-align: center;
   color: #FFF;
   text-transform: uppercase;
   text-decoration: none;
-  background: transparent;} 
+  background: transparent;}
 
 ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 { color: #FFF;
-  background: #1C2C3E url(/images/knitkit/menu_select.png) repeat-x;}
+  background: #1C2C3E url(../../images/knitkit/menu_select.png) repeat-x;}
 
 #site_content
 { width: 837px;
   overflow: hidden;
   margin: 0 auto 0 auto;
   padding: 40px 24px 20px 37px;
-  background: #FFF url(/images/knitkit/content.png) repeat-y;}
+  background: #FFF url(../../images/knitkit/content.png) repeat-y;}
 
 .sidebar
 { float: right;
@@ -175,35 +175,36 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
   padding: 0 15px 20px 15px;}
 
 .sidebar ul
-{ width: 178px; 
-  padding: 4px 0 0 0; 
+{ width: 178px;
+  padding: 4px 0 0 0;
   margin: 4px 0 30px 0;}
 
 .sidebar li
-{ list-style: none; 
+{ list-style: none;
   padding: 0 0 7px 0; }
 
 .sidebar li a, .sidebar li a:hover
 { padding: 0 0 0 40px;
   display: block;
-  background: transparent url(/images/knitkit/link.png) no-repeat left center;}
+  background: transparent url(../../images/knitkit/link.png) no-repeat left center;}
 
 .sidebar li a.selected
 { color: #444;
-  text-decoration: none;} 
+  text-decoration: none;}
 
 #content
 { text-align: left;
   width: 595px;
-  padding: 0;}
+  padding: 0;
+  float: left;}
 
 #content ul
 { margin: 2px 0 22px 0px;}
 
 #content ul li
 { list-style-type: none;
-  background: url(/images/knitkit/bullet.png) no-repeat;
-  margin: 0 0 6px 0; 
+  background: url(../../images/knitkit/bullet.png) no-repeat;
+  margin: 0 0 6px 0;
   padding: 0 0 4px 25px;
   line-height: 1.5em;}
 
@@ -212,8 +213,8 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
   font: normal 100% 'lucida sans unicode', arial, sans-serif;
   height: 33px;
   padding: 24px 0 5px 0;
-  text-align: center; 
-  background: #29425E url(/images/knitkit/footer.png) repeat-x;
+  text-align: center;
+  background: #29425E url(../../images/knitkit/footer.png) repeat-x;
   color: #FFF;
   text-transform: uppercase;
   letter-spacing: 0.1em;}
@@ -227,10 +228,10 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
   text-decoration: underline;}
 
 .search
-{ color: #5D5D5D; 
-  border: 1px solid #BBB; 
-  width: 134px; 
-  padding: 4px; 
+{ color: #5D5D5D;
+  border: 1px solid #BBB;
+  width: 134px;
+  padding: 4px;
   font: 100% arial, sans-serif;}
 
 .form_settings
@@ -240,39 +241,39 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 { padding: 0 0 4px 0;}
 
 .form_settings span
-{ float: left; 
+{ float: left;
   width: 125px;
   text-align: left;}
-  
+
 .form_settings input, .form_settings textarea
-{ padding: 5px; 
-  width: 299px; 
-  font: 100% arial; 
+{ padding: 5px;
+  width: 299px;
+  font: 100% arial;
   border: 1px solid #CCCCCC;
-  background: #FFF; 
+  background: #FFF;
   color: #47433F;}
-  
+
 .form_settings .submit
-{ font: 100% arial; 
-  border: 1px solid; 
-  width: 99px; 
-  margin: 0 0 0 212px; 
+{ font: 100% arial;
+  border: 1px solid;
+  width: 99px;
+  margin: 0 0 0 212px;
   height: 33px;
   padding: 2px 0 3px 0;
-  cursor: pointer; 
-  background: #263C56; 
+  cursor: pointer;
+  background: #263C56;
   color: #FFF;}
 
 .form_settings textarea, .form_settings select
-{ font: 100% arial; 
+{ font: 100% arial;
   width: 299px;}
 
 .form_settings select
 { width: 310px;}
 
 .form_settings .checkbox
-{ margin: 4px 0; 
-  padding: 0; 
+{ margin: 4px 0;
+  padding: 0;
   width: 14px;
   border: 0;
   background: none;}
@@ -296,15 +297,15 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 }
 
 .blog_tags
-{ 
+{
   float: right;
 }
 
 .blog_link
-{ 
+{
   margin-bottom: 10px;
 }
-  
+
 table
 {
   /* Beware that ExtJS uses tables for forms so modifying this class will modify the ExtJS form style */
@@ -316,9 +317,9 @@ table tr th, table tr td
   padding: 7px 4px;
   text-align: left;
 }
-  
+
 table tr td
-{ 
+{
   background: transparent;
   color: #47433F;
 }
@@ -362,11 +363,28 @@ ul#submenu li a
 ul#submenu li a:hover, ul#submenu li.selected a, ul#submenu li.selected a:hover
 { color: #000;}
 
-
-div.sexyerror{
-	background: #FFEBE8 none repeat scroll 0;border: 1px solid #DD3C10;padding: 1em;font-weight: bold;font:16px;
+ul.side_menu_children{
+  margin: 2px 0 2px 17px;
 }
 
-div.sexysuccess{
-	background: #DDFED1 none repeat scroll 0;border: 1px solid #1FCB4A;padding: 1em;font-weight: bold;font:16px;
+ul#side_menu li{
+  list-style-type: none;
+  color:#1293EE;
+}
+
+#side_menu_container{
+  float: left;
+  background-image: url('../../images/knitkit/greyFadeDown.png');
+  margin: 20px 20px 0 0;
+  width: 125px;
+}
+
+ul#side_menu{
+  margin: 4px 22px 22px;
+}
+
+ul#side_menu li a:hover, ul#side_menu li.selected a, ul#side_menu li.selected a:hover
+{
+	text-decoration:none;
+	color:black;
 }

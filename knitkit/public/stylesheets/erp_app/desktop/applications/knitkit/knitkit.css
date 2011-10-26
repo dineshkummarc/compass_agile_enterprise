@@ -14,6 +14,8 @@
 .image-assets .thumb {
     background: none repeat scroll 0 0 #DDDDDD;
     padding: 3px;
+    height: 65px;
+    width: 95px;
 }
 
 .images-assets .thumb-wrap span {

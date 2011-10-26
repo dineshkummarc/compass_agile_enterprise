@@ -34,7 +34,11 @@ module Knitkit
             end
           end
 
-          render :inline => "{\"success\":true, \"results\":#{published_websites.count}, \"totalCount\":#{@website.published_websites.count}, \"data\":#{published_websites.to_json(:only => [:comment, :id, :version, :created_at, :active],:methods => [:viewing])} }"
+          render :inline => "{\"success\":true, \"results\":#{published_websites.count},
+                            \"totalCount\":#{@website.published_websites.count},
+                            \"data\":#{published_websites.to_json(
+          :only => [:comment, :id, :version, :created_at, :active],
+          :methods => [:viewing, :published_by_username])} }"
         end
 
         def activate_publication
@@ -56,7 +60,7 @@ module Knitkit
         end
 
         def publish
-          @website.publish(params[:comment])
+          @website.publish(params[:comment], current_user)
 
           render :json => {:success => true}
         end
@@ -77,14 +81,19 @@ module Knitkit
           website_section.title = "Home"
           website_section.in_menu = true
           website.website_sections << website_section
-          website.create_publication_and_role
-          website.setup_default_pages
           if website.save
-            website.hosts << WebsiteHost.create(:host => params[:host])      
+            website.setup_default_pages
+
+            #set default publication published by user
+            first_publication = website.published_websites.first
+            first_publication.published_by = current_user
+            first_publication.save
+
+            website.hosts << WebsiteHost.create(:host => params[:host])
             website.save
 
-            website.publish("Publish Default Sections")
-            PublishedWebsite.activate(website, 1)
+            website.publish("Publish Default Sections", current_user)
+            PublishedWebsite.activate(website, 1, current_user)
       
             result[:success] = true
           else
@@ -110,9 +119,7 @@ module Knitkit
   
  
         def delete
-          @website.destroy
-
-          render :json => {:success => true}
+          render :json => @website.destroy ? {:success => true} : {:success => false}
         end
 
         def export
@@ -123,9 +130,9 @@ module Knitkit
         end
 
         def import
-          result, message = Website.import(params[:website_data])
+          result, message = Website.import(params[:website_data], current_user)
 
-          render :json => {:success => result, :message => message}
+          render :inline => {:success => result, :message => message}.to_json
         ensure
           FileUtils.rm_r File.dirname(zip_path) rescue nil
         end
@@ -139,15 +146,15 @@ module Knitkit
           render :json => {
             :success => true,
             :node => {
-              :text => website_host.host,
+              :text => website_host.attributes['host'],
               :websiteHostId => website_host.id,
-              :host => website_host.host,
+              :host => website_host.attributes['host'],
               :iconCls => 'icon-globe',
-              :url => "http://#{website_host.host}",
+              :url => "http://#{website_host.attributes['host']}",
               :isHost => true,
               :leaf => true,
               :children => []}
-            }
+          }
         end
 
         def update_host
@@ -159,18 +166,16 @@ module Knitkit
         end
 
         def delete_host
-          WebsiteHost.destroy(params[:id])
-
-          render :json => {:success => true}
+          render :json => WebsiteHost.destroy(params[:id]) ? {:success => true} : {:success => false}
         end
 
-        private
+        protected
 
         def set_website
           @website = Website.find(params[:id])
         end
   
-      end
-    end
-  end
-end
+      end#WebsiteController
+    end#Desktop
+  end#ErpApp
+end#Knitkit

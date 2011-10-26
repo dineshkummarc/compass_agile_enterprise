@@ -19,7 +19,7 @@ Knitkit::Engine.routes.draw do
   match '/erp_app/desktop/image_assets/:context/:action' => 'erp_app/desktop/image_assets'
   match '/erp_app/desktop/file_assets/:context/:action' => 'erp_app/desktop/file_assets'
   #article
-  match '/erp_app/desktop/articles/:action/:section_id' => 'erp_app/desktop/articles'
+  match '/erp_app/desktop/articles/:action(/:section_id)' => 'erp_app/desktop/articles'
   #content
   match '/erp_app/desktop/content/:action' => 'erp_app/desktop/content'
   #website

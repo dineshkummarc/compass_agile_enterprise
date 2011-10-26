@@ -61,7 +61,7 @@ class Desktop < ActiveRecord::Base
               contents = File.read(image_data.path)
             end
             FileUtils.mkdir_p(BACKGROUND_IMAGES_PATH) unless File.directory? BACKGROUND_IMAGES_PATH 
-            File.open(File.join(BACKGROUND_IMAGES_PATH,name), 'wb'){|f| f.write(contents)}
+            File.open(File.join(BACKGROUND_IMAGES_PATH,name), 'wb'){|f| f.puts(contents)}
             pref_type = PreferenceType.iid('desktop_background')
             pref_type.preference_options << PreferenceOption.create(:description => description, :internal_identifier => (description.gsub(' ','').underscore + '_desktop_background'), :value => name)
             pref_type.save

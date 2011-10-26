@@ -58,7 +58,7 @@ module RailsDbAdmin
 	    
 	    FileUtils.mkdir_p(path) unless File.directory? path
 	    File.new("#{path}#{name}.sql", 'w') unless File.exist?("#{path}#{name}.sql")
-	    File.open("#{path}#{name}.sql", 'w+'){|f| f.write(query) }
+	    File.open("#{path}#{name}.sql", 'w+'){|f| f.puts(query) }
 	  end
 	  
 	  def delete_query(name, database_connection_name)
