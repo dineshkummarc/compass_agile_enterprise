@@ -206,7 +206,17 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
 
     end
 
+  end
 
+  describe "get_row_data" do
+
+    it "should send good sql to the connection adapter" do
+
+      @sql = "SELECT * FROM \"role_types\"  WHERE \"role_types\".\"id\" = 3"
+
+      @adapter.should_receive(:select_all).with(@sql).and_return([])
+      returns = @instance.get_row_data("role_types", ['id', 3])
+    end
 
 
   end

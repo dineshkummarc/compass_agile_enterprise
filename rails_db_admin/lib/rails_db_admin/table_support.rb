@@ -1,34 +1,22 @@
 module RailsDbAdmin
-	class TableSupport
+  class TableSupport
 
-	  def initialize(database_connection_class)
-	   @connection = database_connection_class.connection
-	  end
-	
-	  def update_table(table, id, data)
-	    columns = @connection.columns(table)
-	
-	    sql = "update #{table} set "
-	
-      #TODO: Should make sure all values are strings, otherwise gsub could fail here
-	    data.each do |k,v|
-	      columns.each do |column|
-	        if column.name == k
-	          sql << if column.type == :string or column.type == :text
-	            " #{k} = '#{v.gsub("'","''")}',"
-	          else
-	            (v.blank? ? " #{k} = null," : " #{k} = '#{v.gsub("'","''")}',")
-	          end
-	        end
-	      end
-	    end
-	
-	    sql = sql[0..sql.length - 2]
-	
-	    sql << " where id = #{id}"
-	    
-	    @connection.execute(sql)
-	  end
+    def initialize(database_connection_class)
+     @connection = database_connection_class.connection
+    end
+
+    def update_table(table, id, data)
+
+      arel_table = Arel::Table::new(table)
+      data = RailsDbAdmin::TableSupport.arel_attr(data, arel_table)
+
+      pk = id[0].to_sym
+      query = arel_table.where(arel_table[pk].eq(id[1])).compile_update(data)
+
+      @connection.execute(query.to_sql)
+    end
+
+
 
     def update_table_without_id(table, data)
       columns = @connection.columns(table)
@@ -172,6 +160,17 @@ module RailsDbAdmin
 	
 	    records.reverse
 	  end
+
+    #Construct a hash of ARel relation objects as
+    #keys and assign with values for use in update
+    #calls
+    def self.arel_attr data, arel_table
+      cln_hsh = {}
+      data.each do |k,v|
+        cln_hsh[arel_table[k.to_sym]] = v
+      end
+      cln_hsh
+    end
 
     #Accepts an array of table row hashes and adds a 'fake_id'
     #field to each one with a generated number.  Useful

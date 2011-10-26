@@ -107,8 +107,12 @@ module RailsDbAdmin
       table = params[:table]
       id = params[:data][0]['id']
 
-      if id != nil
-        params[:data][0].delete('id')
+      if @database_connection_class.connection.supports_primary_key? &&
+          @database_connection_class.connection.primary_key(table) != nil
+
+        id = [@database_connection_class.connection.primary_key(table), nil]
+        id[1] = params[:data][0][id[0]]
+        params[:data][0].delete(id[0])
 
         @table_support.update_table(table, id, params[:data][0])
         record = @json_data_builder.get_row_data(table, id)

@@ -33,6 +33,7 @@ module RailsDbAdmin
 
         rows = @connection.select_all(query.to_sql)
         records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
+
         if !records.empty? && !records[0].has_key?("id")
           records = RailsDbAdmin::TableSupport.add_fake_id_col(records)
         end
@@ -41,9 +42,12 @@ module RailsDbAdmin
       end
 
       def get_row_data(table, id)
-        query = "select * from #{table} where id = #{id}"
+        arel_table = Arel::Table::new(table)
 
-        rows = @connection.select_all(query)
+        query = arel_table.project(
+          Arel.sql('*')).where(arel_table[id[0].to_sym].eq(id[1]))
+
+        rows = @connection.select_all(query.to_sql)
         records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
         records[0]
       end

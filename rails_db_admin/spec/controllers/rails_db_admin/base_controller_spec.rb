@@ -185,9 +185,9 @@ describe RailsDbAdmin::BaseController do
     it "should return success" do
 
       @table_support.should_receive(:update_table).with(
-        "role_types", "2", @mod_role_types_data)
+        "role_types", ['id', "2"], @mod_role_types_data)
       @json_data_builder.should_receive(:get_row_data).with(
-        "role_types", "2").and_return(@role_types_data)
+        "role_types", ['id', "2"]).and_return(@role_types_data)
 
       put :base, {:use_route => :rails_db_admin,
                   :action => "table_data",

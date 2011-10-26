@@ -10,10 +10,41 @@ describe RailsDbAdmin::TableSupport do
     @adapter = double(ActiveRecord::ConnectionAdapters::AbstractAdapter)
   end
 
+  describe "update_table" do
+
+    it "should be able to send a correctly formed SQL statment to the ConnectionAdapter" do
+      table = "role_types"
+      data = {"parent_id" => "",
+                          "lft" => "3",
+                          "rgt" => "4",
+                          "description" => "Partner-Test",
+                          "comments" => "",
+                          "internal_identifier" => "partner",
+                          "external_identifier" => "",
+                          "external_id_source" => "",
+                          "created_at" => "2011-10-11 00:54:56.137144",
+                          "updated_at" => "2011-10-11 00:54:56.137144"}
+
+
+      sql = "UPDATE \"role_types\" SET \"parent_id\" = 0, \"lft\" = 3, "\
+            "\"rgt\" = 4, \"description\" = 'Partner-Test', "\
+            "\"comments\" = '', \"internal_identifier\" = 'partner', "\
+            "\"external_identifier\" = '', \"external_id_source\" = '', "\
+            "\"created_at\" = '2011-10-11 00:54:56.137144', "\
+            "\"updated_at\" = '2011-10-11 00:54:56.137144' "\
+            "WHERE \"role_types\".\"id\" = 5"
+
+      @connection_class.should_receive(:connection).and_return(@adapter)
+      @instance = RailsDbAdmin::TableSupport.new(@connection_class)
+      @adapter.should_receive(:execute).with(sql)
+      @instance.update_table(table, ["id","5"], data)
+    end
+  end
 
   describe "update_table_without_id" do
 
     it "should be able to send a correctly formed SQL statment to the ConnectionAdapter" do
+
       table = "preference_options_preference_types"
       data = [{"preference_type_id" => "1",
               "preference_option_id" => "2",
@@ -34,11 +65,11 @@ describe RailsDbAdmin::TableSupport do
 
       @connection_class.should_receive(:connection).and_return(@adapter)
       @instance = RailsDbAdmin::TableSupport.new(@connection_class)
+      #@adapter.should_receive(:supports_primary_key?).and_return(false)
       @adapter.should_receive(:columns).with(table).and_return(col)
       @adapter.should_receive(:execute).with(sql)
       @instance.update_table_without_id(table, data)
     end
-
   end
 
   describe "add_fake_id_col" do
