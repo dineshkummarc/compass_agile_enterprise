@@ -24,6 +24,7 @@ ActionView::Base.class_eval do
     end
     
     published_contents.each do |content|
+      html << "<h3>#{content.title}</h3>" if content.display_title?
       body_html = content.body_html.nil? ? '' : content.body_html
       html << body_html
     end
