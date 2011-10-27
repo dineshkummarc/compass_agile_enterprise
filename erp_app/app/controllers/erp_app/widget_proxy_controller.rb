@@ -1,6 +1,7 @@
 module ErpApp
 	class WidgetProxyController < ErpApp::ApplicationController
-	  attr_accessor :performed_redirect
+	  before_filter :set_website
+    attr_accessor :performed_redirect
 
 	  def index
 		  @widget_name   = params[:widget_name]
@@ -15,6 +16,19 @@ module ErpApp
 
   		render widget_obj.send(@widget_action)
 		end
+
+    protected
+    def set_website
+      @website = Website.find_by_host(request.host_with_port)
+    end
+
+    def current_themes
+      @website.themes.active if @website
+    end
+
+    def current_theme_paths
+      current_themes ? current_themes.map { |theme| {:path => theme.path.to_s, :url => theme.url.to_s}} : []
+    end
 	  
 	end
 end

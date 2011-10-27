@@ -8,8 +8,6 @@ module Widgets
   
       #should not be modified
       #modify at your own risk
-      self.view_paths = File.join(File.dirname(__FILE__),"/views")
-  
       def locate
         File.dirname(__FILE__)
       end
