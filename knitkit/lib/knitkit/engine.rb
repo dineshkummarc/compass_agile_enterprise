@@ -29,7 +29,7 @@ module Knitkit
     #set engine to scope
   	engine = self
   	config.to_prepare do 
-  		#load extensions for engine
+      #load extensions for engine
   		engine.load_extensions
   		#load widgets for engine
   		engine.load_widgets

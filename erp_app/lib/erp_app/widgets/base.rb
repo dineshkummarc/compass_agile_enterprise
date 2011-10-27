@@ -17,7 +17,7 @@ module ErpApp
 	  
       IGNORED_PARAMS = %w{action controller uuid widget_name widget_action dynamic_form_id dynamic_form_model_id model_name use_dynamic_form authenticity_token is_html_form commit utf8}
     
-      delegate :config, :params, :session, :request, :logger, :user_signed_in?, :current_user, :flash, :update_div_id, :update_html, :current_theme_paths, :to => :controller
+      delegate :config, :params, :session, :request, :logger, :user_signed_in?, :current_user, :flash, :update_div_id, :update_html, :current_theme_paths, :request, :to => :controller
 
       attr_accessor :controller
       attr_reader   :state_name
@@ -132,34 +132,6 @@ module ErpApp
           ErpApp::Widgets::Base.view_resolver_cache << resolver
         else
           prepend_view_path(cached_resolver)
-        end
-
-        #set overrides by themes
-        current_theme_paths.each do |theme|
-          resolver = case ErpTechSvcs::FileSupport.options[:storage]
-          when :s3
-            ErpTechSvcs::FileSupport::S3Manager.reload
-            path = "/#{theme[:url]}/widgets/#{self.name}"
-            cached_resolver = ErpApp::Widgets::Base.view_resolver_cache.find{|cached_resolver| cached_resolver.to_path == path}
-            if cached_resolver.nil?
-              resolver = ActionView::S3Resolver.new(path)
-              ErpApp::Widgets::Base.view_resolver_cache << resolver
-              resolver
-            else
-              cached_resolver
-            end
-          when :filesystem
-            path = "#{theme[:path]}/widgets/#{self.name}"
-            cached_resolver = ErpApp::Widgets::Base.view_resolver_cache.find{|cached_resolver| cached_resolver.to_path == path}
-            if cached_resolver.nil?
-              resolver = ActionView::OptimizedFileSystemResolver.new(path)
-              ErpApp::Widgets::Base.view_resolver_cache << resolver
-              resolver
-            else
-              cached_resolver
-            end
-          end
-          prepend_view_path(resolver)
         end
       end
     

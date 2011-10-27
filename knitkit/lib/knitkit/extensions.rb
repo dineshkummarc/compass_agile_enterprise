@@ -13,3 +13,6 @@ require 'knitkit/extensions/active_record/theme_support/has_many_themes'
 
 #active_controller extensions
 require 'knitkit/extensions/action_controller/theme_support/acts_as_themed_controller'
+
+#compass extensions
+require 'knitkit/extensions/compass/widgets/base'
