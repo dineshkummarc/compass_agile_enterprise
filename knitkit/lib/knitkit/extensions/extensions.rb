@@ -4,7 +4,7 @@ require 'knitkit/extensions/core/array'
 #railties
 require 'knitkit/extensions/railties/action_view'
 require 'knitkit/extensions/railties/theme_support/asset_tag_helper'
-require 'knitkit/extensions/railties/theme_support/path_resolver'
+require 'knitkit/extensions/railties/theme_support/s3_resolver'
 
 #active_record extensions
 require 'knitkit/extensions/active_record/acts_as_commentable'

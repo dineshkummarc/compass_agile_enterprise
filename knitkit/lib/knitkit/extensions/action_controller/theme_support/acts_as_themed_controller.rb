@@ -2,6 +2,9 @@ module Knitkit
   module Extensions
     module ActionController
       module ThemeSupport
+        class Cache
+          cattr_accessor :theme_resolvers
+        end
         module ActsAsThemedController
           def self.included(base)
             base.class_eval do
@@ -34,17 +37,34 @@ module Knitkit
             end
 
             def add_theme_view_paths
+              ThemeSupport::Cache.theme_resolvers = [] if ThemeSupport::Cache.theme_resolvers.nil?
               if respond_to?(:current_theme_paths)
-                paths = current_theme_paths.map do |theme|
-                  case ErpTechSvcs::FileSupport.options[:storage]
+                current_theme_paths.each do |theme|
+                  resolver = case ErpTechSvcs::FileSupport.options[:storage]
                   when :s3
                     ErpTechSvcs::FileSupport::S3Manager.reload
-                    "/#{theme[:url]}/templates"
+                    path = "/#{theme[:url]}/templates"
+                    cached_resolver = ThemeSupport::Cache.theme_resolvers.find{|cached_resolver| cached_resolver.to_path == path}
+                    if cached_resolver.nil?
+                      resolver = ActionView::S3Resolver.new(path)
+                      ThemeSupport::Cache.theme_resolvers << resolver
+                      resolver
+                    else
+                      cached_resolver
+                    end
                   when :filesystem
-                    "#{theme[:path]}/templates"
+                    path = "#{theme[:path]}/templates"
+                    cached_resolver = ThemeSupport::Cache.theme_resolvers.find{|cached_resolver| cached_resolver.to_path == path}
+                    if cached_resolver.nil?
+                      resolver = ActionView::OptimizedFileSystemResolver.new(path)
+                      ThemeSupport::Cache.theme_resolvers << resolver
+                      resolver
+                    else
+                      cached_resolver
+                    end
                   end
+                  prepend_view_path(resolver)
                 end
-                prepend_view_path(paths) unless paths.empty?
               end
             end
 
