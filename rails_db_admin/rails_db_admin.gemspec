@@ -15,11 +15,13 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   
   s.add_dependency "rails", "~> 3.1.0"
-  
-  s.add_development_dependency("rspec-rails", "~> 2.5")
+
+  s.add_development_dependency("cucumber-rails", "~> 1.1.1")
+  s.add_development_dependency("database_cleaner")
   s.add_development_dependency("factory_girl_rails", "~> 1.2.0")
-  s.add_development_dependency("watchr")
+  s.add_development_dependency("rspec-rails", "~> 2.5")
   s.add_development_dependency("spork", "~> 0.9.0.rc")
   s.add_development_dependency "sqlite3"
   s.add_development_dependency("simplecov", ">= 0.5.4")
+  s.add_development_dependency("watchr")
 end
