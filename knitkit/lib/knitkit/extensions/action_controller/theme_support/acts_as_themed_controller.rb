@@ -27,23 +27,29 @@ module Knitkit
           module InstanceMethods
             def current_themes
               @current_themes ||= case accessor = self.class.read_inheritable_attribute(:current_themes)
-                when Symbol then accessor == :current_themes ? raise("screwed") : send(accessor)
-                when Proc   then accessor.call(self)
-                else accessor
+              when Symbol then accessor == :current_themes ? raise("screwed") : send(accessor)
+              when Proc   then accessor.call(self)
+              else accessor
               end
             end
 
             def add_theme_view_paths
               if respond_to?(:current_theme_paths)
-                paths = current_theme_paths.map do |path| 
-                  File.join(path,'templates')
+                paths = current_theme_paths.map do |theme|
+                  case ErpTechSvcs::FileSupport.options[:storage]
+                  when :s3
+                    ErpTechSvcs::FileSupport::S3Manager.reload
+                    "/#{theme[:url]}/templates"
+                  when :filesystem
+                    "#{theme[:path]}/templates"
+                  end
                 end
                 prepend_view_path(paths) unless paths.empty?
               end
             end
 
             def current_theme_paths
-              current_themes ? current_themes.map { |theme| theme.path.to_s } : []
+              current_themes ? current_themes.map { |theme| {:path => theme.path.to_s, :url => theme.url.to_s}} : []
             end
 
             def authorize_template_extension!(template, ext)

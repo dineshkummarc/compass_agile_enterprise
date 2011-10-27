@@ -5,6 +5,8 @@ module ErpTechSvcs
   module FileSupport
     class S3Manager < Manager
       class << self
+        cattr_accessor :node_tree
+
         def setup_connection
           @@configuration = YAML::load_file(File.join(Rails.root,'config','s3.yml'))[Rails.env]
 
@@ -164,7 +166,7 @@ module ErpTechSvcs
           message = 'File does not exists'
         end
 
-        contents = object.value if message.nil?
+        contents = object.value.to_s if message.nil?
 
         return contents, message
       end

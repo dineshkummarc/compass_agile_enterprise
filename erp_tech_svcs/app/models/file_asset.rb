@@ -113,7 +113,7 @@ class FileAsset < ActiveRecord::Base
   end
 
   def set_content_type
-    klass = FileAsset.type_for(self.data_file_name).constantize
+    klass = @type.constantize
     content_type = klass == Image ? "image/#{self.extname.downcase}" : klass.content_type
     self.data.instance_write(:content_type, content_type)
   end
