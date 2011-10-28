@@ -4,7 +4,7 @@ module Knitkit
       class ThemeController < ::ErpApp::Desktop::FileManager::BaseController
         before_filter :set_file_support
         before_filter :set_website, :only => [:new, :change_status, :available_themes]
-        before_filter :set_theme, :only => [:delete, :change_status, :copy]
+        before_filter :set_theme, :only => [:delete, :change_status, :theme_widget, :available_widgets]
         IGNORED_PARAMS = %w{action controller node_id theme_data}
 
         def index
@@ -21,11 +21,16 @@ module Knitkit
         end
 
         def available_themes
-          result = {:success => true, :themes => []}
-          @website.themes.each do |theme|
-            result[:themes].push << {:id => theme.id, :name => theme.name}
-          end
-          render :json => result
+          render :json => {:success => true, :themes => @website.themes.map{|theme|{:id => theme.id, :name => theme.name}}}
+        end
+
+        def available_widgets
+          render :json => {:success => true, :widgets => @theme.non_themed_widgets.map{|widget|{:id => widget, :name => widget.humanize}}}
+        end
+
+        def theme_widget
+          @theme.create_layouts_for_widget(params[:widget_id])
+          render :json => {:success => true}
         end
 
         def new
@@ -261,7 +266,7 @@ module Knitkit
         end
 
         def set_theme
-          @theme = Theme.find(params[:id])
+          @theme = Theme.find(params[:theme_id])
         end
 
         def set_file_support

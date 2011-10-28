@@ -13,7 +13,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
       url: '/knitkit/erp_app/desktop/theme/change_status',
       method: 'POST',
       params:{
-        id:themeId,
+        theme_id:themeId,
         site_id:siteId,
         active:active
       },
@@ -52,7 +52,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
           url: '/knitkit/erp_app/desktop/theme/delete',
           method: 'POST',
           params:{
-            id:themeId
+            theme_id:themeId
           },
           success: function(response) {
             var obj =  Ext.decode(response.responseText);
@@ -83,9 +83,163 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
     window.open('/knitkit/erp_app/desktop/theme/export?id='+themeId,'mywindow','width=400,height=200');
     self.initialConfig['centerRegion'].clearWindowStatus();
   },
+
+  themeWidget : function(){
+    var self = this;
+    self.sitesJsonStore.load();
+    var themesJsonStore = Ext.create("Ext.data.Store",{
+      autoLoad:true,
+      proxy:{
+        url:'/knitkit/erp_app/desktop/theme/available_themes',
+        type:'ajax',
+        reader:{
+          type:'json',
+          root:'themes'
+        }
+      },
+      fields: [
+      {
+        name:'name'
+      },
+      {
+        name:'id'
+      }
+      ]
+    });
+    
+    var widgetsJsonStore = Ext.create("Ext.data.Store",{
+      proxy:{
+        url:'/knitkit/erp_app/desktop/theme/available_widgets',
+        type:'ajax',
+        reader:{
+          type:'json',
+          root:'widgets'
+        }
+      },
+      fields: [
+      {
+        name:'name'
+      },
+      {
+        name:'id'
+      }
+      ]
+    });
+
+    var widgetThemeWindow = Ext.create("Ext.window.Window",{
+      layout:'fit',
+      width:375,
+      title:'Theme Widget',
+      plain: true,
+      buttonAlign:'center',
+      items: new Ext.FormPanel({
+        labelWidth: 110,
+        frame:false,
+        bodyStyle:'padding:5px 5px 0',
+        fileUpload: true,
+        url:'/knitkit/erp_app/desktop/theme/theme_widget',
+        defaults: {
+          width: 225
+        },
+        items: [
+        {
+          xtype:'combo',
+          hiddenName:'site_id',
+          name:'site_id',
+          store:self.sitesJsonStore,
+          forceSelection:true,
+          editable:false,
+          fieldLabel:'Website',
+          emptyText:'Select Site...',
+          typeAhead: false,
+          displayField:'name',
+          valueField:'id',
+          allowBlank:false,
+          listeners:{
+            'select':function(combo, records, opts){
+              this.next().enable();
+              themesJsonStore.setExtraParam("site_id", records[0].get("id"));
+              themesJsonStore.load();
+            }
+          }
+        },
+        {
+          xtype:'combo',
+          hiddenName:'theme_id',
+          name:'theme_id',
+          store:themesJsonStore,
+          forceSelection:true,
+          editable:false,
+          disabled:true,
+          fieldLabel:'Theme',
+          emptyText:'Select Theme...',
+          typeAhead: false,
+          mode: 'remote',
+          displayField:'name',
+          valueField:'id',
+          allowBlank:false,
+          listeners:{
+            'select':function(combo, records, opts){
+              this.next().enable();
+              widgetsJsonStore.setExtraParam("theme_id", records[0].get("id"));
+              widgetsJsonStore.load();
+            }
+          }
+        },
+        {
+          xtype:'combo',
+          hiddenName:'widget_id',
+          name:'widget_id',
+          store:widgetsJsonStore,
+          forceSelection:true,
+          editable:false,
+          disabled:true,
+          fieldLabel:'Widget',
+          emptyText:'Select Widget...',
+          typeAhead: false,
+          mode: 'remote',
+          displayField:'name',
+          valueField:'id',
+          allowBlank:false
+        },
+        ]
+      }),
+      buttons: [{
+        text:'Submit',
+        listeners:{
+          'click':function(button){
+            var form = this.up('window').query('form')[0].getForm();
+            if(form.isValid()){
+              form.submit({
+                waitMsg: 'Generating layout files for widget...',
+                success:function(form, action){
+                  var obj = Ext.decode(action.response.responseText);
+                  if(obj.success){
+                    self.getStore().load({
+                      node:self.getRootNode()
+                    });
+                  }
+                  widgetThemeWindow.close();
+                },
+                failure:function(form, action){
+                  Ext.Msg.alert("Error", "Error generating layouts");
+                }
+              });
+            }
+          }
+        }
+      },{
+        text: 'Close',
+        handler: function(){
+          widgetThemeWindow.close();
+        }
+      }]
+    });
+    widgetThemeWindow.show();
+  },
   
   constructor : function(config) {
-    var sitesJsonStore = Ext.create("Ext.data.Store",{
+    this.sitesJsonStore = Ext.create("Ext.data.Store",{
       proxy:{
         url:'/knitkit/erp_app/desktop/site/index',
         type:'ajax',
@@ -220,11 +374,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
           text:'Add Theme',
           iconCls:'icon-add',
           handler:function(btn){
-            var addThemeWindow = new Ext.Window({
+            self.sitesJsonStore.load();
+            var addThemeWindow = Ext.create("Ext.window.Window",{
               layout:'fit',
               width:375,
               title:'New Theme',
-              height:325,
               plain: true,
               buttonAlign:'center',
               items: new Ext.FormPanel({
@@ -241,16 +395,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                   xtype:'combo',
                   hiddenName:'site_id',
                   name:'site_id',
-                  store:sitesJsonStore,
+                  store:self.sitesJsonStore,
                   forceSelection:true,
                   editable:false,
                   fieldLabel:'Website',
                   emptyText:'Select Site...',
                   typeAhead: false,
-                  mode: 'remote',
                   displayField:'name',
                   valueField:'id',
-                  triggerAction: 'all',
                   allowBlank:false
                 },
                 {
@@ -330,11 +482,11 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
           text:'Upload Theme',
           iconCls:'icon-upload',
           handler:function(btn){
-            var uploadThemeWindow = new Ext.Window({
+            self.sitesJsonStore.load();
+            var uploadThemeWindow = Ext.create("Ext.window.Window",{
               layout:'fit',
               width:375,
               title:'New Theme',
-              height:140,
               plain: true,
               buttonAlign:'center',
               items: new Ext.FormPanel({
@@ -351,16 +503,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
                   xtype:'combo',
                   hiddenName:'site_id',
                   name:'site_id',
-                  store:sitesJsonStore,
+                  store:self.sitesJsonStore,
                   forceSelection:true,
                   editable:false,
                   fieldLabel:'Website',
                   emptyText:'Select Site...',
                   typeAhead: false,
-                  mode: 'remote',
                   displayField:'name',
                   valueField:'id',
-                  triggerAction: 'all',
                   allowBlank:false
                 },
                 {
@@ -405,6 +555,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ThemesTreePanel",{
               }]
             });
             uploadThemeWindow.show();
+          }
+        },
+        {
+          text:'Theme Widget',
+          iconCls:'icon-picture',
+          handler:function(btn){
+            self.themeWidget();
           }
         }
         ]

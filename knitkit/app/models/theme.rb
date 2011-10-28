@@ -75,6 +75,29 @@ class Theme < ActiveRecord::Base
     update_attributes! :active => false
   end
 
+  def themed_widgets
+    widgets = []
+    ErpApp::Widgets::Base.installed_widgets.each do |widget_name|
+      widgets << widget_name unless self.files.where("directory like '/#{File.join(self.url, 'widgets', widget_name)}%'").empty?
+    end
+    widgets
+  end
+
+  def non_themed_widgets
+    already_themed_widgets = self.themed_widgets
+    widgets = []
+    ErpApp::Widgets::Base.installed_widgets.each do |widget_name|
+      widgets << widget_name unless already_themed_widgets.include?(widget_name)
+    end
+    widgets
+  end
+
+  def create_layouts_for_widget(widget)
+    file_support = ErpTechSvcs::FileSupport::Base.new
+    views_location = "::Widgets::#{widget.camelize}::Base".constantize.views_location
+    create_theme_files_for_directory_node(file_support.build_tree(views_location), :widgets, :path_to_replace => views_location, :widget_name => widget)
+  end
+
   def about
     %w(name author version homepage summary).inject({}) do |result, key|
       result[key] = send(key)
@@ -188,35 +211,29 @@ class Theme < ActiveRecord::Base
 
   def create_theme_files
     file_support = ErpTechSvcs::FileSupport::Base.new
-    create_theme_files_for_directory_node(file_support.build_tree(BASE_LAYOUTS_VIEWS_PATH))
-    create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_STYLESHEETS_PATH))
-    create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_IMAGES_PATH))
+    create_theme_files_for_directory_node(file_support.build_tree(BASE_LAYOUTS_VIEWS_PATH), :templates, :path_to_replace => BASE_LAYOUTS_VIEWS_PATH)
+    create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_STYLESHEETS_PATH), :stylesheets, :path_to_replace => KNITKIT_WEBSITE_STYLESHEETS_PATH)
+    create_theme_files_for_directory_node(file_support.build_tree(KNITKIT_WEBSITE_IMAGES_PATH), :images, :path_to_replace => KNITKIT_WEBSITE_IMAGES_PATH)
   end
 
   private
 
-  def create_theme_files_for_directory_node(node)
+  def create_theme_files_for_directory_node(node, type, options={})
     node[:children].each do |child_node|
-      child_node[:leaf] ? save_theme_file(child_node[:id]) : create_theme_files_for_directory_node(child_node)
+      child_node[:leaf] ? save_theme_file(child_node[:id], type, options) : create_theme_files_for_directory_node(child_node, type, options)
     end
   end
 
-  def save_theme_file(path)
+  def save_theme_file(path, type, options)
     contents = IO.read(path)
-    unless path.scan('style.css').empty?
-      contents.gsub!("../../images/knitkit","../images")
-    end
-
-    unless path.scan('base.html.erb').empty?
-      contents.gsub!("<%= static_stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>")
-    end
-
-    if !path.scan(BASE_LAYOUTS_VIEWS_PATH).empty?
-      path = path.gsub(BASE_LAYOUTS_VIEWS_PATH, "/#{self.url}/templates")
-    elsif !path.scan(KNITKIT_WEBSITE_STYLESHEETS_PATH).empty?
-      path = path.gsub(KNITKIT_WEBSITE_STYLESHEETS_PATH, "/#{self.url}/stylesheets")
-    elsif !path.scan(KNITKIT_WEBSITE_IMAGES_PATH).empty?
-      path = path.gsub(KNITKIT_WEBSITE_IMAGES_PATH, "/#{self.url}/images")
+    contents.gsub!("../../images/knitkit","../images") unless path.scan('style.css').empty?
+    contents.gsub!("<%= static_stylesheet_link_tag('knitkit/style.css') %>","<%= theme_stylesheet_link_tag('#{self.theme_id}','style.css') %>") unless path.scan('base.html.erb').empty?
+  
+    path = case type
+    when :widgets
+      path.gsub(options[:path_to_replace], "/#{self.url}/widgets/#{options[:widget_name]}")
+    else
+      path.gsub(options[:path_to_replace], "/#{self.url}/#{type.to_s}")
     end
 
     self.add_file(contents, path)
