@@ -8,8 +8,6 @@ module Widgets
   
       #should not be modified
       #modify at your own risk
-      self.view_paths = File.join(File.dirname(__FILE__),"/views")
-  
       def locate
         File.dirname(__FILE__)
       end
@@ -17,6 +15,10 @@ module Widgets
       class << self
         def title
           "<%= class_name %>"
+        end
+
+        def views_location
+          File.join(File.dirname(__FILE__),"/views")
         end
     
         def widget_name

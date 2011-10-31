@@ -1,6 +1,7 @@
 module ErpApp
 	class WidgetProxyController < ErpApp::ApplicationController
-	  attr_accessor :performed_redirect
+	  
+    attr_accessor :performed_redirect
 
 	  def index
 		  @widget_name   = params[:widget_name]
@@ -15,6 +16,6 @@ module ErpApp
 
   		render widget_obj.send(@widget_action)
 		end
-	  
+    
 	end
 end
