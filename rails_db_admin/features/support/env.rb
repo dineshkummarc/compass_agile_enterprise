@@ -21,17 +21,43 @@ Spork.prefork do
   require 'action_controller'
 
   require 'cucumber/rails'
+  require 'factory_girl'
+  require "factory_girl/step_definitions"
 
+  Dir[File.join(ENGINE_RAILS_ROOT, "../erp_app/spec/factories/*")].each do |factory|
+    require factory
+  end
+  Dir[File.join(ENGINE_RAILS_ROOT, "../rails_db_admin/spec/factories/*")].each do |factory|
+    require factory
+  end
+
+  FactoryGirl.find_definitions
+
+  ActiveRecord::Base.configurations = YAML::load(IO.read(DUMMY_APP_ROOT + "/config/database.yml"))
+  ActiveRecord::Base.establish_connection(ENV["DB"] || "cucumber")
+  ActiveRecord::Migration.verbose = false
+
+  #Can't run migration from engine root.  Must cd to the dummy
+  #app and execute this command there
+  #`rake db:migrate RAILS_ENV=cucumber`
 
   # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
   # order to ease the transition to Capybara we set the default here. If you'd
   # prefer to use XPath just remove this line and adjust any selectors in your
   # steps to use the XPath syntax.
   #Capybara.default_selector = :css
+  #
+  #[CB 11/01/2011]  I don't have a use for the Rack tester, since we have a lot
+  #of JS to use for integration tests
+  Capybara.default_driver = :selenium
+  #extend wait time for AJAX-y requests
+  Capybara.default_wait_time = 5
 
 end
  
 Spork.each_run do
+
+
   # By default, any exception happening in your Rails application will bubble up
   # to Cucumber so that your scenario will fail. This is a different from how 
   # your application behaves in the production environment, where an error page will 
@@ -52,7 +78,7 @@ Spork.each_run do
   # Remove/comment out the lines below if your app doesn't have a database.
   # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
   begin
-    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.strategy = :truncation
   rescue NameError
     raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
   end
