@@ -8,8 +8,6 @@ Spork.prefork do
   ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
   DUMMY_APP_ROOT=File.join(File.dirname(__FILE__), '/dummy')
 
-
-
   require 'active_support'
   require 'active_model'
   require 'active_record'
@@ -29,7 +27,6 @@ Spork.prefork do
   Dir[File.join(ENGINE_RAILS_ROOT, "spec/support/**/*.rb")].each {|f| require f }
 
   require 'rspec/rails'
-
 
   # Don't need passwords in test DB to be secure, but we would like 'em to be
   # fast -- and the stretches mechanism is intended to make passwords

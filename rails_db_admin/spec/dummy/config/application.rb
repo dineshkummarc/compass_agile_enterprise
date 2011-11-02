@@ -3,6 +3,9 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require
+require "erp_base_erp_svcs"
+require "erp_tech_svcs"
+require "erp_app"
 require "rails_db_admin"
 
 module Dummy

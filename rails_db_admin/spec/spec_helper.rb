@@ -1,4 +1,5 @@
 require 'spork'
+require 'rake'
 
 Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
@@ -21,6 +22,11 @@ Spork.prefork do
   ActiveRecord::Base.configurations = YAML::load(IO.read(DUMMY_APP_ROOT + "/config/database.yml"))
   ActiveRecord::Base.establish_connection(ENV["DB"] || "spec")
   ActiveRecord::Migration.verbose = false
+
+  Dir.chdir DUMMY_APP_ROOT
+  `rake db:migrate`
+  Dir.chdir ENGINE_RAILS_ROOT
+  
   load(File.join(DUMMY_APP_ROOT, "db", "schema.rb"))
 
   # Requires supporting ruby files with custom matchers and macros, etc,

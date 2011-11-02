@@ -2,7 +2,7 @@ class BaseTechServices < ActiveRecord::Migration
   def self.up
     unless table_exists?(:users)
       # Create the users table
-      create_table :users, do |t|
+      create_table :users do |t|
         t.database_authenticatable :null => false
         # t.confirmable
         t.recoverable
