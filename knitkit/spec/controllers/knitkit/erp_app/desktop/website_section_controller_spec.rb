@@ -20,7 +20,12 @@ describe Knitkit::ErpApp::Desktop::WebsiteSectionController do
       parsed_res['success'].should eq(true)
     end
 
-    it "should associate to an existing website"
+    it "should associate to an existing website" 
+    
+    it "title can not be 'blog' if section is a blog"
 
+    it "can be a child of another section"
+    
+    it "should return false if save fails"
   end
 end
