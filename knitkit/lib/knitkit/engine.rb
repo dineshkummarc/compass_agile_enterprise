@@ -22,11 +22,7 @@ module Knitkit
     ActiveSupport.on_load(:action_controller) do
       include Knitkit::Extensions::ActionController::ThemeSupport::ActsAsThemedController
     end
-    
-    #add widgets to load path
-
-    config.autoload_paths << "#{root}/app/widgets/*" rescue nil
-        
+      
     #set engine to scope
   	engine = self
   	config.to_prepare do 
@@ -36,5 +32,5 @@ module Knitkit
   		engine.load_widgets
   	end
     
-  end
-end
+  end#Engine
+end#Knitkit
