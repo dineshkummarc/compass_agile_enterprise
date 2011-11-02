@@ -56,7 +56,16 @@ Spork.prefork do
 end
  
 Spork.each_run do
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter "spec/"
+    add_group "Controllers", "app/controllers"
+    add_group "Lib", "lib/"
+  end
 
+  #Need to explictly load the files in lib/ until we figure out how to 
+  #get rails to autoload them for spec like it used to...
+  Dir[File.join(ENGINE_RAILS_ROOT, "lib/**/*.rb")].each {|f| load f}
 
   # By default, any exception happening in your Rails application will bubble up
   # to Cucumber so that your scenario will fail. This is a different from how 

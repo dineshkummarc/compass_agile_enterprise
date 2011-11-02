@@ -1,12 +1,12 @@
 require "spec_helper"
 
 describe RailsDbAdmin::QuerySupport do
+
   before(:each) do
     @connection_class = double(ActiveRecord::Base)
     @adapter = double(ActiveRecord::ConnectionAdapters::AbstractAdapter)
     @connection_class.should_receive(:connection).and_return(@adapter)
     @instance = RailsDbAdmin::QuerySupport.new(@connection_class)
-
   end
 
   describe "select_top_fifty" do
@@ -18,7 +18,6 @@ describe RailsDbAdmin::QuerySupport do
       @adapter.should_receive(:select_all).with(@sql).and_return([])
 
       @instance.select_top_fifty("test_table")
-
     end
 
     it "should return a sql statement and an array of hashes" do
@@ -36,10 +35,6 @@ describe RailsDbAdmin::QuerySupport do
       sql, records = @instance.select_top_fifty("test_table")
       sql.should eq(@sql)
       records.should eq(@return_arry)
-
     end
-
-
   end
-
 end

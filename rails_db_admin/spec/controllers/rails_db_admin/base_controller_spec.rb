@@ -15,6 +15,7 @@ describe RailsDbAdmin::BaseController do
   describe "POST setup_table_grid" do
 
     it "should return success:true" do
+
       post :base, {:use_route => :rails_db_admin,
                    :action => "setup_table_grid",
                    :table =>  'role_types'}
@@ -24,6 +25,7 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should return model, columns, and fields" do
+
       post :base, {:use_route => :rails_db_admin,
                    :action => "setup_table_grid",
                    :table =>  'role_types'}
@@ -46,11 +48,13 @@ describe RailsDbAdmin::BaseController do
 
     it "should return model, columns, and fields even if there is not an 'id' column on a table 
         and should have a 'fake_id' column in the fields and columns array" do
+
       post :base, {:use_route => :rails_db_admin,
                    :action => "setup_table_grid",
                    :table =>  'preference_options_preference_types'}
 
       parsed_body = JSON.parse(response.body)
+
       parsed_body["model"].should eq("preference_options_preference_types")
       parsed_body["columns"][0].should include(
         {"header"=>"preference_type_id",
@@ -58,11 +62,9 @@ describe RailsDbAdmin::BaseController do
           "dataIndex"=>"preference_type_id",
           "width"=>150,
           "editor"=>{"xtype"=>"textfield"}})
-
       parsed_body["columns"][4].should include(
           {"header"=>"fake_id", "type"=>"number", "dataIndex"=>"fake_id", "hidden"=>true}
       )
-
       parsed_body["fields"].should include(
         {"name" => "preference_type_id"})
       parsed_body["fields"].should include(
@@ -70,6 +72,7 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should return a value called id_property that equals 'fake_id'" do
+
       post :base, {:use_route => :rails_db_admin,
                    :action => "setup_table_grid",
                    :table =>  'preference_options_preference_types'}
@@ -79,18 +82,15 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should return a value called id_property that equals 'id'" do
+
       post :base, {:use_route => :rails_db_admin,
                    :action => "setup_table_grid",
                    :table =>  'role_types'}
 
       parsed_body = JSON.parse(response.body)
       parsed_body["id_property"].should eq("id")
-
     end
-
-
   end
-
 
   describe "GET table_data" do
 
@@ -130,25 +130,24 @@ describe RailsDbAdmin::BaseController do
 
     #TODO: Need to setup Factory Girl to dummy up data for this test
     it "should return successfully with a fake_id column because there is no id column defined in the DB" do
+
       get :base, {:use_route => :rails_db_admin,
                   :action => "table_data",
                   :table => 'preference_options_preference_types'}
+
       parsed_body = JSON.parse(response.body)
       parsed_body["totalCount"].should eq(0)
     end
-
   end
 
 
   describe "PUT table_data" do
+
     before(:each) do
-
-
       @pref_opt_types_data = {"preference_type_id" => "1",
                               "preference_option_id" => "2",
                               "created_at" => "2011-10-11 00:54:56.137144",
                               "updated_at" => "2011-10-11 00:54:56.137144"}
-
       @role_types_data = {"id" => 2,
                           "parent_id" => "",
                           "lft" => "3",
@@ -160,7 +159,6 @@ describe RailsDbAdmin::BaseController do
                           "external_id_source" => "",
                           "created_at" => "2011-10-11 00:54:56.137144",
                           "updated_at" => "2011-10-11 00:54:56.137144"}
-
       @mod_role_types_data = {"parent_id" => "",
                               "lft" => "3",
                               "rgt" => "4",
@@ -174,12 +172,10 @@ describe RailsDbAdmin::BaseController do
       @table_support = double("RailsDbAdmin::TableSupport")
       @json_data_builder = double("RailsDbAdmin::Extjs::JsonDataBuilder")
 
-
       RailsDbAdmin::TableSupport.should_receive(
         :new).and_return(@table_support)
       RailsDbAdmin::Extjs::JsonDataBuilder.should_receive(
         :new).and_return(@json_data_builder)
-
     end
 
     it "should return success" do
@@ -216,24 +212,22 @@ describe RailsDbAdmin::BaseController do
       parsed_body["success"].should eq(true)
       parsed_body["data"].should eq(@pref_opt_types_data)
     end
-
-
   end
 
   describe "POST table_data" do
+
     before(:each) do
       @table_support = double("RailsDbAdmin::TableSupport")
       @json_data_builder = double("RailsDbAdmin::Extjs::JsonDataBuilder")
-
 
       RailsDbAdmin::TableSupport.should_receive(
         :new).and_return(@table_support)
       RailsDbAdmin::Extjs::JsonDataBuilder.should_receive(
         :new).and_return(@json_data_builder)
-
     end
 
     it "should return success and the row that was created" do
+
       @role_types_data = {"id" => 3,
                           "parent_id" => "",
                           "lft" => "3",
@@ -273,6 +267,7 @@ describe RailsDbAdmin::BaseController do
     end
 
     it "should return success even with empty row hashed passed in" do
+
       @role_types_data = {"id" => "",
                           "parent_id" => "",
                           "lft" => "",
@@ -386,6 +381,7 @@ describe RailsDbAdmin::BaseController do
   describe "DELETE table_data" do
 
     it "should process the request successfully" do
+
       @table_support = double("RailsDbAdmin::TableSupport")
       RailsDbAdmin::TableSupport.should_receive(
         :new).and_return(@table_support)
@@ -411,7 +407,6 @@ describe RailsDbAdmin::BaseController do
       @table_support.should_receive(:delete_row).with(
         "role_types", id).and_raise(ActiveRecord::StatementInvalid)
 
-
       delete :base, {:use_route => :rails_db_admin,
                      :action => "table_data",
                      :table => "role_types",
@@ -420,9 +415,7 @@ describe RailsDbAdmin::BaseController do
       parsed_body = JSON.parse(response.body)
       parsed_body["success"].should eq(false)
       parsed_body["exception"].should eq("Delete operation not supported on tables without an ID column")
-
     end
-
   end
 
   after(:all) do

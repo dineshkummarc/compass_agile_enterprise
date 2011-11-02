@@ -22,5 +22,6 @@ Given /^a (.*) table with a row where these (.*) equal this (.*)$/ do |table, co
   click_button('Submit')
   #visit('/erp_app/desktop/')
   click_button('Start')
+  #click_button('RailsDbAdmin')
 end
 

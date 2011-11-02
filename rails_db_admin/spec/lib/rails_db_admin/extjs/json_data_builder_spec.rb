@@ -1,19 +1,16 @@
 require "spec_helper"
 
 describe RailsDbAdmin::Extjs::JsonDataBuilder do
+
   #preconditions
   before(:each) do
     @connection_class = double(ActiveRecord::Base)
     @adapter = double(ActiveRecord::ConnectionAdapters::AbstractAdapter)
     @connection_class.should_receive(:connection).and_return(@adapter)
     @instance = RailsDbAdmin::Extjs::JsonDataBuilder.new(@connection_class)
-
   end
 
   describe "build_json_data" do
-    before(:each) do
-
-    end
 
     it "should pass well-formed sql to the connection.select_all" do
 
@@ -25,14 +22,11 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       sql = "SELECT  * FROM \"test_table\"  ORDER BY id desc LIMIT 30 OFFSET 2"
 
       @instance.should_receive(:get_total_count).and_return(25)
-
       @adapter.should_receive(:select_all).with(sql).and_return([])
-
       @adapter.should_receive(:sanitize_limit).with(30).and_return(30)
 
       RailsDbAdmin::TableSupport.should_receive(
         :database_rows_to_hash).with([]).and_return([])
-
       @instance.build_json_data(options)
     end
 
@@ -73,7 +67,6 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       @instance.should_receive(:get_total_count).and_return(25)
 
       @instance.build_json_data(options)
-
     end
 
     it "should create well-formed sql, only passing :limit option" do
@@ -92,7 +85,6 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
         :database_rows_to_hash).with([]).and_return([])
 
       @instance.build_json_data(options)
-
     end
 
     it "should create well-formed sql, only passing :order option" do
@@ -109,7 +101,6 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       @instance.should_receive(:get_total_count).and_return(25)
 
       @instance.build_json_data(options)
-
     end
 
     it "should create well-formed sql, only passing :table option" do
@@ -125,15 +116,12 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       @instance.should_receive(:get_total_count).and_return(25)
 
       @instance.build_json_data(options)
-
     end
 
     it "should raise an exception if missing :table option" do
 
       options = {:limit => 30}
-
       expect {@instance.build_json_data(options) }.to raise_error
-
     end
 
     it "should call add_fake_id_col if there's no 'id' col in the result hash" do
@@ -153,15 +141,12 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
 
       RailsDbAdmin::TableSupport.should_receive(
         :database_rows_to_hash).with([]).and_return(test_data)
-
       RailsDbAdmin::TableSupport.should_receive(:add_fake_id_col).with(
         test_data).and_return(test_data)
 
       @instance.should_receive(:get_total_count).and_return(25)
-
       @instance.build_json_data(options)
     end
-
   end
 
   describe "get_row_data_no_id" do
@@ -201,11 +186,8 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       @adapter.should_receive(:select_all).with(@sql).and_return(@rows)
 
       returns = @instance.get_row_data_no_id("preference_options_preference_types", row_hash)
-
       returns.should eq(@result)
-
     end
-
   end
 
   describe "get_row_data" do
@@ -217,8 +199,5 @@ describe RailsDbAdmin::Extjs::JsonDataBuilder do
       @adapter.should_receive(:select_all).with(@sql).and_return([])
       returns = @instance.get_row_data("role_types", ['id', 3])
     end
-
-
   end
-
 end
