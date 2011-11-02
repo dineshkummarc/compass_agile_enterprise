@@ -31,7 +31,7 @@ class Agreement < ActiveRecord::Base
   end
   
   def respond_to?(m)
-    ((get_item_by_item_type_internal_identifier(m.to_s).nil? ? false : true)) unless super
+    ((get_item_by_item_type_internal_identifier(m.to_s).nil? ? super : true)) rescue super
   end
   
   def method_missing(m, *args, &block)

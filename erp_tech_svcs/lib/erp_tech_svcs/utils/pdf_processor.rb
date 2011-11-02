@@ -1,4 +1,4 @@
-require 'tech_services/utils/compass_pdf'
+require 'erp_tech_svcs/utils/compass_pdf'
 
 # Middleware that will convert html to pdf.
 # This will intercept a HTTP Request and look for the .pdf on the end of the URI
