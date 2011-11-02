@@ -24,8 +24,28 @@ describe Knitkit::ErpApp::Desktop::WebsiteSectionController do
     
     it "title can not be 'blog' if section is a blog"
 
-    it "can be a child of another section"
+    it "can be a child of another section" do
+      @website_section = Factory.create(:website_section)
+      @website.website_sections << @website_section
+      post :section, {:use_route => :knitkit,
+                     :action => "new",
+                     :websiteId => @website.id,
+                     :title => "Some New Title",
+                     :website_section_id => @website_section.id}
+
+      parsed_res = JSON.parse(response.body)
+      parsed_res['success'].should eq(true)
+      
+    end
+
     
-    it "should return false if save fails"
+    it "should fail to save if no title is given" do
+      post :section, {:use_route => :knitkit,
+                     :action => "new",
+                     :websiteId => @website.id}
+
+      parsed_res = JSON.parse(response.body)
+      parsed_res['success'].should eq(false)
+    end
   end
 end
