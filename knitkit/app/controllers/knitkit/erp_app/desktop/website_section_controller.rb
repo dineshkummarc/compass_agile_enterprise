@@ -11,8 +11,8 @@ module Knitkit
           website_section = nil
 
           result = {}
-          if (params[:title] == 'Blog' || params[:title] == 'blog') && params[:type] == 'Blog'
-            result[:sucess] = false
+          if params[:title].to_s.downcase == 'blog' && params[:type] == 'Blog'
+            result[:success] = false
             result[:msg] = 'Blog can not be the title of a Blog'
           else
             website_section = WebsiteSection.new

@@ -22,7 +22,16 @@ describe Knitkit::ErpApp::Desktop::WebsiteSectionController do
 
     it "should associate to an existing website" 
     
-    it "title can not be 'blog' if section is a blog"
+    it "title can not be 'blog' if section is a blog" do
+      post :section, {:use_route => :knitkit,
+                     :action => "new",
+                     :websiteId => @website.id,
+                     :title => "Blog", 
+                     :type => "Blog"}
+
+      parsed_res = JSON.parse(response.body)
+      parsed_res['success'].should eq(false)
+    end
 
     it "can be a child of another section" do
       @website_section = Factory.create(:website_section)
