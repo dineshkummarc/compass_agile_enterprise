@@ -48,4 +48,19 @@ describe Knitkit::ErpApp::Desktop::WebsiteSectionController do
       parsed_res['success'].should eq(false)
     end
   end
+
+  describe "Post delete" do
+    before(:each) do
+      @website_section = Factory.create(:website_section)
+      @website.website_sections << @website_section
+    end
+
+    it "should delete the given section" do
+      post :section, {:use_route => :knitkit,
+                     :action => "delete",
+                     :id => @website_section.id}
+      parsed_res = JSON.parse(response.body)
+      parsed_res['success'].should eq(true)
+    end
+  end
 end
