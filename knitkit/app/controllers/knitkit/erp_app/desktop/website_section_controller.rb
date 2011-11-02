@@ -69,9 +69,12 @@ module Knitkit
           @website_section.in_menu = params[:in_menu] == 'yes'
           @website_section.title = params[:title]
           @website_section.internal_identifier = params[:internal_identifier]
-          @website_section.save
 
-          render :json => {:success => true}
+          if @website_section.save
+            render :json => {:success => true}
+          else
+            render :json => {:success => false}
+          end
         end
 
         def add_layout
