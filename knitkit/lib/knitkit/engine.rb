@@ -24,7 +24,8 @@ module Knitkit
     end
     
     #add widgets to load path
-    config.autoload_paths << "#{root}/app/widgets/*"
+
+    config.autoload_paths << "#{root}/app/widgets/*" rescue nil
         
     #set engine to scope
   	engine = self

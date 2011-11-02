@@ -6,6 +6,6 @@ describe WebsiteSection do
   end
 
   it "can be saved successfully" do
-    WebsiteSection.create().should be_persisted
+    WebsiteSection.create(:title => "Some Title").should be_persisted
   end
 end
