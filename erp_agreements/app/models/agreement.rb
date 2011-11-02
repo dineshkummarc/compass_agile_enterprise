@@ -13,11 +13,11 @@ class Agreement < ActiveRecord::Base
   end
   
   def to_s
-      "#{description}"
+    "#{description}"
   end
  
   def to_label
-      to_s
+    to_s
   end
 
   def find_parties_by_role(role)

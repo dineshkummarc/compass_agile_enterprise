@@ -6,11 +6,11 @@ describe Blog do
   end
 
   it "can be saved successfully" do
-    Blog.create().should be_persisted
+    Blog.create(:title => "Some Title").should be_persisted
   end
   
   it "can find_blog_post" do
-    blog = Blog.create()
+    blog = Blog.create(:title => "some title")
     blog.find_blog_post('test')
   end
 end

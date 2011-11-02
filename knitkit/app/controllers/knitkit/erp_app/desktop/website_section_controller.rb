@@ -5,7 +5,7 @@ module Knitkit
         before_filter :set_website_section, :only => [:update, :update_security, :add_layout, :get_layout, :save_layout]
 
         def new
-          ignored_params = %w{action controller websiteId website_section_id in_menu}
+          ignored_params = %w{action controller websiteId website_section_id in_menu, use_route}
 
           website = nil
           website_section = nil

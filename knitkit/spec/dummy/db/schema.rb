@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110530193446) do
+ActiveRecord::Schema.define(:version => 20110913145329) do
 
   create_table "app_containers", :force => true do |t|
     t.integer  "user_id"
@@ -163,6 +164,12 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   add_index "comments", ["commented_record_id", "commented_record_type"], :name => "commented_record_idx"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
+  create_table "compass_ae_instances", :force => true do |t|
+    t.decimal  "version"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "contact_purposes", :force => true do |t|
     t.integer  "parent_id"
     t.integer  "lft"
@@ -222,6 +229,8 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.text     "body_html"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
+    t.string   "internal_identifier"
+    t.boolean  "display_title"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "versioned_type"
@@ -237,12 +246,15 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.text     "body_html"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
+    t.string   "internal_identifier"
+    t.boolean  "display_title"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "version"
   end
 
   add_index "contents", ["created_by_id"], :name => "index_contents_on_created_by_id"
+  add_index "contents", ["internal_identifier"], :name => "contents_iid_idx"
   add_index "contents", ["permalink"], :name => "index_contents_on_permalink"
   add_index "contents", ["type"], :name => "index_contents_on_type"
   add_index "contents", ["updated_by_id"], :name => "index_contents_on_updated_by_id"
@@ -572,22 +584,27 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   create_table "party_search_facts", :force => true do |t|
     t.integer  "party_id"
     t.string   "eid"
-    t.string   "description"
-    t.string   "username"
-    t.string   "lastname"
-    t.string   "firstname"
-    t.string   "middlename"
-    t.string   "birthdate"
-    t.string   "ssn"
-    t.string   "phone"
-    t.string   "email"
-    t.string   "addr1"
-    t.string   "addr2"
-    t.string   "city"
-    t.string   "state"
-    t.string   "zip"
-    t.string   "country"
     t.string   "type"
+    t.text     "roles"
+    t.string   "party_description"
+    t.string   "party_business_party_type"
+    t.string   "user_login"
+    t.string   "individual_current_last_name"
+    t.string   "individual_current_first_name"
+    t.string   "individual_current_middle_name"
+    t.string   "individual_birth_date"
+    t.string   "individual_ssn"
+    t.string   "party_phone_number"
+    t.string   "party_email_address"
+    t.string   "party_address_1"
+    t.string   "party_address_2"
+    t.string   "party_primary_address_city"
+    t.string   "party_primary_address_state"
+    t.string   "party_primary_address_zip"
+    t.string   "party_primary_address_country"
+    t.boolean  "user_enabled"
+    t.string   "user_type"
+    t.boolean  "reindex"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -659,10 +676,12 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.integer  "published_element_record_id"
     t.string   "published_element_record_type"
     t.integer  "version"
+    t.integer  "published_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "published_elements", ["published_by_id"], :name => "index_published_elements_on_published_by_id"
   add_index "published_elements", ["published_element_record_id", "published_element_record_type"], :name => "published_elm_idx"
   add_index "published_elements", ["published_website_id"], :name => "index_published_elements_on_published_website_id"
   add_index "published_elements", ["version"], :name => "index_published_elements_on_version"
@@ -672,11 +691,13 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.text     "comment"
     t.decimal  "version"
     t.boolean  "active"
+    t.integer  "published_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "published_websites", ["active"], :name => "index_published_websites_on_active"
+  add_index "published_websites", ["published_by_id"], :name => "index_published_websites_on_published_by_id"
   add_index "published_websites", ["version"], :name => "index_published_websites_on_version"
   add_index "published_websites", ["website_id"], :name => "index_published_websites_on_website_id"
 
@@ -861,7 +882,6 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   create_table "users", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                       :default => "", :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -872,6 +892,7 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.string   "last_sign_in_ip"
     t.string   "username"
     t.integer  "party_id"
+    t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -880,6 +901,17 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   add_index "users", ["party_id"], :name => "index_users_on_party_id", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  create_table "valid_note_types", :force => true do |t|
+    t.integer  "valid_note_type_record_id"
+    t.string   "valid_note_type_record_type"
+    t.integer  "note_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "valid_note_types", ["note_type_id"], :name => "index_valid_note_types_on_note_type_id"
+  add_index "valid_note_types", ["valid_note_type_record_id", "valid_note_type_record_type"], :name => "valid_note_type_record_idx"
 
   create_table "valid_preference_types", :force => true do |t|
     t.integer "preference_type_id"
@@ -964,7 +996,8 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.string   "permalink"
     t.text     "layout"
     t.boolean  "in_menu"
-    t.integer  "position",           :default => 0
+    t.integer  "position",            :default => 0
+    t.string   "internal_identifier"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "versioned_type"
@@ -980,7 +1013,8 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.string   "permalink"
     t.text     "layout"
     t.boolean  "in_menu"
-    t.integer  "position",   :default => 0
+    t.integer  "position",            :default => 0
+    t.string   "internal_identifier"
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
@@ -989,6 +1023,7 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.integer  "version"
   end
 
+  add_index "website_sections", ["internal_identifier"], :name => "section_iid_idx"
   add_index "website_sections", ["lft"], :name => "index_website_sections_on_lft"
   add_index "website_sections", ["parent_id"], :name => "index_website_sections_on_parent_id"
   add_index "website_sections", ["permalink"], :name => "index_website_sections_on_permalink"

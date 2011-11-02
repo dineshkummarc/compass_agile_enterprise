@@ -6,6 +6,6 @@ describe Comment do
   end
 
   it "can be saved successfully" do
-    Comment.create().should be_persisted
+    Comment.create(:comment => "Test Comment").should be_persisted
   end
 end
