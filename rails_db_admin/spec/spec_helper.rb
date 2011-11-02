@@ -1,4 +1,5 @@
 require 'spork'
+require 'rake'
 
 Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
@@ -7,8 +8,6 @@ Spork.prefork do
 
   ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
   DUMMY_APP_ROOT=File.join(File.dirname(__FILE__), '/dummy')
-
-
 
   require 'active_support'
   require 'active_model'
@@ -23,6 +22,11 @@ Spork.prefork do
   ActiveRecord::Base.configurations = YAML::load(IO.read(DUMMY_APP_ROOT + "/config/database.yml"))
   ActiveRecord::Base.establish_connection(ENV["DB"] || "spec")
   ActiveRecord::Migration.verbose = false
+
+  Dir.chdir DUMMY_APP_ROOT
+  `rake db:migrate`
+  Dir.chdir ENGINE_RAILS_ROOT
+  
   load(File.join(DUMMY_APP_ROOT, "db", "schema.rb"))
 
   # Requires supporting ruby files with custom matchers and macros, etc,
@@ -30,7 +34,6 @@ Spork.prefork do
   Dir[File.join(ENGINE_RAILS_ROOT, "spec/support/**/*.rb")].each {|f| require f }
 
   require 'rspec/rails'
-
 
   # Don't need passwords in test DB to be secure, but we would like 'em to be
   # fast -- and the stretches mechanism is intended to make passwords
