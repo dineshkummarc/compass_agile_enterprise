@@ -11,7 +11,6 @@ gem 'acts-as-taggable-on', '2.1.1'
 
 #Compass AE engines
 gem 'erp_base_erp_svcs', :path => '../erp_base_erp_svcs'
-gem 'erp_dev_svcs', :path => '../erp_dev_svcs'
 gem 'erp_tech_svcs', :path => '../erp_tech_svcs'
 gem 'erp_app', :path => '../erp_app'
 gem 'erp_forms', :path => '../erp_forms'
@@ -19,6 +18,7 @@ gem 'erp_forms', :path => '../erp_forms'
 group :development, :test do
   gem 'cucumber-rails', "~> 1.1.1"
   gem 'database_cleaner'
+  gem 'erp_dev_svcs', :path => '../erp_dev_svcs'
   gem 'factory_girl_rails', '1.2.0'
   gem 'rspec-rails', '~> 2.7'
   gem 'watchr'
