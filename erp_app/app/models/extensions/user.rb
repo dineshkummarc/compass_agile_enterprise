@@ -1,4 +1,4 @@
-User.class_eval do
+class User < ActiveRecord::Base
   has_many :app_containers, :dependent => :destroy
 
   def desktop

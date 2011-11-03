@@ -11,8 +11,8 @@ module Knitkit
           website_section = nil
 
           result = {}
-          if (params[:title] == 'Blog' || params[:title] == 'blog') && params[:type] == 'Blog'
-            result[:sucess] = false
+          if params[:title].to_s.downcase == 'blog' && params[:type] == 'Blog'
+            result[:success] = false
             result[:msg] = 'Blog can not be the title of a Blog'
           else
             website_section = WebsiteSection.new
@@ -69,9 +69,12 @@ module Knitkit
           @website_section.in_menu = params[:in_menu] == 'yes'
           @website_section.title = params[:title]
           @website_section.internal_identifier = params[:internal_identifier]
-          @website_section.save
 
-          render :json => {:success => true}
+          if @website_section.save
+            render :json => {:success => true}
+          else
+            render :json => {:success => false}
+          end
         end
 
         def add_layout

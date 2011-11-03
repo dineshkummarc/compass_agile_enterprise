@@ -573,87 +573,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
 
   add_index "charge_lines", ["charged_item_id", "charged_item_type"], :name => "charged_item_idx"
 
-  create_table "comm_evt_purpose_types", :force => true do |t|
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.string   "description"
-    t.string   "comments"
-    t.string   "internal_identifier"
-    t.string   "external_identifier"
-    t.string   "external_id_source"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "comm_evt_purpose_types", ["parent_id"], :name => "index_comm_evt_purpose_types_on_parent_id"
-
-  create_table "comm_evt_purposes", :id => false, :force => true do |t|
-    t.integer  "communication_event_id"
-    t.integer  "comm_evt_purpose_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "comm_evt_purposes", ["comm_evt_purpose_type_id"], :name => "index_comm_evt_purposes_on_comm_evt_purpose_type_id"
-  add_index "comm_evt_purposes", ["communication_event_id"], :name => "index_comm_evt_purposes_on_communication_event_id"
-
-  create_table "comm_evt_status_types", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "comm_evt_statuses", :force => true do |t|
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.string   "description"
-    t.string   "comments"
-    t.string   "internal_identifier"
-    t.string   "external_identifier"
-    t.string   "external_id_source"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "comm_evt_statuses", ["parent_id"], :name => "index_comm_evt_statuses_on_parent_id"
-
-  create_table "comments", :force => true do |t|
-    t.string   "commentor_name"
-    t.string   "email"
-    t.text     "comment"
-    t.integer  "approved"
-    t.datetime "approved_at"
-    t.integer  "user_id"
-    t.integer  "commented_record_id"
-    t.string   "commented_record_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "comments", ["approved"], :name => "index_comments_on_approved"
-  add_index "comments", ["commented_record_id", "commented_record_type"], :name => "commented_record_idx"
-  add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
-
-  create_table "communication_events", :force => true do |t|
-    t.string   "short_description"
-    t.integer  "status_type_id"
-    t.integer  "case_id"
-    t.string   "contact_mechanism_type"
-    t.integer  "role_type_id_from"
-    t.integer  "role_type_id_to"
-    t.integer  "party_id_from"
-    t.integer  "party_id_to"
-    t.datetime "date_time_started"
-    t.datetime "date_time_ended"
-    t.string   "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "communication_events", ["case_id"], :name => "index_communication_events_on_case_id"
-  add_index "communication_events", ["status_type_id"], :name => "index_communication_events_on_status_type_id"
-
   create_table "compass_ae_instances", :force => true do |t|
     t.decimal  "version"
     t.datetime "created_at"
@@ -709,46 +628,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
 
   add_index "contacts", ["contact_mechanism_id", "contact_mechanism_type"], :name => "besi_2"
   add_index "contacts", ["party_id"], :name => "index_contacts_on_party_id"
-
-  create_table "content_versions", :force => true do |t|
-    t.integer  "content_id"
-    t.integer  "version"
-    t.string   "title"
-    t.string   "permalink"
-    t.text     "excerpt_html"
-    t.text     "body_html"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "versioned_type"
-  end
-
-  add_index "content_versions", ["content_id"], :name => "index_content_versions_on_content_id"
-
-  create_table "contents", :force => true do |t|
-    t.string   "type"
-    t.string   "title"
-    t.string   "permalink"
-    t.text     "excerpt_html"
-    t.text     "body_html"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "version"
-  end
-
-  add_index "contents", ["created_by_id"], :name => "index_contents_on_created_by_id"
-  add_index "contents", ["permalink"], :name => "index_contents_on_permalink"
-  add_index "contents", ["type"], :name => "index_contents_on_type"
-  add_index "contents", ["updated_by_id"], :name => "index_contents_on_updated_by_id"
-
-  create_table "costs", :force => true do |t|
-    t.integer  "money_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "credit_card_account_party_roles", :force => true do |t|
     t.integer  "credit_card_account_id"
@@ -824,10 +703,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
   add_index "currencies_locales", ["currency_id"], :name => "index_currencies_locales_on_currency_id"
   add_index "currencies_locales", ["locale_id", "locale_type"], :name => "besi_3"
 
-  create_table "data_migrations", :id => false, :force => true do |t|
-    t.string "version"
-  end
-
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -862,70 +737,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "domains", :force => true do |t|
-    t.string   "host"
-    t.string   "route"
-    t.integer  "tenant_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "domains", ["tenant_id"], :name => "index_domains_on_tenant_id"
-
-  create_table "dynamic_data", :force => true do |t|
-    t.string   "reference_type"
-    t.integer  "reference_id"
-    t.text     "dynamic_attributes"
-    t.integer  "created_with_form_id"
-    t.integer  "updated_with_form_id"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "dynamic_data", ["created_by_id"], :name => "index_dynamic_data_on_created_by_id"
-  add_index "dynamic_data", ["created_with_form_id"], :name => "index_dynamic_data_on_created_with_form_id"
-  add_index "dynamic_data", ["reference_id"], :name => "index_dynamic_data_on_reference_id"
-  add_index "dynamic_data", ["reference_type"], :name => "index_dynamic_data_on_reference_type"
-  add_index "dynamic_data", ["updated_by_id"], :name => "index_dynamic_data_on_updated_by_id"
-  add_index "dynamic_data", ["updated_with_form_id"], :name => "index_dynamic_data_on_updated_with_form_id"
-
-  create_table "dynamic_form_documents", :force => true do |t|
-    t.integer  "dynamic_form_model_id"
-    t.string   "type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "dynamic_form_documents", ["dynamic_form_model_id"], :name => "index_dynamic_form_documents_on_dynamic_form_model_id"
-  add_index "dynamic_form_documents", ["type"], :name => "index_dynamic_form_documents_on_type"
-
-  create_table "dynamic_form_models", :force => true do |t|
-    t.string   "model_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "dynamic_forms", :force => true do |t|
-    t.string   "description"
-    t.text     "definition"
-    t.integer  "dynamic_form_model_id"
-    t.string   "model_name"
-    t.string   "internal_identifier"
-    t.boolean  "default"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "dynamic_forms", ["created_by_id"], :name => "index_dynamic_forms_on_created_by_id"
-  add_index "dynamic_forms", ["dynamic_form_model_id"], :name => "index_dynamic_forms_on_dynamic_form_model_id"
-  add_index "dynamic_forms", ["internal_identifier"], :name => "index_dynamic_forms_on_internal_identifier"
-  add_index "dynamic_forms", ["model_name"], :name => "index_dynamic_forms_on_model_name"
-  add_index "dynamic_forms", ["updated_by_id"], :name => "index_dynamic_forms_on_updated_by_id"
 
   create_table "email_addresses", :force => true do |t|
     t.string   "email_address"
@@ -1083,69 +894,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
   end
 
   add_index "individuals", ["party_id"], :name => "index_individuals_on_party_id"
-
-  create_table "inv_entry_reln_types", :force => true do |t|
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.string   "description"
-    t.string   "comments"
-    t.string   "internal_identifier"
-    t.string   "external_identifier"
-    t.string   "external_id_source"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "inv_entry_reln_types", ["parent_id"], :name => "index_inv_entry_reln_types_on_parent_id"
-
-  create_table "inv_entry_relns", :force => true do |t|
-    t.integer  "inv_entry_reln_type_id"
-    t.string   "description"
-    t.integer  "inv_entry_id_from"
-    t.integer  "inv_entry_id_to"
-    t.integer  "role_type_id_from"
-    t.integer  "role_type_id_to"
-    t.integer  "status_type_id"
-    t.date     "from_date"
-    t.date     "thru_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "inv_entry_relns", ["inv_entry_reln_type_id"], :name => "index_inv_entry_relns_on_inv_entry_reln_type_id"
-  add_index "inv_entry_relns", ["status_type_id"], :name => "index_inv_entry_relns_on_status_type_id"
-
-  create_table "inv_entry_role_types", :force => true do |t|
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.string   "description"
-    t.string   "comments"
-    t.string   "internal_identifier"
-    t.string   "external_identifier"
-    t.string   "external_id_source"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "inv_entry_role_types", ["parent_id"], :name => "index_inv_entry_role_types_on_parent_id"
-
-  create_table "inventory_entries", :force => true do |t|
-    t.string   "description"
-    t.integer  "inventory_entry_record_id"
-    t.string   "inventory_entry_record_type"
-    t.string   "external_identifier"
-    t.string   "external_id_source"
-    t.integer  "product_type_id"
-    t.integer  "number_available"
-    t.string   "sku"
-    t.integer  "number_sold"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "inventory_entries", ["inventory_entry_record_id", "inventory_entry_record_type"], :name => "bii_1"
 
   create_table "invitations", :force => true do |t|
     t.integer  "sender_id"
@@ -1388,30 +1136,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
   add_index "party_relationships", ["relationship_type_id"], :name => "index_party_relationships_on_relationship_type_id"
   add_index "party_relationships", ["status_type_id"], :name => "index_party_relationships_on_status_type_id"
 
-  create_table "party_resource_availabilities", :force => true do |t|
-    t.datetime "from_date"
-    t.datetime "to_date"
-    t.integer  "party_id"
-    t.integer  "pra_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "party_resource_availabilities", ["from_date"], :name => "index_party_resource_availabilities_on_from_date"
-  add_index "party_resource_availabilities", ["party_id"], :name => "index_party_resource_availabilities_on_party_id"
-  add_index "party_resource_availabilities", ["pra_type_id"], :name => "index_party_resource_availabilities_on_pra_type_id"
-  add_index "party_resource_availabilities", ["to_date"], :name => "index_party_resource_availabilities_on_to_date"
-
-  create_table "party_resource_availability_types", :force => true do |t|
-    t.string   "description"
-    t.string   "internal_identifier"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "party_resource_availability_types", ["description"], :name => "index_party_resource_availability_types_on_description"
-  add_index "party_resource_availability_types", ["internal_identifier"], :name => "index_party_resource_availability_types_on_internal_identifier"
-
   create_table "party_roles", :force => true do |t|
     t.string   "type"
     t.integer  "party_id"
@@ -1649,16 +1373,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
     t.datetime "updated_at"
   end
 
-  create_table "prod_instance_inv_entries", :force => true do |t|
-    t.integer  "product_instance_id"
-    t.integer  "inventory_entry_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "prod_instance_inv_entries", ["inventory_entry_id"], :name => "index_prod_instance_inv_entries_on_inventory_entry_id"
-  add_index "prod_instance_inv_entries", ["product_instance_id"], :name => "index_prod_instance_inv_entries_on_product_instance_id"
-
   create_table "prod_instance_reln_types", :force => true do |t|
     t.integer  "parent_id"
     t.integer  "lft"
@@ -1815,32 +1529,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
   add_index "product_types", ["parent_id"], :name => "index_product_types_on_parent_id"
   add_index "product_types", ["product_type_record_id", "product_type_record_type"], :name => "bpi_1"
 
-  create_table "published_elements", :force => true do |t|
-    t.integer  "published_website_id"
-    t.integer  "published_element_record_id"
-    t.string   "published_element_record_type"
-    t.integer  "version"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "published_elements", ["published_element_record_id", "published_element_record_type"], :name => "published_elm_idx"
-  add_index "published_elements", ["published_website_id"], :name => "index_published_elements_on_published_website_id"
-  add_index "published_elements", ["version"], :name => "index_published_elements_on_version"
-
-  create_table "published_websites", :force => true do |t|
-    t.integer  "website_id"
-    t.text     "comment"
-    t.decimal  "version"
-    t.boolean  "active"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "published_websites", ["active"], :name => "index_published_websites_on_active"
-  add_index "published_websites", ["version"], :name => "index_published_websites_on_version"
-  add_index "published_websites", ["website_id"], :name => "index_published_websites_on_website_id"
-
   create_table "relationship_types", :force => true do |t|
     t.integer  "parent_id"
     t.integer  "lft"
@@ -1953,45 +1641,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
 
   add_index "simple_product_offers", ["product_id"], :name => "index_simple_product_offers_on_product_id"
 
-  create_table "taggings", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "taggable_id"
-    t.integer  "tagger_id"
-    t.string   "tagger_type"
-    t.string   "taggable_type"
-    t.string   "context"
-    t.datetime "created_at"
-  end
-
-  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "taggable_poly_idx"
-
-  create_table "tags", :force => true do |t|
-    t.string "name"
-  end
-
-  create_table "tenants", :force => true do |t|
-    t.string   "schema"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "themes", :force => true do |t|
-    t.integer  "website_id"
-    t.string   "name"
-    t.string   "theme_id"
-    t.string   "author"
-    t.integer  "version"
-    t.string   "homepage"
-    t.text     "summary"
-    t.integer  "active"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "themes", ["active"], :name => "index_themes_on_active"
-  add_index "themes", ["website_id"], :name => "index_themes_on_website_id"
-
   create_table "tree_menu_node_defs", :force => true do |t|
     t.string   "node_type"
     t.integer  "parent_id"
@@ -2039,7 +1688,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
   create_table "users", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                       :default => "", :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -2087,138 +1735,9 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
   add_index "valid_price_plan_components", ["pricing_plan_component_id"], :name => "index_valid_price_plan_components_on_pricing_plan_component_id"
   add_index "valid_price_plan_components", ["pricing_plan_id"], :name => "index_valid_price_plan_components_on_pricing_plan_id"
 
-  create_table "valid_work_assignment_attributes", :force => true do |t|
-    t.integer  "valid_work_assignment_id"
-    t.string   "name"
-    t.string   "type"
-    t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "valid_work_assignments", :force => true do |t|
-    t.integer  "role_type_id"
-    t.integer  "work_requirement_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "view_types", :force => true do |t|
     t.string   "internal_identifier"
     t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "website_hosts", :force => true do |t|
-    t.integer  "website_id"
-    t.string   "host"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "website_hosts", ["website_id"], :name => "index_website_hosts_on_website_id"
-
-  create_table "website_inquiries", :force => true do |t|
-    t.integer  "website_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "website_inquiries", ["website_id"], :name => "index_website_inquiries_on_website_id"
-
-  create_table "website_nav_items", :force => true do |t|
-    t.integer  "website_nav_id"
-    t.string   "title"
-    t.string   "url"
-    t.integer  "position",            :default => 0
-    t.integer  "linked_to_item_id"
-    t.string   "linked_to_item_type"
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "website_nav_items", ["lft"], :name => "index_website_nav_items_on_lft"
-  add_index "website_nav_items", ["linked_to_item_id", "linked_to_item_type"], :name => "linked_to_idx"
-  add_index "website_nav_items", ["parent_id"], :name => "index_website_nav_items_on_parent_id"
-  add_index "website_nav_items", ["position"], :name => "index_website_nav_items_on_position"
-  add_index "website_nav_items", ["rgt"], :name => "index_website_nav_items_on_rgt"
-  add_index "website_nav_items", ["website_nav_id"], :name => "index_website_nav_items_on_website_nav_id"
-
-  create_table "website_navs", :force => true do |t|
-    t.integer  "website_id"
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "website_navs", ["website_id"], :name => "index_website_navs_on_website_id"
-
-  create_table "website_section_contents", :force => true do |t|
-    t.integer  "website_section_id"
-    t.integer  "content_id"
-    t.string   "content_area"
-    t.integer  "position",           :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "website_section_contents", ["content_area"], :name => "index_website_section_contents_on_content_area"
-  add_index "website_section_contents", ["content_id"], :name => "index_website_section_contents_on_content_id"
-  add_index "website_section_contents", ["position"], :name => "index_website_section_contents_on_position"
-  add_index "website_section_contents", ["website_section_id"], :name => "index_website_section_contents_on_website_section_id"
-
-  create_table "website_section_versions", :force => true do |t|
-    t.integer  "website_section_id"
-    t.integer  "version"
-    t.string   "title"
-    t.integer  "website_id"
-    t.string   "path"
-    t.string   "permalink"
-    t.text     "layout"
-    t.boolean  "in_menu"
-    t.integer  "position",           :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "versioned_type"
-  end
-
-  add_index "website_section_versions", ["website_section_id"], :name => "index_website_section_versions_on_website_section_id"
-
-  create_table "website_sections", :force => true do |t|
-    t.string   "title"
-    t.string   "type"
-    t.integer  "website_id"
-    t.string   "path"
-    t.string   "permalink"
-    t.text     "layout"
-    t.boolean  "in_menu"
-    t.integer  "position",   :default => 0
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "version"
-  end
-
-  add_index "website_sections", ["lft"], :name => "index_website_sections_on_lft"
-  add_index "website_sections", ["parent_id"], :name => "index_website_sections_on_parent_id"
-  add_index "website_sections", ["permalink"], :name => "index_website_sections_on_permalink"
-  add_index "website_sections", ["position"], :name => "index_website_sections_on_position"
-  add_index "website_sections", ["rgt"], :name => "index_website_sections_on_rgt"
-  add_index "website_sections", ["website_id"], :name => "index_website_sections_on_website_id"
-
-  create_table "websites", :force => true do |t|
-    t.string   "name"
-    t.string   "title"
-    t.string   "subtitle"
-    t.string   "email"
-    t.boolean  "auto_activate_publication"
-    t.boolean  "email_inquiries"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -2230,97 +1749,6 @@ ActiveRecord::Schema.define(:version => 20110921150854) do
     t.string   "xtype"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "work_effort_assignments", :force => true do |t|
-    t.datetime "assigned_at"
-    t.datetime "assigned_from"
-    t.datetime "assigned_thru"
-    t.datetime "unassigned_at"
-    t.integer  "assigned_to_id"
-    t.string   "assigned_to_type"
-    t.integer  "assigned_by_id"
-    t.string   "assigned_by_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "work_effort_assignments", ["assigned_from"], :name => "index_work_effort_assignments_on_assigned_from"
-  add_index "work_effort_assignments", ["assigned_thru"], :name => "index_work_effort_assignments_on_assigned_thru"
-  add_index "work_effort_assignments", ["assigned_to_id", "assigned_to_type"], :name => "assigned_to"
-
-  create_table "work_effort_status_types", :force => true do |t|
-    t.string   "internal_identifier"
-    t.string   "description"
-    t.integer  "next_status_id"
-    t.integer  "previous_status_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "work_effort_status_types", ["description"], :name => "index_work_effort_status_types_on_description"
-  add_index "work_effort_status_types", ["internal_identifier"], :name => "index_work_effort_status_types_on_internal_identifier"
-
-  create_table "work_effort_statuses", :force => true do |t|
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.integer  "work_effort_id"
-    t.integer  "work_effort_status_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "work_effort_statuses", ["work_effort_id"], :name => "index_work_effort_statuses_on_work_effort_id"
-  add_index "work_effort_statuses", ["work_effort_status_type_id"], :name => "index_work_effort_statuses_on_work_effort_status_type_id"
-
-  create_table "work_efforts", :force => true do |t|
-    t.string   "description"
-    t.string   "type"
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.integer  "projected_completion_time"
-    t.integer  "actual_completion_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "facility_id"
-    t.string   "facility_type"
-    t.integer  "work_effort_record_id"
-    t.string   "work_effort_record_type"
-    t.integer  "work_effort_assignment_id"
-    t.integer  "projected_cost_id"
-    t.integer  "actual_cost_id"
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
-  end
-
-  add_index "work_efforts", ["facility_type", "facility_id"], :name => "facility"
-  add_index "work_efforts", ["finished_at"], :name => "index_work_efforts_on_finished_at"
-  add_index "work_efforts", ["work_effort_assignment_id"], :name => "index_work_efforts_on_work_effort_assignment_id"
-  add_index "work_efforts", ["work_effort_record_id", "work_effort_record_type"], :name => "work_effort_record_id_type"
-
-  create_table "work_requirement_work_effort_status_types", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "work_requirement_id"
-    t.integer  "work_effort_status_type_id"
-    t.boolean  "is_initial_status"
-  end
-
-  create_table "work_requirements", :force => true do |t|
-    t.string   "description"
-    t.string   "type"
-    t.integer  "projected_completion_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "work_requirement_record_id"
-    t.string   "work_requirement_record_type"
-    t.integer  "facility_id"
-    t.string   "facility_type"
-    t.integer  "cost_id"
-    t.integer  "parent_id"
-    t.integer  "lft"
-    t.integer  "rgt"
   end
 
 end

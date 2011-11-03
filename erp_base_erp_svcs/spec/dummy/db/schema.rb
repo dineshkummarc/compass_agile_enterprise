@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110530193446) do
+ActiveRecord::Schema.define(:version => 20110913145329) do
 
   create_table "categories", :force => true do |t|
     t.string   "description"
@@ -40,6 +41,12 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   end
 
   add_index "category_classifications", ["classification_id", "classification_type"], :name => "classification_polymorphic"
+
+  create_table "compass_ae_instances", :force => true do |t|
+    t.decimal  "version"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contact_purposes", :force => true do |t|
     t.integer  "parent_id"
@@ -240,11 +247,6 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.datetime "updated_at"
   end
 
-  create_table "organizers", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "parties", :force => true do |t|
     t.string   "description"
     t.integer  "business_party_id"
@@ -288,6 +290,34 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
 
   add_index "party_roles", ["party_id"], :name => "index_party_roles_on_party_id"
   add_index "party_roles", ["role_type_id"], :name => "index_party_roles_on_role_type_id"
+
+  create_table "party_search_facts", :force => true do |t|
+    t.integer  "party_id"
+    t.string   "eid"
+    t.string   "type"
+    t.text     "roles"
+    t.string   "party_description"
+    t.string   "party_business_party_type"
+    t.string   "user_login"
+    t.string   "individual_current_last_name"
+    t.string   "individual_current_first_name"
+    t.string   "individual_current_middle_name"
+    t.string   "individual_birth_date"
+    t.string   "individual_ssn"
+    t.string   "party_phone_number"
+    t.string   "party_email_address"
+    t.string   "party_address_1"
+    t.string   "party_address_2"
+    t.string   "party_primary_address_city"
+    t.string   "party_primary_address_state"
+    t.string   "party_primary_address_zip"
+    t.string   "party_primary_address_country"
+    t.boolean  "user_enabled"
+    t.string   "user_type"
+    t.boolean  "reindex"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "phone_numbers", :force => true do |t|
     t.string   "phone_number"
@@ -343,7 +373,18 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-  
+
+  create_table "valid_note_types", :force => true do |t|
+    t.integer  "valid_note_type_record_id"
+    t.string   "valid_note_type_record_type"
+    t.integer  "note_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "valid_note_types", ["note_type_id"], :name => "index_valid_note_types_on_note_type_id"
+  add_index "valid_note_types", ["valid_note_type_record_id", "valid_note_type_record_type"], :name => "valid_note_type_record_idx"
+
   create_table "view_types", :force => true do |t|
     t.string   "internal_identifier"
     t.string   "description"

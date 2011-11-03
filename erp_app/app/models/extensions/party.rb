@@ -1,4 +1,4 @@
-Party.class_eval do
+class Party < ActiveRecord::Base
 
   #************************************************************************************************
   #** relationship Methods

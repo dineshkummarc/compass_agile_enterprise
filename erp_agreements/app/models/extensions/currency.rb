@@ -1,4 +1,4 @@
-Currency.class_eval do
+class Currency < ActiveRecord::Base
 
 #  refactor for has_many_polymorphic. Not used at the moment
 #

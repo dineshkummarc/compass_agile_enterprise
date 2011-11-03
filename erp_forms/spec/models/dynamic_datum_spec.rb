@@ -5,7 +5,5 @@ describe DynamicDatum do
     DynamicDatum.new.should be_an_instance_of(DynamicDatum)
   end
 
-  it "can be saved successfully" do
-    DynamicDatum.create().should be_persisted
-  end
+  it "can be saved successfully"
 end

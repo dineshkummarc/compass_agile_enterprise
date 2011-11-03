@@ -172,7 +172,6 @@ class Party < ActiveRecord::Base
   def get_contact_by_method(m)
     method_name = m.split('_')
     return nil if method_name.size < 3 or method_name.size > 4
-    
     # handles 1 or 2 segment contact purposes (i.e. home or employment_offer)
     # contact mechanism must be 2 segments, (i.e. email_address, postal_address, phone_number)
     if method_name.size == 4
@@ -192,7 +191,7 @@ class Party < ActiveRecord::Base
   end
 
   def respond_to?(m)
-    ((get_contact_by_method(m.to_s).nil? ? false : true)) unless super
+    ((get_contact_by_method(m.to_s).nil? ? super : true)) rescue super
   end
   
   def method_missing(m, *args, &block)
