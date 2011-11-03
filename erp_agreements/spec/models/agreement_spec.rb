@@ -47,8 +47,8 @@ describe Agreement do
 
   it "can find paties by roles" do
     #TODO this needs to factored to use erp_base_base_erp_svcs factories
-    party = Party.create(:description => 'Joe Smith')
-    role_type = RoleType.create(:description => 'owner', :internal_identifier => 'owner')
+    party = Factory(:party, :description => 'Joe Smith')
+    role_type = Factory(:role_type, :description => 'owner', :internal_identifier => 'owner')
 
     agreement = Factory(:agreement, :description => 'My Agreement')
     agreement_party_role = Factory(:agreement_party_role,

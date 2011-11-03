@@ -60,7 +60,7 @@ Spork.prefork do
 end
 
 Spork.each_run do
-  FactoryGirl.find_definitions
+  ErpDevSvcs::FactorySupport.load_enigne_factories
 
   require 'simplecov'
   SimpleCov.start 'rails' do
