@@ -17,6 +17,12 @@ PATH
       uuid (= 2.3.4)
 
 PATH
+  remote: ../erp_dev_svcs
+  specs:
+    erp_dev_svcs (0.0.1)
+      rails (~> 3.1.0)
+
+PATH
   remote: ../erp_tech_svcs
   specs:
     erp_tech_svcs (0.0.1)
@@ -237,6 +243,7 @@ DEPENDENCIES
   dynamic_attributes (= 1.2.0)
   erp_app!
   erp_base_erp_svcs!
+  erp_dev_svcs!
   erp_tech_svcs!
   factory_girl_rails (= 1.2.0)
   jquery-rails (= 1.0.13)

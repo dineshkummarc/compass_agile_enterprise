@@ -6522,3 +6522,307 @@ Migrating to CreateCompassAeInstance (20110913145329)
   [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
   [1m[36mSQL (4.6ms)[0m  [1mINSERT INTO "loyalty_program_codes" ("created_at", "description", "identifier", "name", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["created_at", Thu, 03 Nov 2011 00:24:52 UTC +00:00], ["description", nil], ["identifier", nil], ["name", nil], ["updated_at", Thu, 03 Nov 2011 00:24:52 UTC +00:00]]
   [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations" [0m
+Migrating to BaseTechServices (20080805000010)
+Migrating to BaseErpServices (20080805000020)
+Migrating to AgreementsServices (20080805000070)
+Migrating to AgreementsServicesIndexes (20080805000071)
+Migrating to AddValidNoteTypes (20110907171257)
+Migrating to CreateCompassAeInstance (20110913145329)
+  [1m[35m (1.5ms)[0m  select sqlite_version(*)
+  [1m[36m (0.1ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations" [0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("agreement_item_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_item_types_on_parent_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("agreement_items")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_items_on_agreement_item_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_agreement_items_on_agreement_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("agreement_party_roles")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_agreement_party_roles_on_role_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_party_roles_on_party_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_agreement_party_roles_on_agreement_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("agreement_relationships")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_agreement_relationships_on_status_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_relationships_on_agreement_reln_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("agreement_reln_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_reln_types_on_valid_to_role_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_agreement_reln_types_on_valid_from_role_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_reln_types_on_parent_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("agreement_role_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_role_types_on_parent_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("agreement_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreement_types_on_parent_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("agreements")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_agreements_on_product_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_agreements_on_agreement_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("audit_log_item_types")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("audit_log_items")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("audit_log_types")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("audit_logs")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('event_record_index')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_audit_logs_on_party_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("categories")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('category_polymorphic')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("category_classifications")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('classification_polymorphic')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("compass_ae_instances")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("contact_purposes")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_contact_purposes_on_parent_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("contact_purposes_contacts")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('contact_purposes_contacts_index')[0m
+  [1m[35m (0.1ms)[0m  PRAGMA index_list("contact_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_contact_types_on_parent_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("contacts")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('besi_2')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_contacts_on_party_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("currencies")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_currencies_on_internal_identifier')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("currencies_locales")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('besi_3')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_currencies_locales_on_currency_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("delayed_jobs")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('delayed_jobs_priority')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("descriptive_assets")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('described_record_idx')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_descriptive_assets_on_view_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("email_addresses")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("file_assets")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('file_asset_holder_idx')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_file_assets_on_type')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("four_oh_fours")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("geo_countries")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_geo_countries_on_iso_code_2')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_geo_countries_on_name')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("geo_zones")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_geo_zones_on_zone_code')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_geo_zones_on_zone_name')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_geo_zones_on_geo_country_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("individuals")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_individuals_on_party_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("invitations")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_invitations_on_sender_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("logged_exceptions")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_logged_exceptions_on_created_at')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("loyalty_program_codes")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("money")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_money_on_currency_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("note_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('note_type_record_idx')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("notes")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_notes_on_content')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_notes_on_created_by_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_notes_on_note_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_notes_on_noted_record_id_and_noted_record_type')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("organizations")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("parties")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('besi_1')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("party_relationships")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_party_relationships_on_relationship_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_party_relationships_on_priority_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_party_relationships_on_status_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("party_roles")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_party_roles_on_role_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_party_roles_on_party_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("party_search_facts")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("phone_numbers")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("postal_addresses")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_postal_addresses_on_geo_zone_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_postal_addresses_on_geo_country_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("relationship_types")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_relationship_types_on_valid_to_role_type_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_relationship_types_on_valid_from_role_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("role_types")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("roles")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("roles_secured_models")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_roles_secured_models_on_role_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_roles_secured_models_on_secured_model_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("roles_users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_roles_users_on_user_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_roles_users_on_role_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("secured_models")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('secured_record_idx')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("security_questions")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("sessions")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_sessions_on_updated_at')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_sessions_on_session_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("simple_captcha_data")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('btsi_3')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("user_failures")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_user_failures_on_username')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('btsi_1')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("users")
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_users_on_party_id')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_reset_password_token')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('index_users_on_username')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_users_on_email')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_list("valid_note_types")[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_info('index_valid_note_types_on_note_type_id')
+  [1m[36m (0.0ms)[0m  [1mPRAGMA index_info('valid_note_type_record_idx')[0m
+  [1m[35m (0.0ms)[0m  PRAGMA index_list("view_types")
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementRelnType Load (0.1ms)[0m  SELECT "agreement_reln_types".* FROM "agreement_reln_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (34.1ms)[0m  [1mINSERT INTO "agreement_reln_types" ("created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "name", "parent_id", "rgt", "updated_at", "valid_from_role_type_id", "valid_to_role_type_id") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["created_at", Thu, 03 Nov 2011 03:51:57 UTC +00:00], ["description", nil], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", nil], ["lft", 1], ["name", nil], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:57 UTC +00:00], ["valid_from_role_type_id", nil], ["valid_to_role_type_id", nil]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "agreement_party_roles" ("agreement_id", "created_at", "description", "external_id_source", "external_identifier", "party_id", "role_type_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_id", nil], ["created_at", Thu, 03 Nov 2011 03:51:57 UTC +00:00], ["description", nil], ["external_id_source", nil], ["external_identifier", nil], ["party_id", nil], ["role_type_id", nil], ["updated_at", Thu, 03 Nov 2011 03:51:57 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35mAgreementItem Load (0.2ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'description=') LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "My Agreement"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "My Agreement"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[35mAgreementItemType Load (0.1ms)[0m  SELECT "agreement_item_types".* FROM "agreement_item_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreement_item_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "reference_number"], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "agreement_items" ("agreement_id", "agreement_item_rule_string", "agreement_item_type_id", "agreement_item_value", "created_at", "description", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)  [["agreement_id", 1], ["agreement_item_rule_string", nil], ["agreement_item_type_id", 1], ["agreement_item_value", "1234ABCD"], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" = 1 AND (agreement_item_types.internal_identifier = 'reference_number') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "Agreement One"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "Agreement two"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[35mAgreementRelnType Load (0.1ms)[0m  SELECT "agreement_reln_types".* FROM "agreement_reln_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreement_reln_types" ("created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "name", "parent_id", "rgt", "updated_at", "valid_from_role_type_id", "valid_to_role_type_id") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "test reln type"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "test_reln_type"], ["lft", 1], ["name", nil], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["valid_from_role_type_id", nil], ["valid_to_role_type_id", nil]]
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "agreement_relationships" ("agreement_id_from", "agreement_id_to", "agreement_reln_type_id", "created_at", "description", "from_date", "role_type_id_from", "role_type_id_to", "status_type_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_id_from", 1], ["agreement_id_to", 2], ["agreement_reln_type_id", 1], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "test reln"], ["from_date", nil], ["role_type_id_from", nil], ["role_type_id_to", nil], ["status_type_id", nil], ["thru_date", nil], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35mAgreementRelationship Load (0.1ms)[0m  SELECT "agreement_relationships".* FROM "agreement_relationships" WHERE (agreement_id_from = 1 OR agreement_id_to = 1)
+  [1m[36mAgreementRelationship Load (0.1ms)[0m  [1mSELECT "agreement_relationships".* FROM "agreement_relationships" WHERE (agreement_id_from = 2 OR agreement_id_to = 2)[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "My Agreement"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1[0m
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "My Agreement"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mContactPurpose Load (0.2ms)[0m  [1mSELECT "contact_purposes".* FROM "contact_purposes" [0m
+  [1m[35mContactPurpose Load (0.1ms)[0m  SELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '' LIMIT 1
+  [1m[36mContactPurpose Load (0.1ms)[0m  [1mSELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '' LIMIT 1[0m
+  [1m[35mContactPurpose Load (0.1ms)[0m  SELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '_business' LIMIT 1
+  [1m[36mContactPurpose Load (0.1ms)[0m  [1mSELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '_business' LIMIT 1[0m
+  [1m[35mContactPurpose Load (0.1ms)[0m  SELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '' LIMIT 1
+  [1m[36mContactPurpose Load (0.1ms)[0m  [1mSELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '' LIMIT 1[0m
+  [1m[35mContactPurpose Load (0.1ms)[0m  SELECT "contact_purposes".* FROM "contact_purposes" WHERE "contact_purposes"."internal_identifier" = '' LIMIT 1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "parties" ("business_party_id", "business_party_type", "created_at", "description", "enterprise_identifier", "list_view_image_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["business_party_id", nil], ["business_party_type", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "Joe Smith"], ["enterprise_identifier", nil], ["list_view_image_id", nil], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36mRoleType Load (0.1ms)[0m  [1mSELECT "role_types".* FROM "role_types" [0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRoleType Load (0.1ms)[0m  [1mSELECT "role_types".* FROM "role_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "owner"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "owner"], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementItem Load (0.1ms)[0m  [1mSELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'created_on') LIMIT 1[0m
+  [1m[35mAgreementItem Load (0.1ms)[0m  SELECT "agreement_items".* FROM "agreement_items" join agreement_item_types on 
+ agreement_item_types.id = 
+ agreement_items.agreement_item_type_id WHERE "agreement_items"."agreement_id" IS NULL AND (agreement_item_types.internal_identifier = 'updated_on') LIMIT 1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "agreements" ("agreement_date", "agreement_status", "agreement_type_id", "created_at", "description", "external_id_source", "external_identifier", "from_date", "product_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["agreement_date", nil], ["agreement_status", nil], ["agreement_type_id", nil], ["created_at", nil], ["description", "My Agreement"], ["external_id_source", nil], ["external_identifier", nil], ["from_date", nil], ["product_id", nil], ["thru_date", nil], ["updated_at", nil]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "agreement_party_roles" ("agreement_id", "created_at", "description", "external_id_source", "external_identifier", "party_id", "role_type_id", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_id", 1], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "My Agreement"], ["external_id_source", nil], ["external_identifier", nil], ["party_id", 1], ["role_type_id", 1], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35mRoleType Load (0.1ms)[0m  SELECT "role_types".* FROM "role_types" WHERE (internal_identifier = 'owner') LIMIT 1
+  [1m[36mParty Load (0.2ms)[0m  [1mSELECT "parties".* FROM "parties" INNER JOIN "agreement_party_roles" ON "parties"."id" = "agreement_party_roles"."party_id" WHERE "agreement_party_roles"."agreement_id" = 1 AND (role_type_id = 1)[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "agreement_items" ("agreement_id", "agreement_item_rule_string", "agreement_item_type_id", "agreement_item_value", "created_at", "description", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["agreement_id", nil], ["agreement_item_rule_string", nil], ["agreement_item_type_id", nil], ["agreement_item_value", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementType Load (0.2ms)[0m  SELECT "agreement_types".* FROM "agreement_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreement_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", nil], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "agreement_relationships" ("agreement_id_from", "agreement_id_to", "agreement_reln_type_id", "created_at", "description", "from_date", "role_type_id_from", "role_type_id_to", "status_type_id", "thru_date", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["agreement_id_from", nil], ["agreement_id_to", nil], ["agreement_reln_type_id", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["from_date", nil], ["role_type_id_from", nil], ["role_type_id_to", nil], ["status_type_id", nil], ["thru_date", nil], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRoleType Load (0.2ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "seller"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "seller"], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRoleType Load (0.1ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "buyer"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "buyer"], ["lft", 3], ["parent_id", nil], ["rgt", 4], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRelnType Load (0.1ms)[0m  [1mSELECT "agreement_reln_types".* FROM "agreement_reln_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "agreement_reln_types" ("created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "name", "parent_id", "rgt", "updated_at", "valid_from_role_type_id", "valid_to_role_type_id") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "Buyer Seller"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "buyer_seller"], ["lft", 1], ["name", nil], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["valid_from_role_type_id", 1], ["valid_to_role_type_id", 2]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRoleType Load (0.1ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "seller"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "seller"], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRoleType Load (0.1ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "buyer"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "buyer"], ["lft", 3], ["parent_id", nil], ["rgt", 4], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRelnType Load (0.1ms)[0m  [1mSELECT "agreement_reln_types".* FROM "agreement_reln_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "agreement_reln_types" ("created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "name", "parent_id", "rgt", "updated_at", "valid_from_role_type_id", "valid_to_role_type_id") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "Buyer Seller"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "buyer_seller"], ["lft", 1], ["name", nil], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["valid_from_role_type_id", 1], ["valid_to_role_type_id", 2]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35mAgreementRelnType Load (0.1ms)[0m  SELECT "agreement_reln_types".* FROM "agreement_reln_types" WHERE "agreement_reln_types"."internal_identifier" = 'buyer_seller' LIMIT 1
+  [1m[36mAgreementRoleType Load (0.1ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" WHERE "agreement_role_types"."id" = 1 LIMIT 1[0m
+  [1m[35mAgreementRoleType Load (0.1ms)[0m  SELECT "agreement_role_types".* FROM "agreement_role_types" WHERE "agreement_role_types"."id" = 2 LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementRoleType Load (0.1ms)[0m  SELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "seller"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "seller"], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementRoleType Load (0.1ms)[0m  SELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "buyer"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "buyer"], ["lft", 3], ["parent_id", nil], ["rgt", 4], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementRelnType Load (0.1ms)[0m  SELECT "agreement_reln_types".* FROM "agreement_reln_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "agreement_reln_types" ("created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "name", "parent_id", "rgt", "updated_at", "valid_from_role_type_id", "valid_to_role_type_id") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", "Buyer Seller"], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", "buyer_seller"], ["lft", 1], ["name", nil], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["valid_from_role_type_id", 1], ["valid_to_role_type_id", 2]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36mAgreementRelnType Load (0.1ms)[0m  [1mSELECT "agreement_reln_types".* FROM "agreement_reln_types" WHERE "agreement_reln_types"."internal_identifier" = 'buyer_seller' LIMIT 1[0m
+  [1m[35mAgreementRoleType Load (0.1ms)[0m  SELECT "agreement_role_types".* FROM "agreement_role_types" WHERE "agreement_role_types"."id" = 1 LIMIT 1
+  [1m[36mAgreementRoleType Load (0.1ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" WHERE "agreement_role_types"."id" = 2 LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mAgreementRoleType Load (0.1ms)[0m  [1mSELECT "agreement_role_types".* FROM "agreement_role_types" ORDER BY "rgt" desc LIMIT 1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "agreement_role_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", nil], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "loyalty_program_codes" ("created_at", "description", "identifier", "name", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["identifier", nil], ["name", nil], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mAgreementItemType Load (0.1ms)[0m  SELECT "agreement_item_types".* FROM "agreement_item_types" ORDER BY "rgt" desc LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "agreement_item_types" ("comments", "created_at", "description", "external_id_source", "external_identifier", "internal_identifier", "lft", "parent_id", "rgt", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["comments", nil], ["created_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00], ["description", nil], ["external_id_source", nil], ["external_identifier", nil], ["internal_identifier", nil], ["lft", 1], ["parent_id", nil], ["rgt", 2], ["updated_at", Thu, 03 Nov 2011 03:51:58 UTC +00:00]]
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1

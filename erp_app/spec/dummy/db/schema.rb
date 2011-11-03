@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110530193446) do
+ActiveRecord::Schema.define(:version => 20110913145329) do
 
   create_table "app_containers", :force => true do |t|
     t.integer  "user_id"
@@ -162,6 +163,12 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   add_index "comments", ["approved"], :name => "index_comments_on_approved"
   add_index "comments", ["commented_record_id", "commented_record_type"], :name => "commented_record_idx"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
+
+  create_table "compass_ae_instances", :force => true do |t|
+    t.decimal  "version"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contact_purposes", :force => true do |t|
     t.integer  "parent_id"
@@ -880,6 +887,17 @@ ActiveRecord::Schema.define(:version => 20110530193446) do
   add_index "users", ["party_id"], :name => "index_users_on_party_id", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  create_table "valid_note_types", :force => true do |t|
+    t.integer  "valid_note_type_record_id"
+    t.string   "valid_note_type_record_type"
+    t.integer  "note_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "valid_note_types", ["note_type_id"], :name => "index_valid_note_types_on_note_type_id"
+  add_index "valid_note_types", ["valid_note_type_record_id", "valid_note_type_record_type"], :name => "valid_note_type_record_idx"
 
   create_table "valid_preference_types", :force => true do |t|
     t.integer "preference_type_id"

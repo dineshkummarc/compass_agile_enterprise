@@ -13,7 +13,6 @@ Spork.prefork do
   require 'active_model'
   require 'active_record'
   require 'action_controller'
-  #only need to be required if looking to generate code coverage reports
 
   # Configure Rails Envinronment
   ENV["RAILS_ENV"] = "spec"
@@ -23,6 +22,7 @@ Spork.prefork do
   ActiveRecord::Base.establish_connection(ENV["DB"] || "spec")
   ActiveRecord::Migration.verbose = false
 
+  #We have to execute the migrations from dummy app directory
   Dir.chdir DUMMY_APP_ROOT
   `rake db:migrate`
   Dir.chdir ENGINE_RAILS_ROOT
@@ -63,13 +63,9 @@ Spork.each_run do
   FactoryGirl.find_definitions
 
   require 'simplecov'
-  SimpleCov.start do
+  SimpleCov.start 'rails' do
     add_filter "spec/"
-    add_group "Controllers", "app/controllers"
-    add_group "Lib", "lib/"
   end
-  # This code will be run each time you run your specs.
-
   #Need to explictly load the files in lib/ until we figure out how to 
   #get rails to autoload them for spec like it used to...
   Dir[File.join(ENGINE_RAILS_ROOT, "lib/**/*.rb")].each {|f| load f}

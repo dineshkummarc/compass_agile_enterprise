@@ -9,6 +9,12 @@ PATH
       rails (~> 3.1.0)
       uuid (= 2.3.4)
 
+PATH
+  remote: ../erp_dev_svcs
+  specs:
+    erp_dev_svcs (0.0.1)
+      rails (~> 3.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -194,6 +200,7 @@ DEPENDENCIES
   cucumber-rails (~> 1.1.1)
   database_cleaner
   erp_base_erp_svcs!
+  erp_dev_svcs!
   factory_girl_rails (= 1.2.0)
   jquery-rails (= 1.0.13)
   rails (= 3.1)

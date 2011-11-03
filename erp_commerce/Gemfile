@@ -19,6 +19,7 @@ gem 'erp_products', :path => '../erp_products'
 group :development, :test do
   gem 'cucumber-rails', "~> 1.1.1"
   gem 'database_cleaner'
+  gem 'erp_dev_svcs', :path => '../erp_dev_svcs'
   gem 'factory_girl_rails', '1.2.0'
   gem 'rspec-rails', '~> 2.7'
   gem 'watchr'

@@ -31,6 +31,12 @@ PATH
       rails (~> 3.1.0)
 
 PATH
+  remote: ../erp_dev_svcs
+  specs:
+    erp_dev_svcs (0.0.1)
+      rails (~> 3.1.0)
+
+PATH
   remote: ../erp_products
   specs:
     erp_products (0.0.1)
@@ -255,6 +261,7 @@ DEPENDENCIES
   erp_app!
   erp_base_erp_svcs!
   erp_commerce!
+  erp_dev_svcs!
   erp_products!
   erp_tech_svcs!
   erp_txns_and_accts!

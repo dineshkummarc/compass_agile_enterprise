@@ -1,3 +1,9 @@
+PATH
+  remote: ../erp_dev_svcs
+  specs:
+    erp_dev_svcs (0.0.1)
+      rails (~> 3.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -168,6 +174,7 @@ DEPENDENCIES
   cucumber-rails (~> 1.1.1)
   data_migrator (= 1.7)
   database_cleaner
+  erp_dev_svcs!
   factory_girl_rails (= 1.2.0)
   has_many_polymorphic (= 0.5.0)
   jquery-rails (= 1.0.13)
