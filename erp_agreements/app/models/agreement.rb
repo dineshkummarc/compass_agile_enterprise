@@ -13,7 +13,7 @@ class Agreement < ActiveRecord::Base
   end
   
   def to_s
-    "#{description}"
+    description
   end
  
   def to_label
@@ -21,7 +21,7 @@ class Agreement < ActiveRecord::Base
   end
 
   def find_parties_by_role(role)
-    self.parties.includes([:agreement_party_roles]).where("role_type_id = ?", role.id)
+    self.parties.where("role_type_id = ?", role.id).all
   end
 
   def get_item_by_item_type_internal_identifier(item_type_internal_identifier)
@@ -31,7 +31,7 @@ class Agreement < ActiveRecord::Base
   end
   
   def respond_to?(m)
-    ((get_item_by_item_type_internal_identifier(m.to_s).nil? ? super : true)) rescue super
+    ((get_item_by_item_type_internal_identifier(m.to_s).nil? ? false : true)) unless super
   end
   
   def method_missing(m, *args, &block)

@@ -59,10 +59,8 @@ end
 
 Spork.each_run do
   require 'factory_girl'
-  Dir[File.join(ENGINE_RAILS_ROOT, "../erp_app/spec/factories/*")].each do |factory|
-    require factory
-  end
-FactoryGirl.find_definitions
+  FactoryGirl.find_definitions
+
   require 'simplecov'
   SimpleCov.start do
     add_filter "spec/"
@@ -74,7 +72,8 @@ FactoryGirl.find_definitions
   #Need to explictly load the files in lib/ until we figure out how to
   #get rails to autoload them for spec like it used to...
   Dir[File.join(ENGINE_RAILS_ROOT, "lib/**/*.rb")].each {|f| load f}
-
+  #model extensions need to be explictely loaded each time as well
+  Dir[File.join(ENGINE_RAILS_ROOT, "app/models/extensions/**/*.rb")].each {|f| load f}
 end
 
 # --- Instructions ---
