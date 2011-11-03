@@ -6,3 +6,4 @@ spec.sqlite3-journal
 *.sqlite3
 *.log
 Thumbs.db
+spec.log
