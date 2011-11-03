@@ -41,7 +41,7 @@ Spork.prefork do
 end
 
 Spork.each_run do
-  ErpDevSvcs::FactorySupport.load_enigne_factories
+  ErpDevSvcs::FactorySupport.load_engine_factories
 
   require 'simplecov'
   SimpleCov.start do
