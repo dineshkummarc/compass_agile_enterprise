@@ -28,27 +28,11 @@ class Party < ActiveRecord::Base
     end
 	end
 
-  # return primary credit card
-  def primary_credit_card
-    return get_credit_card('primary')
-  end
-
-  # return credit card by credit card account purpose using internal identifier
-  def get_credit_card(internal_identifier)
-    result = nil
-    self.credit_card_account_party_roles.each do |ccapr|
-      if ccapr.credit_card_account.credit_card_account_purpose.internal_identifier.eql?(internal_identifier)
-        result = ccapr.credit_card
-      end
-    end 
-    result 
-  end
-
-  def has_phone_number?(phone)
+  def has_phone_number?(phone_number)
     result = nil
     self.contacts.each do |c|
       if c.contact_mechanism_type == 'PhoneNumber'
-        if c.contact_mechanism.eql_to?(phone)
+        if c.contact_mechanism.phone_number == phone_number
           result = true
         end
       end
@@ -60,7 +44,7 @@ class Party < ActiveRecord::Base
     result = nil
     self.contacts.each do |c|
       if c.contact_mechanism_type == 'PostalAddress'
-        if c.contact_mechanism.zip_eql_to?(zip)
+        if c.contact_mechanism.zip == zip
           result = true
         end
       end
