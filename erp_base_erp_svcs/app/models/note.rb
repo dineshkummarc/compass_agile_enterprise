@@ -11,8 +11,4 @@ class Note < ActiveRecord::Base
     (content.length > 20) ? "#{content[0..20]}..." : content
   end
 
-  def created_by_username
-    created_by.user.username
-  end
-
 end

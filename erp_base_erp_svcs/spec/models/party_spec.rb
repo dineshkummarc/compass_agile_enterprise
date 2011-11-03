@@ -9,14 +9,14 @@ describe Party do
     Party.create.should be_persisted
   end
 
-  it "has method to check for phone number passing in number" do
+  it "has method to check for phone number passing in a number" do
     party = Factory(:party)
     contact_purpose = Factory(:contact_purpose, :description => 'billing', :internal_identifier => 'billing')
     party.update_or_add_contact_with_purpose(PhoneNumber, contact_purpose, :phone_number => '123-123-1234')
     party.has_phone_number?('123-123-1234').should eq true
   end
 
-  it "has method to check for zip code passing in zip code" do
+  it "has method to check for zip code passing in a zip code" do
     party = Factory(:party)
     contact_purpose = Factory(:contact_purpose, :description => 'billing', :internal_identifier => 'billing')
     party.update_or_add_contact_with_purpose(PostalAddress, contact_purpose, :zip => '34711')
@@ -92,7 +92,6 @@ describe Party do
     new_contact = party.find_contact_with_purpose(PhoneNumber, contact_purpose_billing)
     new_contact.contact_mechanism.phone_number.should eq '123-123-1235'
     new_contact.id.should eq current_contact.id
-
   end
 
 
