@@ -3,8 +3,6 @@
 
 #Compass AE Development has moved to separate repos
 
----
-
 https://github.com/portablemind/Compass-AE-Kernel
 
 https://github.com/portablemind/Application-Stack---Suite
