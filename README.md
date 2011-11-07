@@ -1,7 +1,9 @@
 ![Logo](http://github.com/portablemind/compass_agile_enterprise/raw/master/erp_app/public/images/art/compass-logo-1-medium.png)
 
 
-= Compass AE Development has moved to separate repos
+#Compass AE Development has moved to separate repos
+
+---
 
 https://github.com/portablemind/Compass-AE-Kernel
 
