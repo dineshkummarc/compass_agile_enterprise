@@ -13,5 +13,5 @@ https://github.com/portablemind/Rails-DB-Admin
 
 https://github.com/portablemind/Knitkit-CMS
 
-Please update you Compass AE installation and thanks for the support!
+Please update your Compass AE installation and thanks for the support!
 
