@@ -26,6 +26,10 @@ class Website < ActiveRecord::Base
   end
   alias :sections :website_sections
   
+  def top_sections
+    sections.find_all_by_parent_id(nil)
+  end
+  
   def all_sections
     sections_array = sections
     sections_array.each do |section|
@@ -102,7 +106,7 @@ class Website < ActiveRecord::Base
       :website_navs => []
     }
 
-    setup_hash[:sections] = website_sections.collect do |website_section|
+    setup_hash[:sections] = top_sections.collect do |website_section|
       build_section_hash(website_section)
     end
 
@@ -276,7 +280,7 @@ class Website < ActiveRecord::Base
 
           #handle sections
           setup_hash[:sections].each do |section_hash|
-            website.website_sections << build_section(section_hash, entries)
+            website.website_sections << build_section(section_hash, entries, website.id)
           end
           website.website_sections.update_paths!
 
@@ -325,9 +329,9 @@ class Website < ActiveRecord::Base
       website_item
     end
 
-    def build_section(hash, entries)
+    def build_section(hash, entries, website_id)
       klass = hash[:type].constantize
-      section = klass.new(:title => hash[:name], :in_menu => hash[:in_menu], :position => hash[:position])
+      section = klass.new(:title => hash[:name], :in_menu => hash[:in_menu], :position => hash[:position], :website_id => website_id)
       unless entries.find{|entry| entry[:type] == 'sections' and entry[:name] == "#{hash[:name]}.rhtml"}.nil?
         section.layout = entries.find{|entry| entry[:type] == 'sections' and entry[:name] == "#{hash[:name]}.rhtml"}[:data]
       end
@@ -343,7 +347,7 @@ class Website < ActiveRecord::Base
       end
       section.save
       hash[:sections].each do |section_hash|
-        child_section = build_section(section_hash, entries)
+        child_section = build_section(section_hash, entries, website_id)
         child_section.move_to_child_of(section)
       end
       section
