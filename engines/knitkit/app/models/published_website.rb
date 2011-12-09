@@ -98,9 +98,9 @@ class PublishedWebsite < ActiveRecord::Base
     published_website = PublishedWebsite.new
     published_website.website = self.website
     if version_increment == 1
-      published_website.version = (self.version = self.version.to_i + version_increment)
+      published_website.version = (self.version.to_i + version_increment)
     else
-      published_website.version = (self.version += version_increment)
+      published_website.version = (self.version + version_increment).round(6)
     end
     published_website.published_by = current_user
     published_website.comment = comment
