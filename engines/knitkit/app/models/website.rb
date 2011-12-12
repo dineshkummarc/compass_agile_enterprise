@@ -43,6 +43,10 @@ class Website < ActiveRecord::Base
       find(:all, :conditions => 'active = 1')
     end
   end
+  
+  def all_section_paths
+    ActiveRecord::Base.connection.execute("select path from website_sections where website_id = #{self.id}").collect{|row| row['path']}
+  end
 
   def self.find_by_host(host)
     website = nil

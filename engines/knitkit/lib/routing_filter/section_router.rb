@@ -28,7 +28,7 @@ module RoutingFilter
     
     protected
     def paths_for_website(website)
-      website ? website.sections.paths.map{|path| path[1..path.length]}.sort{|a, b| b.size <=> a.size }.join('|') : []
+      website ? website.all_section_paths.map{|path| path[1..path.length]}.sort{|a, b| b.size <=> a.size }.join('|') : []
     end
 
     def website_section_by_path(website, path)
