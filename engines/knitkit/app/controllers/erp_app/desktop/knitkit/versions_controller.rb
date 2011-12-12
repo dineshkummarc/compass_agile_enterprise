@@ -10,20 +10,25 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     limit     = params[:limit] || 15
     start     = params[:start] || 0
 
-    versions = content.versions.order("#{sort} #{dir}").offset(start).limit(limit)
+    versions = content.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
 
     Content::Version.class_exec(website) do
       cattr_accessor :website
       self.website = website
+      
       def active
-        published_site_id = self.website.active_publication.id
-        !PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version).first.nil?
+        published_site_id = @@website.active_publication.id
+        !PublishedElement.find(:first,
+          :include => [:published_website],
+          :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.content_id, 'Content', self.version]).nil?
       end
-
+      
       def published_element
+        PublishedElement.find(:first,
+          :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.content_id, 'Content', self.version])
         PublishedElement.where('published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.content_id, 'Content', self.version).first
       end
-
+      
       def published
         !published_element.nil?
       end
@@ -34,8 +39,8 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     end
 
     render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(
-    :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at],
-    :methods => [:active, :published, :publisher])}}"
+                        :only => [:id, :version, :title, :body_html, :excerpt_html, :created_at],
+                        :methods => [:active, :published, :publisher])}}"
   end
 
   def non_published_content_versions
@@ -77,6 +82,7 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
   #website section layouts
 
   def website_section_layout_versions
+    
     website_section = WebsiteSection.find(params[:id])
     website = Website.find(params[:site_id])
     sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
@@ -85,22 +91,26 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     limit = params[:limit] || 15
     start = params[:start] || 0
 
-    versions = website_section.versions.order("#{sort} #{dir}").offset(start).limit(limit)
+    versions = website_section.versions.find(:all, :order => "#{sort} #{dir}", :offset => start, :limit => limit)
 
     WebsiteSection::Version.class_exec(website) do
       cattr_accessor :website
       self.website = website
+      
       def active
-        published_site_id = self.website.active_publication.id
-        !PublishedElement.includes([:published_website]).where('published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.website_section_id, 'WebsiteSection', self.version).first.nil?
+        published_site_id = @@website.active_publication.id
+        !PublishedElement.find(:first,
+          :include => [:published_website],
+          :conditions => ['published_websites.id = ? and published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', published_site_id, self.website_section_id, 'WebsiteSection', self.version]).nil?
       end
-
+      
       def published_element
-        PublishedElement.where('published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version).first
+        PublishedElement.find(:first,
+          :conditions => ['published_element_record_id = ? and published_element_record_type = ? and published_elements.version = ?', self.website_section_id, 'WebsiteSection', self.version])
       end
-
+      
       def published
-        !published_element.first.nil?
+        !published_element.nil?
       end
 
       def publisher
@@ -109,8 +119,8 @@ class ErpApp::Desktop::Knitkit::VersionsController < ErpApp::Desktop::Knitkit::B
     end
 
     render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(
-    :only => [:id, :version, :title, :created_at],
-    :methods => [:active, :published, :publisher])}}"
+                        :only => [:id, :version, :title, :created_at], 
+                        :methods => [:active, :published, :publisher])}}"
   end
 
   def get_website_section_version
