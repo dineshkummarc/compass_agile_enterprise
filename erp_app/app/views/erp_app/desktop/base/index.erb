@@ -107,7 +107,11 @@
         </style>
     <%=include_file_upload%>
     <%=setup_js_authentication(@user)%>
-    
+      <script type="text/javascript">
+
+Ext.Ajax.extraParams = { authenticity_token: "<%= form_authenticity_token %>" };
+
+</script>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Compass Desktop</title>
   </head>
