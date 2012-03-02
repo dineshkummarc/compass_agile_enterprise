@@ -1,0 +1,51 @@
+<h2><%=h @website_section.title %></h2>
+
+<div class="blog_articles left">
+  <% @contents.each do |content| %>
+    <div class="blog_post" id="blog_<%=h content.id %>">
+      <h4><%=h content.title %></h4>
+      <p>
+        Posted: <%= content.created_at.to_s(:long) %> <%=published_content_created_by %><br />
+        Topics: <%=content.content.tag_list %>
+      </p>
+      <div class="blog_body">
+        <%= raw content.excerpt_html %>
+      </div>
+      <div><%= link_to 'Read More...', main_app.blog_article_path(@website_section.id, content.permalink) %></div>
+    </div>
+  <% end %>
+  
+  <%= blog_pagination 'blog_pagination', params %>
+  
+</div>
+
+<div class="sidebar blog_tags">
+  <h4>Topics</h4>
+  <%=blog_topics 'tag_link' %>
+</div>
+
+<div class="sidebar rss">  
+  <h4>Links</h4>
+  <%=blog_rss_links 'RSS Feed' %>
+</div>
+
+<div class="sidebar blog_search">
+  <% #Optional Parameters:
+   # content_type: Leave blank to search all section types, set to Blog to only search Blog articles
+   # section_permalink: This is the permalink value for the section
+   #                    Useful if you only want to search articles within a single Blog section
+   # results_permalink: How do you want your results to display? via ajax? or on a new page?
+   #                    Leave blank if you want results to display via ajax on the same page as the search form
+   #                    Enter the permalink of results page if you want the search results to display on a new page
+   # per_page: Number of results per page 
+   # class: CSS class for the form %>
+  <%= render_widget :search,
+                    :action => get_widget_action,
+                    :params => set_widget_params({
+                                 :content_type => 'Blog',
+                                 :section_permalink => '',
+                                 :results_permalink => 'search',
+                                 :per_page => 20,
+                                 :class => ''
+                      }) %>
+</div>

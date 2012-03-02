@@ -1,0 +1,32 @@
+<div id="<%=widget_result_id%>"></div>
+<div>
+  <%= form_tag '/users/reset_password', :remote => true, :id => 'reset_password_form' do %>
+    <div class="form_settings">
+      <p>
+        <span style="width:175px">Username or Email Address</span>
+        <%= text_field_tag "login"%>
+      </p>
+      <input type="hidden" name="login_url" value="<%=@login_url%>" />
+      <input type="hidden" name="domain" value="<%=@domain%>" />
+      <p style="padding-top: 15px">
+        <span style="width:175px">&nbsp;</span>
+        <%= submit_tag "Reset", :disable_with => "Please wait...", :class => "submit", :style => 'margin: 0 0 0 0px;'%>
+      </p>
+    </div>
+  <% end %>
+</div>
+<script type="text/javascript">
+$('#reset_password_form').bind('ajaxComplete', function(e, xhr, settings){
+  var response = jQuery.parseJSON(xhr.responseText);
+  if(response.success){
+    $('#<%=widget_result_id%>').html('<div class="sexynotice">'+response.message+'</div>');
+  }
+  else{
+    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.message+'</div>');
+  }
+});
+</script>
+
+
+
+

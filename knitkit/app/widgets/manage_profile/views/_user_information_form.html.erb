@@ -1,0 +1,34 @@
+  <%= form_tag build_widget_url(:update_user_information), :remote => true, :html => {:id => 'user_information_form'} do %>
+    <div class="form_settings" style="margin-left: 20px;">
+      <p>
+        <span>Email Address</span>
+        <%= text_field_tag :email, @user.email %>
+      </p>
+      <p>
+        <span>First Name</span>
+        <%= text_field_tag :first_name, @individual.current_first_name %>
+      </p>
+      <p>
+        <span>Last Name</span>
+        <%= text_field_tag :last_name, @individual.current_last_name %>
+      </p>
+      <p>
+        <span>Middle Name</span>
+        <%= text_field_tag :middle_name, @individual.current_middle_name %>
+      </p>
+      <p>
+        <span>Date of Birth</span>
+		<!--find a better solution for styling this. this method cant be overridden easily by a template -->
+        <%= select_date(@individual.birth_date, {:start_year => Time.now.year - 100, :end_year => Time.now.year},
+						{:style => 'width: auto;'}) %>
+      </p>
+      <p>
+        <span>Gender</span>
+        <%= select_tag(:gender, options_for_select([['M', 'm'], ['F', 'f']], @individual.gender), {:style => 'width: auto;'})%>
+      </p>
+      <p style="padding-top: 15px">
+        <input type="reset" class="submit" value="Reset" style="margin: 0 0 0 120px;" />
+        <%=  submit_tag "Submit", :disable_with => "Please wait...", :class => "submit", :style => "margin-left: 0;" %>
+      </p>
+    </div>
+  <% end %>

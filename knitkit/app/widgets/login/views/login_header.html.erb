@@ -1,0 +1,9 @@
+<div style="float:left;font-size:15px;">
+  <% unless @authenticated %>
+    <span>
+      <a href="<%=@login_url%>">Login</a>&nbsp;|&nbsp;<a href="<%=@signup_url%>">Sign Up</a>
+    </span>
+  <% else  %>
+    <span>Welcome <%= @user.party.description %>&nbsp;|&nbsp;<a href="/session/sign_out?login_url=<%=@login_url%>">Logout</a></span>
+  <% end %>
+</div>

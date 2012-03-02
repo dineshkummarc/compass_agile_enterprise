@@ -1,0 +1,1 @@
+- Moved ajax_pagination to knitkit and update base layout to reflect move.

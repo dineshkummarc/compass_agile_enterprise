@@ -1,0 +1,11 @@
+<div class="sexyerror">
+  <h2>There was an error.</h2>
+  <%if !@user.errors.empty?%>
+  <h3>Please address the following issues</h3>
+  <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%=msg%></li>
+    <% end %>
+  </ul>
+  <%end%>
+</div>

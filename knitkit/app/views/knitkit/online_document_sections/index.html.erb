@@ -1,0 +1,149 @@
+<div id="document_content">
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	Ext.onReady(function() {
+		var index = 0;
+		var currentItem;
+		
+		var tree = Ext.create('Ext.tree.Panel', {
+			region: 'west',
+			cls: 'tree_styles',
+    	store: new Ext.data.TreeStore({
+				proxy:{
+	     		type: 'ajax',
+			 		url: 'online_document_sections/build_tree',
+					extraParams:{ section_id: <%= params[:section_id] %> },
+					format: 'json'
+	     	},
+				root: {
+	      	text: '<%= @root.title %>',
+	        id: '0',
+	        expanded: true
+	      },
+				fields:[ { name:'id' }, { name:'title' }, { name:'documented_item_published_content_html' }, { name:'leaf' }]
+			}),
+			collapsible: true,
+			tbar: {
+				items: [
+					new Ext.form.TextField({
+									id:"search",
+									disabled: true,
+									cls: 'document_search',
+									emptyText: 'Search',
+									allowBlank:true,
+								})
+				]
+			},
+			header: false,
+			autoScroll: true,
+			bodyBorder: false,
+    	rootVisible: false,
+    	width: 170,
+			displayField: 'title',
+			valueField: 'id',
+    	title: '<%= @root.title %>',
+			listeners:{
+      	'itemclick':function(view, record, htmlItem, index, e){
+					var tab_panel = Ext.getCmp('tabs_root')
+					var tab = Ext.getCmp("tab_" + record.data['id'])
+					if (tab){
+						tab_panel.setActiveTab(tab.id);
+					}
+					else{
+						addTab(record);
+					}
+				}
+			}
+    });
+		
+		var tabs = Ext.createWidget('tabpanel', {
+				id: 'tabs_root',
+				region: 'center',
+				plain: true,
+				bodyBorder: true,
+        resizeTabs: true,
+        enableTabScroll: true,
+        width: 640,
+				collapsible: false,
+        defaults: {
+            autoScroll: true,
+						bodyPadding: 10,
+        },
+        items: [{
+						id: "tab_" + <%= @root.id.to_s %>,
+            title: '<%= @root.title %>',
+            html: "<%= raw @root_content.gsub(/\n/, '<br/>') %>",
+            closable: false,
+						autoScroll: true
+        }],
+        plugins: Ext.create('Ext.ux.TabCloseMenu', {
+            extraItemsTail: [
+                '-',
+                {
+                    text: 'Closable',
+                    checked: true,
+                    hideOnClick: true,
+                    handler: function (item) {
+                        currentItem.tab.setClosable(item.checked);
+                    }
+                }
+            ],
+            listeners: {
+                aftermenu: function () {
+                    currentItem = null;
+                },
+                beforemenu: function (menu, item) {
+                    var menuitem = menu.child('*[text="Closable"]');
+                    currentItem = item;
+                    menuitem.setChecked(item.closable);
+                }
+            }
+        })
+    });
+		
+		function addTab(record){
+			++index;
+      tabs.add({
+					id: "tab_" + record.data['id'],
+          title: record.data['title'],
+          html: record.data['documented_item_published_content_html'],
+          closable: true
+      }).show();
+		}
+		
+		var fitted_panel = Ext.createWidget('panel', {
+			id: 'fitted_panel',
+			layout: 'border',
+			header: false,
+			defaults: {
+			    collapsible: true,
+			    split: true,
+			},
+			renderTo: 'document_content',
+			autoScroll: true,
+			items: [
+				tree,
+				tabs
+			]
+		});
+		
+		resize_windows();
+			
+	});
+	
+	function resize_windows(){
+		window_height = Ext.getBody().getViewSize().height;
+		header_height = Ext.get("header").getHeight();
+		footer_height = Ext.get("footer").getHeight();
+		document_content_height = window_height - header_height - footer_height;
+		Ext.get("document_content").setHeight(document_content_height);
+		Ext.getCmp("fitted_panel").setHeight(document_content_height - 20);
+	}
+	
+	window.onresize = function(){
+		resize_windows();
+	}
+	
+</script>

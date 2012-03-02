@@ -1,0 +1,45 @@
+<%if !menu_items.nil? && menu_items.count > 0%>
+<div id="side_menu_container">
+  <ul id="side_menu">
+    <%
+    menu_items.each do |menu_item| %>
+      <%if menu_item.has_access?(@current_user)%>
+        <% if menu_item_selected(menu_item) %>
+          <li class="selected">
+        <%
+          selected_menu_item = menu_item
+        else
+         %>
+          <li>
+        <% end %>
+          <a href="<%= menu_item.path %>"><span><%= menu_item.title %></span></a>
+        </li>
+
+        <% unless selected_menu_item.nil? %>
+          <% unless selected_menu_item.positioned_children.nil? %>
+            <ul class="side_menu_children">
+            <% selected_menu_item.positioned_children.each do |child_menu_item| %>
+              <% if child_menu_item.has_access?(@current_user)%>
+                <% if menu_item_selected(child_menu_item) %>
+                  <li class="selected">
+                <% else %>
+                  <li>
+                <% end %>
+                <a href="<%= child_menu_item.path %>"><span><%= child_menu_item.title %></span></a>
+                </li>
+              <% end %>
+            <% end %>
+            </ul>
+          <%
+            end
+            selected_menu_item = nil
+          end
+        %>
+      <% end %>
+    <% end %>
+
+  </ul>
+</div>
+<%end%>
+
+

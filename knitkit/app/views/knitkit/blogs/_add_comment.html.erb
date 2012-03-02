@@ -1,0 +1,28 @@
+<br/>
+<h1>Add Comment</h1>
+<div>
+  <div id="notice"></div>
+  <br/>
+
+  <%= form_tag "/comments/add/#{@website_section.id}/#{@published_content.content.id}", :remote => true, :id => 'add_comment_form' do %>
+  <div class="form_settings">
+    <div>
+      <p>
+      <span>Comment</span>
+      <%= text_area_tag :comment, @comment, :rows => 8, :cols => 50 %>
+      </p>
+      <p style="padding-top: 15px">
+      <span>&nbsp;</span>
+      <%= submit_tag "Add Comment", :disable_with => "Please wait...", :class => "submit" %>
+      </p>
+    </div>
+  </div>
+  <% end %>
+
+</div>
+
+<script type="text/javascript">
+$('#add_comment_form').bind('ajaxComplete', function(e, xhr, settings){
+  $('#notice').html(xhr.responseText);
+});
+</script>

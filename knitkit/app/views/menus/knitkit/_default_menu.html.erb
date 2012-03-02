@@ -1,0 +1,23 @@
+<div id="menubar">
+  <ul id="menu">
+    <%
+      selected_menu_item = nil
+      menu_items.each do |menu_item|
+    %>
+      <%if menu_item.has_access?(@current_user)%>
+      <% if menu_item_selected(menu_item)
+          selected_menu_item = menu_item
+      %>
+        <li class="selected">
+        <% else %>
+        <li>
+        <% end %>
+        <a href="<%= menu_item.path %>"><span><%= menu_item.title %></span></a>
+      </li>
+    <% end %>
+  <% end %>
+  </ul>
+</div>
+
+
+

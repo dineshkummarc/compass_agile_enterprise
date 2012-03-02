@@ -1,0 +1,50 @@
+html, body { height: 100%; }
+
+#main{
+	min-height: 100%;
+}
+
+#document_content{ 
+	margin: 0 auto 0 auto;
+	width: 897px;
+	padding: 10px 22px 62px 22px;
+	background: #FFF url(../../images/knitkit/content.png) repeat-y;*/
+}
+
+#footer{
+	position: relative;
+	margin-top: -62px;
+	clear: both;
+	height: 62px;
+}
+
+/*Opera Fix*/
+body:before {
+	content: "";
+	height: 100%;
+	float: left;
+	width: 0;
+	margin-top: -32767px;/
+}
+
+/* this corrects a rendering issue */
+#menubar ul li a
+{
+	-moz-box-sizing:content-box;
+	-ms-box-sizing:content-box;
+	-webkit-box-sizing:content-box;
+	box-sizing:content-box;
+}
+
+::-webkit-scrollbar {  
+    height: 1ex;
+		width: 6px;
+		-webkit-border-radius: 1ex; 
+		background: #FFF;
+}
+  
+::-webkit-scrollbar-thumb:vertical{  
+    background: rgba(0, 0, 0, .2);
+		-webkit-border-radius: 1ex;  
+}
+

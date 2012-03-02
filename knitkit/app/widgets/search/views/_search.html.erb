@@ -1,0 +1,39 @@
+<div>
+  <% if @ajax_results %>
+    <%= form_remote_tag build_widget_url(:new) do %>
+      <div class="form_settings">
+        <%= hidden_field_tag :section_permalink, @section_permalink %>
+        <%= hidden_field_tag :content_type, @content_type %>
+        <%= hidden_field_tag :per_page, @per_page %>
+        <p>
+          <span style="width:75px;">Search For</span>
+          <%= text_field_tag :query %>
+        </p>
+        <p style="padding-top: 15px">
+          <span style="width:75px">&nbsp;</span>
+          <%=  submit_tag "Submit", :disable_with => "Please wait...", :class => "submit", :style => 'margin: 0 0 0 0px;' %>
+        </p>
+      <% end %>
+    </div>
+  <% else %>
+    <%= form_tag "/#{@results_permalink}", :method => :get, :html => {:class => @css_class}  do %>
+      <div class="form_settings">
+        <%= hidden_field_tag :section_permalink, @section_permalink %>
+        <%= hidden_field_tag :results_permalink, @results_permalink %>
+        <%= hidden_field_tag :content_type, @content_type %>
+        <%= hidden_field_tag :widget_action, 'new' %>
+        <%= hidden_field_tag :per_page, @per_page %>
+         <p>
+          <span style="width:75px;">Search For</span>
+          <%= text_field_tag :query %>
+        </p>
+        <p style="padding-top: 15px">
+          <span style="width:75px">&nbsp;</span>
+          <%=  submit_tag "Submit", :disable_with => "Please wait...", :class => "submit", :style => 'margin: 0 0 0 0px;' %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<br />
+<div id="<%=widget_result_id%>"></div>

@@ -1,0 +1,37 @@
+<div id="<%=widget_result_id%>"></div>
+<div>
+  <%= form_tag '/session/sign_in', :remote => true, :id => 'login_form' do %>
+    <div class="form_settings">
+      <p>
+        <span style="width:175px">Username or Email Address</span>
+        <%= text_field_tag "login"%>
+      </p>
+      <p>
+        <span style="width:175px">Password</span>
+        <%= password_field_tag "password"%>
+      </p>
+      <input type="hidden" name="logout_to" value="<%=@logout_to%>" />
+      <input type="hidden" name="login_to" value="<%=@login_to%>" />
+      <p style="padding-top: 15px">
+        <span style="width:175px">&nbsp;</span>
+        <%= submit_tag "Login", :disable_with => "Please wait...", :class => "submit", :style => 'margin:0px;'%>
+        <%unless @signup_url.blank?%> | <%= link_to 'Sign Up', @signup_url %> <%end%> <%unless @reset_password_url.blank?%> | <%= link_to 'Reset Password', @reset_password_url %> <%end%>
+      </p>
+    </div>
+  <% end %>
+</div>
+<script type="text/javascript">
+$('#login_form').bind('ajaxComplete', function(e, xhr, settings){
+  var response = jQuery.parseJSON(xhr.responseText);
+  if(response.success){
+    window.location = '<%=@login_to%>';
+  }
+  else{
+    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.errors.reason+'</div>');
+  }
+});
+</script>
+
+
+
+

@@ -1,0 +1,27 @@
+<div id="menubar">
+<%
+  selected_section_parent = @website_section.nil? ? nil : @website_section.parent
+%>
+  <% unless @website_sections.nil? %>
+    <ul id="menu">
+      <% @website_sections.each do |section| %>
+        <%if section.in_menu %>
+          <%if section.has_access?(@current_user)%>
+            <% if (!@website_section.nil? && section.id == @website_section.id) or (!selected_section_parent.nil? and selected_section_parent.id == section.id) %>
+              <li class="selected">
+                <%
+                selected_section_parent = section
+              else
+              %>
+              <li>
+              <%end%>
+              <a href="<%= section.path %>"><span><%= section.title %></span></a>
+            </li>
+          <%end%>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+  <br/>
+<% end %>
+

@@ -1,0 +1,22 @@
+<div class="blog_post">
+
+  <h2><%=h @blog.title %></h2>
+  <br/>
+  <h3><%=h @published_content.title %></h3>
+  <p>
+    Posted: <%= @published_content.created_at.to_s(:long) %> <%=published_content_created_by %><br />
+    Topics: <%= @published_content.content.tag_list %>  
+  </p>
+  <p><%= raw @published_content.excerpt_html %></p>
+  <%= raw @published_content.body_html %>
+
+  <h3>Comments</h3>
+  <br/>
+  <%= blog_recent_approved_comments %>
+  <br/>
+  <br/>
+
+  <hr/>
+  <%=blog_add_comment_form %>
+
+</div>

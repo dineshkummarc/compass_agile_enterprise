@@ -1,0 +1,36 @@
+<div id="<%=widget_result_id%>"></div>
+<div> 
+  <%= form_remote_tag build_widget_url(:new) do %>
+    <div class="form_settings">
+      <p>
+        <span>First Name</span>
+        <%= text_field_tag :first_name %>
+      </p>
+      <p>
+        <span>Last Name</span>
+        <%= text_field_tag :last_name %>
+      </p>
+      <p>
+        <span>Email</span>
+        <%= text_field_tag :email %>
+      </p>
+      <p>
+        <span>Username</span>
+        <%= text_field_tag :username %>
+      </p>
+      <p>
+        <span>Password</span>
+        <%= password_field_tag :password %>
+      </p>
+      <p>
+        <span>Confirm Password</span>
+        <%= password_field_tag :password_confirmation %>
+      </p>
+      <p style="padding-top: 15px">
+        <span>&nbsp;</span>
+        <%=  submit_tag "Sign Up", :disable_with => "Please wait...", :class => "submit", :style => 'margin: 0 0 0 0px;' %>
+      </p>
+    </div>
+  <input type="hidden" value="<%=@login_url%>" name="login_url" />
+  <% end %>
+</div>
