@@ -26,17 +26,3 @@ To override these settings simple create a knikit.rb file in your initializers a
       config.file_assets_location = 'knitkit_assets'
     end
     Rails.application.config.knitkit.configure!
-
-##Getting Started
-
-There is a gem to help you get started
-
-Install the gem
-
-    gem install compass_ae_starter_kit
-
-Or
-
-clone the repository [Compass AE Starter Kit](https://github.com/portablemind/compass_ae_starter_kit)
-
-    git clone https://github.com/portablemind/compass_ae_starter_kit
