@@ -38,18 +38,18 @@ module ErpApp
       end
 
       def initialize(controller, name, view, uuid, widget_params)
+        ErpApp::Widgets::Base.view_resolver_cache = [] if ErpApp::Widgets::Base.view_resolver_cache.nil?
         self.name = name
         self.controller = controller
         self.view = view
         self.uuid = uuid
         self.widget_params = widget_params
+        add_view_paths
         store_widget_params
         merge_params
       end
 
       def render(opts={})
-        ErpApp::Widgets::Base.view_resolver_cache = [] if ErpApp::Widgets::Base.view_resolver_cache.nil?
-        add_view_paths
         render_view_for(opts, self.view)
       end
 
@@ -112,11 +112,13 @@ module ErpApp
         File.dirname(__FILE__)
       end
 
-      def views_location
-        File.join(File.dirname(__FILE__),"/views")
+      #get the full file path for a view file relative to the widgets view path
+      def get_views_full_path(view)
+        find_template(view).identifier
       end
 
       private
+      
       def merge_params
         stored_widget_params = session[:widgets][self.uuid]
         unless stored_widget_params.nil?
@@ -145,16 +147,12 @@ module ErpApp
       end
 
       class << self
-        def views_location
-          File.join(File.dirname(__FILE__),"/views")
-        end
-
         def widget_name
           File.basename(File.dirname(__FILE__))
         end
 
         def installed_widgets
-          locate_widgets
+          self.locate_widgets
         end
 
         private

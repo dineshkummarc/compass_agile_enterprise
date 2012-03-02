@@ -53,7 +53,7 @@
     </style>
 
     <!--javascript-->
-    <%= include_extjs(:theme => @desktop.get_preference(:extjs_theme), :debug => true) %>
+    <%= include_extjs(:theme => @desktop.get_preference(:extjs_theme), :debug => (Rails.env != 'production')) %>
 
     <%= static_javascript_include_tag("erp_app/utility.js")%>
     <%= static_javascript_include_tag("erp_app/desktop/ext_ux_desktop_module.js")%>

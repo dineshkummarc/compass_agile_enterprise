@@ -1,0 +1,11 @@
+source "http://rubygems.org"
+
+gemspec
+
+#For Compass AE developemnt
+#gem 'erp_base_erp_svcs', :path => '../../Compass-AE-Kernel/erp_base_erp_svcs'
+#gem 'erp_tech_svcs', :path => '../../Compass-AE-Kernel/erp_tech_svcs'
+
+#group :development, :test do
+#  gem 'erp_dev_svcs', :path => '../../Compass-AE-Kernel/erp_dev_svcs'
+#end

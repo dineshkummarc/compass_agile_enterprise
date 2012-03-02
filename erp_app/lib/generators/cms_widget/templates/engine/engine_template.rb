@@ -16,10 +16,6 @@ module Widgets
         def title
           "<%= description %>"
         end
-
-        def views_location
-          File.join(File.dirname(__FILE__),"/views")
-        end
     
         def widget_name
           File.basename(File.dirname(__FILE__))

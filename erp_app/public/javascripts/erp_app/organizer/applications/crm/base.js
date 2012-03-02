@@ -72,8 +72,6 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
   loadPartyDetails = function(partyId){
     widget_xtypes = individualsPanel.widget_xtypes
 
-    widget_xtypes.push('userinfo');
-
     if(partyId == null){
       Ext.Msg.alert('Error', 'Member partyId not set');
     }
@@ -104,8 +102,6 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       partygrid : true,
       shared_notes_grid:true
     });
-
-    xtypes.push('userinfo');
 
     if (party_type == 'Individual'){
       for (var i = 0; i < xtypes.length; i++) {
@@ -165,24 +161,9 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     
     loadPartyDetails(partyId);
   };
-    
-  var addIndividualWindow = Ext.create("Ext.window.Window",{
-    layout:'fit',
-    width:375,
-    title:'New Individual',
-    height:500,
-    buttonAlign:'center',
-    items: new Ext.FormPanel({
-      labelWidth: 110,
-      frame:false,
-      bodyStyle:'padding:5px 5px 0',
-      width: 425,
-      url:'/erp_app/organizer/crm/create_party',
-      defaults: {
-        width: 225
-      },
-      items: [
-      {
+  
+  var individualFormFields = [
+  {
         xtype:'textfield',
         fieldLabel:'Enterprise Identifier',
         allowBlank:true,
@@ -243,9 +224,16 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         name:'birth_date'
       },
       {
-        xtype:'textfield',
-        fieldLabel:'Gender',
-        allowBlank:false,
+        xtype:'combobox',
+        fieldLabel: 'Gender',
+        store: Ext.create('Ext.data.Store', {
+          fields: ['v', 'k'],
+          data : [
+            {"v":"m", "k":"Male"},
+            {"v":"f", "k":"Female"}]
+        }),
+        displayField: 'k',
+        valueField: 'v',
         name:'gender'
       },
       {
@@ -266,7 +254,31 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         allowBlank:true,
         name:'social_security_number'
       }
+  ]
+
+  var editIndividualFormFields = [
+        {
+          xtype:'hiddenfield',
+          name:'business_party_id'
+        }
       ]
+
+  var addIndividualWindow = Ext.create("Ext.window.Window",{
+    layout:'fit',
+    width:375,
+    title:'New Individual',
+    height:500,
+    buttonAlign:'center',
+    items: new Ext.FormPanel({
+      labelWidth: 110,
+      frame:false,
+      bodyStyle:'padding:5px 5px 0',
+      width: 425,
+      url:'/erp_app/organizer/crm/create_party',
+      defaults: {
+        width: 225
+      },
+      items: [ individualFormFields ]
     }),
     buttons: [{
       text:'Submit',
@@ -326,96 +338,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       defaults: {
         width: 225
       },
-      items: [
-      {
-        xtype:'hiddenfield',
-        name:'business_party_id'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Enterprise Identifier',
-        allowBlank:true,
-        name:'enterprise_identifier'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Title',
-        allowBlank:true,
-        name:'current_personal_title'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'First Name',
-        allowBlank:false,
-        name:'current_first_name'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Middle Name',
-        allowBlank:true,
-        name:'current_middle_name'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Last Name',
-        allowBlank:false,
-        name:'current_last_name'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Suffix',
-        allowBlank:true,
-        name:'current_suffix'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Nickname',
-        allowBlank:true,
-        name:'current_nickname'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Passport Number',
-        allowBlank:true,
-        name:'current_passport_number'
-      },
-      {
-        xtype:'datefield',
-        fieldLabel:'Passport Expiration Date',
-        allowBlank:true,
-        name:'current_passport_expire_date'
-      },
-      {
-        xtype:'datefield',
-        fieldLabel:'DOB',
-        allowBlank:false,
-        name:'birth_date'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Gender',
-        allowBlank:false,
-        name:'gender'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Total Yrs Work Exp',
-        allowBlank:true,
-        name:'total_years_work_experience'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Marital Status',
-        allowBlank:true,
-        name:'marital_status'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Social Security Number',
-        allowBlank:true,
-        name:'social_security_number'
-      }
-      ]
+      items: [ individualFormFields.concat(editIndividualFormFields) ]
     }),
     buttons: [{
       text:'Submit',
@@ -456,22 +379,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     }]
   });
 
-  var addOrganizationWindow = Ext.create("Ext.window.Window",{
-    layout:'fit',
-    width:375,
-    title:'New Organization',
-    height:160,
-    buttonAlign:'center',
-    items: new Ext.FormPanel({
-      labelWidth: 110,
-      frame:false,
-      bodyStyle:'padding:5px 5px 0',
-      width: 425,
-      url:'/erp_app/organizer/crm/create_party',
-      defaults: {
-        width: 225
-      },
-      items: [
+  var organizationFormFields = [
       {
         xtype:'textfield',
         fieldLabel:'Enterprise Identifier',
@@ -490,7 +398,31 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         allowBlank:true,
         name:'description'
       }
+  ]
+
+  var editOrganizationFormFields = [
+        {
+          xtype:'hiddenfield',
+          name:'business_party_id'
+        }
       ]
+
+  var addOrganizationWindow = Ext.create("Ext.window.Window",{
+    layout:'fit',
+    width:375,
+    title:'New Organization',
+    height:160,
+    buttonAlign:'center',
+    items: new Ext.FormPanel({
+      labelWidth: 110,
+      frame:false,
+      bodyStyle:'padding:5px 5px 0',
+      width: 425,
+      url:'/erp_app/organizer/crm/create_party',
+      defaults: {
+        width: 225
+      },
+      items: [ organizationFormFields ]
     }),
     buttons: [{
       text:'Submit',
@@ -550,30 +482,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       defaults: {
         width: 225
       },
-      items: [
-      {
-        xtype:'hiddenfield',
-        name:'business_party_id'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Enterprise Identifier',
-        allowBlank:true,
-        name:'enterprise_identifier'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Tax ID',
-        allowBlank:true,
-        name:'tax_id_number'
-      },
-      {
-        xtype:'textfield',
-        fieldLabel:'Description',
-        allowBlank:true,
-        name:'description'
-      }
-      ]
+      items: [ organizationFormFields.concat(editOrganizationFormFields) ]
     }),
     buttons: [{
       text:'Submit',
