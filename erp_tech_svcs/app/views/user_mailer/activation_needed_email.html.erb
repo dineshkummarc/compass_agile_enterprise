@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>Welcome <%= @user.username %></h1>
+    <p>
+      You have successfully registered, to activate your account follow this link: <a href="<%= @url %>"><%= @url %></a>.
+    </p>
+    <p>Your username is <%=@user.username%>, use the password you set during registration to login.</p>
+    <p>Thanks for joining and have a great day!!</p>
+  </body>
+</html>

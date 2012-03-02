@@ -1,0 +1,1 @@
+ErpTechSvcs::FileSupport::S3Manager.setup_connection() if ErpTechSvcs::FileSupport.options[:storage] == :s3

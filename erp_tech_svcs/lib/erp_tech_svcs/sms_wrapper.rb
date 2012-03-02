@@ -1,0 +1,1 @@
+require 'erp_tech_svcs/sms_wrapper/clickatell'
