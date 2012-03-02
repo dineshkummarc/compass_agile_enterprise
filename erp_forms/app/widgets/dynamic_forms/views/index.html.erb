@@ -1,8 +1,0 @@
-<div id="<%=widget_result_id %>"></div>
-
-<%=raw render_dynamic_form(params[:model_name], {
-      :internal_identifier => params[:internal_identifier],
-      :width => (params[:width] ? params[:width].to_i : nil)
-    }) %>
-
-<div id="dynamic_form_target"></div>

@@ -1,2 +1,0 @@
-class ProjectRequirement < WorkRequirement
-end
