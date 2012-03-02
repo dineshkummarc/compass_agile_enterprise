@@ -19,16 +19,3 @@ To override these settings simple create a rails_db_admin.rb file in your initia
     end
     Rails.application.config.rails_db_admin.configure!
 
-##Getting Started
-
-There is a gem to help you get started
-
-Install the gem
-
-    gem install compass_ae_starter_kit
-
-Or
-
-clone the repository [Compass AE Starter Kit](https://github.com/portablemind/compass_ae_starter_kit)
-
-    git clone https://github.com/portablemind/compass_ae_starter_kit
