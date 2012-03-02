@@ -30,7 +30,6 @@ CompassAeStarterKit::FileSupport.patch_file 'config/environments/production.rb',
 CompassAeStarterKit::FileSupport.append_file 'Gemfile',
 "
 gem 'erp_base_erp_svcs'
-gem 'erp_dev_svcs'
 gem 'erp_tech_svcs'
 gem 'erp_app'
 gem 'erp_forms'

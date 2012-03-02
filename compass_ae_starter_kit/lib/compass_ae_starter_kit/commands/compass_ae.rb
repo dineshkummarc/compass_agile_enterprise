@@ -8,7 +8,7 @@ Usage:
   compass_ae new <app_name> [rails_opt]  Creates a new Rails Compass AE Application
     rails_opt:            all the options accepted by the rails command
   
-  compass_ae dev <app_name> [rails_opt]  Creates a new Rails Compass AE Application with the gems pointing to our Git repository
+  compass_ae dev <app_name> [rails_opt]  Creates a new Rails Compass AE Application and clones our repository and points the Compass AE gems to it
     rails_opt:            all the options accepted by the rails command
     
   compass_ae --help|-h             This help screen

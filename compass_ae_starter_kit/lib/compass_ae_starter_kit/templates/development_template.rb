@@ -27,11 +27,16 @@ CompassAeStarterKit::FileSupport.patch_file 'config/environments/production.rb',
 "  config.assets.compile = true",
 :patch_mode => :change
 
+git :clone => 'git://github.com/portablemind/compass_agile_enterprise.git "lib/compass_agile_enterprise"'
+
+inside('lib/compass_agile_enterprise') do
+  run 'git checkout'
+end
+
 CompassAeStarterKit::FileSupport.append_file 'Gemfile',
 "
-git 'https://github.com/portablemind/compass_agile_enterprise.git' do
+path './lib/compass_agile_enterprise' do
   gem 'erp_base_erp_svcs'
-  gem 'erp_dev_svcs'
   gem 'erp_tech_svcs'
   gem 'erp_app'
   gem 'erp_forms'
@@ -51,7 +56,7 @@ We've performed the following tasks:
 * patched config/initializers/session_store.rb to use ActiveRecord for your session store
 * patched config/environments/production.rb and set config.serve_static_assets = true
 * patched config/environments/production.rb and set config.assets.compile = true
-* Added the core Compass AE gems to your Gemfile and pointed them to our Github repositories
+* Added the core Compass AE gems to your Gemfile and cloned our repository and pointed the Compass AE gems to it
 
 Now we will bundle it up and run the migrations...
 
