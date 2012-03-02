@@ -1,0 +1,24 @@
+
+/**************************************
+    Webutler V2.1 - www.webutler.de
+    Copyright (c) 2008 - 2011
+    Autor: Sven Zinke
+    Free for any use
+    Lizenz: GPL
+**************************************/
+
+html {
+  cursor: text;
+}
+
+.editbox {
+  margin: .4em;
+  padding: 0;
+  font-family: monospace;
+  font-size: 10pt;
+  color: black;
+}
+
+.editbox p {
+  margin: 0;
+}

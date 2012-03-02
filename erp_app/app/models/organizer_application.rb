@@ -1,0 +1,2 @@
+class OrganizerApplication < Application
+end

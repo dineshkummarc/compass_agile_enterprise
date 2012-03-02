@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Organizer</title>
+    <!-- include google maps -->
+     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <!-- include google maps -->
+    <!--javascript-->
+    <%= include_extjs(:theme => @organizer.get_preference(:extjs_theme), :debug => true) %>
+    <%= static_javascript_include_tag("erp_app/utility.js")%>
+    <!-- shared application resources -->
+    <%= load_shared_application_resources(:javascripts) %>
+    <!-- end shared application resources -->
+    <%= static_javascript_include_tag("erp_app/organizer/preference_window.js","erp_app/organizer/layout.js","erp_app/organizer/default_menu_tree_panel.js") %>
+    <%=setup_js_authentication(@user, @organizer)%>
+    <!-- application resources -->
+    <%=static_javascript_include_tag(@organizer.applications.collect{|app| app.locate_resources('javascripts')}.flatten)%>
+    <!-- end application resources -->
+	
+    <!-- shared application resources -->
+    <%= load_shared_application_resources(:stylesheets) %>
+    <!-- end application resources -->
+    <!-- application resources -->
+    <%= static_stylesheet_link_tag(@organizer.applications.collect{|app| app.locate_resources('stylesheets')}.flatten)%>
+    <!-- end application resources -->
+
+    <%=add_authenticity_token_to_extjs%>
+  </head>
+  <body scroll="no">
+    <script type="text/javascript">
+      Ext.onReady(function() {
+        var organizerLayout = Ext.create("Compass.ErpApp.Organizer.Layout",{logout_url:'/session/sign_out'});
+
+        <%@organizer.applications.each do |application|%>
+
+        var <%=application.internal_identifier.camelize%> = Ext.create("Compass.ErpApp.Organizer.Applications.<%=application.internal_identifier.camelize%>.Base",{organizerLayout:organizerLayout});
+        <%=application.internal_identifier.camelize%>.setup();
+
+        <%end%>
+          organizerLayout.setupLogoutButton();
+          organizerLayout.setup();
+      });
+    </script>
+  </body>
+</html>
+

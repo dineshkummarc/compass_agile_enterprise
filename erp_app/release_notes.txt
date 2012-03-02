@@ -1,0 +1,3 @@
+- Added ordered loading of js files via filename.1.js, the number is used to sort the files
+- Added authenticity token to all Ajax requests and added view helper to set the token
+- Added shared resource loader that will load all js files in the shared directory of erp_app

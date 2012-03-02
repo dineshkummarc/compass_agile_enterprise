@@ -1,0 +1,96 @@
+
+/**************************************
+    Webutler V2.1 - www.webutler.de
+    Copyright (c) 2008 - 2011
+    Autor: Sven Zinke
+    Free for any use
+    Lizenz: GPL
+**************************************/
+
+.CodeMirror-line-numbers {
+	width: 2.2em;
+	text-align: right;
+	background-color: #eeeeee;
+	padding-right: .3em;
+	padding-top: .4em;
+}
+
+.CodeMirror-line-numbers div {
+	color: #aaaaaa;
+	text-align: right;
+	font-size: 14px;
+	font-family: monospace;
+	line-height: 16px;
+}
+
+#codemirror_editormenu {
+	height: 26px;
+	background-color: #F7F7F7;
+	border-right: 1px solid #A8A89C;
+	border-bottom: 1px solid #A8A89C;
+	border-top: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	padding: 2px 5px;
+}
+.codemirror_ckemenu {
+	height: 24px;
+}
+#codemirror_editormenu .button, .codemirror_ckemenu .button {
+    float: left;
+    margin-right: 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#codemirror_editormenu .button_out, .codemirror_ckemenu .button_out {
+    border: 1px solid #E3E0D7;
+	background-repeat: repeat-x;
+	background-attachment: scroll;
+	background-position: 0px 0px;
+	background-image: url(images/buttonbg.gif);
+}
+
+#codemirror_editormenu .button_over, #codemirror_editormenu .button_up,
+.codemirror_ckemenu .button_over, .codemirror_ckemenu .button_up {
+    border: 1px solid #316AC5;
+	background-color: #DFF1FF;
+}
+
+#codemirror_editormenu .button_down, .codemirror_ckemenu .button_down {
+    border: 1px solid #316AC5;
+	background-color: #C1D2EE;
+}
+
+#codemirror_editormenu .icon, .codemirror_ckemenu .icon {
+    width: 24px;
+    height: 22px;
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-position: center center;
+}
+
+.codemirror_ckebg {
+    border: 1px solid #000000;
+	background-color: #ffffff;
+    border: 1px solid #A8A89C;
+    height: 100%;
+    overflow: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

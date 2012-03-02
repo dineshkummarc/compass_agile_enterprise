@@ -1,0 +1,2 @@
+class DesktopApplication < Application
+end

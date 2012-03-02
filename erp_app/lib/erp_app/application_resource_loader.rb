@@ -1,0 +1,3 @@
+require 'erp_app/application_resource_loader/base_loader'
+require 'erp_app/application_resource_loader/file_system_loader'
+require 'erp_app/application_resource_loader/shared_loader'
