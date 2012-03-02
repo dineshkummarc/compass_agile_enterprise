@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-
-begin
-  require 'erp_base_erp_svcs/cli'
-rescue LoadError
-  puts "could not load erp_base_erp_svcs gem"
-  exit
-end

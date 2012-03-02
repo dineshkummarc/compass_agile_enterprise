@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'compass_ae_starter_kit/cli'
+rescue LoadError
+  puts "could not load compass_ae_starter_kit gem"
+  exit
+end
