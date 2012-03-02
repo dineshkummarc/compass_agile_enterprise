@@ -1,0 +1,23 @@
+<div id="<%=widget_result_id%>">
+  <%=link_to_remote "<- Back To List", build_widget_url(:back_to_catalog) %>
+  <br/><br/>
+  <ul style="margin: 0;padding: 0;list-style-type: none;">
+    <% @product_type.images.each do |image| %>
+      <li style="display: inline;background:none;">
+        <img src="<%=image.data.url%>" />
+      </li>
+    <% end %>
+  </ul>
+  <br/>
+  <h2>
+    <%=@product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : @product_type.get_current_simple_amount_with_currency%>
+    <br/>
+    <%=@product_type.inventory_entries.first.number_available%> Available
+  </h2>
+  <hr/>
+  <p>
+    <%=raw @product_type.find_description_by_iid('long_description').description%>
+  </p>
+  <br/>
+  <%=link_to_remote 'Add To Cart', build_widget_url(:add_to_cart, @product_type.id) %>
+</div>

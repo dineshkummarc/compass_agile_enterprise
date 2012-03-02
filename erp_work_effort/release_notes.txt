@@ -1,0 +1,3 @@
+- Added work_effort_id to work_effort_assignments and removed work_effort_assignment_id from work_effort
+  to allow for a work_effort to have many assignments
+
