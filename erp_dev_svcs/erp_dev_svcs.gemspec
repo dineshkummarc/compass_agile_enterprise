@@ -8,7 +8,7 @@ require "erp_dev_svcs/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_dev_svcs"
-  s.version     = ErpDevSvcs::VERSION
+  s.version     = ErpDevSvcs::VERSION::STRING
   s.summary     = "This plugin exists to serve as a way to organize code that exists to support the development process, but will not live in the running production code."
   s.description = "This plugin exists to serve as a way to organize code that exists to support the development process, but will not live in the running production code."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.executables   = ['compass-dev']
 
   #compass dependencies
-  s.add_dependency 'erp_base_erp_svcs'
+  s.add_dependency 'erp_base_erp_svcs', '3.0.2'
 
   s.add_dependency "cucumber-rails", "~> 1.1.1"
   s.add_dependency "database_cleaner"

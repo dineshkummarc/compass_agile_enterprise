@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.name        = "compass_ae_starter_kit"
   s.version     = CompassAeStarterKit::VERSION::STRING
   s.summary     = "Gem to help get the Compass AE framework up a running"
-  s.description = "Contains serveral rake tasks to get Compass AE running"
+  s.description = "Contains compass_ae command to create a new Compass AE application"
   s.authors     = ["Rick Koloski, Russell Holmes"]
   s.email       = ["russonrails@gmail.com"]
   s.homepage    = "http://development.compassagile.com"

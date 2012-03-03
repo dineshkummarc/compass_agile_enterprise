@@ -7,7 +7,7 @@ require "erp_products/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_products"
-  s.version     = ErpProducts::VERSION
+  s.version     = ErpProducts::VERSION::STRING
   s.summary     = "The Products Engine implements ProductType and ProductInstance, as well as a number of classes to support product catalog-type functions and search/shopping scenarios."
   s.description = "The Products Engine implements ProductType and ProductInstance, as well as a number of classes to support product catalog-type functions and search/shopping scenarios. "
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -15,11 +15,11 @@ Gem::Specification.new do |s|
   s.homepage    = "http://development.compassagile.com"
 
   s.files = Dir["{public,app,config,db,lib,tasks,public}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.rdoc"]
-  s.test_files = Dir["test/**/*"]
+  s.test_files = Dir["spec/**/*"]
 
   #compass dependencies
-  s.add_dependency "erp_app"
-  s.add_dependency "erp_agreements"
+  s.add_dependency "erp_app", "3.0.2"
+  s.add_dependency "erp_agreements", "3.0.2"
 
-  s.add_development_dependency "erp_dev_svcs"
+  s.add_development_dependency "erp_dev_svcs", "3.0.2"
 end

@@ -8,7 +8,7 @@ require "erp_app/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_app"
-  s.version     = ErpApp::VERSION
+  s.version     = ErpApp::VERSION::STRING
   s.summary     = "Provides an application infrastructure based on the Sencha/extjs UI framework, as well as several utilities and example applications. "
   s.description = "Provides an application infrastructure based on the Sencha/extjs UI framework, as well as several utilities and example applications. It houses the core application container framework and component model infrastructure that play a key role in the RAD/Agile orientation of CompassAE."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -23,8 +23,8 @@ Gem::Specification.new do |s|
   #s.add_dependency 'therubyracer' # needed on Linux for javascript
 
   #compass dependencies
-  s.add_dependency 'erp_tech_svcs'
+  s.add_dependency 'erp_tech_svcs', "3.0.2"
 
   #dev dependencies
-  s.add_development_dependency 'erp_dev_svcs'
+  s.add_development_dependency 'erp_dev_svcs', "3.0.2"
 end

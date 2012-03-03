@@ -7,7 +7,7 @@ require "erp_orders/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_orders"
-  s.version     = ErpOrders::VERSION
+  s.version     = ErpOrders::VERSION::STRING
   s.summary     = "The Orders Engine in CompassAE implements models for Orders, Order Items and Order status tracking."
   s.description = "The Orders Engine in CompassAE implements models for Orders, Order Items and Order status tracking. It also houses models for charge lines associated with Orders (although it could be argued that this functionality should reside in Commerce)."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -18,9 +18,9 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   #compass dependencies
-  s.add_dependency "erp_app"
-  s.add_dependency "erp_agreements"
-  s.add_dependency "erp_products"
+  s.add_dependency "erp_app", "3.0.2"
+  s.add_dependency "erp_agreements", "3.0.2"
+  s.add_dependency "erp_products", "3.0.2"
 
-  s.add_development_dependency "erp_dev_svcs"
+  s.add_development_dependency "erp_dev_svcs", "3.0.2"
 end

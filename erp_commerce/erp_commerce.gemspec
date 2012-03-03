@@ -7,7 +7,7 @@ require "erp_commerce/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_commerce"
-  s.version     = ErpCommerce::VERSION
+  s.version     = ErpCommerce::VERSION::STRING
   s.summary     = "The CompassAE Commerce Engine uses the engines that implement Parties, Products and Orders, and adds the ability to conduct commerce."
   s.description = "The CompassAE Commerce Engine uses the engines that implement Parties, Products and Orders, and adds the ability to conduct commerce. It implements a pricing engine, fees, payment gateways."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -19,11 +19,13 @@ Gem::Specification.new do |s|
 
   s.add_dependency "aasm", "2.3.1"
   s.add_dependency "activemerchant", "1.17.0"
-  s.add_dependency "erp_app"
-  s.add_dependency "erp_agreements"
-  s.add_dependency "erp_orders"
-  s.add_dependency "erp_products"
-  s.add_dependency "erp_txns_and_accts"
 
-  s.add_development_dependency "erp_dev_svcs"
+  #compass_ae dependencies
+  s.add_dependency "erp_app", "3.0.2"
+  s.add_dependency "erp_agreements", "3.0.2"
+  s.add_dependency "erp_orders", "3.0.2"
+  s.add_dependency "erp_products", "3.0.2"
+  s.add_dependency "erp_txns_and_accts", "3.0.2"
+
+  s.add_development_dependency "erp_dev_svcs", "3.0.2"
 end

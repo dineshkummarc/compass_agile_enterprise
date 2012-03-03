@@ -1,6 +1,6 @@
 module CompassAeStarterKit
   module VERSION #:nodoc:
-    MAJOR = 1
+    MAJOR = 2
     MINOR = 0
     TINY  = 0
 

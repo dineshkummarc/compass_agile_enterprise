@@ -7,7 +7,7 @@ require "erp_inventory/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_inventory"
-  s.version     = ErpInventory::VERSION
+  s.version     = ErpInventory::VERSION::STRING
   s.summary     = "The Inventory Engine in CompassAE implements a set of models for storing information about the availability and location of ProductTypes and optionally Product Instances. "
   s.description = "The Inventory Engine in CompassAE implements a set of models for storing information about the availability and location of ProductTypes and optionally Product Instances. It is also the root for yield and revenue management requirements to segment and allocate inventory for different purposes."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -18,11 +18,11 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   #compass dependencies
-  s.add_dependency "erp_app"
-  s.add_dependency "erp_agreements"
-  s.add_dependency "erp_txns_and_accts"
-  s.add_dependency "erp_orders"
-  s.add_dependency "erp_products"
+  s.add_dependency "erp_app", "3.0.2"
+  s.add_dependency "erp_agreements", "3.0.2"
+  s.add_dependency "erp_txns_and_accts", "3.0.2"
+  s.add_dependency "erp_orders", "3.0.2"
+  s.add_dependency "erp_products", "3.0.2"
 
-  s.add_development_dependency "erp_dev_svcs"
+  s.add_development_dependency "erp_dev_svcs", "3.0.2"
 end

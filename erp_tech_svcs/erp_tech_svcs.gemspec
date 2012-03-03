@@ -8,7 +8,7 @@ require "erp_tech_svcs/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_tech_svcs"
-  s.version     = ErpTechSvcs::VERSION
+  s.version     = ErpTechSvcs::VERSION::STRING
   s.summary     = "This engine is implemented with the premise that services like logging, tracing and encryption would likely already exist in many organizations, so they are factored here so they can easily be re-implemented."
   s.description = "This engine is implemented with the premise that services like logging, tracing and encryption would likely already exist in many organizations, so they are factored here so they can easily be re-implemented. There are default implementations here, and we track several excellent Rails projects as potential implementations of services like security and content/digital asset mgt."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency('sorcery','0.7.5')
 
   #compass dependencies
-  s.add_dependency 'erp_base_erp_svcs'
-  s.add_development_dependency 'erp_dev_svcs'
+  s.add_dependency 'erp_base_erp_svcs', "3.0.2"
+  s.add_development_dependency 'erp_dev_svcs', "3.0.2"
 
 end

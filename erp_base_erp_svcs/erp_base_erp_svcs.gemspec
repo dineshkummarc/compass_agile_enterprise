@@ -8,7 +8,7 @@ require "erp_base_erp_svcs/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_base_erp_svcs"
-  s.version     = ErpBaseErpSvcs::VERSION
+  s.version     = ErpBaseErpSvcs::VERSION::STRING
   s.summary     = "contains an implementation of the ubiquitous 'party model' for managing people, organizations, roles, relationships and contact information."
   s.description = "contains an implementation of the ubiquitous 'party model' for managing people, organizations, roles, relationships and contact information. The models in this library are designed to be useful in a variety of circumstances, including headless SOA implementations and batch operations."
   s.authors     = ["Rick Koloski, Russell Holmes"]

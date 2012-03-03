@@ -7,7 +7,7 @@ require "erp_work_effort/version"
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = "erp_work_effort"
-  s.version     = ErpWorkEffort::VERSION
+  s.version     = ErpWorkEffort::VERSION::STRING
   s.summary     = "Summary of ErpWorkEffort."
   s.description = "Description of ErpWorkEffort."
   s.authors     = ["Rick Koloski, Russell Holmes"]
@@ -17,8 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "erp_tech_svcs"
-  s.add_dependency "erp_base_erp_svcs"
+  s.add_dependency "erp_tech_svcs", "3.0.2"
 
-  s.add_development_dependency "erp_dev_svcs"
+  s.add_development_dependency "erp_dev_svcs", "3.0.2"
 end
