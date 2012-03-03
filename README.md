@@ -15,5 +15,5 @@ Once installed you will get a compass_ae command line utility, simple use this c
     compass_ae new [your apps name]
 
 ###License
-CompassERP’s foundation modules and base applications are in the process of being released under a GPL license. CompassERP development is supported by TrueNorth Solutions, Inc. which offers vertical solutions based on this framework, support and consulting services around the technology.
+CompassERP’s foundation modules and base applications are released under a GPL license. CompassERP development is supported by TrueNorth Solutions, Inc. which offers vertical solutions based on this framework, support and consulting services around the technology.
 
