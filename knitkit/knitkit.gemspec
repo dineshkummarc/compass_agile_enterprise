@@ -25,6 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency('acts-as-taggable-on','2.2.0')
 
   #compass dependencies
-  s.add_dependency 'erp_forms', "3.0.2"
+  s.add_dependency 'erp_forms', "2.0.2"
   s.add_development_dependency 'erp_dev_svcs', "3.0.2"
 end
