@@ -4,7 +4,7 @@ It's Object-Relational layer is based conceptually on the phenomenal Data Model 
 
 ![Compass AE Stack](http://www.tnsolutionsinc.com/sites/site-2/themes/krisnatale/images/erp2-stack-900-2-small.png?1327693367)
 
-###Getting Started
+##Getting Started
 
 To get started simply install the compass_ae gem
 
@@ -14,6 +14,14 @@ Once installed you will get a compass_ae command line utility, simple use this c
 
     compass_ae new [your apps name]
 
-###License
+###Development
+
+You can also create a Compass AE application with our github source via this command
+
+    compass_ae dev [your apps name]
+    
+this will clone our repository into a folder named compass_agile_enterprise within your lib folder of the rails application
+
+##License
 CompassERP’s foundation modules and base applications are released under a GPL license. CompassERP development is supported by [TrueNorth Solutions, Inc](http://www.tnsolutionsinc.com/home). which offers vertical solutions based on this framework, support and consulting services around the technology.
 
