@@ -53,7 +53,7 @@ class PartySearchFact < ActiveRecord::Base
         :roles => (party.user.roles.map { |role| role.internal_identifier }.join(',') rescue ''),
         :party_description => party.description,
         :party_business_party_type => party.business_party_type,
-        :user_login => (party.user.login rescue ''),
+        :user_login => (party.user.username rescue ''),
         :individual_current_last_name => (party.business_party.current_last_name rescue ''),
         :individual_current_first_name => (party.business_party.current_first_name rescue ''),
         :individual_current_middle_name => (party.business_party.current_middle_name rescue ''),
