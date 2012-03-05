@@ -124,7 +124,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         "SSN: "+  party.get('ssn_last_four')+"<br>",
         "</div>"]);   
 
-      var tabtitle =  'Party: ' + party.get('current_first_name') + ' ' + party.get('current_last_name');
+      var tabtitle = party.get('current_first_name') + ' ' + party.get('current_last_name');
     }
     else{
       for (i = 0; i < xtypes.length; i++) {
@@ -139,7 +139,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         "Tax ID: "+  party.get('tax_id_number')+"<br>",
         "</div>"]);   
       
-      var tabtitle =  'Party: ' + party.get('description');
+      var tabtitle = party.get('description');
     }
 
     var partyPanel = Ext.create("Compass.ErpApp.Organizer.Applications.Crm.PartyPanel",{
