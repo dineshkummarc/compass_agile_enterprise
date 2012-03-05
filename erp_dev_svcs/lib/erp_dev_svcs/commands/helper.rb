@@ -28,13 +28,16 @@ module ErpDevSvcs
       def self.exec_in_engines(only_in_these_gems = nil)
         find_rails_root!
 
-        Dir.chdir("lib/compass")
+        Dir.chdir("lib/compass_agile_enterprise")
         root_dir = Dir.pwd
 
         #we're using gemspecs to know that we have
         #a mountable engine located there
         gemspecs = Dir.glob("**/*.gemspec")
         gemspecs.each do |gem|
+          #XXX:we're skipping compass_ae since all it does is
+          #help install compass
+          next if gem == "compass_ae.gemspec"
           gemspec = /(.*)\/(.*.gemspec)/.match(gem)
           #set engine name to the submatch via "[1]"
           engine_name = /(.*).gemspec/.match(gemspec[2])[1]
