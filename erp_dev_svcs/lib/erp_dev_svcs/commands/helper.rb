@@ -27,11 +27,11 @@ module ErpDevSvcs
       #block will only be executed on the engines listed in
       #that array
       def self.exec_in_engines(only_in_these_gems = nil)
-        find_rails_root!
 
         code_dirs = [COMPASS_ROOT, COMMERCIAL_ROOT]
         code_dirs.each do |code_dir|
           begin
+            find_rails_root!
             Dir.chdir(code_dir)
             root_dir = Dir.pwd
 
@@ -53,9 +53,40 @@ module ErpDevSvcs
                 Dir.chdir(root_dir)
               end
             end
-          rescue Errno::ENOENT => e
+          rescue Errno::ENOENT
             puts "#{code_dir} does not exist; skipping..."
           end
+        end
+
+      end
+
+      ##
+      #This will cd into the COMPASS_ROOT and COMMERCIAL_DIR
+      #and execute the passed block; in COMMERCIAL_DIR, it will
+      #cd to the subdir and execute each command.  The assumption here
+      #is that you're trying to perform a command on individual repos
+      def self.exec_in_dirs
+        begin
+          find_rails_root!
+          Dir.chdir(COMPASS_ROOT)
+          puts "Operating on compass root dir..."
+          yield
+
+          find_rails_root!
+          Dir.chdir(COMMERCIAL_ROOT)
+          root_dir = Dir.pwd
+          puts "Now operating on commercial repos..."
+          Dir.foreach(".") do |dir_item|
+            next if dir_item == '..' || dir_item == '.'
+            if File.directory?(dir_item)
+              Dir.chdir(dir_item)
+              puts "\nChanging to #{dir_item}...\n"
+              yield
+              Dir.chdir(root_dir)
+            end
+          end
+        rescue Errno::ENOENT => e
+          puts "#{e.message} does not exist; skipping..."
         end
       end
 
