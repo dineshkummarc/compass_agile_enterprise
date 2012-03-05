@@ -17,7 +17,7 @@
     <!-- application resources -->
     <%=static_javascript_include_tag(@organizer.applications.collect{|app| app.locate_resources('javascripts')}.flatten)%>
     <!-- end application resources -->
-	
+	  <%=set_max_file_upload%>
     <!-- shared application resources -->
     <%= load_shared_application_resources(:stylesheets) %>
     <!-- end application resources -->

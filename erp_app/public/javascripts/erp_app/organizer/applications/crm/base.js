@@ -41,6 +41,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyPanel",{
       layout:'border',
       partyType: config['party_type'],
       id : 'party_id_' + config['partyId'],
+      //tbar: toolBar,
       closable: true,
       split: true,
       items:[
@@ -110,14 +111,19 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         });
       }
 
+      var current_passport_expire_date = party.get('current_passport_expire_date')
+      if (!Compass.ErpApp.Utility.isBlank(current_passport_expire_date)){
+        current_passport_expire_date = Ext.Date.format(current_passport_expire_date, 'm/d/Y');
+      }
+
       var party_details = new Ext.Template(["<div style=\"padding: 10px;\"> ",
         "<h1>"+party.get('current_first_name')+" "+party.get('current_middle_name')+" "+party.get('current_last_name')+" "+party.get('current_suffix')+"</h1>",
         "Enterprise ID: "+  party.get('enterprise_identifier')+"<br>",
         "Title: "+  party.get('current_personal_title')+"<br>",
         "Nickname: "+  party.get('current_nickname')+"<br>",
         "Passport #: "+  party.get('current_passport_number')+"<br>",
-        "Passport Expiration: "+  party.get('current_passport_expire_date')+"<br>",
-        "DOB: "+  party.get('birth_date')+"<br>",
+        "Passport Expiration: "+ current_passport_expire_date +"<br>",
+        "DOB: "+ Ext.Date.format(party.get('birth_date'), 'm/d/Y')+"<br>",
         "Gender: "+  party.get('gender')+"<br>",
         "Years Work Experience: "+  party.get('total_years_work_experience')+"<br>",
         "Marital Status: "+  party.get('marital_status')+"<br>",
