@@ -29,19 +29,16 @@ module ErpDevSvcs
 
         opt_parser.parse!
 
-
         puts opt_parser; exit if options[:emails].nil?
 
-        gem_names.each do |gem_name|
-
+        ErpDevSvcs::Commands::Helper.exec_in_engines do |engine_name|
           options[:emails].each do |email|
-            puts "Adding #{email} as an owner on #{gem_name}"
-            result = %x[gem owner #{gem_name} -a #{email}]
+            puts "Adding #{email} as an owner on #{engine_name}"
+            result = %x[gem owner #{engine_name} -a #{email}]
             puts result
           end
         end
       end
-
     end
   end
 end
