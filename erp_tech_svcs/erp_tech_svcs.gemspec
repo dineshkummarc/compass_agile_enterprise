@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency('sorcery','0.7.5')
 
   #compass dependencies
-  s.add_dependency 'erp_base_erp_svcs', "3.0.2"
-  s.add_development_dependency 'erp_dev_svcs', "3.0.2"
+  s.add_dependency 'erp_base_erp_svcs', "3.0.1"
+  s.add_development_dependency 'erp_dev_svcs', "3.0.1"
 
 end

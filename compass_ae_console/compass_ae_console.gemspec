@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   #compass dependencies
-  s.add_dependency('erp_app', "3.0.2")
+  s.add_dependency('erp_app', "3.0.1")
 
-  s.add_development_dependency("erp_dev_svcs", "3.0.2")
+  s.add_development_dependency("erp_dev_svcs", "3.0.1")
   s.add_development_dependency "sqlite3"
 end
