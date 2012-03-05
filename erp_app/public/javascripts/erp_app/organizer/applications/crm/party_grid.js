@@ -25,7 +25,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
         var config = this.initialConfig;
         var store = Ext.create('Ext.data.Store', {
             fields:config['fields'],
-            autoLoad: true,
+            autoLoad: false,
             autoSync: true,
             proxy: {
                 type: 'rest',

@@ -11,7 +11,8 @@ Ext.define("Compass.ErpApp.Organizer.Applications.BillPay.AccountDetailsPanel",{
       items:[{
         xtype:'shared-invoicesgridpanel',
         billingAccountNumber:config.billingAccountNumber,
-        billingAccountId:config.billingAccountId
+        billingAccountId:config.billingAccountId,
+        showAddDelete:true
       },{
         xtype:'billpay-paymentaccountsgridpanel',
         billingAccountNumber:config.billingAccountNumber,
@@ -80,6 +81,7 @@ Compass.ErpApp.Organizer.Applications.BillPay.Base = function(config){
 
   var tabPanel = {
     xtype:'tabpanel',
+    title:'Bill Pay',
     itemId:'billpay-application',
     plugins: Ext.create('Ext.ux.TabCloseMenu', {
       extraItemsTail: [
@@ -106,11 +108,11 @@ Compass.ErpApp.Organizer.Applications.BillPay.Base = function(config){
     }),
     items:[{
       xtype:'shared-billingaccountsgridpanel',
-      title:'search',
+      title:'Search',
       closable:false,
       autoLoad:false,
       listeners:{
-        'itemclick':function(view, record, item, index, e, options){
+        'itemdblclick':function(view, record, item, index, e, options){
           var tabPanel = view.ownerCt.up('tabpanel');
           var billingAccountNumber = record.get("account_number");
           var billingAccountId = record.get("id");
@@ -123,7 +125,8 @@ Compass.ErpApp.Organizer.Applications.BillPay.Base = function(config){
               closable:true,
               itemId:itemId,
               billingAccountId:billingAccountId,
-              billingAccountNumber:billingAccountNumber
+              billingAccountNumber:billingAccountNumber,
+              billingAccount: record
             });
             tabPanel.add(item);
           }

@@ -16,6 +16,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.BillPay.PaymentAccountsGridPan
 
   constructor : function(config) {
     var store = Ext.create("Ext.data.Store",{
+      autoLoad: true,
       proxy:{
         type:'ajax',
         url: '/erp_invoicing/erp_app/organizer/bill_pay/accounts/payment_accounts',
