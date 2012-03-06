@@ -24,15 +24,15 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
         var grid = this;
         var config = this.initialConfig;
         var store = Ext.create('Ext.data.Store', {
-            fields:config['fields'],
+            fields:config.fields,
             autoLoad: false,
             autoSync: true,
             proxy: {
                 type: 'rest',
-                url:config['url'] || '/erp_app/organizer/crm/parties',
+                url:config.url || '/erp_app/organizer/crm/parties',
                 extraParams:{
                     party_name:null,
-                    party_type:config['partyType']
+                    party_type:config.partyType
                 },
                 reader: {
                     type: 'json',
@@ -51,7 +51,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                     exception: function(proxy, response, operation){
                         Ext.MessageBox.show({
                             title: 'REMOTE EXCEPTION',
-                            msg: 'Error Saving ' + config['partyType'],
+                            msg: 'Error Saving ' + config.partyType,
                             icon: Ext.MessageBox.ERROR,
                             buttons: Ext.Msg.OK
                         });
@@ -62,7 +62,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
  
         var toolBar = Ext.create("Ext.toolbar.Toolbar",{
             items:[
-            '<span class="x-btn-inner">'+ this.initialConfig['partyType'] +' Name:</span>',
+            '<span class="x-btn-inner">'+ this.initialConfig.partyType +' Name:</span>',
             {
                 xtype:'textfield',
                 hideLabel:true,
@@ -105,37 +105,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                 handler: function(button) {
                     grid.fireEvent('addpartybtnclick', this, grid);
                 }
-            },
-            '|',
-            {
-                text: 'Edit',
-                xtype:'button',
-                iconCls: 'icon-edit',
-                handler: function(button) {
-                    grid.fireEvent('editpartybtnclick', this, grid);
-                }
-            },
-            '|',
-            {
-                text: 'Delete',
-                xtype:'button',
-                iconCls: 'icon-delete',
-                handler: function(button) {
-                    var grid = button.findParentByType('partygrid');
-                    var rec = grid.getSelectionModel().selected.items[0];
-                    if (!rec) {
-                        return false;
-                    }
-                    var messageBox = Ext.MessageBox.confirm(
-                      'Confirm', 'Are you sure?',
-                      function(btn){
-                        if (btn == 'yes'){
-                          grid.store.remove(rec);
-                        }
-                      }
-                    );                            
-                }
-            }
+            }            
             ]
         });
 
@@ -184,7 +154,7 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
         }
         ];
 
-        if(config['partyType'] == 'Organization'){
+        if(config.partyType == 'Organization'){
             columns = columns.concat([
             {
                 header: 'Description',

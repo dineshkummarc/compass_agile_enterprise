@@ -33,30 +33,69 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyPanel",{
   partyId:null,
 
   constructor : function(config) {
-    this.partyId = config['partyId'];
+    this.partyId = config.partyId;
+    var self = this;
+    var currentPartyGrid = config.currentPartyGrid;
+    var currentPartyPanel = config.currentPartyPanel;
+
+    var toolBar = Ext.create("Ext.toolbar.Toolbar",{
+        items:[
+        {
+            text: 'Edit',
+            xtype:'button',
+            iconCls: 'icon-edit',
+            handler: function(button) {
+              var rec = currentPartyGrid.store.getById(self.partyId);
+              currentPartyGrid.fireEvent('editpartybtnclick', this, rec);
+            }
+        },
+        '|',
+        {
+            text: 'Delete',
+            xtype:'button',
+            iconCls: 'icon-delete',
+            handler: function(button) {
+                var rec = currentPartyGrid.store.getById(self.partyId);
+                if (!rec) {
+                    return false;
+                }
+                var messageBox = Ext.MessageBox.confirm(
+                  'Confirm', 'Are you sure?',
+                  function(btn){
+                    if (btn == 'yes'){
+                      currentPartyGrid.store.remove(rec);
+                      Ext.getCmp('party_id_' + self.partyId).close();
+                    }
+                  }
+                );                            
+            }
+        }
+        ]
+    });
 
     config = Ext.apply({
-      title: config['tabtitle'],
+      title: config.tabtitle,
       xtype:'panel',
       layout:'border',
-      partyType: config['party_type'],
-      id : 'party_id_' + config['partyId'],
-      //tbar: toolBar,
+      partyType: config.party_type,
+      id : 'party_id_' + config.partyId,
+      tbar: toolBar,
       closable: true,
       split: true,
       items:[
         {
+          id: 'party_details_'+ config.partyId,
           region: 'center',
           xtype: 'panel',
-          html: config['party_details']
+          html: ''
         },
         {
           height: 300,
           collapsible: true,
           region: 'south',
           xtype:'tabpanel',
-          id: 'panelSouthItems_' + config['partyId'],
-          items: config['panelSouthItems']
+          id: 'panelSouthItems_' + config.partyId,
+          items: config.panelSouthItems
         }
       ]
 
@@ -71,15 +110,16 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     * load details of party
     */
   loadPartyDetails = function(partyId){
-    widget_xtypes = individualsPanel.widget_xtypes
+    widget_xtypes = individualsPanel.widget_xtypes;
 
     if(partyId == null){
       Ext.Msg.alert('Error', 'Member partyId not set');
     }
     else{
       var tabPanel = Ext.getCmp('panelSouthItems_'+partyId);
-
-      for (i=0; i < widget_xtypes.length; i++) {
+      updatePartyDetails(partyId);
+  
+      for (i=0; i < widget_xtypes.length; i += 1) {
         var widget = tabPanel.query(widget_xtypes[i]);
         if(widget.length > 0) {
           widget[0].setParams({
@@ -93,8 +133,26 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     }
   };
 
+  updatePartyDetails = function(partyId){
+    Ext.Ajax.request({
+      url : '/erp_app/organizer/crm/get_party_details/'+partyId,
+      disableCaching : false,
+      method : 'GET',
+      success : function(response){
+        Ext.getCmp('party_details_' + partyId).update(response.responseText);
+      }
+    });
+  };
+
   openPartyTab = function(partyId, party, party_type){
-    if (!party_type){ party_type = 'Individual'}
+    if (!party_type){ party_type = 'Individual'; }
+    if (party_type == 'Individual'){
+      currentPartyPanel = Ext.getCmp('IndividualsCenterPanel');
+      currentPartyGrid = Ext.getCmp('individualSearchGrid');
+    }else{
+      currentPartyPanel = Ext.getCmp('OrganizationsCenterPanel');      
+      currentPartyGrid = Ext.getCmp('organizationSearchGrid');
+    }
 
     var panelSouthItems = [];
 
@@ -105,64 +163,42 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     });
 
     if (party_type == 'Individual'){
-      for (var i = 0; i < xtypes.length; i++) {
+      for (i = 0; i < xtypes.length; i += 1) {
         panelSouthItems.push({
           xtype: xtypes[i]
         });
       }
 
-      var current_passport_expire_date = party.get('current_passport_expire_date')
+      var current_passport_expire_date = party.get('current_passport_expire_date');
       if (!Compass.ErpApp.Utility.isBlank(current_passport_expire_date)){
         current_passport_expire_date = Ext.Date.format(current_passport_expire_date, 'm/d/Y');
       }
 
-      var party_details = new Ext.Template(["<div style=\"padding: 10px;\"> ",
-        "<h1>"+party.get('current_first_name')+" "+party.get('current_middle_name')+" "+party.get('current_last_name')+" "+party.get('current_suffix')+"</h1>",
-        "Enterprise ID: "+  party.get('enterprise_identifier')+"<br>",
-        "Title: "+  party.get('current_personal_title')+"<br>",
-        "Nickname: "+  party.get('current_nickname')+"<br>",
-        "Passport #: "+  party.get('current_passport_number')+"<br>",
-        "Passport Expiration: "+ current_passport_expire_date +"<br>",
-        "DOB: "+ Ext.Date.format(party.get('birth_date'), 'm/d/Y')+"<br>",
-        "Gender: "+  party.get('gender')+"<br>",
-        "Years Work Experience: "+  party.get('total_years_work_experience')+"<br>",
-        "Marital Status: "+  party.get('marital_status')+"<br>",
-        "SSN: "+  party.get('ssn_last_four')+"<br>",
-        "</div>"]);   
-
-      var tabtitle = party.get('current_first_name') + ' ' + party.get('current_last_name');
+      tabtitle = party.get('current_first_name') + ' ' + party.get('current_last_name');
     }
     else{
-      for (i = 0; i < xtypes.length; i++) {
+      for (i = 0; i < xtypes.length; i += 1) {
         panelSouthItems.push({
           xtype: xtypes[i]
         });
       }
       
-      var party_details = new Ext.Template(["<div style=\"padding: 10px;\">",
-        "<h1>"+party.get('description')+"</h1>",
-        "Enterprise ID: "+  party.get('enterprise_identifier')+"<br>",
-        "Tax ID: "+  party.get('tax_id_number')+"<br>",
-        "</div>"]);   
-      
-      var tabtitle = party.get('description');
+      tabtitle = party.get('description');
     }
 
     var partyPanel = Ext.create("Compass.ErpApp.Organizer.Applications.Crm.PartyPanel",{
       party_type: party_type,
       panelSouthItems: panelSouthItems,
       tabtitle: tabtitle,
-      party_details: party_details,
-      partyId: partyId
+      party_details: '',
+      partyId: partyId,
+      currentPartyPanel: currentPartyPanel,
+      currentPartyGrid: currentPartyGrid
     });
 
     if (party_type == 'Individual'){
-      Ext.getCmp('IndividualsCenterPanel').add(partyPanel);
-      Ext.getCmp('IndividualsCenterPanel').setActiveTab('party_id_' + partyId);
-    }
-    else{
-      Ext.getCmp('OrganizationsCenterPanel').add(partyPanel);
-      Ext.getCmp('OrganizationsCenterPanel').setActiveTab('party_id_' + partyId);      
+      currentPartyPanel.add(partyPanel);
+      currentPartyPanel.setActiveTab('party_id_' + partyId);
     }
     
     loadPartyDetails(partyId);
@@ -260,14 +296,18 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         allowBlank:true,
         name:'social_security_number'
       }
-  ]
+  ];
 
   var editIndividualFormFields = [
         {
           xtype:'hiddenfield',
+          name:'id'
+        },
+        {
+          xtype:'hiddenfield',
           name:'business_party_id'
         }
-      ]
+      ];
 
   var addIndividualWindow = Ext.create("Ext.window.Window",{
     layout:'fit',
@@ -350,6 +390,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       text:'Submit',
       listeners:{
         'click':function(button){
+          partyId = Ext.getCmp('editIndividualFormPanel').getForm().findField('id').getValue();
+
           var window = button.findParentByType('window');
           var formPanel = window.query('form')[0];
           formPanel.getForm().submit({
@@ -362,6 +404,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
               var response =  Ext.decode(action.response.responseText);
               Ext.Msg.alert("Status", response.message);
               if(response.success){
+                updatePartyDetails(partyId);
                 editIndividualWindow.hide();
                 Ext.getCmp('individualSearchGrid').store.load();
               }
@@ -404,14 +447,18 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
         allowBlank:true,
         name:'description'
       }
-  ]
+  ];
 
   var editOrganizationFormFields = [
         {
           xtype:'hiddenfield',
+          name:'id'
+        },
+        {
+          xtype:'hiddenfield',
           name:'business_party_id'
         }
-      ]
+      ];
 
   var addOrganizationWindow = Ext.create("Ext.window.Window",{
     layout:'fit',
@@ -494,6 +541,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       text:'Submit',
       listeners:{
         'click':function(button){
+          partyId = Ext.getCmp('editOrganizationFormPanel').getForm().findField('id').getValue();
+
           var window = button.findParentByType('window');
           var formPanel = window.query('form')[0];
           formPanel.getForm().submit({
@@ -506,6 +555,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
               var response =  Ext.decode(action.response.responseText);
               Ext.Msg.alert("Status", response.message);
               if(response.success){
+                updatePartyDetails(partyId);
                 var organizationName = response.organizationName;
                 editOrganizationWindow.hide();
                 var organizationSearchGrid = Ext.ComponentMgr.get('organizationSearchGrid');
@@ -599,8 +649,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       'addpartybtnclick':function(btn, grid){
         addIndividualWindow.show();
       },
-      'editpartybtnclick':function(btn, grid){
-        rec = grid.getSelectionModel().getSelection()[0];
+      'editpartybtnclick':function(btn, rec){
+        //rec = grid.getSelectionModel().getSelection()[0];
         if (rec){
           Ext.getCmp('editIndividualFormPanel').getForm().loadRecord(rec);        
           editIndividualWindow.show();
@@ -631,8 +681,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       'addpartybtnclick':function(btn, grid){
         addOrganizationWindow.show();
       },
-      'editpartybtnclick':function(btn, grid){
-        rec = grid.getSelectionModel().getSelection()[0];
+      'editpartybtnclick':function(btn, rec){
+        //rec = grid.getSelectionModel().getSelection()[0];
         if (rec){
           Ext.getCmp('editOrganizationFormPanel').getForm().loadRecord(rec);        
           editOrganizationWindow.show();
@@ -691,7 +741,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
   };
 
   this.setup = function(){
-    config['organizerLayout'].addApplication(menuTreePanel, [individualsPanel, organizationsPanel]);
+    config.organizerLayout.addApplication(menuTreePanel, [individualsPanel, organizationsPanel]);
   };
     
 };

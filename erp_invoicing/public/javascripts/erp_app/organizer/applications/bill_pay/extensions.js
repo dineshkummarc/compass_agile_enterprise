@@ -24,7 +24,7 @@ initComponent : function(){
         type:'date',
         dateFormat:'Y-m-d'
       },'payable_online','send_paper_bills'],
-      autoLoad: Compass.ErpApp.Utility.isBlank(config['autoLoad']) ? true : config['autoLoad'],
+      autoLoad: Compass.ErpApp.Utility.isBlank(config.autoLoad) ? true : config.autoLoad,
       autoSync: true,
       proxy: {
         type: 'rest',
@@ -98,7 +98,7 @@ initComponent : function(){
           xtype:'datefield',
           fieldLabel:'Due Date',
           name:'due_date'
-        }]
+        }];
 
     updateBillingAccountFields = [{
           xtype:'numberfield',
@@ -109,7 +109,7 @@ initComponent : function(){
           xtype:'numberfield',
           fieldLabel:'Balance',
           name:'balance'
-        }]
+        }];
 
     var addBillingAccountWindow = Ext.create("Ext.window.Window",{
       layout:'fit',
@@ -340,7 +340,7 @@ initComponent : function(){
         sortable: false,
         dataIndex: 'send_paper_bills',
         renderer:function(v){
-          var result = ''
+          var result = '';
           if(v){
             result = 'Yes';
           }
@@ -362,7 +362,7 @@ initComponent : function(){
         sortable: false,
         dataIndex: 'payable_online',
         renderer:function(v){
-          var result = ''
+          var result = '';
           if(v){
             result = 'Yes';
           }
@@ -384,7 +384,7 @@ initComponent : function(){
         sortable: false,
         dataIndex: 'calculate_balance',
         renderer:function(v){
-          var result = ''
+          var result = '';
           if(v){
             result = 'Yes';
           }
