@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency "sunspot_solr", "1.3.0"
 
   #compass dependencies
-  s.add_dependency "knitkit", "3.0.2"
+  s.add_dependency "knitkit", "2.0.2"
 end
