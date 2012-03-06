@@ -4,6 +4,13 @@ module ErpDevSvcs
       COMPASS_ROOT = "lib/compass_agile_enterprise"
       COMMERCIAL_ROOT = "lib/truenorth"
 
+      KEY_ENGINES = {0 => 'erp_base_erp_svcs/erp_base_erp_svcs.gemspec',
+                     1 => 'erp_tech_svcs/erp_tech_svcs.gemspec',
+                     2 => 'erp_dev_svcs/erp_dev_svcs.gemspec',
+                     3 => 'erp_app/erp_app.gemspec',
+                     4 => 'erp_agreements/erp_agreements.gemspec',
+                     5 => 'erp_txns_and_accts/erp_txns_and_accts.gemspec'}
+
       def self.find_rails_root!
         if in_rails_application?
           return
@@ -15,6 +22,16 @@ module ErpDevSvcs
 
       def self.in_rails_application?
         File.exists?(File.join('config', 'boot.rb'))
+      end
+
+      def self.sort_gems gemspecs
+        KEY_ENGINES.each do |key, val|
+          gemspecs.delete(val)
+        end
+        KEY_ENGINES.each do |key, val|
+          gemspecs.insert(key, val)
+        end
+        gemspecs
       end
 
       ##
@@ -38,6 +55,7 @@ module ErpDevSvcs
             #we're using gemspecs to know that we have
             #a mountable engine located there
             gemspecs = Dir.glob("**/*.gemspec")
+            gemspecs = sort_gems(gemspecs) if code_dir == COMPASS_ROOT
             gemspecs.each do |gem|
               #XXX:we're skipping compass_ae since all it does is
               #help install compass
