@@ -112,6 +112,11 @@ module ErpApp
           }
 			  end
 
+        def get_party_details
+          @party = Party.find(params[:id]) rescue nil
+          
+        end
+
         def get_user
           party = Party.find(params[:party_id]) rescue nil
 

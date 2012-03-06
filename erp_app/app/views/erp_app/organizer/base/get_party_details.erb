@@ -1,0 +1,19 @@
+<div style="padding: 10px;"> 
+<% if @party.business_party_type == 'Individual' %>
+  <h1><%=@party.business_party.current_first_name %> <%=@party.business_party.current_middle_name %> <%=@party.business_party.current_last_name %> <%=@party.business_party.current_suffix %></h1>
+  Enterprise ID: <%=  @party.enterprise_identifier %><br>
+  Title: <%=  @party.business_party.current_personal_title %><br>
+  Nickname: <%=  @party.business_party.current_nickname %><br>
+  Passport #: <%=  @party.business_party.current_passport_number %><br>
+  Passport Expiration: <%= @party.business_party.current_passport_expire_date  %><br>
+  DOB: <%= @party.business_party.birth_date.to_s %><br>
+  Gender: <%=  @party.business_party.gender %><br>
+  Years Work Experience: <%=  @party.business_party.total_years_work_experience %><br>
+  Marital Status: <%=  @party.business_party.marital_status %><br>
+  SSN: <%=  @party.business_party.ssn_last_four %><br>
+<% else %>
+  <h1> <%= @party.description %></h1>
+  Enterprise ID: <%= @party.enterprise_identifier %><br>
+  Tax ID: <%= @party.business_party.tax_id_number %><br>
+<% end %>
+</div> 
