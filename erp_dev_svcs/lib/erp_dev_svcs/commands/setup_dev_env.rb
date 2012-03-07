@@ -15,7 +15,7 @@ module ErpDevSvcs
                    :bundle => false}
 
         opt_parser = OptionParser.new do |opt|
-          opt.banner = "Usage: compass-dev test [OPTIONS]"
+          opt.banner = "Usage: compass-util test [OPTIONS]"
 
           opt.on("-g", "--gems [GEMLIST]", Array,
                  "List of engines to operate on;"\

@@ -15,7 +15,7 @@ module ErpDevSvcs
         gem_names = ErpDevSvcs::Commands::Helper.compass_gem_names
 
         opt_parser = OptionParser.new do |opt|
-          opt.banner = "Usage: compass-dev new_gem_owner --emails LISTOFEMAILS"
+          opt.banner = "Usage: compass-util new_gem_owner --emails LISTOFEMAILS"
 
           opt.on("-e", "--emails LISTOFEMAILS", Array,
                  "comma seperated list of email addresses of the users "\
