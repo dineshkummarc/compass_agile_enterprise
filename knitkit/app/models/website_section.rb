@@ -125,6 +125,7 @@ class WebsiteSection < ActiveRecord::Base
       :path => self.path,
       :permalink => self.permalink,
       :internal_identifier => self.internal_identifier,
+      :render_base_layout => self.render_base_layout,
       :position => self.position,
       :sections => self.children.each.map{|child| child.build_section_hash}
     }
