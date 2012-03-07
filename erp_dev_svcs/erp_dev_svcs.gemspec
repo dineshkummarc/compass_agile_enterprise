@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.executables   = ['compass-util']
 
   #compass dependencies
-  s.add_dependency 'erp_base_erp_svcs', '3.0.2'
+  s.add_dependency 'erp_base_erp_svcs', '3.0.1'
 
   s.add_dependency "cucumber-rails", "~> 1.1.1"
   s.add_dependency "database_cleaner"

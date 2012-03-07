@@ -351,7 +351,7 @@ class Website < ActiveRecord::Base
 
           #handle sections
           setup_hash[:sections].each do |section_hash|
-            build_section(section_hash, entries, website)
+            build_section(section_hash, entries, website, current_user)
           end
           website.website_sections.update_paths!
 
@@ -405,12 +405,13 @@ class Website < ActiveRecord::Base
       website_item
     end
 
-    def build_section(hash, entries, website)
+    def build_section(hash, entries, website, current_user)
       klass = hash[:type].constantize
       section = klass.new(:title => hash[:name],
         :in_menu => hash[:in_menu],
         :render_base_layout => hash[:render_base_layout],
-        :position => hash[:position])
+        :position => hash[:position],
+        :render_base_layout => hash[:render_base_layout])
       section.internal_identifier = hash[:internal_identifier]
       section.permalink = hash[:permalink]
       section.path = hash[:path]
@@ -422,6 +423,7 @@ class Website < ActiveRecord::Base
         article = Article.find_by_internal_identifier(article_hash[:internal_identifier])
         if article.nil?
           article = Article.new(:title => article_hash[:name], :display_title => article_hash[:display_title])
+          article.created_by = current_user
           article.tag_list = article_hash[:tag_list].split(',').collect{|t| t.strip() } unless article_hash[:tag_list].blank?
           article.body_html = entries.find{|entry| entry[:type] == 'articles' and entry[:name] == "#{article_hash[:internal_identifier]}.html"}[:data]
           content = entries.find{|entry| entry[:type] == 'excerpts' and entry[:name] == "#{article_hash[:internal_identifier]}.html"}

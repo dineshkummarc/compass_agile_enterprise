@@ -18,12 +18,13 @@ Gem::Specification.new do |s|
   s.files       = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.md"]
   s.test_files  = Dir["spec/**/*"]
 
-  s.add_dependency('rails',"~> 3.1.0")
+  #compass dependency
+  s.add_dependency('compass_ae_starter_kit', '~> 2.0.0')
+  
   s.add_dependency('attr_encrypted','1.2.0')
   s.add_dependency('awesome_nested_set','2.0.2')
   s.add_dependency('data_migrator','1.7')
   s.add_dependency('has_many_polymorphic','>= 2.0.1')
-  s.add_dependency("jquery-rails", "~> 1.0.13")
   s.add_dependency('uuid','2.3.4')
 
   s.add_development_dependency "database_cleaner"
