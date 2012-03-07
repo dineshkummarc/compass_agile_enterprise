@@ -149,7 +149,7 @@ module ErpCommerce
           :expiration_year => params[:exp_year]
         )
         credit_card.card_number = params[:card_number]
-        result = CreditCardAccount.new.purchase(financial_txn, params[:cvvs], ErpCommerce::ActiveMerchantWrappers::PrismPayWrapper, {}, credit_card)
+        result = CreditCardAccount.new.purchase(financial_txn, params[:cvvs], Rails.application.config.erp_commerce.active_merchange_gateway_wrapper, {}, credit_card)
 
         #make sure cedit card payment was successful
         if result[:payment].nil? or !result[:payment].success
