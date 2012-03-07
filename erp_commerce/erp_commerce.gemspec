@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "aasm", "2.3.1"
-  s.add_dependency "activemerchant", "1.17.0"
+  s.add_dependency "activemerchant", "1.20.4"
 
   #compass_ae dependencies
   s.add_dependency "erp_app", "3.0.1"
