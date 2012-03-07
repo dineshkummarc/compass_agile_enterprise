@@ -410,7 +410,8 @@ class Website < ActiveRecord::Base
       section = klass.new(:title => hash[:name],
         :in_menu => hash[:in_menu],
         :render_base_layout => hash[:render_base_layout],
-        :position => hash[:position])
+        :position => hash[:position],
+        :render_base_layout => hash[:render_base_layout])
       section.internal_identifier = hash[:internal_identifier]
       section.permalink = hash[:permalink]
       section.path = hash[:path]
