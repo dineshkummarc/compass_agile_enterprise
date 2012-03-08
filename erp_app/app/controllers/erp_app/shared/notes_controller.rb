@@ -1,6 +1,7 @@
 module ErpApp
 	module Shared
 		class Shared::NotesController < ErpApp::ApplicationController
+      before_filter :find_party
 
 		  def view
         if params[:party_id].to_i == 0
@@ -15,7 +16,7 @@ module ErpApp
 
           Note.include_root_in_json = false
 			
-          party = Party.find(params[:party_id])
+          party = @party
           notes = party.notes.order("#{sort} #{dir}").limit(limit).offset(start)
 			
           render :inline => "{\"totalCount\":#{party.notes.count}, \"notes\":#{notes.to_json(:only => [:id, :content, :created_at], :methods => [:summary, :note_type_desc, :created_by_username])}}"
@@ -25,7 +26,7 @@ module ErpApp
 		  def create
         content  = params[:content]
         note_type = NoteType.find(params[:note_type_id])
-        party = Party.find(params[:party_id])
+        party = @party
 
         note = Note.create(
           :note_type => note_type,
@@ -48,6 +49,12 @@ module ErpApp
 
         render :json => {:note_types => NoteType.all}
 		  end
+
+      protected
+      def find_party
+        party_id = params[:party_id] ? params[:party_id] : params[:id]
+        @party = Party.find(party_id) rescue nil
+      end
 		end
 	end
 end

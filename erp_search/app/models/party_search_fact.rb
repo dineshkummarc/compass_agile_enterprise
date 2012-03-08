@@ -16,6 +16,8 @@ class PartySearchFact < ActiveRecord::Base
     text :user_login
     text :individual_current_last_name
     text :individual_current_first_name
+    string :individual_current_last_name # we need to search AND sort on first and last name
+    string :individual_current_first_name
     string :individual_current_middle_name    
     string :individual_birth_date
     text :individual_ssn    
@@ -28,7 +30,7 @@ class PartySearchFact < ActiveRecord::Base
     text :party_primary_address_zip
     string :party_primary_address_country    
     string :user_enabled
-    string :user_type 
+    string :user_type
   end
   
   def self.update_search_fact(party)    

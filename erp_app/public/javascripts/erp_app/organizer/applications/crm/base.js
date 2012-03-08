@@ -46,7 +46,18 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyPanel",{
             iconCls: 'icon-edit',
             handler: function(button) {
               var rec = currentPartyGrid.store.getById(self.partyId);
-              currentPartyGrid.fireEvent('editpartybtnclick', this, rec);
+              if (rec){
+                if (rec.data.business_party_type == 'Individual'){
+                  Ext.getCmp('editIndividualFormPanel').getForm().loadRecord(rec);        
+                  Ext.getCmp('editIndividualWindow').show();                  
+                }else{
+                  Ext.getCmp('editOrganizationFormPanel').getForm().loadRecord(rec);        
+                  Ext.getCmp('editOrganizationWindow').show();      
+                }
+              }
+              else{
+                Ext.Msg.alert('Please select a record to edit.');  
+              }
             }
         },
         '|',
@@ -146,13 +157,8 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
 
   openPartyTab = function(partyId, party, party_type){
     if (!party_type){ party_type = 'Individual'; }
-    if (party_type == 'Individual'){
-      currentPartyPanel = Ext.getCmp('IndividualsCenterPanel');
-      currentPartyGrid = Ext.getCmp('individualSearchGrid');
-    }else{
-      currentPartyPanel = Ext.getCmp('OrganizationsCenterPanel');      
-      currentPartyGrid = Ext.getCmp('organizationSearchGrid');
-    }
+    currentPartyPanel = Ext.getCmp('IndividualsCenterPanel');
+    currentPartyGrid = Ext.getCmp('individualSearchGrid').query('shared_dynamiceditablegrid').first();
 
     var panelSouthItems = [];
 
@@ -162,28 +168,22 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
       shared_notes_grid:true
     });
 
-    if (party_type == 'Individual'){
-      for (i = 0; i < xtypes.length; i += 1) {
-        panelSouthItems.push({
-          xtype: xtypes[i]
-        });
-      }
+    // var current_passport_expire_date = party.get('current_passport_expire_date');
+    //   if (!Compass.ErpApp.Utility.isBlank(current_passport_expire_date)){
+    //     current_passport_expire_date = Ext.Date.format(current_passport_expire_date, 'm/d/Y');
+    //   }
 
-      var current_passport_expire_date = party.get('current_passport_expire_date');
-      if (!Compass.ErpApp.Utility.isBlank(current_passport_expire_date)){
-        current_passport_expire_date = Ext.Date.format(current_passport_expire_date, 'm/d/Y');
-      }
-
-      tabtitle = party.get('current_first_name') + ' ' + party.get('current_last_name');
+    for (i = 0; i < xtypes.length; i += 1) {
+      panelSouthItems.push({
+        xtype: xtypes[i]
+      });
     }
-    else{
-      for (i = 0; i < xtypes.length; i += 1) {
-        panelSouthItems.push({
-          xtype: xtypes[i]
-        });
-      }
       
-      tabtitle = party.get('description');
+//    var tabtitle = party.get('individual_current_first_name') + ' ' + party.get('individual_current_last_name');
+    if (!Compass.ErpApp.Utility.isBlank(party.get('description'))){
+        var tabtitle = party.get('description');
+    }else{
+        var tabtitle = party.get('party_description');
     }
 
     var partyPanel = Ext.create("Compass.ErpApp.Organizer.Applications.Crm.PartyPanel",{
@@ -344,9 +344,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
               if(response.success){
                 var individualName = response.individualName;
                 addIndividualWindow.hide();
-                var individualsSearchGrid = Ext.ComponentMgr.get('individualSearchGrid');
-                individualsSearchGrid.store.proxy.extraParams.party_name = individualName;
-                individualsSearchGrid.store.load();
+                currentPartyGrid.store.load();
               }
             },
             failure:function(form, action){
@@ -369,6 +367,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
   });
 
   var editIndividualWindow = Ext.create("Ext.window.Window",{
+    id: 'editIndividualWindow',
     layout:'fit',
     width:375,
     title:'Edit Individual',
@@ -406,7 +405,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
               if(response.success){
                 updatePartyDetails(partyId);
                 editIndividualWindow.hide();
-                Ext.getCmp('individualSearchGrid').store.load();
+                currentPartyGrid.store.load();
               }
             },
             failure:function(form, action){
@@ -495,9 +494,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
               if(response.success){
                 var organizationName = response.organizationName;
                 addOrganizationWindow.hide();
-                var organizationSearchGrid = Ext.ComponentMgr.get('organizationSearchGrid');
-                organizationSearchGrid.store.proxy.extraParams.party_name = organizationName;
-                organizationSearchGrid.store.load();
+                currentPartyGrid.store.load();
               }
             },
             failure:function(form, action){
@@ -520,6 +517,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
   });
 
   var editOrganizationWindow = Ext.create("Ext.window.Window",{
+    id: 'editOrganizationWindow',
     layout:'fit',
     width:375,
     title:'Edit Organization',
@@ -558,9 +556,7 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
                 updatePartyDetails(partyId);
                 var organizationName = response.organizationName;
                 editOrganizationWindow.hide();
-                var organizationSearchGrid = Ext.ComponentMgr.get('organizationSearchGrid');
-                organizationSearchGrid.store.proxy.extraParams.party_name = organizationName;
-                organizationSearchGrid.store.load();
+                currentPartyGrid.store.load();
               }
             },
             failure:function(form, action){
@@ -643,66 +639,49 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
   var individualsGrid = {
     id:'individualSearchGrid',
     title: 'Search',
-    xtype:'partygrid',
+    xtype:'crmDynamicPartyGridPanel',
     partyType:'Individual',
     listeners:{
       'addpartybtnclick':function(btn, grid){
         addIndividualWindow.show();
       },
-      'editpartybtnclick':function(btn, rec){
-        //rec = grid.getSelectionModel().getSelection()[0];
-        if (rec){
-          Ext.getCmp('editIndividualFormPanel').getForm().loadRecord(rec);        
-          editIndividualWindow.show();
-        }
-        else{
-          Ext.Msg.alert('Please select a record to edit.');  
-        }
-      },      
-      'itemdblclick':function(view, record, item, index, e, options){
-        var partyId = record.get("id");
-        var partyTab = Ext.getCmp('party_id_' + partyId);
-        if (partyTab){
-          Ext.getCmp('IndividualsCenterPanel').setActiveTab('party_id_' + partyId);
-        }
-        else{
-          openPartyTab(partyId, record, 'Individual');        
-        }
+      'addorgbtnclick':function(btn, grid){
+        addOrganizationWindow.show();
       }
     }
   };
 
-  var organizationsGrid = {
-    id:'organizationSearchGrid',
-    title: 'Search',
-    xtype:'partygrid',
-    partyType:'Organization',
-    listeners:{
-      'addpartybtnclick':function(btn, grid){
-        addOrganizationWindow.show();
-      },
-      'editpartybtnclick':function(btn, rec){
-        //rec = grid.getSelectionModel().getSelection()[0];
-        if (rec){
-          Ext.getCmp('editOrganizationFormPanel').getForm().loadRecord(rec);        
-          editOrganizationWindow.show();
-        }
-        else{
-          Ext.Msg.alert('Please select a record to edit.');  
-        }
-      },   
-      'itemdblclick':function(view, record, item, index, e, options){
-        var partyId = record.get("id");
-        var partyTab = Ext.getCmp('party_id_' + partyId);
-        if (partyTab){
-          Ext.getCmp('OrganizationsCenterPanel').setActiveTab('party_id_' + partyId);
-        }
-        else{
-          openPartyTab(partyId, record, 'Organization');        
-        }
-      }
-    }
-  };
+  // var organizationsGrid = {
+  //   id:'organizationSearchGrid',
+  //   title: 'Search',
+  //   xtype:'crmDynamicPartyGridPanel',
+  //   partyType:'Organization',
+  //   listeners:{
+  //     'addpartybtnclick':function(btn, grid){
+  //       addOrganizationWindow.show();
+  //     },
+  //     'editpartybtnclick':function(btn, rec){
+  //       //rec = grid.getSelectionModel().getSelection()[0];
+  //       if (rec){
+  //         Ext.getCmp('editOrganizationFormPanel').getForm().loadRecord(rec);        
+  //         editOrganizationWindow.show();
+  //       }
+  //       else{
+  //         Ext.Msg.alert('Please select a record to edit.');  
+  //       }
+  //     },   
+  //     'itemdblclick':function(view, record, item, index, e, options){
+  //       var partyId = record.get("id");
+  //       var partyTab = Ext.getCmp('party_id_' + partyId);
+  //       if (partyTab){
+  //         Ext.getCmp('OrganizationsCenterPanel').setActiveTab('party_id_' + partyId);
+  //       }
+  //       else{
+  //         openPartyTab(partyId, record, 'Organization');        
+  //       }
+  //     }
+  //   }
+  // };
 
   var xtypes = currentUser.validWidgets('crm',
     {
@@ -725,23 +704,23 @@ Compass.ErpApp.Organizer.Applications.Crm.Base = function(config){
     }]
   };
 
-  var organizationsPanel = {
-    xtype:'contactslayout',
-    id:'organizations_search_grid',
-    title: 'Organizations',
-    widget_xtypes: xtypes,
-    items:[{
-      xtype: 'tabpanel',
-      layout:'fit',
-      region:'center',
-      id: 'OrganizationsCenterPanel',
-      autoScroll:true,
-      items:[organizationsGrid]
-    }]
-  };
+  // var organizationsPanel = {
+  //   xtype:'contactslayout',
+  //   id:'organizations_search_grid',
+  //   title: 'Organizations',
+  //   widget_xtypes: xtypes,
+  //   items:[{
+  //     xtype: 'tabpanel',
+  //     layout:'fit',
+  //     region:'center',
+  //     id: 'OrganizationsCenterPanel',
+  //     autoScroll:true,
+  //     items:[organizationsGrid]
+  //   }]
+  // };
 
   this.setup = function(){
-    config.organizerLayout.addApplication(menuTreePanel, [individualsPanel, organizationsPanel]);
+    config.organizerLayout.addApplication(menuTreePanel, [individualsPanel]);
   };
     
 };

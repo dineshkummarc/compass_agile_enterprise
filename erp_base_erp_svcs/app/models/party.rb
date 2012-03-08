@@ -10,6 +10,18 @@ class Party < ActiveRecord::Base
 	attr_reader :relationships
   attr_writer :create_relationship
 
+  def self.search(options = {})
+    options[:sort] = 'description' if options[:sort].blank?
+
+    parties = Party.where("LOWER(description) LIKE ?", "%#{options[:query].downcase}%")
+    parties = parties.order("#{options[:sort]} #{options[:dir]}")
+    parties.paginate(:page => options[:page], :per_page => options[:per_page])
+  end
+
+  def self.do_search(options = {})
+    parties = Party.search(options)
+  end
+
   # Gathers all party relationships that contain this particular party id
   # in either the from or to side of the relationship.
   def relationships

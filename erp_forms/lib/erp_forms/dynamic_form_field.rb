@@ -90,6 +90,7 @@ class DynamicFormField
         :labelWidth => options[:labelwidth]
     }
     
+    field[:mapping] = options[:mapping] unless options[:mapping].blank?
     field[:maxLength] = options[:maxlength] unless options[:maxlength].nil?
     
     if selections and selections != []

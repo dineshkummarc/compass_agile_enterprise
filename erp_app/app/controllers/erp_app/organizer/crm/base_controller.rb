@@ -4,12 +4,73 @@ module ErpApp
 			class BaseController < ErpApp::Organizer::BaseController
         @@date_format = "%m/%d/%Y"
         @@datetime_format = "%m/%d/%Y %l:%M%P"
+        before_filter :find_party
+
+        def index
+          render :inline => if request.get?
+            search_parties
+          elsif request.delete?
+            delete_party
+          end          
+        end
+
+        # setup dynamic data grid
+        def setup
+          columns=[]
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Description", :name => 'description', :xtype => 'textfield' })
+          #columns << DynamicGridColumn.build_column({ :fieldLabel => "Username", :name => 'username', :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "First Name", :name => 'current_first_name', :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Last Name", :name => 'current_last_name', :xtype => 'textfield' })
+
+          definition = []
+          definition << DynamicFormField.textfield({ :fieldLabel => "Description", :name => 'description' })
+          #definition << DynamicFormField.textfield({ :fieldLabel => "Username", :name => 'username', :mapping => 'user.username' })
+          definition << DynamicFormField.datefield({ :fieldLabel => "First Name", :name => 'current_first_name', :mapping => 'business_party.current_first_name' })
+          definition << DynamicFormField.datefield({ :fieldLabel => "Last Name", :name => 'current_last_name', :mapping => 'business_party.current_last_name' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "Party ID", :name => 'party_id' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "business_party_id", :name => 'business_party_id', :mapping => 'business_party.id' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "business_party_type", :name => 'business_party_type' })
+
+          render :inline => "{
+            \"success\": true,
+            \"columns\": [#{columns.join(',')}],
+            \"fields\": #{definition.to_json}
+          }"
+        end
+
+        def search_parties
+          options = {
+            :query => (params[:query] || ''),
+            :page => (params[:page] || 1),
+            :per_page => (params[:per_page] || 20),
+            :sort => (params[:sort] || '').downcase,
+            :dir => (params[:dir] || 'asc').downcase
+          }
+          parties = Party.do_search(options)
+
+          party_hash = {
+            :total => parties.total_entries, 
+            :data => parties.collect{|party| {
+              :description => party.description,
+              :id => party.id,
+              :enterprise_identifier => party.enterprise_identifier,
+              :created_at => party.created_at,
+              :updated_at => party.updated_at,
+              :business_party_type => party.business_party_type,
+              :business_party => party.business_party,
+              :user => party.user
+            }}
+          }
+
+          party_hash.to_json
+        end
 
 			  def menu
           menu = []
 
-          menu << {:text => 'Individuals', :businessPartType => 'individual', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "individuals_search_grid"}
-          menu << {:text => 'Organizations',:businessPartType => 'organization', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "organizations_search_grid"}
+          menu << {:text => 'Customers', :businessPartType => 'individual', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "individuals_search_grid"}
+          #menu << {:text => 'Organizations',:businessPartType => 'organization', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "organizations_search_grid"}
 
           render :json => menu
 			  end
@@ -79,12 +140,10 @@ module ErpApp
           business_party_data.delete(:party_type)
           business_party_data.delete(:controller)
           business_party_data.delete(:action)
-          puts business_party_data[:birth_date]
           business_party_data[:birth_date] = Date.strptime(business_party_data[:birth_date], @@date_format) unless business_party_data[:birth_date].blank?
           business_party_data[:current_passport_expire_date] = Date.strptime(business_party_data[:current_passport_expire_date], @@date_format) unless business_party_data[:current_passport_expire_date].blank?
 
-          klass = party_type.constantize
-          business_party = klass.find(businesss_party_id)
+          business_party = @party.business_party
 
           business_party_data.each do |key,value|
             key = key.gsub("business_party.", "")
@@ -107,18 +166,18 @@ module ErpApp
                   :enterprise_identifier => party.enterprise_identifier,
                   :created_at => party.created_at,
                   :updated_at => party.updated_at,
-                  :business_party => party.business_party
+                  :business_party => party.business_party,
+                  :user => party.user
                 }]
           }
 			  end
 
         def get_party_details
-          @party = Party.find(params[:id]) rescue nil
-          
+          @party          
         end
 
         def get_user
-          party = Party.find(params[:party_id]) rescue nil
+          party = @party rescue nil
 
           if params[:party_id] and !party.nil?
             user = party.user
@@ -161,7 +220,7 @@ module ErpApp
         end
 
         def update_user
-          party = Party.find(params[:party_id]) rescue nil
+          party = @party rescue nil
 
           if params[:party_id] and !party.nil?
             user = party.user
@@ -201,28 +260,39 @@ module ErpApp
         end
 
         private
-			  def get_parties
-          search_name = params[:party_name]
-          party_type = params[:party_type]
-          start = params[:start] || 0
-          limit = params[:limit] || 30
 
-          total_count = Party.where("description like ? and business_party_type = ?", "%#{search_name}%", party_type).count
-          parties = Party.where("description like ? and business_party_type = ?", "%#{search_name}%", party_type).order("id").offset(start).limit(limit)
+        def page
+          offset = params[:start].to_f
+          offset > 0 ? (offset / params[:limit].to_f).to_i + 1 : 1
+        end
+        
+        def per_page
+          params[:limit].nil? ? 20 : params[:limit].to_i
+        end  
 
-           {:totalCount => total_count, :data => parties.collect{|party| {
-                :id => party.id,
-                :enterprise_identifier => party.enterprise_identifier,
-                :created_at => party.created_at,
-                :updated_at => party.updated_at,
-                :business_party => party.business_party
-              }}
-          }.to_json
-			  end
+			  # def get_parties
+     #      search_name = params[:party_name]
+     #      party_type = params[:party_type]
+     #      start = params[:start] || 0
+     #      limit = params[:limit] || 30
+
+     #      parties = Party.where("description like ? and business_party_type = ?", "%#{search_name}%", party_type)
+     #      total_count = parties.count
+     #      parties = parties.order("id").offset(start).limit(limit)
+
+     #       {:totalCount => total_count, :data => parties.collect{|party| {
+     #            :id => party.id,
+     #            :enterprise_identifier => party.enterprise_identifier,
+     #            :created_at => party.created_at,
+     #            :updated_at => party.updated_at,
+     #            :business_party => party.business_party
+     #          }}
+     #      }.to_json
+			  # end
 
 			  def delete_party
           party_type = params[:party_type]
-          Party.destroy(params[:id])
+          @party.destroy
 
           {:data => [], :message => "#{party_type} deleted"}.to_json
 			  end
@@ -234,10 +304,9 @@ module ErpApp
           params[:data].delete(:contact_purpose_id)
 
           contact_mechanism_class = contact_type.constantize
-          party = Party.find(party_id)
           
           contact_purpose = contact_purpose_id.blank? ? ContactPurpose.find_by_internal_identifier('default') : ContactPurpose.find(contact_purpose_id)
-          contact_mechanism = party.add_contact(contact_mechanism_class, params[:data], contact_purpose)
+          contact_mechanism = @party.add_contact(contact_mechanism_class, params[:data], contact_purpose)
 
           contact_mechanism_class.class_eval do
             def contact_purpose_id
@@ -286,8 +355,7 @@ module ErpApp
 
           contact_mechanism_class = contact_type.constantize
 
-          party = Party.find(party_id)
-          contact_mechanisms = party.find_all_contacts_by_contact_mechanism(contact_mechanism_class)
+          contact_mechanisms = @party.find_all_contacts_by_contact_mechanism(contact_mechanism_class)
 
           contact_mechanism_class.class_eval do
             def contact_purpose_id
@@ -307,11 +375,16 @@ module ErpApp
           contact_mechanism = contact_type_class.find(contact_mechanism_id)
           contact_mechanism.destroy
 
-          party = Party.find(party_id)
-          contact_mechanisms = party.find_all_contacts_by_contact_mechanism(contact_type_class)
+          contact_mechanisms = @party.find_all_contacts_by_contact_mechanism(contact_type_class)
           
           "{\"success\":true, \"data\":#{contact_mechanisms.to_json(:methods => [:contact_purpose_id])},\"message\":\"#{contact_type} deleted\"}"
 			  end
+
+        protected
+        def find_party
+          party_id = params[:party_id] ? params[:party_id] : params[:id]
+          @party = Party.find(party_id) rescue nil
+        end
 			end
 		end
 	end

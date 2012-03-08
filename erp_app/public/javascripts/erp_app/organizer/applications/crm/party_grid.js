@@ -333,7 +333,6 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                 allowBlank:true
             },
 
-
             {
                 name:'current_suffix',
                 mapping:'business_party.current_suffix',
@@ -345,7 +344,6 @@ Ext.define("Compass.ErpApp.Organizer.Applications.Crm.PartyGrid",{
                 mapping:'business_party.current_passport_number',
                 allowBlank:true
             },
-
 
             {
                 name:'current_passport_expire_date',
