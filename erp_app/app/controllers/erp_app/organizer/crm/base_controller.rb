@@ -17,20 +17,57 @@ module ErpApp
         # setup dynamic data grid
         def setup
           columns=[]
-          columns << DynamicGridColumn.build_column({ :fieldLabel => "Description", :name => 'description', :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Description",
+                                                      :name => 'description',
+                                                      :xtype => 'textfield' })
           #columns << DynamicGridColumn.build_column({ :fieldLabel => "Username", :name => 'username', :xtype => 'textfield' })
-          columns << DynamicGridColumn.build_column({ :fieldLabel => "First Name", :name => 'current_first_name', :xtype => 'textfield' })
-          columns << DynamicGridColumn.build_column({ :fieldLabel => "Last Name", :name => 'current_last_name', :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Tax ID #",
+                                                      :name => 'tax_id_number',
+                                                      :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "First Name",
+                                                      :name => 'current_first_name',
+                                                      :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Last Name",
+                                                      :name => 'current_last_name',
+                                                      :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => 'Middle Name',
+                                                      :name => 'current_middle_name',
+                                                      :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => 'Title',
+                                                      :name => 'current_personal_title',
+                                                      :xtype => 'textfield' })
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Gender", 
+                                                      :name => 'gender',
+                                                      :xtype => 'textfield'})
+          columns << DynamicGridColumn.build_column({ :fieldLabel => "Birth Date",
+                                                      :name => 'birth_date',
+                                                      :xtype => 'datefield' })
+
+
 
           definition = []
-          definition << DynamicFormField.textfield({ :fieldLabel => "Description", :name => 'description' })
+          definition << DynamicFormField.textfield({ :fieldLabel => "Description",
+                                                     :name => 'description' })
           #definition << DynamicFormField.textfield({ :fieldLabel => "Username", :name => 'username', :mapping => 'user.username' })
-          definition << DynamicFormField.textfield({ :fieldLabel => "First Name", :name => 'current_first_name', :mapping => 'business_party.current_first_name' })
-          definition << DynamicFormField.textfield({ :fieldLabel => "Last Name", :name => 'current_last_name', :mapping => 'business_party.current_last_name' })
+          definition << DynamicFormField.textfield({ :fieldLabel => "First Name",
+                                                     :name => 'current_first_name',
+                                                     :mapping => 'business_party.current_first_name' })
+          definition << DynamicFormField.textfield({ :fieldLabel => "Last Name",
+                                                     :name => 'current_last_name',
+                                                     :mapping => 'business_party.current_last_name' })
+          definition << DynamicFormField.textfield({ :fieldLabel => "Middle Name",
+                                                     :name => 'current_middle_name',
+                                                     :mapping => 'business_party.current_middle_name' })
+          definition << DynamicFormField.textfield({ :fieldLabel => 'Title',
+                                                     :name => 'current_personal_title',
+                                                     :mapping => 'business_party.current_personal_title' })
           definition << DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' })
           definition << DynamicFormField.hidden({ :fieldLabel => "Party ID", :name => 'party_id' })
-          definition << DynamicFormField.hidden({ :fieldLabel => "business_party_id", :name => 'business_party_id', :mapping => 'business_party.id' })
-          definition << DynamicFormField.hidden({ :fieldLabel => "business_party_type", :name => 'business_party_type' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "business_party_id",
+                                                  :name => 'business_party_id',
+                                                  :mapping => 'business_party.id' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "business_party_type",
+                                                  :name => 'business_party_type' })
 
           render :inline => "{
             \"success\": true,
