@@ -35,6 +35,7 @@ module ErpApp
           definition << DynamicFormField.hidden({ :fieldLabel => "Party ID", :name => 'party_id' })
           definition << DynamicFormField.hidden({ :fieldLabel => "business_party_type", :name => 'business_party_type', :mapping => 'party_business_party_type' })
           definition << DynamicFormField.hidden({ :fieldLabel => "Enterprise ID", :name => 'enterprise_identifier', :mapping => 'eid' })
+          definition << DynamicFormField.hidden({ :fieldLabel => "Date of Birth", :name => 'birth_date', :mapping => 'individual_birth_date' })
 
           render :inline => "{
             \"success\": true,
