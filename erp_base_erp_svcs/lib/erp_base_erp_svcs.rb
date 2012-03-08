@@ -9,6 +9,7 @@ module ErpBaseErpSvcs
     def register_compass_ae_engine(engine)
       Rails.application.config.erp_base_erp_svcs.compass_ae_engines << engine
       load_compass_ae_extensions(engine)
+      load_root_compass_ae_framework_extensions()
     end
 
     #forces rails to reload model extensions and framework extensions
