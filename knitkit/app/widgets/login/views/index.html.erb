@@ -24,7 +24,7 @@
 $('#login_form').bind('ajaxComplete', function(e, xhr, settings){
   var response = jQuery.parseJSON(xhr.responseText);
   if(response.success){
-    window.location = '<%=@login_to%>';
+    window.location = response.login_to;
   }
   else{
     $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.errors.reason+'</div>');
