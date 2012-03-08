@@ -13,7 +13,7 @@ module ErpDevSvcs
         options = {}
 
         optparse = OptionParser.new do|opts|
-          opts.banner = "Usage: compass-dev push_gems [options]"
+          opts.banner = "Usage: compass-util push_gems [options]"
 
           options[:verbose] = false
           opts.on('-v', '--verbose', 'Output more information') do

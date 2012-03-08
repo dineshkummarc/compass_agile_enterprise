@@ -2,10 +2,9 @@ class CompassAeInstance < ActiveRecord::Base
   has_file_assets
   
   def installed_engines
-    Rails::Application::Railties.engines.map{|e| 
-      name = e.railtie_name.camelize
-      Rails.application.config.erp_base_erp_svcs.compass_ae_engines.include?(name) ? {:name => name, :version => ("#{name}::VERSION".constantize rescue 'N/A')} : nil
-    }.delete_if {|x| x == nil}
+    Rails.application.config.erp_base_erp_svcs.compass_ae_engines.map do |compass_ae_engine|
+      {:name => compass_ae_engine.railtie_name.camelize, :version => ("#{compass_ae_engine.railtie_name.camelize}::VERSION::STRING".constantize rescue 'N/A')}
+    end
   end
   
 end

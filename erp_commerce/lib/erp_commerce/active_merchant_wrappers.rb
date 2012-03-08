@@ -1,3 +1,3 @@
-require 'erp_commerce/active_merchant_wrappers/credit_card_validation'
-require 'erp_commerce/active_merchant_wrappers/brain_tree_gateway_wrapper'
-require 'erp_commerce/active_merchant_wrappers/bank_wrapper'
+Dir.glob("#{File.dirname(__FILE__)}/active_merchant_wrappers/**/*.rb").each do |file|
+  require "erp_commerce/active_merchant_wrappers/#{File.basename(file)}"
+end

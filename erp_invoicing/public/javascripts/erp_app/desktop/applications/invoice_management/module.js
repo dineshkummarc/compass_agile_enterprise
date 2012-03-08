@@ -33,22 +33,4 @@ Ext.define("Compass.ErpApp.Desktop.Applications.InvoiceManagement",{
     }
     win.show();
   }
-});
-
-// fix for tempHidden in ExtJS 4.0.7 - Invoice Mgmt window was not opening correctly
-// taken from http://www.sencha.com/forum/showthread.php?160222-quot-this.tempHidden-is-undefined-quot-Error-Workaround
-Ext.override(Ext.ZIndexManager, {
-    tempHidden: [],
-
-    show: function() {
-        var comp, x, y;
-
-        while (comp = this.tempHidden.shift()) {
-            x = comp.x;
-            y = comp.y;
-
-            comp.show();
-            comp.setPosition(x, y);
-        }
-    }
 });  

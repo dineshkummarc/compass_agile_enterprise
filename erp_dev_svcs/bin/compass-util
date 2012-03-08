@@ -25,7 +25,7 @@ when 'push_gems'
   ErpDevSvcs::Commands::PushGems.execute
 else
   puts <<-EOT
-Usage: compass-dev COMMAND [ARGS]
+Usage: compass-util COMMAND [ARGS]
 
 This app contains utility programs for Compass developers:
 
