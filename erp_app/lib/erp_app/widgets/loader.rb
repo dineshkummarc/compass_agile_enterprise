@@ -30,7 +30,7 @@ module ErpApp
               Rails.application.config.erp_app.widgets << widget_hash
             end
             
-            require_dependency File.join(widget_hash[:path],'base.rb')
+            load File.join(widget_hash[:path],'base.rb')
             #load helpers
             if File.exists? File.join(widget_hash[:path],'helpers')
               load_widget_view_helpers File.join(widget_hash[:path],'helpers','view') if File.directory? File.join(widget_hash[:path],'helpers','view')
@@ -47,7 +47,7 @@ module ErpApp
           helpers = Dir.entries(path)
           helpers.delete_if{|name| name =~ /^\./}
           helpers.each do |helper|
-            require_dependency File.join(path,helper)
+            load File.join(path,helper)
             ActionView::Base.send(:include, File.basename(helper, ".rb").classify.constantize)
           end
         end
@@ -56,7 +56,7 @@ module ErpApp
           helpers = Dir.entries(path)
           helpers.delete_if{|name| name =~ /^\./}
           helpers.each do |helper|
-            require_dependency File.join(path,helper)
+            load File.join(path,helper)
             "Widgets::#{widget_hash[:name].classify}::Base".constantize.send(:include, File.basename(helper, ".rb").classify.constantize)
           end
         end
@@ -86,7 +86,7 @@ module ErpApp
             widget_hash = Rails.application.config.erp_app.widgets.find{|item| item[:name] == widget_name}
             #load any extensions to existing widgets
             Dir.glob(File.join(widgets_path,widget_name,"*.rb")).each do |file|
-              require_dependency file
+              load file
             end
 
             #add any additional view paths to widgets
@@ -106,7 +106,7 @@ module ErpApp
         def load_root_widget_extensions(widget_hash)
           if File.directory?(File.join(Rails.root,"lib/extensions/widgets",widget_hash[:name]))
             Dir.glob(File.join(Rails.root,"lib/extensions/widgets",widget_hash[:name],"*.rb")).each do |file|
-              require_dependency file
+              load file
             end
 
             #add any additional view paths to widgets

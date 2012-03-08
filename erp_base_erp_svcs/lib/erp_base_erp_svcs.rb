@@ -74,14 +74,14 @@ module ErpBaseErpSvcs
     def load_compass_ae_framework_extensions(engine)
       if File.directory? File.join(engine.root,"lib",engine.railtie_name,"extensions/compass_ae")
         Dir.glob(File.join(engine.root,"lib",engine.railtie_name,"extensions/compass_ae/**/*.rb")).each do |file|
-          require_dependency file
+          load file
         end
       end
     end
 
     def load_root_compass_ae_framework_extensions
       Dir.glob(File.join(Rails.root,"lib/extensions/compass_ae/**/*.rb")).each do |file|
-        require_dependency file
+        load file
       end
     end
   end
