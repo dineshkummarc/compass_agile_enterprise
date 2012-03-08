@@ -25,8 +25,8 @@ module ErpApp
           definition = []
           definition << DynamicFormField.textfield({ :fieldLabel => "Description", :name => 'description' })
           #definition << DynamicFormField.textfield({ :fieldLabel => "Username", :name => 'username', :mapping => 'user.username' })
-          definition << DynamicFormField.datefield({ :fieldLabel => "First Name", :name => 'current_first_name', :mapping => 'business_party.current_first_name' })
-          definition << DynamicFormField.datefield({ :fieldLabel => "Last Name", :name => 'current_last_name', :mapping => 'business_party.current_last_name' })
+          definition << DynamicFormField.textfield({ :fieldLabel => "First Name", :name => 'current_first_name', :mapping => 'business_party.current_first_name' })
+          definition << DynamicFormField.textfield({ :fieldLabel => "Last Name", :name => 'current_last_name', :mapping => 'business_party.current_last_name' })
           definition << DynamicFormField.hidden({ :fieldLabel => "ID", :name => 'id' })
           definition << DynamicFormField.hidden({ :fieldLabel => "Party ID", :name => 'party_id' })
           definition << DynamicFormField.hidden({ :fieldLabel => "business_party_id", :name => 'business_party_id', :mapping => 'business_party.id' })
