@@ -1,7 +1,7 @@
 module ErpCommerce
   module Config
     class << self
-      attr_accessor :encryption_key, :active_merchange_gateway_wrapper
+      attr_accessor :encryption_key, :active_merchant_gateway_wrapper
 
       def init!
         @defaults = {
