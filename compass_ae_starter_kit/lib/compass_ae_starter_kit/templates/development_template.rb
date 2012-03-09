@@ -10,11 +10,8 @@ CompassAeStarterKit::FileSupport.patch_file 'config/initializers/session_store.r
 
 CompassAeStarterKit::FileSupport.patch_file 'config/routes.rb',
 "#{app_const}.routes.draw do",
-" mount ErpApp::Engine => '/erp_app'
-mount RailsDbAdmin::Engine => '/rails_db_admin'
-mount Knitkit::Engine => '/knitkit'
-mount ErpTechSvcs::Engine => '/erp_tech_svcs'
-mount CompassAeConsole::Engine => '/compass_ae_console'",
+" #mount CompassAE engines
+ ErpBaseErpSvcs.mount_compass_ae_engines(self)",
 :patch_mode => :insert_after
 
 CompassAeStarterKit::FileSupport.patch_file 'config/environments/production.rb',
