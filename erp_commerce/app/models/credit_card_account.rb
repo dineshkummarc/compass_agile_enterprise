@@ -20,7 +20,7 @@ class CreditCardAccount < ActiveRecord::Base
     end
     payments
   end
-  #financial_txn, params[:cvvs], credit_card, ErpCommerce::ActiveMerchantWrappers::BrainTreeGatewayWrapper, {}
+  #financial_txn, params[:cvvs], credit_card, ErpCommerce::Config.active_merchant_gateway_wrapper, {}
 
   #params
   #financial_txn
