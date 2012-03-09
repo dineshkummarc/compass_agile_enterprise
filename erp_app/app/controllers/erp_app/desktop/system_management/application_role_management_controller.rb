@@ -47,7 +47,7 @@ module ErpApp
 
           klass = params[:klass].constantize
           model = klass.find(id)
-          roles = (role_ids.nil? ? Role.where("id in (#{role_ids.join(',')})").all : [])
+          roles = (role_ids.empty? ? [] : Role.where("id in (#{role_ids.join(',')})").all)
           model.remove_all_roles
           model.add_roles(roles)
           model.save
