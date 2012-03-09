@@ -1,4 +1,3 @@
-=begin
 require 'prismpay'
 require 'prismpay_am'
 require 'active_merchant'
@@ -91,4 +90,3 @@ module ErpCommerce
     end#BrainTreeGatewayWrapper
   end#ActiveMerchantWrappers
 end#ErpCommerce
-=end
