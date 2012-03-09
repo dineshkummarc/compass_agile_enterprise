@@ -31,17 +31,17 @@ module ErpDevSvcs
             options[:ruby_gems] = false
           end
 
-          opt.on("-g", "--gems [GEMLIST]", Array,
+          opts.on("-g", "--gems [GEMLIST]", Array,
                  "List of engines to operate on;"\
                  "defaults to all") {|engines| options[:engines] = engines}
 
-          opt.on_tail("-h", "--help", "Show this message") do
-            puts opt
+          opts.on_tail("-h", "--help", "Show this message") do
+            puts opts
             exit
           end
         end
 
-        opt_parser.parse!
+        optparse.parse!
 
         ErpDevSvcs::Commands::Helper.exec_in_engines(options[:gems]) do |engine_name|
           gem_file = Dir.glob("*.gem")[0]

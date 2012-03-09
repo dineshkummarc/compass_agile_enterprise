@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.email       = ["russonrails@gmail.com"]
   s.homepage    = "http://development.compassagile.com"
 
-  s.files = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "aasm", "2.3.1"
