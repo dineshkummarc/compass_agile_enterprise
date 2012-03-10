@@ -10,6 +10,7 @@ require "erp_agreements"
 require "erp_commerce"
 require "erp_products"
 require "erp_orders"
+require "erp_work_effort"
 require "erp_invoicing"
 
 module Dummy
