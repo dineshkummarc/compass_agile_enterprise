@@ -10,6 +10,7 @@ require 'erp_txns_and_accts'
 require 'erp_agreements'
 require 'erp_products'
 require 'erp_orders'
+require 'erp_commerce'
 require "erp_financial_accounting"
 
 module Dummy
