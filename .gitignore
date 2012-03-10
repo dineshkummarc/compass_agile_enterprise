@@ -8,9 +8,9 @@
 *Gemfile
 *.bundle
 *.DS_Store
-*Gemfile.lock
+Gemfile.lock
 *.gem
-*spec/dummy/db/*
-*spec/dummy/log
-*spec/dummy/tmp
+*/spec/dummy/db/*
+*/spec/dummy/log
+*/spec/dummy/tmp
 *pkg
