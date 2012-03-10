@@ -10,6 +10,7 @@ require "erp_agreements"
 require "erp_txns_and_accts"
 require "erp_commerce"
 require "erp_products"
+require "erp_orders"
 require "erp_inventory"
 
 module Dummy
