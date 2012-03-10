@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency 'erp_app', "3.0.1"
+  s.add_dependency "erp_forms", "2.0.1"
   s.add_development_dependency "erp_dev_svcs", "3.0.1"
 end
