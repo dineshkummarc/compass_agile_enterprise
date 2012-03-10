@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
 
   #compass dependencies
   s.add_dependency "knitkit", "2.0.1"
+  s.add_development_dependency "erp_dev_svcs", "3.0.1"
 end
