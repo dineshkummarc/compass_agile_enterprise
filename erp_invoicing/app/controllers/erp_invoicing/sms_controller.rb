@@ -113,14 +113,14 @@ module ErpInvoicing
         end
       when "CreditCardAccount"
         if financial_txn.apply_date == Date.today
-          result = @payment_account.purchase(financial_txn, ErpCommerce::ActiveMerchantWrappers::BrainTreeGatewayWrapper, '123')
+          result = @payment_account.purchase(financial_txn, ErpCommerce::Config.active_merchant_gateway_wrapper, '123')
           if !result[:payment].nil? and result[:payment].success
             @authorization_code = result[:payment].authorization_code
           else
             @message = result[:message]
           end
         else
-          result = @account.schedule_payment(financial_txn, ErpCommerce::ActiveMerchantWrappers::BrainTreeGatewayWrapper, financial_txn.apply_date, '123')
+          result = @account.schedule_payment(financial_txn, ErpCommerce::Config.active_merchant_gateway_wrapper, '123')
           @message = "Error taking payment. Please try agian." unless result[:payment].success
         end
       end

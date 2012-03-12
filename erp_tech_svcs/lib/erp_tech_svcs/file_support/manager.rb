@@ -8,7 +8,7 @@ module ErpTechSvcs
       class << self
         def find_parent(item, parents)
           parents.find do |parent|
-            path = item[:path].gsub(item[:text],'').split('/').join('/')
+            path = item[:path].split('/')[0..-2].join('/')
             parent[:id] == path
           end
         end

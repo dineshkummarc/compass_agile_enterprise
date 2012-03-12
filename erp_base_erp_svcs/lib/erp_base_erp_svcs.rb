@@ -6,6 +6,12 @@ require "erp_base_erp_svcs/non_escape_json_string"
 
 module ErpBaseErpSvcs
   class << self
+    def mount_compass_ae_engines(routes)
+      Rails.application.config.erp_base_erp_svcs.compass_ae_engines.each do |engine|
+        routes.mount engine => "/#{engine.name.split("::").first.underscore}"
+      end
+    end
+
     def register_compass_ae_engine(engine)
       Rails.application.config.erp_base_erp_svcs.compass_ae_engines << engine
       load_compass_ae_extensions(engine)
