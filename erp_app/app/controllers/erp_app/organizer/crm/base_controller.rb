@@ -106,7 +106,8 @@ module ErpApp
 			  def menu
           menu = []
 
-          menu << {:text => 'Customers', :businessPartType => 'individual', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "individuals_search_grid"}
+          menu << {:text => 'Search Customers', :businessPartType => 'individual', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "individuals_search_grid"}
+          menu << {:text => 'Search Accounts', :leaf => true, :iconCls => 'icon-creditcards', :applicationCardId => "billpay-application"}
           #menu << {:text => 'Organizations',:businessPartType => 'organization', :leaf => true, :iconCls => 'icon-user', :applicationCardId => "organizations_search_grid"}
 
           render :json => menu

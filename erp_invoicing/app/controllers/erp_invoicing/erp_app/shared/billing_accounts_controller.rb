@@ -2,6 +2,7 @@ module ErpInvoicing
   module ErpApp
     module Shared
       class BillingAccountsController < ::ErpApp::Desktop::BaseController
+        before_filter :find_party
         @@date_format = "%m/%d/%Y"
 
         def index
@@ -24,7 +25,7 @@ module ErpInvoicing
           dir            = sort_hash[:dir] || 'DESC'
           limit          = params[:limit] || 50
           start          = params[:start] || 0
-          party_id       = params[:party_id] || nil
+          party_id       = @party.id rescue nil
 
           billing_accounts = (party_id.blank? ? BillingAccount.scoped.includes(:financial_txn_account) : BillingAccount.scoped.includes(:financial_txn_account => {:biz_txn_acct_root => :biz_txn_acct_party_roles}))
           billing_accounts = billing_accounts.where(:financial_txn_accounts => {:account_number => params[:account_number]}) unless params[:account_number].blank?
@@ -60,7 +61,7 @@ module ErpInvoicing
           billing_account.send_paper_bills = data[:send_paper_bills]
 
           if params[:party_id]
-            party = Party.find(params[:party_id])
+            party = @party
             primary_role_type = BizTxnAcctPtyRtype.find_by_internal_identifier('primary')
             billing_account.add_party_with_role(party, primary_role_type)
           end
@@ -105,6 +106,12 @@ module ErpInvoicing
           BillingAccount.find(params[:id]).destroy
 
           {:success => true}
+        end
+
+        protected
+        def find_party
+          party_id = params[:party_id] ? params[:party_id] : params[:id]
+          @party = Party.find(party_id) rescue nil
         end
 
       end#BillingAccountsController
