@@ -439,7 +439,7 @@ class Website < ActiveRecord::Base
       section.save
       if hash[:sections]
         hash[:sections].each do |section_hash|
-          child_section = build_section(section_hash, entries, website)
+          child_section = build_section(section_hash, entries, website, current_user)
           child_section.move_to_child_of(section)
         end
       end
@@ -450,7 +450,7 @@ class Website < ActiveRecord::Base
       end
       if hash[:online_document_sections]
         hash[:online_document_sections].each do |section_hash|
-          child_section = build_section(section_hash, entries, website)
+          child_section = build_section(section_hash, entries, website, current_user)
           child_section.move_to_child_of(section)
           # CREATE THE DOCUMENTED CONTENT HERE
           entry_data = entries.find{|entry| entry[:type] == 'documented contents' and entry[:name] == "#{child_section.internal_identifier}.html"}[:data]
