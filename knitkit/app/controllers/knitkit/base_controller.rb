@@ -1,7 +1,7 @@
 module Knitkit
   class BaseController < ::ErpApp::ApplicationController
     before_filter :set_website
-    before_filter :set_active_publication, :load_sections, :set_section, :except => [:view_current_publication]
+    before_filter :set_login_path, :set_active_publication, :load_sections, :set_section, :except => [:view_current_publication]
     acts_as_themed_controller :current_themes => lambda {|c| c.website.themes.active if c.website }
 
     layout 'knitkit/base'
@@ -27,9 +27,18 @@ module Knitkit
     def set_section
       unless params[:section_id].nil?
         @website_section = WebsiteSection.find(params[:section_id])
+        if (current_user === false and !@website_section.has_access?(current_user)) and @website_section.path != @login_path
+          redirect_to @login_path
+        elsif !@website_section.has_access?(current_user)
+          redirect_to Rails.application.config.knitkit.unauthorized_url
+        end
       else
         raise "No Id set"
       end
+    end
+
+    def set_login_path
+      @login_path = @website.configurations.first.get_configuration_item(ConfigurationItemType.find_by_internal_identifier('login_url')).options.first.value
     end
 
     def set_active_publication

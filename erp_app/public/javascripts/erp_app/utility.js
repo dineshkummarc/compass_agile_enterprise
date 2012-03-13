@@ -60,6 +60,13 @@ Ext.override(Ext.data.TreeStore, {
 
 Ext.ns("Compass.ErpApp.Utility");
 
+Compass.ErpApp.Utility.confirmBrowserNavigation = function(additionalmessage){
+  additionalmessage = additionalmessage || null;
+  window.onbeforeunload = function(){
+    return Ext.isEmpty(additionalmessage) ? '' : additionalmessage;
+  }
+};
+
 Compass.ErpApp.Utility.disableEnterSubmission = function(){
   $(function(){
     $("form").bind("keypress", function(e){

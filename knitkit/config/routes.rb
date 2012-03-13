@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   filter :section_router
   
   get 'pages/:section_id' => 'knitkit/website_sections#index', :as => 'page'
-  get 'pages/:section_id/:id' => 'knitkit/articles#show', :as => 'page_article'
   get 'onlinedocumentsections/:section_id' => 'knitkit/online_document_sections#index', :as => 'document'
   #get 'onlinedocumentsections/:section_id/:id' => 'knitkit/online_document_sections#show', :as => 'document'
   get 'blogs/:section_id(.:format)' => 'knitkit/blogs#index', :as => 'blogs'
