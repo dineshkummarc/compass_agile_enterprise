@@ -5,7 +5,7 @@ module ErpInvoicing
         before_filter :set_invoice
 
         def base_path
-          @base_path = File.join(@file_support.root, 'invoices', @invoice.invoice_number)
+          @base_path = File.join(@file_support.root, Rails.application.config.erp_tech_svcs.file_assets_location, 'documents', @invoice.invoice_number)
         end
 
         def upload_file

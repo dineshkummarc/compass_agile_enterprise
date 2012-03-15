@@ -169,7 +169,7 @@ class Website < ActiveRecord::Base
       setup_hash[:images] << {:path => image_asset.directory, :name => image_asset.name}
     end
 
-    self.files.where("directory like '%/#{Rails.application.config.knitkit.file_assets_location}/sites/#{self.iid}%'").all.each do |file_asset|
+    self.files.where("directory like '%/#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{self.iid}%'").all.each do |file_asset|
       setup_hash[:files] << {:path => file_asset.directory, :name => file_asset.name}
     end
 
@@ -222,7 +222,7 @@ class Website < ActiveRecord::Base
       File.open(File.join(image_assets_path,image_asset.directory,image_asset.name), 'w+') {|f| f.puts(contents) }
     end
 
-    self.files.where("directory like '%/#{Rails.application.config.knitkit.file_assets_location}/sites/#{self.iid}%'").all.each do |file_asset|
+    self.files.where("directory like '%/#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{self.iid}%'").all.each do |file_asset|
       contents = file_support.get_contents(File.join(file_support.root,file_asset.directory,file_asset.name))
       FileUtils.mkdir_p(File.join(file_assets_path,file_asset.directory))
       File.open(File.join(file_assets_path,file_asset.directory,file_asset.name), 'w+') {|f| f.puts(contents) }

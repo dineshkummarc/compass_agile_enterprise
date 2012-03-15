@@ -16,6 +16,9 @@ This engine is implemented with the premise that services like logging, tracing 
 - max\_file\_size\_in\_mb
   - Max allowed file upload size in mega bytes.
   - Default : 5
+- file\_assets\_location
+  - Where you want file_assets to be saved to.
+  - Default : file_assets
 
 ### Override Initializer
 
@@ -26,6 +29,7 @@ To override these settings simple create a erp_tech_svcs.rb file in your initial
       config.login_url = '/erp_app/login'
       config.email_notifications_from = 'notifications@noreply.com'
       config.max_file_size_in_mb = 5
+      config.file_assets_location = 'file_assets'
     end
     Rails.application.config.erp_tech_svcs.configure!
 

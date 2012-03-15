@@ -18,7 +18,7 @@ module Knitkit
       include Knitkit::Extensions::ActiveRecord::ActsAsCommentable
       include Knitkit::Extensions::ActiveRecord::ActsAsPublishable
       include Knitkit::Extensions::ActiveRecord::ThemeSupport::HasManyThemes
-      include Knitkit::Extensions::ActiveRecord::HasRelationalDynamicAttributes
+      include Knitkit::Extensions::ActiveRecord::ActsAsDocument
     end
 
     ActiveSupport.on_load(:action_controller) do

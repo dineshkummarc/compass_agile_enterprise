@@ -8,9 +8,9 @@ module Knitkit
         def base_path
           @base_path = nil
           if @context == :website
-            @base_path = File.join(@file_support.root,"#{Rails.application.config.knitkit.file_assets_location}/sites/#{@assets_model.iid}") unless @assets_model.nil?
+            @base_path = File.join(@file_support.root,"#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{@assets_model.iid}") unless @assets_model.nil?
           else
-            @base_path = File.join(@file_support.root,"#{Rails.application.config.knitkit.file_assets_location}") unless @assets_model.nil?
+            @base_path = File.join(@file_support.root,"#{Rails.application.config.erp_tech_svcs.file_assets_location}/shared_site_files") unless @assets_model.nil?
           end
         end
 

@@ -32,7 +32,8 @@ module Knitkit
             end
           end
         end
-      end
-    end
-  end
-end
+
+      end#ActsAsPublishable
+    end#ActiveRecord
+  end#Extensions
+end#Knitkit

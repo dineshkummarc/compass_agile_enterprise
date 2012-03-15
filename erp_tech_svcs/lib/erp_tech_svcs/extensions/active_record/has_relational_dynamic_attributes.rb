@@ -1,4 +1,4 @@
-module Knitkit
+module ErpTechSvcs
   module Extensions
     module ActiveRecord
       module HasRelationalDynamicAttributes
@@ -20,10 +20,23 @@ module Knitkit
         end
 
         module SingletonMethods
+          def find_by_value(value, *type_iids)
+            arel_query = AttributeValue.where('attributed_record_type = ?', self.name)
+                                       .where(AttributeValue.arel_table[:value].matches("%#{value}%"))
+
+            or_clauses = nil
+            type_iids.each do |type_iid|
+              type = AttributeType.find_by_internal_identifier(type_iid)
+              raise "Attribute Type '#{type_iid}' does not exist" if type.nil?
+              or_clauses = or_clauses.nil? ? AttributeValue.arel_table[:attribute_type_id].eq(type.id) : or_clauses.or(AttributeValue.arel_table[:attribute_type_id].eq(type.id))
+            end
+            
+            arel_query = arel_query.where(or_clauses) if or_clauses
+            arel_query.all.collect(&:attributed_record)
+          end
         end
 
         module InstanceMethods
-
           def update_or_create_attribute(value, type, data_type)
             if self.has_attribute_value_of_type?(type)
               update_first_attribute_value_of_type(value, type)
@@ -32,19 +45,9 @@ module Knitkit
             end
           end
 
-          def add_attribute(value, type, data_type)
-            attribute_type = AttributeType.find_by_internal_identifier(type)
-            attribute_type = AttributeType.create(:description => type, :data_type => data_type) unless attribute_type
-
-            attribute_value = AttributeValue.new(:value => value)
-            attribute_type.attribute_values << attribute_value
-            self.attribute_values << attribute_value
-            attribute_value.save
-          end
-
           def update_first_attribute_value_of_type(value, type)
             attribute_type = AttributeType.find_by_internal_identifier(type)
-            attribute_value = AttributeValue.where(:attribute_type_id => attribute_type.id, :attributed_record_id => self.id).first
+            attribute_value = self.attribute_values.where(:attribute_type_id => attribute_type.id).first
             attribute_value.value = value
             attribute_value.save!
           end
@@ -102,8 +105,18 @@ module Knitkit
             end
           end
 
+          private
+
+          def add_attribute(value, type, data_type)
+            attribute_type = AttributeType.find_by_internal_identifier(type)
+            attribute_type = AttributeType.create(:description => type, :data_type => data_type) unless attribute_type
+            attribute_value = AttributeValue.create(:value => value, :attribute_type => attribute_type)
+            self.attribute_values << attribute_value
+          end
+
         end
-      end
-    end
-  end
-end
+        
+      end#HasRelationalDynamicAttributes
+    end#ActiveRecord
+  end#Extensions
+end#ErpTechSvcs

@@ -1,4 +1,6 @@
 class Invoice < ActiveRecord::Base
+  acts_as_document
+  
   belongs_to  :billing_account
   belongs_to	:invoice_type
   belongs_to  :invoice_payment_strategy_type
@@ -22,8 +24,6 @@ class Invoice < ActiveRecord::Base
   end
   has_many 	  :invoice_party_roles, :dependent => :destroy
 	has_many	  :parties, :through => :invoice_party_roles
-
-  has_file_assets
   
   alias :items :invoice_items
   alias :type :invoice_type
