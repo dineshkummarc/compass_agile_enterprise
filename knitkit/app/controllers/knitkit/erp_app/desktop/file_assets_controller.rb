@@ -2,15 +2,16 @@ module Knitkit
   module ErpApp
     module Desktop
       class FileAssetsController < ::ErpApp::Desktop::FileManager::BaseController
+        skip_before_filter :verify_authenticity_token, :only => :upload_file
         skip_before_filter :require_login, :only => [:download_file_asset]
         before_filter :set_asset_model
 
         def base_path
           @base_path = nil
           if @context == :website
-            @base_path = File.join(@file_support.root,"#{Rails.application.config.knitkit.file_assets_location}/sites/#{@assets_model.iid}") unless @assets_model.nil?
+            @base_path = File.join(@file_support.root,"#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{@assets_model.iid}") unless @assets_model.nil?
           else
-            @base_path = File.join(@file_support.root,"#{Rails.application.config.knitkit.file_assets_location}") unless @assets_model.nil?
+            @base_path = File.join(@file_support.root,"#{Rails.application.config.erp_tech_svcs.file_assets_location}/shared_site_files") unless @assets_model.nil?
           end
         end
 
@@ -55,7 +56,7 @@ module Knitkit
           begin
             current_user.with_capability(model, capability_type, capability_resource) do
               result = {}
-              upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
+              upload_path = request.env['HTTP_X_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_X_DIRECTORY']
               name = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data].original_filename : request.env['HTTP_X_FILE_NAME']
               data = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data] : request.raw_post
 
@@ -189,7 +190,7 @@ module Knitkit
 
           if @context == :website
             #get website id this can be an xhr request or regular
-            website_id = request.env['HTTP_EXTRAPOSTDATA_WEBSITE_ID'].blank? ? params[:website_id] : request.env['HTTP_EXTRAPOSTDATA_WEBSITE_ID']
+            website_id = request.env['HTTP_X_WEBSITEID'].blank? ? params[:website_id] : request.env['HTTP_X_WEBSITEID']
             (@assets_model = website_id.blank? ? nil : Website.find(website_id))
 
             render :inline => {:success => false, :error => "No Website Selected"}.to_json if (@assets_model.nil? && params[:action] != "base_path")

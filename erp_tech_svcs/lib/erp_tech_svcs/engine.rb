@@ -8,6 +8,7 @@ module ErpTechSvcs
       include ErpTechSvcs::Extensions::ActiveRecord::HasRoles
       include ErpTechSvcs::Extensions::ActiveRecord::HasFileAssets
       include ErpTechSvcs::Extensions::ActiveRecord::HasCapabilities
+      include ErpTechSvcs::Extensions::ActiveRecord::HasRelationalDynamicAttributes
     end
 
     engine = self

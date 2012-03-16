@@ -1,14 +1,16 @@
 module ErpTechSvcs
   module Config
     class << self
-      attr_accessor :max_file_size_in_mb, :installation_domain, :login_url, :email_notifications_from
+      attr_accessor :max_file_size_in_mb, :installation_domain, :login_url,
+                    :email_notifications_from, :file_assets_location
 
       def init!
         @defaults = {
           :@max_file_size_in_mb => 5,
           :@installation_domain => 'localhost:3000',
           :@login_url => '/erp_app/login',
-          :@email_notifications_from => 'notifications@noreply.com'
+          :@email_notifications_from => 'notifications@noreply.com',
+          :@file_assets_location => 'file_assets'
         }
       end
 

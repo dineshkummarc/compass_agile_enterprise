@@ -58,7 +58,7 @@ Ext.define("Ext.ux.XHRUpload",{
             filePostName:'fileName',
             contentTypeHeader: 'text/plain; charset=x-user-defined-binary',
             extraPostData:{},
-            xhrExtraPostDataPrefix:'extraPostData_',
+            xhrExtraPostDataPrefix:'X-',
             sendMultiPartFormData:false
         });
         this.addEvents({ //extend the xhr's progress events to here
