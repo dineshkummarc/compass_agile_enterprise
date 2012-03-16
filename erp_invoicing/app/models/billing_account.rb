@@ -1,5 +1,7 @@
 class BillingAccount < ActiveRecord::Base
+  has_relational_dynamic_attributes
   acts_as_financial_txn_account
+  
 
   has_many :invoices, :dependent => :destroy do
     def by_invoice_date
