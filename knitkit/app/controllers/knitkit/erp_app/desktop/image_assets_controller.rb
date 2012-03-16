@@ -2,7 +2,7 @@ module Knitkit
   module ErpApp
     module Desktop
       class ImageAssetsController < FileAssetsController
-
+        
         def base_path
           @base_path = nil
           if @context == :website
@@ -30,7 +30,7 @@ module Knitkit
           begin
             current_user.with_capability(model, capability_type, capability_resource) do
               result = {}
-              upload_path = request.env['HTTP_EXTRAPOSTDATA_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_EXTRAPOSTDATA_DIRECTORY']
+              upload_path = request.env['HTTP_X_DIRECTORY'].blank? ? params[:directory] : request.env['HTTP_X_DIRECTORY']
               name = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data].original_filename : request.env['HTTP_X_FILE_NAME']
               data = request.env['HTTP_X_FILE_NAME'].blank? ? params[:file_data] : request.raw_post
 

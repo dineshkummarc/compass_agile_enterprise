@@ -177,7 +177,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel = function() {
 
   this.reloadWebsiteImageAssetsTreePanel = function(websiteId){
     this.websiteImageAssetsTreePanel.extraPostData = {
-      website_id:websiteId
+      website_id:websiteId,
+      websiteid:websiteId // for xhrFileUpload to work      
     };
     var store = this.websiteImageAssetsTreePanel.getStore();
     store.load({

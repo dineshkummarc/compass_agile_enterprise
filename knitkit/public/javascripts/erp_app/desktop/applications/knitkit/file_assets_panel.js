@@ -193,7 +193,8 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
 
   this.reloadWebsiteFileAssetsTreePanel = function(websiteId){
     this.websiteFileAssetsTreePanel.extraPostData = {
-      website_id:websiteId
+      website_id:websiteId,
+      websiteid:websiteId // for xhrFileUpload to work
     };
     this.websiteFileAssetsTreePanel.getStore().setProxy({
       type: 'ajax',

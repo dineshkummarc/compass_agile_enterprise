@@ -67,7 +67,7 @@ Ext.define("Ext.ux.AwesomeUploader",{
       allowDragAndDropAnywhere:false,
       xhrUploadUrl:this.awesomeUploaderRoot+'xhrupload.php',
       xhrFileNameHeader:'X-File-Name',
-      xhrExtraPostDataPrefix:'extraPostData_',
+      xhrExtraPostDataPrefix:'X-',
       xhrFilePostName:'file_data',
       xhrSendMultiPartFormData:false,
       maxFileSizeBytes: ErpApp.FileUpload.maxSize,
