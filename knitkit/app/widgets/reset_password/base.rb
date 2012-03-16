@@ -5,7 +5,7 @@ module Widgets
       def index
         @website   = Website.find_by_host(request.host_with_port)
         @login_url = params[:login_url]
-        @domain    = @website.hosts.first.host
+        @domain    = @website.configurations.first.get_item(ConfigurationItemType.find_by_internal_identifier('primary_host')).options.first.value
 
         render
       end

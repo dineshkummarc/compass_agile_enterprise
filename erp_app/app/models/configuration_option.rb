@@ -1,4 +1,6 @@
 class ConfigurationOption < ActiveRecord::Base
+  validates :internal_identifier, :uniqueness => {:scope => :id}
+
   has_and_belongs_to_many :configuration_item_types
   has_and_belongs_to_many :configuration_items
 

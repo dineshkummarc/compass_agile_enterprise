@@ -24,8 +24,13 @@ class ConfigurationItem < ActiveRecord::Base
   end
 
   def set_options(internal_identifiers_or_value)
+    internal_identifiers_or_value.flatten! if internal_identifiers_or_value.is_a?(Array)
     if self.configuration_item_type.allow_user_defined_options?
-      self.options << ConfigurationOption.create(:value => internal_identifiers_or_value) unless internal_identifiers_or_value.blank?
+      unless internal_identifiers_or_value.blank?
+        value = internal_identifiers_or_value.join("")
+        option = ConfigurationOption.find_by_value(value)
+        self.options << (option ? option : ConfigurationOption.create(:value => value))
+      end
     elsif self.configuration_item_type.is_multi_optional?
       internal_identifiers_or_value.split(',').each do |internal_identifier|
         self.options << self.configuration_item_type.find_configuration_option(internal_identifier)

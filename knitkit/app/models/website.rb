@@ -95,7 +95,7 @@ class Website < ActiveRecord::Base
   def setup_website
     PublishedWebsite.create(:website => self, :version => 0, :active => true, :comment => 'New Site Created')
     Role.create(:description => "Website #{self.title}", :internal_identifier => website_role_iid)
-    configuration = Configuration.find_by_internal_identifier('default_website_configuration').clone(true)
+    configuration = ::Configuration.find_template('default_website_configuration').clone(true)
     configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier('contact_us_email_address'), self.email)
     self.configurations << configuration
     self.save

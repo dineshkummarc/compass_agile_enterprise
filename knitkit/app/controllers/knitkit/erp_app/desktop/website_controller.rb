@@ -106,6 +106,7 @@ module Knitkit
                 first_publication.save
 
                 website.hosts << WebsiteHost.create(:host => params[:host])
+                website.configurations.first.update_configuration_item(ConfigurationItemType.find_by_internal_identifier('primary_host'), params[:host])
                 website.save
 
                 website.publish("Publish Default Sections", current_user)

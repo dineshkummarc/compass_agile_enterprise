@@ -1,4 +1,6 @@
 class ConfigurationItemType < ActiveRecord::Base
+  validates :internal_identifier, :uniqueness => {:scope => :id}
+
   has_and_belongs_to_many :configuration_options do
     def default
       where('is_default = ?', true)

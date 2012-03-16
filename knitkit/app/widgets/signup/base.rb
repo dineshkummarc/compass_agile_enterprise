@@ -11,6 +11,8 @@ module Widgets
         @website = Website.find_by_host(request.host_with_port)
         @configuration = @website.configurations.first
         password_config_option = @configuration.get_item(ConfigurationItemType.find_by_internal_identifier('password_strength_regex')).options.first
+        primary_host = @configuration.get_item(ConfigurationItemType.find_by_internal_identifier('primary_host')).options.first
+
         @email = params[:email]
         @user = User.new(
           :email => @email,
@@ -22,7 +24,7 @@ module Widgets
         #set this to tell activation where to redirect_to for login and temp password
         @user.add_instance_attribute(:login_url,params[:login_url])
         @user.add_instance_attribute(:temp_password, params[:password])
-        @user.add_instance_attribute(:domain, @website.hosts.first.host)
+        @user.add_instance_attribute(:domain, primary_host.value)
         begin
           if @user.save
             @user.roles << @website.role
