@@ -35,7 +35,7 @@ module ErpInvoicing
           result.tap do |result_tap|
             result_tap[:billing_accounts] = billing_accounts.all.collect do |billing_account|
               due_date = billing_account.due_date.blank? ? '' : billing_account.due_date.strftime("%Y-%m-%d")
-              billing_account.to_hash(:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,{:due_date => due_date}, :balance_date)
+              billing_account.to_hash(:only => [], :methods => [:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,:balance_date], :additional_attributes => [{:due_date => due_date}])
             end#end billing_accounts collect
           end#end result tap
         end
@@ -68,7 +68,7 @@ module ErpInvoicing
           due_date = billing_account.due_date.blank? ? '' : billing_account.due_date.strftime("%Y-%m-%d")
 
           if billing_account.save
-            {:success => true, :billing_accounts => billing_account.to_hash(:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,{:due_date => due_date},:balance_date)}
+            {:success => true, :billing_accounts => billing_account.to_hash(:only => [], :methods => [:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,:balance_date], :additional_attributes => [{:due_date => due_date}])}
           else
             {:success => false}
           end
@@ -95,7 +95,7 @@ module ErpInvoicing
           billing_account.balance = data[:balance]
 
           if billing_account.save
-            {:success => true, :billing_accounts => billing_account.to_hash(:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,{:due_date => billing_account.due_date.strftime("%Y-%m-%d")},:balance_date)}
+            {:success => true, :billing_accounts => billing_account.to_hash(:only => [], :methods => [:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,:balance_date], :additional_attributes => [{:due_date => billing_account.due_date.strftime("%Y-%m-%d")}])}
           else
             {:success => false}
           end

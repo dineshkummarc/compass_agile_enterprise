@@ -6,7 +6,7 @@ module ErpTechSvcs
 			end
 
 			def to_label
-				"#{description}"
+				description
 			end
 
 			def leaf
@@ -18,6 +18,18 @@ module ErpTechSvcs
 			end
 			alias_method_chain :to_json, :leaf
 
+      def to_tree_hash(options={})
+        additional_values = options[:additional_values] || {}
+        options[:additional_values] = additional_values.merge({
+          :text => self.to_label,
+          :leaf => self.leaf,
+          :children => self.children.collect{|child| child.to_tree_hash(options)}
+        })
+        tree_hash = self.to_hash(options)
+        tree_hash[:iconCls] = options[:icon_cls] if options[:icon_cls]
+        tree_hash
+      end
+
 			module ClassMethods
 				def find_roots
 					where("parent_id = nil")
@@ -27,6 +39,7 @@ module ErpTechSvcs
 					parent_id.to_i == 0 ? self.roots : find(parent_id).children
 				end
 			end
+
 		end
 	end
 end

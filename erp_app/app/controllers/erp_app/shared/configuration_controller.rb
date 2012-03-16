@@ -4,11 +4,12 @@ module ErpApp
 
       def setup_categories
         configuration = ::Configuration.find(params[:id])
-
-        render :json => {
-          :success => true,
-          :categories => configuration.item_types.collect{|item| item.category_classifications.first.category}.uniq.collect{|category|{:description => category.description, :id => category.id}}
-        }
+        tree_array = [].tap do |array|
+          configuration.item_types.collect{|item| item.category_classifications.first.category}.uniq.each do |category|
+            array << category.to_tree_hash(:only => [], :methods => [{:id => :categoryId}])
+          end
+        end
+        render :json => tree_array
       end
 
 		  def setup
@@ -30,7 +31,7 @@ module ErpApp
 
         begin
           params.each do |k,v|
-             configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier(k), v) unless (k.to_s == 'action' or k.to_s == 'controller' or k.to_s == 'id' or k.to_s == 'authenticity_token')
+            configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier(k), v) unless (k.to_s == 'action' or k.to_s == 'controller' or k.to_s == 'id' or k.to_s == 'authenticity_token')
           end
 
           render :json => {:success => true, :configurationItems => configuration.items.collect(&:to_js_hash)}

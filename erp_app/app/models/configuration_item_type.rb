@@ -16,9 +16,9 @@ class ConfigurationItemType < ActiveRecord::Base
     if existing_option.nil?
       ConfigurationItemTypeConfigurationOption.create(:configuration_item_type => self, :configuration_option => option, :is_default => true)
     else
-      configuration_item_type_configurationOption = ConfigurationItemTypeConfigurationOption.where('configuration_option_id = ? and configuration_item_type_id = ?', existing_option.id, self.id)
-      configuration_item_type_configurationOption.is_default = true
-      configuration_item_type_configurationOption.save
+      configuration_item_type_configuration_option = ConfigurationItemTypeConfigurationOption.where('configuration_option_id = ? and configuration_item_type_id = ?', existing_option.id, self.id)
+      configuration_item_type_configuration_option.is_default = true
+      configuration_item_type_configuration_option.save
     end
   end
 
@@ -34,7 +34,7 @@ class ConfigurationItemType < ActiveRecord::Base
 
   def find_configuration_option(internal_identifier, type=:internal_identifier)
     option = self.options.where("#{type.to_s} = ?", internal_identifier).first
-    raise "Option does not exist for configuration item type #{self.description}" if option.nil?
+    raise "Option #{internal_identifier} does not exist for configuration item type #{self.description}" if option.nil?
     option
   end
 
