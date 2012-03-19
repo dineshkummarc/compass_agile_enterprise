@@ -6,7 +6,7 @@ module ErpApp
         configuration = ::Configuration.find(params[:id])
         tree_array = [].tap do |array|
           configuration.item_types.collect{|item| item.category_classifications.first.category}.uniq.each do |category|
-            array << category.to_tree_hash(:only => [], :methods => [{:id => :categoryId}])
+            array << category.to_tree_hash(:only => [], :methods => [{:id => :categoryId}], :icon_cls => 'icon-index')
           end
         end
         render :json => tree_array
