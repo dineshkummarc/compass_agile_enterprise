@@ -16,7 +16,7 @@ class AddPrimaryHostToWebsiteConfiguration
     #update existing websites
     Website.all.each do |website|
       website_config = website.configurations.first
-      if(website_config.internal_identifier == 'website_setup')
+      if(website_config.internal_identifier == 'default_website_configuration')
         website_config.configuration_item_types << primary_host_config_item_type
         website_config.add_configuration_item(primary_host_config_item_type, website.hosts.first.host)
         website_config.save
