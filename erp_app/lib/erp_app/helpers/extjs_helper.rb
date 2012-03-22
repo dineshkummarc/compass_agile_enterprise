@@ -1,5 +1,18 @@
 module ErpApp::ExtjsHelper
 
+  # example usage:
+  # <%= dynamic_extjs_grid({
+  #   :title => 'Accounts',
+  #   :renderTo => 'grid_target',
+  #   :setupUrl => build_widget_url(:accounts_grid_setup),
+  #   :dataUrl => build_widget_url(:accounts_grid_data),
+  #   :width => 500,
+  #   :height => 200,
+  #   :page => true,
+  #   :pageSize => 5,
+  #   :displayMsg => 'Displaying {0} - {1} of {2}',
+  #   :emptyMsg => 'Empty'
+  # }) %>
   def dynamic_extjs_grid(options={})
     options[:title] = '' if options[:title].blank?
     options[:closable] = false if options[:closable].blank?
