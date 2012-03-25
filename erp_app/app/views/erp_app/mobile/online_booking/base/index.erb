@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Online Booking</title>
+    <%=include_sencha_touch :debug => true%>
+
+    <script type="text/javascript">
+      Ext.ns('Compass.ErpApp.Mobile');
+    </script>
+
+    <!--stylesheets-->
+    <%= static_stylesheet_link_tag('erp_app/shared/mobile.css') %>
+    <!--end stylesheets-->
+
+    <!-- application resources -->
+    <%=static_javascript_include_tag(@application.locate_resources('javascripts'))%>
+    <!-- end application resources -->
+
+    <!-- application resources -->
+    <%=static_stylesheet_link_tag(@application.locate_resources('stylesheets'))%>
+    <!-- end application resources -->
+    
+  </head>
+  <body>
+  </body>
+</html>

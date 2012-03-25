@@ -2,10 +2,7 @@ require 'action_view'
 
 module ErpApp
 	module ApplicationResourceLoader
-		class FileSystemLoader < ErpApp::ApplicationResourceLoader::BaseLoader
-		  @javascripts_folder = nil
-		  @stylesheets_folder = nil
-
+		class DesktopOrganizerLoader < ErpApp::ApplicationResourceLoader::BaseLoader
 		  def initialize(application)
         @application = application
 		  end
@@ -67,6 +64,6 @@ module ErpApp
 		    (application_files + engine_extension_files + root_extension_files)
 		  end
 
-		end#FileSystemLoader
+		end#DesktopOrganizerLoader
 	end#ApplicationResourceLoader
 end#ErpApp

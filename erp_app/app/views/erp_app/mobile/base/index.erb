@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>CompassAE Mobile</title>
+    <%=include_sencha_touch :debug => true%>
+
+    <script type="text/javascript">
+      Ext.ns('Compass.ErpApp.Mobile');
+      Compass.ErpApp.Mobile.CompassLogo = '<%=@compass_logo%>';
+    </script>
+
+    <!--stylesheets-->
+    <%= static_stylesheet_link_tag('erp_app/shared/mobile.css') %>
+    <!--end stylesheets-->
+
+    <%= static_javascript_include_tag("erp_app/mobile/app.js")%>
+  </head>
+  <body>
+  </body>
+</html>

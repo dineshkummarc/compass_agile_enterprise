@@ -5,7 +5,7 @@ class AppContainer < ActiveRecord::Base
   belongs_to :app_container_record, :polymorphic => true
   has_and_belongs_to_many :applications
 
-  def preferences()
+  def preferences
     self.user_preferences.includes([:preference]).where('user_id = ?', self.user.id).map(&:preference)
   end
 
@@ -19,5 +19,11 @@ class AppContainer < ActiveRecord::Base
 
   def setup_default_preferences
     #template method
+  end
+
+  class << self
+    def find_by_user(user)
+      AppContainer.where('user_id = ?', user.id).first
+    end
   end
 end

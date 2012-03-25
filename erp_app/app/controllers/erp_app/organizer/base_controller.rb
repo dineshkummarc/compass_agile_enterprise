@@ -5,8 +5,8 @@ module ErpApp
       before_filter :require_login
 		  
 		  def index
-        @organizer = ::Organizer.find_by_user(current_user)
         @user = current_user
+        @organizer = @user.organizer
 		  end
 		  
 		  def get_preferences
@@ -34,6 +34,7 @@ module ErpApp
 			
         render :inline => "{\"success\":true, \"preferences\":#{organizer.preferences.to_json(:include => [:preference_type, :preference_option])}}"
 		  end
-		end
-	end
-end
+      
+		end#BaseController
+	end#Organizer
+end#ErpApp

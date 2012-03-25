@@ -21,6 +21,6 @@ module ErpApp
 		    shared_files = sort_files(shared_files)
 		  end
 
-		end#SharedJsLoader
+		end#SharedLoader
   end#ApplicationResourceLoader
 end#ErpApp

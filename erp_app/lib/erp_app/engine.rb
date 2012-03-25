@@ -12,7 +12,6 @@ module ErpApp
     
 	  ActiveSupport.on_load(:active_record) do
       include ErpApp::Extensions::ActiveRecord::HasUserPreferences
-      include ErpApp::Extensions::ActiveRecord::ActsAsAppContainer
     end
 	  
 	  ActiveSupport.on_load(:action_controller) do

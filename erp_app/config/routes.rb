@@ -13,6 +13,14 @@ ErpApp::Engine.routes.draw do
   match '/shared/notes/:action(/:party_id)' => "shared/notes"
 
   #############################
+  #Mobile Application Routes
+  #############################
+  match '/mobile' => 'mobile/base#index'
+
+  #Online Booking
+  match '/mobile/online_booking(/:action)' => 'mobile/online_booking/base'
+
+  #############################
   #Organizer Application Routes
   #############################
   match '/organizer(/:action)' => "organizer/base"

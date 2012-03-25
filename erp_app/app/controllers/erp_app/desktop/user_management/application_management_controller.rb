@@ -24,7 +24,8 @@ module ErpApp
           user_id            = params[:user_id]
           app_container_type = params[:app_container_type]
 
-          app_container = (app_container_type == 'Desktop') ? ::Desktop.find_by_user(User.find(user_id)) : ::Organizer.find_by_user(User.find(user_id))
+          user = User.find(user_id)
+          app_container = (app_container_type == 'Desktop') ? user.desktop : user.organizer
           render :json => app_container.applications.map{|application| {:text => application.description, :app_id => application.id, :iconCls => application.icon, :leaf => true}}
 			  end
 
@@ -33,7 +34,8 @@ module ErpApp
           user_id            = params[:user_id]
           app_container_type = params[:app_container_type]
 
-          app_container = (app_container_type == 'Desktop') ? ::Desktop.find_by_user(User.find(user_id)) : ::Organizer.find_by_user(User.find(user_id))
+          user = User.find(user_id)
+          app_container = (app_container_type == 'Desktop') ? user.desktop : user.organizer
           app_container.applications = []
           app_container.save
 

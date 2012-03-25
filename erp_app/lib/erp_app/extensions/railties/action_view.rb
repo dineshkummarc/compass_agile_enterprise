@@ -24,7 +24,7 @@ ActionView::Base.class_eval do
     resources << static_javascript_include_tag("extjs/Ext.ux.form.MultiSelect.js")
 
     if opt[:theme] === false
-      #do nothing not theme loaded.
+      #do nothing no theme loaded.
     elsif opt[:theme]
       resources << static_stylesheet_link_tag("extjs/resources/css/#{opt[:theme]}")
     else
@@ -38,18 +38,18 @@ ActionView::Base.class_eval do
     resources = ''
 
     if(opt[:debug])
-      resources << static_javascript_include_tag("extjs/sencha-touch-debug.js")
+      resources << static_javascript_include_tag("sencha_touch/sencha-touch-all-debug.js")
     else
-      resources << static_javascript_include_tag("extjs/sencha-touch.js")
+      resources << static_javascript_include_tag("sencha_touch/sencha-touch-all.js")
     end
 
     if opt[:theme] === false
-      #do nothing not theme loaded.
+      #do nothing no theme loaded.
     elsif opt[:theme]
-      resources << static_stylesheet_link_tag("extjs/sench_touch/resources/css/#{opt[:theme]}")
+      resources << static_stylesheet_link_tag("sencha_touch/resources/css/#{opt[:theme]}")
     else
-      resources << static_stylesheet_link_tag("extjs/sench_touch/resources/css/sencha-touch.css")
-      resources << static_stylesheet_link_tag("extjs/sench_touch/resources/css/apple.css")
+      resources << static_stylesheet_link_tag("sencha_touch/resources/css/sencha-touch.css")
+      resources << static_stylesheet_link_tag("sencha_touch/resources/css/apple.css")
     end
 
     raw resources

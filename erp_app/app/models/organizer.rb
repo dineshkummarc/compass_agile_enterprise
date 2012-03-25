@@ -1,6 +1,4 @@
-class Organizer < ActiveRecord::Base
-  acts_as_app_container
-
+class Organizer < AppContainer
   def setup_default_preferences
     #setup theme
     theme_pt = PreferenceType.iid('extjs_theme')
@@ -21,7 +19,7 @@ class Organizer < ActiveRecord::Base
 
   class << self
     def find_by_user(user)
-      find_by_user_and_klass(user, Organizer)
+      Organizer.where('user_id = ?', user.id).first
     end
   end
 end
