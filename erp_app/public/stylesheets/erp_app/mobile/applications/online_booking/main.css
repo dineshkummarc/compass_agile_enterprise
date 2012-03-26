@@ -6,6 +6,15 @@ span.value{
   font-weight:bold;
 }
 
+div.summary{
+  padding:15px;
+}
+
+div.summary span{
+  font-weight:bold;
+  margin-right: 5px;
+}
+
 .x-img{
   margin-right: 1em;
   background-position: center center;
@@ -25,4 +34,9 @@ span.value{
   -webkit-box-orient:horizontal;
   min-width:100%;
   max-width:100%;
+}
+
+div.confirmation{
+  padding:50px;
+  border: solid 1px #CCCCCC;
 }

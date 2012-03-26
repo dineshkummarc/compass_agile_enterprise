@@ -2,8 +2,72 @@ module ErpApp
 	module Mobile
 		module OnlineBooking
       class BaseController < ErpApp::Mobile::BaseController
+        #for stores
+        def countries
+          render :json => {:countries => GeoCountry.find_all_by_display(true).collect{|item| {:description => item.name, :value => item.iso_code_2}}}
+        end
+        
+        def states
+          render :json => {:states => GeoZone.all.collect{|item| {:description => item.zone_name, :value => item.zone_code}}}
+        end
+
+        #models
+
+        def accomodation_unit_types
+          render :json => {
+            :success => true,
+            :accomodation_unit_types => AccomodationUnitType.where('id = ?', params[:id]).all.collect{|item|
+              {
+                :description => item.description, 
+                :img_url => "/images/timeshare/rooms/#{item.internal_identifier}_100x100.jpg",
+                :internal_identifier => item.internal_identifier,
+                :long_description => item.find_descriptions_by_view_type('search_result_details').first.description,
+                :id => item.id
+              }
+            }}
+        end
+
+        def reservations
+          order_txn = OrderTxn.find_by_order_number(params[:id])
+
+          if order_txn
+            reservation_txn = order_txn.order_txn_record
+            traveler = reservation_txn.find_party_by_role('traveler')
+            postal_address = traveler.find_contact_mechanism_with_purpose(PostalAddress, 'billing')
+            email = traveler.find_contact_mechanism_with_purpose(EmailAddress, 'billing')
+            phone_number = traveler.find_contact_mechanism_with_purpose(PhoneNumber, 'billing')
+            render :json => {:success => true, :reservations => [{
+              :id => reservation_txn.id,
+              :display_price => ActionController::Base.helpers.number_to_currency(reservation_txn.get_total_charges.first.amount),
+              :first_name => traveler.business_party.current_first_name,
+              :last_name => traveler.business_party.current_last_name,
+              :address_line_1 => postal_address.address_line_1,
+              :address_line_2 => postal_address.address_line_2,
+              :country => postal_address.country,
+              :state => postal_address.state,
+              :city => postal_address.city,
+              :zipcode => postal_address.zip,
+              :email => email.email_address,
+              :phone => phone_number.phone_number,
+              :confirmation_number => reservation_txn.order_number,
+              :travel_from_date => reservation_txn.travel_from_date.to_date,
+              :travel_to_date => reservation_txn.travel_to_date.to_date,
+              :accomodation_unit_type_id => reservation_txn.accomodation_unit_type.id
+            }]}
+          else
+            render :json => {:success => true, :reservations => []}
+          end
+        end
+
         def index
           @application = MobileApplication.find_by_internal_identifier('online_booking')
+        end
+
+        def email_confirmation
+          order_txn = OrderTxn.find_by_order_number(params[:confirmation_number])
+          ReservationMailer.reservation_confirmation(order_txn.order_txn_record).deliver
+
+          render :json => {:success => true}
         end
 
         def search
@@ -47,17 +111,7 @@ module ErpApp
 
           render :json => {:success => true, :packages => @packages}
         end
-
-        def book
-          @unit_type      = AccomodationUnitType.find(params[:unit_type_id])
-          @check_in_date  = params[:check_in_date]
-          @check_out_date = params[:check_out_date]
-          @usd_price      = params[:usd_price]
-          @nights         = params[:nights]
-
-          render :update => {:id => "#{@uuid}_result", :view => :book}
-        end
-
+        
         def submit
           begin
             set_enviroment_variables
@@ -69,8 +123,9 @@ module ErpApp
             @error = 'Error Booking'
           end
 
-          view = @error ? :error : :success
-          render :update => {:id => "#{@uuid}_result", :view => view}
+          html = render_to_string(:layout => false, :locals => {:order => @order})
+
+          render :json => {:success => true, :html => html}
         end
 
         protected
@@ -104,7 +159,8 @@ module ErpApp
 
           #if you want a phyiscal room use this.
           accom_unit = order.find_available_unit(params[:unit_type_id], params[:check_in_date].to_date, params[:check_out_date].to_date)
-
+          order.travel_from_date = params[:check_in_date].to_date
+          order.travel_to_date = params[:check_out_date].to_date
           order.add_line_item(
             :check_in_date => params[:check_in_date].to_date,
             :check_out_date => params[:check_out_date].to_date,
@@ -116,7 +172,7 @@ module ErpApp
 
           order.status = 'order initialized'
 
-          order.determine_charge_elements(:enviroment_facts => @enviroment_variables, :price => params[:usd_price])
+          order.determine_charge_elements(:enviroment_facts => @enviroment_variables, :price => params[:price])
           order
         end
 
@@ -131,6 +187,7 @@ module ErpApp
           order.update_product_availability
           order.status = "Complete"
           order.save
+          ReservationMailer.reservation_confirmation(order).deliver
         end
 
         def set_enviroment_variables
@@ -196,13 +253,13 @@ module ErpApp
 
           #set currency
           packages.each do |package|
-            package[:price] = ActionController::Base.helpers.number_to_currency(package[:price])
+            package[:display_price] = ActionController::Base.helpers.number_to_currency(package[:price])
           end
 
           packages
         end
 
 			end
-    end
+    end#OnlineBooking
   end#Mobile
 end#ErpApp

@@ -3,9 +3,14 @@
   <head>
     <title>CompassAE Mobile</title>
     <%=include_sencha_touch :debug => true%>
+    <%=static_javascript_include_tag('erp_app/utility.js')%>
+    <%=static_javascript_include_tag('erp_app/shared/mobile_base.js')%>
+    <%#=setup_js_authentication(@user, @desktop)%>
+    <script type="text/javascript">
+      Compass.ErpApp.Mobile.AuthentictyToken = '<%=form_authenticity_token%>';
+    </script>
 
     <script type="text/javascript">
-      Ext.ns('Compass.ErpApp.Mobile');
       Compass.ErpApp.Mobile.CompassLogo = '<%=@compass_logo%>';
     </script>
 

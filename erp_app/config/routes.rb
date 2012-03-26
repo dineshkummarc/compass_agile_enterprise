@@ -18,7 +18,7 @@ ErpApp::Engine.routes.draw do
   match '/mobile' => 'mobile/base#index'
 
   #Online Booking
-  match '/mobile/online_booking(/:action)' => 'mobile/online_booking/base'
+  match '/mobile/online_booking(/:action(/:id))' => 'mobile/online_booking/base'
 
   #############################
   #Organizer Application Routes
