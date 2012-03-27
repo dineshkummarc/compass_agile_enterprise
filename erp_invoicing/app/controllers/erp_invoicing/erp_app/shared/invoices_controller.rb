@@ -35,6 +35,11 @@ module ErpInvoicing
           render :json => {:success => true}
         end
 
+        def print_invoice
+          invoice = Invoice.find(params[:id])
+          send_data(File.read(invoice.files.first.data.path), {type: 'application/pdf', disposition: 'inline'})
+        end
+
         def invoices
           render :json => if request.put?
             update_invoice
