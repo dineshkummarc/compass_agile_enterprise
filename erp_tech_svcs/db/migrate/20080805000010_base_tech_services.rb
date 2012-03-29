@@ -174,6 +174,8 @@ class BaseTechServices < ActiveRecord::Migration
       end
       add_index :file_assets, :type
       add_index :file_assets, [:file_asset_holder_id, :file_asset_holder_type], :name => 'file_asset_holder_idx'
+      add_index :file_assets, :name
+      add_index :file_assets, :directory
     end
 	
     unless table_exists?(:delayed_jobs)

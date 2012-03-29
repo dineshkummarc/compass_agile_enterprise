@@ -85,7 +85,7 @@ class Website < ActiveRecord::Base
   end
 
   def active_publication
-    self.published_websites.all.find{|item| item.active}
+    self.published_websites.where(:active => true).first
   end
 
   def role
