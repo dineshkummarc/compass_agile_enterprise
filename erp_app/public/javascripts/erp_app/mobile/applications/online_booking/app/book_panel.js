@@ -16,6 +16,7 @@ Ext.define('Compass.ErpApp.Mobile.OnlineBooking.BookPanel',{
         xtype:'formpanel',
         flex:2,
         items:[
+        Compass.ErpApp.Mobile.AuthentictyTokenField,
         {
           xtype:'hiddenfield',
           name:'unit_type_id',

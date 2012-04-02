@@ -10,6 +10,10 @@ User.class_eval do
     Organizer.where('user_id = ?', self.id).first
   end
 
+  def mobile
+    Mobile.where('user_id = ?', self.id).first
+  end
+
   def get_preference(preference_type)
     preference_type = PreferenceType.iid(preference_type) if preference_type.is_a? String
     raise 'Preference type does not exist' if preference_type.nil?

@@ -30,7 +30,14 @@ Ext.application({
           text:'Home',
           ui:'back',
           handler:function(btn){
-            window.location = '/erp_app/mobile'
+            window.location = '/erp_app/mobile';
+          }
+        },
+        {
+          text:'Logout',
+          ui:'round',
+          handler:function(btn){
+            window.location = '/session/sign_out?login_url=/erp_app/mobile/login';
           }
         }
         ]
@@ -66,6 +73,7 @@ Ext.application({
             },
             name:'check_out_date'
           },
+          Compass.ErpApp.Mobile.AuthentictyTokenField,
           {
             xtype:'button',
             text:'Search Inventory',
@@ -140,6 +148,7 @@ Ext.application({
           xtype:'formpanel',
           flex:0.55,
           items:[
+          Compass.ErpApp.Mobile.AuthentictyTokenField,
           {
             label:'Confirmation #',
             xtype:'textfield',

@@ -123,6 +123,10 @@ ActionView::Base.class_eval do
     raw "<script type='text/javascript'>Ext.Ajax.extraParams = { authenticity_token: '#{form_authenticity_token}' }; Compass.ErpApp.AuthentictyToken = '#{form_authenticity_token}';</script>"
   end
 
+  def create_authenticity_token_sencha_touch_field
+    raw "<script type='text/javascript'>Compass.ErpApp.Mobile.AuthentictyTokenField = {xtype:'hiddenfield', name:'authenticity_token', value:'#{form_authenticity_token}'}; </script>"
+  end
+
   def load_shared_application_resources(resource_type)
     resource_type = resource_type.to_sym
     case resource_type
