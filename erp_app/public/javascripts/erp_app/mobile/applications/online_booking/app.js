@@ -170,8 +170,9 @@ Ext.application({
               reservation.load(form.getValues().confirmation_number,{
                 success:function(reservation){
                   form.setMasked(false);
+				  var confirmationSearchResult = btn.up('#reservationsContainer').query('#confirmationSearchResult').first();
+				
 				  var mapItPanel = confirmationSearchResult.query('#mapItPanel').first();
-                  
 				  if(!Ext.isEmpty(mapItPanel)){
                     confirmationSearchResult.remove(mapItPanel,true);
                   }
@@ -180,8 +181,7 @@ Ext.application({
                     confirmationSearchResult.remove(confirmationSummary,true);
                   }
 
-				  var confirmationSearchResult = btn.up('#reservationsContainer').query('#confirmationSearchResult').first();
-                  if(Ext.isEmpty(reservation)){
+				  if(Ext.isEmpty(reservation)){
                     confirmationSearchResult.setHtml(Compass.ErpApp.Mobile.OnlineBooking.emptyResults.apply());
                   }
                   else{
