@@ -327,6 +327,18 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
           value: record.get('tag_list')
         },
         {
+          xtype: 'displayfield',
+          fieldLabel: 'Created At',
+          name: 'created_at',
+          value: record.data.created_at
+        },
+        {
+          xtype: 'displayfield',
+          fieldLabel: 'Updated At',
+          name: 'updated_at',
+          value: record.data.updated_at
+        },        
+        {
           xtype:'hidden',
           allowBlank:false,
           name:'id',
@@ -386,6 +398,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
 
     // create the Data Store
     var store = Ext.create('Ext.data.Store', {
+      pageSize: 20,
       proxy: {
         type: 'ajax',
         url:'/knitkit/erp_app/desktop/articles/all/',
@@ -419,6 +432,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.ArticlesGridPanel",{
       },
       {
         name:'display_title'
+      },
+      {
+        name:'created_at'
+      },
+      {
+        name:'updated_at'
       }
       ]
     });
@@ -698,13 +717,13 @@ var columnItems = [];
                         type: 'json',
                         root: 'data',
                         idProperty: 'id',
-                        totalProperty:'totalCount'
+                        totalProperty:'total'
                     },
                     extraParams:{
                         iid:iid,
                     }
                 });
-                store.loadPage(1);
+                store.load();
             }
         },
         {
@@ -872,7 +891,7 @@ var columnItems = [];
                                         type: 'json',
                                         root: 'data',
                                         idProperty: 'id',
-                                        totalProperty:'totalCount'
+                                        totalProperty:'total'
                                     },
                                     extraParams:{
                                         iid:iid,
@@ -887,7 +906,7 @@ var columnItems = [];
                                         show_orphaned:show_orphaned
                                     }
                                 });
-                                store.loadPage(1);
+                                store.load();
                                 advancedSearchWindow.close();
                             }
                         }
@@ -909,7 +928,6 @@ var columnItems = [];
       store:store,
       tbar: tbarItems,
       bbar: new Ext.PagingToolbar({
-        pageSize: 10,
         store: store,
         displayInfo: true,
         displayMsg: '{0} - {1} of {2}',

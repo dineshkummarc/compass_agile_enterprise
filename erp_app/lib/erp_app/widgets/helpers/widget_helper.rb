@@ -9,12 +9,22 @@ module ErpApp::WidgetHelper
     raw "<div id='#{uuid}'>Loading Widget...<script type='text/javascript'>Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params}, true);</script></div>"
   end
 
-  def build_widget_url(action,id=nil)
-    if id
-      "/erp_app/widgets/#{@name}/#{action}/#{@uuid}/#{id}"
+  def build_widget_url(action,id=nil,params={})
+    url = if id
+       "/erp_app/widgets/#{@name}/#{action}/#{@uuid}/#{id}"
     else
       "/erp_app/widgets/#{@name}/#{action}/#{@uuid}"
     end
+
+    if params
+      url = "#{url}?"
+      params.each do |k,v|
+        url += "#{k.to_s}=#{v.to_s}&"
+      end
+      url = url[0...url.length - 1]
+    end
+
+    url
   end
   
   def widget_result_id
