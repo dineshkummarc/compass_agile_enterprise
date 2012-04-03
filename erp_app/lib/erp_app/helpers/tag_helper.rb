@@ -1,4 +1,4 @@
-module ErpApp::TagHelper
+module ErpApp::Helpers::TagHelper
   include ActionView::Helpers::UrlHelper 
   include ActionView::Helpers::TagHelper 
 

@@ -1,4 +1,4 @@
-module ErpApp::ActiveExtHelper
+module ErpApp::Helpers::ActiveExtHelper
 
   #active_ext helper methods
   def active_ext_close_button(options={})

@@ -1,4 +1,4 @@
-module ErpApp::ExtjsHelper
+module ErpApp::Helpers::ExtjsHelper
 
   # example usage:
   # <%= dynamic_extjs_grid({
