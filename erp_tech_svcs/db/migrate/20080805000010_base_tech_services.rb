@@ -43,9 +43,9 @@ class BaseTechServices < ActiveRecord::Migration
       add_index :users, :email, :unique => true
       add_index :users, :username, :unique => true
       add_index :users, [:last_logout_at, :last_activity_at], :name => 'activity_idx'
-      add_index :users, :remember_me_token, :unique => true
-      add_index :users, :reset_password_token, :unique => true
-      add_index :users, :activation_token, :unique => true
+      add_index :users, :remember_me_token
+      add_index :users, :reset_password_token
+      add_index :users, :activation_token
     
     end
 
