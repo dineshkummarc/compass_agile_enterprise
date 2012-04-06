@@ -10,22 +10,23 @@ module ErpTechSvcs
         def setup_connection
           @@configuration = YAML::load_file(File.join(Rails.root,'config','s3.yml'))[Rails.env]
 
-          AWS::S3::Base.establish_connection!(
+          @@s3_connection = AWS::S3.new(
             :access_key_id     => @@configuration['access_key_id'],
             :secret_access_key => @@configuration['secret_access_key']
           )
 
-          @@s3_bucket = AWS::S3::Bucket.find(@@configuration['bucket'])
+          @@s3_bucket = @@s3_connection.buckets[@@configuration['bucket'].to_sym]
           @@node_tree = build_node_tree
         end
 
         def reload
-          AWS::S3::Base.connected? ? (@@node_tree = build_node_tree(true)) : setup_connection
+          !@@s3_connection.nil? ? (@@node_tree = build_node_tree(true)) : setup_connection
         end
 
         def build_node_tree(reload=false)
           tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
-          objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
+          #objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
+          objects = @@s3_bucket.objects
 
 
           nesting_depth = objects.collect{|object| object.key.split('/').count}.max
@@ -54,7 +55,7 @@ module ErpTechSvcs
               level.each do |item|
                 parent = old_parents.count == 1 ? old_parents.first : self.find_parent(item, old_parents)
                 path = File.join(parent[:id], item[:text])
-                child_hash = {:last_modified => item[:last_modified], :text => item[:text], :downloadPath => path, :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
+                child_hash = {:last_modified => item[:last_modified], :text => item[:text], :downloadPath => parent[:id], :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
                 new_parents << child_hash
                 parent[:children] << child_hash
               end
@@ -66,11 +67,11 @@ module ErpTechSvcs
       end
 
       def buckets
-        AWS::S3::Service.buckets
+        @@s3_connection.buckets
       end
 
       def bucket=(name)
-        @@s3_bucket = AWS::S3::Bucket.find(name)
+        @@s3_bucket = @@s3_connection.buckets[name.to_sym]
       end
 
       def bucket
@@ -82,16 +83,20 @@ module ErpTechSvcs
       end
 
       def update_file(path, content)
-        AWS::S3::S3Object.store(path, content, bucket.name, :access => :public_read)
+        path = path.sub(%r{^/},'')
+        bucket.objects[path].write(content)
       end
 
-      def create_file(path, name, contents)
-        AWS::S3::S3Object.store(File.join(path,name), contents, bucket.name, :access => :public_read)
+      def create_file(path, name, content)
+        path = path.sub(%r{^/},'')
+        bucket.objects[File.join(path, name)].write(content)
         ErpTechSvcs::FileSupport::S3Manager.reload
       end
 
       def create_folder(path, name)
-        AWS::S3::S3Object.store(File.join(path,name) + "/", '', bucket.name, :access => :public_read)
+        path = path.sub(%r{^/},'')
+        folder = File.join(path, name) + "/"
+        bucket.objects[folder].write('')
         ErpTechSvcs::FileSupport::S3Manager.reload
       end
 
@@ -100,9 +105,15 @@ module ErpTechSvcs
         unless self.exists? path
           message = FILE_DOES_NOT_EXIST
         else
+          file = FileAsset.where(:name => ::File.basename(path)).where(:directory => ::File.dirname(path)).first
+          acl = (file.has_capabilities? ? :private : :public_read) unless file.nil?
+          options = (file.nil? ? {} : {:acl => acl})
           name = File.basename(path)
-          if AWS::S3::S3Object.rename path, File.join(new_parent_path,name), bucket.name, :copy_acl => true
-            message = "#{name} was moved to #{new_parent_path} successfully"
+          path = path.sub(%r{^/},'')
+          new_path = File.join(new_parent_path,name).sub(%r{^/},'')
+          old_object = bucket.objects[path]
+          if new_object = old_object.move_to(new_path, options)
+            message = "#{name} was moved to #{new_path} successfully"
             result = true
             ErpTechSvcs::FileSupport::S3Manager.reload
           else
@@ -121,30 +132,42 @@ module ErpTechSvcs
         path_pieces.push(name)
         new_path = path_pieces.join('/')
         begin
-          if AWS::S3::S3Object.rename path, new_path, bucket.name, :copy_acl => true
+          file = FileAsset.where(:name => ::File.basename(path)).where(:directory => ::File.dirname(path)).first
+          acl = (file.has_capabilities? ? :private : :public_read) unless file.nil?
+          options = (file.nil? ? {} : {:acl => acl})
+          path = path.sub(%r{^/},'')
+          new_path = new_path.sub(%r{^/},'')
+#          Rails.logger.info "renaming from #{path} to #{new_path}"
+          old_object = bucket.objects[path]
+          if new_object = old_object.move_to(new_path, options)
             message = "#{old_name} was renamed to #{name} successfully"
             result = true
             ErpTechSvcs::FileSupport::S3Manager.reload
           else
             message = "Error renaming #{old_name}"
           end
-        rescue AWS::S3::NoSuchKey=>ex
+        rescue AWS::S3::Errors::NoSuchKey=>ex
           message = FILE_FOLDER_DOES_NOT_EXIST
         end
 
         return result, message
       end
 
+      def set_permissions(path, canned_acl=:public_read)
+        path = path.sub(%r{^/},'')
+        bucket.objects[path].acl = canned_acl
+      end
+
       def delete_file(path, options={})
         result = false
         message = nil
 
-        path = "/" + path unless path.first == "/"
         node = find_node(path)
         if node[:children].empty?
           is_directory = !node[:leaf]
           path << '/' unless node[:leaf]
-          result = AWS::S3::S3Object.delete path, bucket.name, :force => true
+          path = path.sub(%r{^/},'')
+          result = bucket.objects[path].delete
           message = "File was deleted successfully"
           result = true
           ErpTechSvcs::FileSupport::S3Manager.reload
@@ -161,9 +184,9 @@ module ErpTechSvcs
 
       def exists?(path)
         begin
-          path = path[1..path.length] if path.first == '/'
-          !AWS::S3::S3Object.find(path, bucket.name).nil?
-        rescue AWS::S3::NoSuchKey
+          path = path.sub(%r{^/},'')
+          !bucket.objects[path].nil?
+        rescue AWS::S3::Errors::NoSuchKey
           return false
         end
       end
@@ -172,14 +195,14 @@ module ErpTechSvcs
         contents = nil
         message = nil
 
-        path = path[1..path.length] if path.first == '/'
+        path = path.sub(%r{^/},'')
         begin
-          object = AWS::S3::S3Object.find path, bucket.name
-        rescue AWS::S3::NoSuchKey => error
+          object = bucket.objects[path]
+        rescue AWS::S3::Errors::NoSuchKey => error
           message = FILE_DOES_NOT_EXIST
         end
 
-        contents = object.value.to_s if message.nil?
+        contents = object.read if message.nil?
 
         return contents, message
       end

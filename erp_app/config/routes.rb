@@ -1,3 +1,7 @@
+Rails.application.routes.draw do
+  match '/download/:filename' => 'erp_app/public#download'
+end
+
 ErpApp::Engine.routes.draw do
   
   ##########################

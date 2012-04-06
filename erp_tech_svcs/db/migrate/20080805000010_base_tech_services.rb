@@ -42,10 +42,10 @@ class BaseTechServices < ActiveRecord::Migration
       end
       add_index :users, :email, :unique => true
       add_index :users, :username, :unique => true
-      add_index :users, [:last_logout_at, :last_activity_at], :name => 'activity_idx', :unique => true
-      add_index :users, :remember_me_token, :unique => true
-      add_index :users, :reset_password_token, :unique => true
-      add_index :users, :activation_token, :unique => true
+      add_index :users, [:last_logout_at, :last_activity_at], :name => 'activity_idx'
+      add_index :users, :remember_me_token
+      add_index :users, :reset_password_token
+      add_index :users, :activation_token
     
     end
 
@@ -174,6 +174,8 @@ class BaseTechServices < ActiveRecord::Migration
       end
       add_index :file_assets, :type
       add_index :file_assets, [:file_asset_holder_id, :file_asset_holder_type], :name => 'file_asset_holder_idx'
+      add_index :file_assets, :name
+      add_index :file_assets, :directory
     end
 	
     unless table_exists?(:delayed_jobs)

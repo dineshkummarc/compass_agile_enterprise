@@ -3,17 +3,9 @@ module Knitkit
     module Desktop
       class ImageAssetsController < FileAssetsController
         
-        def base_path
-          @base_path = nil
-          if @context == :website
-            @base_path = File.join(@file_support.root,"public/sites/#{@assets_model.iid}", "images") unless @assets_model.nil?
-          else
-            @base_path = File.join(@file_support.root,"public/images") unless @assets_model.nil?
-          end
-        end
-
         def get_images
           directory = (params[:directory] == 'root_node' or params[:directory].blank?) ? base_path : params[:directory]
+          # this @assets_model.images.select should be refactored into a query
           render :json => @assets_model.images.select{|image| image.directory == directory.sub(@file_support.root,'')}.collect{|image|{:name => image.name, :shortName => image.name[0..15], :url => image.data.url}}
         end
 
@@ -87,8 +79,20 @@ module Knitkit
 
         protected
 
+        def set_root_node
+          @root_node = nil
+
+          if @context == :website
+            @root_node = File.join("/public/sites/#{@assets_model.iid}", "images") unless @assets_model.nil?
+          else
+            @root_node = "/public/images"
+          end
+
+          @root_node
+        end
+
         def set_file_support
-          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
         end
         
       end#ImageAssetsController

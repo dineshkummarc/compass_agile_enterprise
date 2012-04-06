@@ -30,7 +30,7 @@ class ProductType < ActiveRecord::Base
   end
   
   def images_path
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     File.join(file_support.root,'products/images',"#{self.description.underscore}_#{self.id}")
   end
   
