@@ -2,8 +2,6 @@ module ErpApp
 	class PublicController < ActionController::Base
     before_filter :set_file_support
 
-    S3_URL_EXPIRATION_TIME = 300 # in seconds
-
     # DEPRECATED, use erp_app/public#download
     # def download_file
    #    path = params[:path]
@@ -64,7 +62,7 @@ module ErpApp
       if ErpTechSvcs::FileSupport.options[:storage] == :s3
         path = File.join(file.directory,file.name).sub(%r{^/},'')
         options = { :response_content_disposition => disposition }
-        options[:expires] = S3_URL_EXPIRATION_TIME if file.has_capabilities?
+        options[:expires] = Rails.application.config.erp_tech_svcs.s3_url_expires_in_seconds if file.has_capabilities?
         redirect_to @file_support.bucket.objects[path].url_for(:read, options).to_s
       else
         # to use X-Sendfile or X-Accel-Redirect, set config.action_dispatch.x_sendfile_header in environment config file
