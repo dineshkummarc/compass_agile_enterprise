@@ -14,8 +14,6 @@ module ErpApp
 	  # end
 
     # TODO:
-    # upload 1.1mb pdf - too large?
-    # file manager upload broken
     # test X Send file in apache
     # reorder menuitems
     # drag and drop image into ckeditor uses bad (but somehow not broken, i.e. ../../images/) url (filesystem on firefox, chrome OK) 
