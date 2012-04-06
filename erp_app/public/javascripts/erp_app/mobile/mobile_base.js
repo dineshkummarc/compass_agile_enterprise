@@ -3,6 +3,8 @@
  */
 
 Ext.ns('Compass.ErpApp.Mobile');
+Compass.ErpApp.Mobile.Applications = {};
+Compass.ErpApp.Mobile.Base = {};
 Compass.ErpApp.Mobile.Utility = {};
 
 

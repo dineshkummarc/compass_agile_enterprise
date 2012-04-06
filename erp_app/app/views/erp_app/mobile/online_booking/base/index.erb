@@ -5,16 +5,17 @@
     <%=include_sencha_touch :debug => true%>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
     <%=static_javascript_include_tag('erp_app/utility.js')%>
-    <%=static_javascript_include_tag('erp_app/shared/mobile_base.js')%>
+    <%=static_javascript_include_tag('erp_app/mobile/mobile_base.js')%>
     <%#=setup_js_authentication(@user, @desktop)%>
-    <%=add_authenticity_token_to_extjs%>
+    <%=create_authenticity_token_sencha_touch_field%>
+    
     
     <!-- application javascript resources -->
     <%=static_javascript_include_tag(@application.locate_resources('javascripts'))%>
     <!-- end application javascript resources -->
 
     <!--stylesheets-->
-    <%= static_stylesheet_link_tag('erp_app/shared/mobile.css') %>
+    <%= static_stylesheet_link_tag('erp_app/mobile/mobile.css') %>
     <!--end stylesheets-->
 
     <!-- application stylesheet resources -->

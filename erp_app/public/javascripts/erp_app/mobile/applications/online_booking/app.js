@@ -30,7 +30,14 @@ Ext.application({
           text:'Home',
           ui:'back',
           handler:function(btn){
-            window.location = '/erp_app/mobile'
+            window.location = '/erp_app/mobile';
+          }
+        },
+        {
+          text:'Logout',
+          ui:'round',
+          handler:function(btn){
+            window.location = '/session/sign_out?login_url=/erp_app/mobile/login';
           }
         }
         ]
@@ -66,6 +73,7 @@ Ext.application({
             },
             name:'check_out_date'
           },
+          Compass.ErpApp.Mobile.AuthentictyTokenField,
           {
             xtype:'button',
             text:'Search Inventory',
@@ -140,6 +148,7 @@ Ext.application({
           xtype:'formpanel',
           flex:0.55,
           items:[
+          Compass.ErpApp.Mobile.AuthentictyTokenField,
           {
             label:'Confirmation #',
             xtype:'textfield',
@@ -156,31 +165,28 @@ Ext.application({
               var form = btn.up('formpanel');
               var reservation = Ext.ModelManager.getModel('Compass.ErpApp.Mobile.OnlineBooking.Reservation');
               form.setMasked({
-                xtype:'loadmask',
-                message:'Searching for reservation...'
+                xtype:'loadmask'
               });
               reservation.load(form.getValues().confirmation_number,{
                 success:function(reservation){
-                  var confirmationSearchResult = btn.up('#reservationsContainer').query('#confirmationSearchResult').first();
-                  if(Ext.isEmpty(reservation)){
+                  form.setMasked(false);
+				  var confirmationSearchResult = btn.up('#reservationsContainer').query('#confirmationSearchResult').first();
+				
+				  var mapItPanel = confirmationSearchResult.query('#mapItPanel').first();
+				  if(!Ext.isEmpty(mapItPanel)){
+                    confirmationSearchResult.remove(mapItPanel,true);
+                  }
+                  var confirmationSummary = confirmationSearchResult.query('#confirmationSummary').first();
+                  if(!Ext.isEmpty(confirmationSummary)){
+                    confirmationSearchResult.remove(confirmationSummary,true);
+                  }
+
+				  if(Ext.isEmpty(reservation)){
                     confirmationSearchResult.setHtml(Compass.ErpApp.Mobile.OnlineBooking.emptyResults.apply());
                   }
                   else{
                     reservation.getAccomodationUnitType({
-                      success:function(args){
-                        form.setMasked(false);
-                        
-                        //remove mapit if its there
-                        var mapItPanel = confirmationSearchResult.query('#mapItPanel').first();
-                        if(!Ext.isEmpty(mapItPanel)){
-                          confirmationSearchResult.remove(mapItPanel,true);
-                        }
-
-                        //remove summary if its there
-                        var confirmationSummary = confirmationSearchResult.query('#confirmationSummary').first();
-                        if(!Ext.isEmpty(confirmationSummary)){
-                          confirmationSearchResult.remove(confirmationSummary,true);
-                        }
+                      success:function(args){                        
 
                         confirmationSearchResult.add({
                           xtype:'container',
@@ -279,6 +285,7 @@ Ext.application({
                         });
                       },
                       failure:function(){
+						form.setMasked(false);
                         Ext.Msg.alert("Error", "Error searching for your reservation.");
                       }
                     });

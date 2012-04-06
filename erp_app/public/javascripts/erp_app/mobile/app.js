@@ -1,6 +1,3 @@
-Compass.ErpApp.Mobile.Applications = {};
-Compass.ErpApp.Mobile.Base = {};
-
 Ext.application({
   name: 'compass_ae_mobile',
   useLoadMask: true,
@@ -9,18 +6,25 @@ Ext.application({
     Ext.create("Ext.tab.Panel", {
       fullscreen: true,
       tabBarPosition: 'bottom',
-
       items: [
+      {
+        xtype:'toolbar',
+        ui:'light',
+        docked:'top',
+        items:[
+        {
+          text:'Logout',
+          ui:'back',
+          handler:function(btn){
+            window.location = '/session/sign_out?login_url=/erp_app/mobile/login';
+          }
+        }
+        ]
+      },
       {
         title: 'Home',
         iconCls: 'home',
-        html: [
-        '<img src="/images/art/',
-        Compass.ErpApp.Mobile.CompassLogo,
-        '" />',
-        '<h1>Welcome to CompassAE Mobile</h1>',
-        "<p>Here you can access your CompassAE applications on the go.</p>",
-        ].join("")
+        style:'background-image: url("/images/wallpaper/truenorth.png");background-position:center;'
       },
       {
         xtype: 'container',
@@ -31,42 +35,11 @@ Ext.application({
           align:'strech'
         },
         defaults:{
-          xtype:'container',
-          layout:{
-            type:'hbox',
-            align:'middle'
-          },
-          defaults:{
-            xtype:'button',
-            flex:1,
-            margin:10
-          }
+          xtype:'button',
+          margin:10
         },
-        items:[
-        {
-          items:[
-
-          {
-            text:'User Management',
-            iconCls:'icon-user',
-            ui:'round',
-            handler:function(){
-              window.location = "/erp_app/mobile/user_management"
-            }
-          },
-          {
-            text:'Online Booking',
-            iconCls:'icon-house',
-            ui:'round',
-            handler:function(){
-              window.location = "/erp_app/mobile/online_booking"
-            }
-          }
-          ]
-        }
-        ]
+        items:mobileApplications
       }
-      
       ]
     });
   }

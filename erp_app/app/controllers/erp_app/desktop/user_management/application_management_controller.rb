@@ -7,13 +7,10 @@ module ErpApp
           user_id            = params[:user_id]
           app_container_type = params[:app_container_type]
 
-          if app_container_type == 'Desktop'
-            app_container = ::Desktop.find_by_user(User.find(user_id))
-            applications = DesktopApplication.all
-          else
-            app_container = ::Organizer.find_by_user(User.find(user_id))
-            applications = OrganizerApplication.all
-          end
+          user = User.find(user_id)
+          app_container = "::#{app_container_type}".constantize.find_by_user(user)
+          applications  = "#{app_container_type}Application".constantize.all
+
           current_applications = app_container.applications
           applications.delete_if{|r| current_applications.collect(&:id).include?(r.id)}
 
@@ -25,7 +22,8 @@ module ErpApp
           app_container_type = params[:app_container_type]
 
           user = User.find(user_id)
-          app_container = (app_container_type == 'Desktop') ? user.desktop : user.organizer
+          app_container = "::#{app_container_type}".constantize.find_by_user(user)
+          
           render :json => app_container.applications.map{|application| {:text => application.description, :app_id => application.id, :iconCls => application.icon, :leaf => true}}
 			  end
 
@@ -35,7 +33,7 @@ module ErpApp
           app_container_type = params[:app_container_type]
 
           user = User.find(user_id)
-          app_container = (app_container_type == 'Desktop') ? user.desktop : user.organizer
+          app_container = "::#{app_container_type}".constantize.find_by_user(user)
           app_container.applications = []
           app_container.save
 
