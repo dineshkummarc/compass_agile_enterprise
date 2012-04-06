@@ -2,7 +2,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.EastRegion",{
     extend:"Ext.TabPanel",
     alias:'widget.knitkit_eastregion',
     initComponent: function() {
-        this.imageAssetsPanel = new Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel();
+        this.imageAssetsPanel = new Compass.ErpApp.Desktop.Applications.Knitkit.ImageAssetsPanel(this.initialConfig['module']);
         this.widgetsPanel = new Compass.ErpApp.Desktop.Applications.Knitkit.WidgetsPanel();
         this.fileAssetsPanel = new Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel(this.initialConfig['module']);
         this.items = [];

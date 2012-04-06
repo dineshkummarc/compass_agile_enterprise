@@ -5,14 +5,16 @@ module Knitkit
         skip_before_filter :verify_authenticity_token, :only => :upload_file
         skip_before_filter :require_login, :only => [:download_file_asset]
         before_filter :set_asset_model
+        before_filter :set_root_node
 
-        def base_path
-          @base_path = nil
-          if @context == :website
-            @base_path = File.join(@file_support.root,"#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{@assets_model.iid}") unless @assets_model.nil?
+        def base_path          
+          if @root_node.nil?
+            @base_path = nil
           else
-            @base_path = File.join(@file_support.root,"#{Rails.application.config.erp_tech_svcs.file_assets_location}/shared_site_files") unless @assets_model.nil?
+            @base_path = File.join(@file_support.root, @root_node) 
           end
+
+          @base_path
         end
 
         def expand_directory
@@ -81,12 +83,12 @@ module Knitkit
           result          = {}
           path            = params[:node]
           new_parent_path = params[:parent_node]
-          new_parent_path = base_path if new_parent_path == ROOT_NODE
+          new_parent_path = @root_node if new_parent_path == ROOT_NODE
 
-          unless File.exists? path
-            result = {:success => false, :msg => 'File does not exists'}
+          if ErpTechSvcs::FileSupport.options[:storage] == :filesystem and !File.exists?(File.join(@file_support.root, path))
+            result = {:success => false, :msg => 'File does not exist.'}
           else
-            path = path[1..path.length] if path[0] == "/"
+            #path = path[1..path.length] if path[0] == "/"
             file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
             file.move(new_parent_path)
             result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
@@ -133,7 +135,7 @@ module Knitkit
           path = params[:node]
           name = params[:file_name]
 
-          result, message = @file_support.rename_file(File.join(Rails.root,path), name)
+          result, message = @file_support.rename_file(File.join(@file_support.root,path), name)
           if result
             file = @assets_model.files.find(:first, :conditions => ['name = ? and directory = ?', ::File.basename(path), ::File.dirname(path)])
             file.name = name
@@ -152,10 +154,14 @@ module Knitkit
           roles << @assets_model.website_role_iid if @context == :website
           
           (secure == 'true') ? file.add_capability(:download, nil, roles) : file.remove_all_capabilities
+
+          # if we're using S3, set file permissions to private or public_read   
+          @file_support.set_permissions(path, ((secure == 'true') ? :private : :public_read)) if ErpTechSvcs::FileSupport.options[:storage] == :s3
           
           render :json =>  {:success => true}
         end
 
+        # DEPRECATED, use erp_app/public#download
         def download_file_asset
           path = params[:path]
 
@@ -183,6 +189,18 @@ module Knitkit
 
         def set_file_support
           @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+        end
+
+        def set_root_node
+          @root_node = nil
+
+          if @context == :website
+            @root_node = "/#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{@assets_model.iid}" unless @assets_model.nil?
+          else
+            @root_node = "/#{Rails.application.config.erp_tech_svcs.file_assets_location}/shared_site_files"
+          end
+
+          @root_node
         end
 
         def set_asset_model

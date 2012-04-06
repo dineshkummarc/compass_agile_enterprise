@@ -21,14 +21,16 @@ module ErpTechSvcs
       end
 
       def save_move(path, new_parent_path)
+        old_path = File.join(root,path)
+        new_path = File.join(root,new_parent_path)
         result = false
-        unless File.exists? path
+        unless File.exists? old_path
           message = FILE_DOES_NOT_EXIST
         else
           name = File.basename(path)
           #make sure path is there.
-          FileUtils.mkdir_p new_parent_path unless File.directory? new_parent_path
-          FileUtils.mv(path, new_parent_path + '/' + name)
+          FileUtils.mkdir_p new_path unless File.directory? new_path
+          FileUtils.mv(old_path, File.join(new_path,name))
           message = "#{name} was moved to #{new_parent_path} successfully"
           result = true
         end
@@ -93,7 +95,7 @@ module ErpTechSvcs
         unless File.exists? path
           message = FILE_DOES_NOT_EXIST
         else
-          contents = IO.read(path)
+          contents = IO.read(path).force_encoding('ASCII-8BIT')
         end
         return contents, message
       end
@@ -152,9 +154,9 @@ module ErpTechSvcs
               {:text => entry, :id => path, :iconCls => 'icon-content'}
             end
           elsif !options[:included_file_extensions_regex].nil? && entry =~ options[:included_file_extensions_regex]
-            tree_data[:children] << {:text => entry, :leaf => true, :iconCls => 'icon-document', :downloadPath => path, :id => path}
+            tree_data[:children] << {:text => entry, :leaf => true, :iconCls => 'icon-document', :downloadPath => directory, :id => path}
           elsif options[:included_file_extensions_regex].nil?
-            tree_data[:children] << {:text => entry, :leaf => true, :iconCls => 'icon-document', :downloadPath => path, :id => path}
+            tree_data[:children] << {:text => entry, :leaf => true, :iconCls => 'icon-document', :downloadPath => directory, :id => path}
           end
         end if File.directory?(directory)
 
