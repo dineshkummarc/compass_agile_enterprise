@@ -1,7 +1,7 @@
 require 'fileutils'
 
 Paperclip.interpolates(:file_path){|data, style|
-  case ErpTechSvcs::FileSupport.options[:storage]
+  case Rails.application.config.erp_tech_svcs.file_storage
   when :filesystem
     file_support = ErpTechSvcs::FileSupport::Base.new
     File.join(file_support.root,data.instance.directory,data.instance.name)
@@ -12,7 +12,7 @@ Paperclip.interpolates(:file_path){|data, style|
 
 Paperclip.interpolates(:file_url){|data, style|
   dir = File.join(data.instance.directory, data.instance.name)
-  case ErpTechSvcs::FileSupport.options[:storage]
+  case Rails.application.config.erp_tech_svcs.file_storage
   when :filesystem
     #if public is at the front of this path and we are using file_system remove it
     dir_pieces = dir.split('/')
@@ -48,8 +48,8 @@ class FileAsset < ActiveRecord::Base
 
   #paperclip
   has_attached_file :data,
-    :storage => ErpTechSvcs::FileSupport.options[:storage],
-    :s3_protocol => (ErpTechSvcs::FileSupport.options[:s3_protocol].nil? ? 'https' : ErpTechSvcs::FileSupport.options[:s3_protocol]),
+    :storage => Rails.application.config.erp_tech_svcs.file_storage,
+    :s3_protocol => Rails.application.config.erp_tech_svcs.s3_protocol,
     :s3_permissions => :public_read,
     :s3_credentials => "#{Rails.root}/config/s3.yml",
     :path => ":file_path",
@@ -149,7 +149,7 @@ class FileAsset < ActiveRecord::Base
   end
 
   def move(new_parent_path)
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     result, message = file_support.save_move(File.join(self.directory, self.name), new_parent_path)
     if result
       self.directory = new_parent_path.gsub(Regexp.new(Rails.root.to_s), '') # strip rails root from new_parent_path, we want relative path

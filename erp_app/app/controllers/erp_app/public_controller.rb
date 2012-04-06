@@ -14,7 +14,6 @@ module ErpApp
 	  # end
 
     # TODO:
-    # make S3_URL_EXPIRATION_TIME a config option
     # upload 1.1mb pdf - too large?
     # file manager upload broken
     # test X Send file in apache
@@ -59,7 +58,7 @@ module ErpApp
     def serve_file(file, disposition)
       type = (file.type == 'Image' ? "image/#{params[:format]}" : file.content_type)
 
-      if ErpTechSvcs::FileSupport.options[:storage] == :s3
+      if Rails.application.config.erp_tech_svcs.file_storage == :s3
         path = File.join(file.directory,file.name).sub(%r{^/},'')
         options = { :response_content_disposition => disposition }
         options[:expires] = Rails.application.config.erp_tech_svcs.s3_url_expires_in_seconds if file.has_capabilities?
@@ -71,7 +70,7 @@ module ErpApp
     end
 
     def set_file_support
-      @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+      @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     end
 
 	end

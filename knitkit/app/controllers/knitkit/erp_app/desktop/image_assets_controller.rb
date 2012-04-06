@@ -92,7 +92,7 @@ module Knitkit
         end
 
         def set_file_support
-          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
         end
         
       end#ImageAssetsController

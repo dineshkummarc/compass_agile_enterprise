@@ -85,7 +85,7 @@ module Knitkit
           new_parent_path = params[:parent_node]
           new_parent_path = @root_node if new_parent_path == ROOT_NODE
 
-          if ErpTechSvcs::FileSupport.options[:storage] == :filesystem and !File.exists?(File.join(@file_support.root, path))
+          if Rails.application.config.erp_tech_svcs.file_storage == :filesystem and !File.exists?(File.join(@file_support.root, path))
             result = {:success => false, :msg => 'File does not exist.'}
           else
             #path = path[1..path.length] if path[0] == "/"
@@ -156,7 +156,7 @@ module Knitkit
           (secure == 'true') ? file.add_capability(:download, nil, roles) : file.remove_all_capabilities
 
           # if we're using S3, set file permissions to private or public_read   
-          @file_support.set_permissions(path, ((secure == 'true') ? :private : :public_read)) if ErpTechSvcs::FileSupport.options[:storage] == :s3
+          @file_support.set_permissions(path, ((secure == 'true') ? :private : :public_read)) if Rails.application.config.erp_tech_svcs.file_storage == :s3
           
           render :json =>  {:success => true}
         end
@@ -188,7 +188,7 @@ module Knitkit
         protected
 
         def set_file_support
-          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
         end
 
         def set_root_node

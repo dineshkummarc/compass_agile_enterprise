@@ -17,7 +17,7 @@
 
     #set overrides by themes
     current_theme_paths.each do |theme|
-      resolver = case ErpTechSvcs::FileSupport.options[:storage]
+      resolver = case Rails.application.config.erp_tech_svcs.file_storage
       when :s3
         ErpTechSvcs::FileSupport::S3Manager.reload
         path = File.join(theme[:url],'widgets',self.name,'views')
