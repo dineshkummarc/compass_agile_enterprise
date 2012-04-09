@@ -46,6 +46,7 @@ module Knitkit
         end
 
         def upload_file
+          #Website level assets if allowed to be viewed can also be uploaded and deleted so this is only checking for the view capability
           if @context == Website
             capability_type = "view"
             capability_resource = "SiteFileAsset"

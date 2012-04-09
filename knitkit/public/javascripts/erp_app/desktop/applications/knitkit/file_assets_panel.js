@@ -245,6 +245,7 @@ Compass.ErpApp.Desktop.Applications.Knitkit.FileAssetsPanel = function(module) {
 
   this.selectWebsite = function(websiteId){
     this.websiteId = websiteId;
+    this.reloadWebsiteFileAssetsTreePanel(websiteId);
   }
 
   this.reloadWebsiteFileAssetsTreePanel = function(websiteId){
