@@ -101,10 +101,10 @@ describe RailsDbAdmin::ErpApp::Desktop::BaseController do
                   :table => "role_types"}
 
       parsed_body = JSON.parse(response.body)
-      parsed_body["totalCount"].should eq(2)
+      parsed_body["total"].should eq(2)
     end
 
-    it "should return 1 row because start is increased by 1, but totalCount should remain 2" do
+    it "should return 1 row because start is increased by 1, but total should remain 2" do
 
       get :base, {:use_route => :rails_db_admin,
                   :action => "table_data",
@@ -112,11 +112,11 @@ describe RailsDbAdmin::ErpApp::Desktop::BaseController do
                   :start => "1"}
 
       parsed_body = JSON.parse(response.body)
-      parsed_body["totalCount"].should eq(2)
+      parsed_body["total"].should eq(2)
       parsed_body["data"].length.should eq(1)
     end
 
-    it "should return 1 row because limit is set to 1, but totalCount should remain 2" do
+    it "should return 1 row because limit is set to 1, but total should remain 2" do
 
       get :base, {:use_route => :rails_db_admin,
                   :action => "table_data",
@@ -124,7 +124,7 @@ describe RailsDbAdmin::ErpApp::Desktop::BaseController do
                   :limit => "1"}
 
       parsed_body = JSON.parse(response.body)
-      parsed_body["totalCount"].should eq(2)
+      parsed_body["total"].should eq(2)
       parsed_body["data"].length.should eq(1)
     end
 
@@ -136,7 +136,7 @@ describe RailsDbAdmin::ErpApp::Desktop::BaseController do
                   :table => 'preference_options_preference_types'}
 
       parsed_body = JSON.parse(response.body)
-      parsed_body["totalCount"].should eq(13)
+      parsed_body["total"].should eq(13)
     end
   end
 
