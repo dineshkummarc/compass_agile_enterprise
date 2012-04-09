@@ -33,7 +33,11 @@ module RailsDbAdmin
       query = ar.project(Arel.sql('*')).take(50)
       #query = "SELECT * FROM #{table} LIMIT #{@connection.sanitize_limit(50)}"
 
-      rows = @connection.select_all(query.to_sql)
+      #rows = @connection.select_all(query.to_sql)
+      # i think the above straight sql query was done to handle straight sql, however it does not translate postgres boolean columns properly
+      # since this method is only used on a single table we can use activerecord, leaving this comment in case I'm wrong
+      rows = table.classify.constantize.find_by_sql(query.to_sql)
+
       records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
 
       return query.to_sql, records

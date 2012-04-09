@@ -30,15 +30,18 @@ module RailsDbAdmin
           query = arel_table.project(Arel.sql('*'))
         end
 
-
-        rows = @connection.select_all(query.to_sql)
+        #rows = @connection.select_all(query.to_sql)
+        # i think the above straight sql query was done to handle straight sql, however it does not translate postgres boolean columns properly
+        # since this method is only used on a single table we can use activerecord, leaving this comment in case I'm wrong
+        rows = options[:table].classify.constantize.find_by_sql(query.to_sql)
+        
         records = RailsDbAdmin::TableSupport.database_rows_to_hash(rows)
 
         if !records.empty? && !records[0].has_key?("id")
           records = RailsDbAdmin::TableSupport.add_fake_id_col(records)
         end
 
-        {:totalCount => total_count, :data => records}
+        {:total => total_count, :data => records}
       end
 
       def get_row_data(table, id)
