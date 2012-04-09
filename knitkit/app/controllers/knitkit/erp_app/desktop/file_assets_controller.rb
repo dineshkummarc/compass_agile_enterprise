@@ -196,9 +196,9 @@ module Knitkit
           @root_node = nil
 
           if @context == :website
-            @root_node = "/#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{@assets_model.iid}" unless @assets_model.nil?
+            @root_node = File.join(Rails.application.config.erp_tech_svcs.file_assets_location,"sites",@assets_model.iid) unless @assets_model.nil?
           else
-            @root_node = "/#{Rails.application.config.erp_tech_svcs.file_assets_location}/shared_site_files"
+            @root_node = File.join(Rails.application.config.erp_tech_svcs.file_assets_location,"shared_site_files")
           end
 
           @root_node

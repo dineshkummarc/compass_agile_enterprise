@@ -10,6 +10,7 @@ module Knitkit
         end
 
         def upload_file
+          #Website level assets if allowed to be viewed can also be uploaded and deleted so this is only checking for the view capability
           if @context == Website
             capability_type = "view"
             capability_resource = "SiteImageAsset"
@@ -83,9 +84,9 @@ module Knitkit
           @root_node = nil
 
           if @context == :website
-            @root_node = File.join("/public/sites/#{@assets_model.iid}", "images") unless @assets_model.nil?
+            @root_node = File.join("public", "sites", @assets_model.iid, "images") unless @assets_model.nil?
           else
-            @root_node = "/public/images"
+            @root_node = File.join("public", "images")
           end
 
           @root_node
