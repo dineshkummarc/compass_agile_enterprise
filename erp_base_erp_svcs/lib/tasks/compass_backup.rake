@@ -4,7 +4,7 @@ namespace :compass_ae do
   namespace :backup do
   	
   	PG_BACKUP_DIR = '/backup/postgres'
-  	SU_POSTGRES = false # set this to false on OS X and true on debian
+  	SU_POSTGRES = true # set this to false on OS X and true on debian
   	TIMESTAMP_FORMAT = "%Y-%m-%d_%Hh%Mm%Ss" # keep a single underscore or the purge_old task will break
   	@purge_dumps_older_than = 2.weeks.ago
   	

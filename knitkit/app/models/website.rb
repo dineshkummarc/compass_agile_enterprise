@@ -56,7 +56,8 @@ class Website < ActiveRecord::Base
   end
 
   def all_section_paths
-    ActiveRecord::Base.connection.execute("select path from website_sections where website_id = #{self.id}").collect{|row| row['path']}
+    WebsiteSection.select(:path).where(:website_id => self.id).collect{|row| row['path']}
+    #ActiveRecord::Base.connection.execute("select path from website_sections where website_id = #{self.id}").collect{|row| row['path']}
   end
 
   def self.find_by_host(host)
@@ -85,7 +86,7 @@ class Website < ActiveRecord::Base
   end
 
   def active_publication
-    self.published_websites.all.find{|item| item.active}
+    self.published_websites.where(:active => true).first
   end
 
   def role
@@ -102,7 +103,7 @@ class Website < ActiveRecord::Base
   end
 
   def remove_sites_directory
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     begin
       file_support.delete_file(File.join(file_support.root,"sites/#{self.iid}"), :force => true)
     rescue
@@ -178,7 +179,7 @@ class Website < ActiveRecord::Base
 
   def export
     tmp_dir = Website.make_tmp_dir
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
 
     sections_path = Pathname.new(File.join(tmp_dir,'sections'))
     FileUtils.mkdir_p(sections_path) unless sections_path.exist?
@@ -256,7 +257,7 @@ class Website < ActiveRecord::Base
     end
 
     def import(file, current_user)
-      file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+      file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
       message = ''
       success = true
 

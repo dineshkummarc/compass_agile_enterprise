@@ -101,7 +101,7 @@ class Theme < ActiveRecord::Base
   end
   
   def import(file)
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     file = ActionController::UploadedTempfile.new("uploaded-theme").tap do |f|
       f.puts file.read
       f.original_filename = file.original_filename
@@ -142,7 +142,7 @@ class Theme < ActiveRecord::Base
   end
 
   def export
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     tmp_dir = Theme.make_tmp_dir
     (tmp_dir + "#{name}[#{theme_id}].zip").tap do |file_name|
       file_name.unlink if file_name.exist?
@@ -152,7 +152,7 @@ class Theme < ActiveRecord::Base
           relative_path = file.directory.sub("#{url}",'')
           path = FileUtils.mkdir_p(File.join(tmp_dir,relative_path))
           full_path = File.join(path,file.name)
-          File.open(full_path, 'w+') {|f| f.puts(contents) }
+          File.open(full_path, 'w+:ASCII-8BIT') {|f| f.puts(contents) }
           zip.add(File.join(relative_path[1..relative_path.length],file.name), full_path) if ::File.exists?(full_path)
         }
         ::File.open(tmp_dir + 'about.yml', 'w') { |f| f.puts(about.to_yaml) }
@@ -198,7 +198,7 @@ class Theme < ActiveRecord::Base
   end
 
   def delete_theme_files!
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
     file_support.delete_file(File.join(file_support.root,self.url), :force => true)
   end
 

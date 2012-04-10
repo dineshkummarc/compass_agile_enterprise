@@ -125,7 +125,7 @@ Rails.application.config.sorcery.configure do |config|
     user.activation_success_email_method_name = nil                                   # activation success email method
                                                                                       # on your mailer class.
 
-    # user.prevent_non_active_users_to_login = true                                   # do you want to prevent or allow
+    user.prevent_non_active_users_to_login = true                                     # do you want to prevent or allow
                                                                                       # users that did not activate by
                                                                                       # email to login?
 

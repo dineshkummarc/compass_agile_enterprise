@@ -159,10 +159,10 @@ module Knitkit
               new_parent_path = File.join(@file_support.root, params[:parent_node])
 
               unless @file_support.exists? path
-                result = {:success => false, :msg => 'File does not exists'}
+                result = {:success => false, :msg => 'File does not exist.'}
               else
                 theme_file = get_theme_file(path)
-                theme_file.move(new_parent_path)
+                theme_file.move(params[:parent_node])
                 result = {:success => true, :msg => "#{File.basename(path)} was moved to #{new_parent_path} successfully"}
               end
 
@@ -340,7 +340,7 @@ module Knitkit
         end
 
         def set_file_support
-          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::FileSupport.options[:storage])
+          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
         end
   
       end#ThemeController
