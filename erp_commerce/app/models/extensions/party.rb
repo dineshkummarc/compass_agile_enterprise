@@ -29,5 +29,27 @@ Party.class_eval do
   def payment_accounts
     (bank_accounts | credit_card_accounts).flatten
   end
-  
+
+  ##
+  #Get payment accounts in a more useful format for 
+  #displaying in CSR, website, etc.
+  def payment_accounts_hash
+    cc_results = credit_card_accounts.map do |cca|
+      { id: cca.id,
+        description: cca.credit_card.description,
+        card_type: cca.credit_card.card_type,
+        last_four: nil, #not stored yet
+        exp_dt: "#{cca.credit_card.expiration_month}-#{cca.credit_card.expiration_year}",
+        account_type: 'Credit Card'}
+    end
+
+    ba_results = bank_accounts.map do |ba|
+      {id: ba.id,
+       description: ba.name_on_account,
+       routing_number: ba.routing_number,
+       account_type: 'Bank Account'}
+    end
+
+    (ba_results | cc_results).flatten
+  end
 end
