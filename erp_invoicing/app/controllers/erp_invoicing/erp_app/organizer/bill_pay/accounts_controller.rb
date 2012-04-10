@@ -45,41 +45,96 @@ module ErpInvoicing
           end
 
           def make_payment_on_account
-            
-            render :json => {:success => true}            
+            #get configuration
+
+            @message = nil
+
+            #get subscription selection if it is there
+            @subscription_selection = get_subscription_selection if params[:subscription_selection]
+
+            #get convenience_fee if it is there
+            @convenience_fee = get_convenience_fee if params[:convenience_fee]
+
+            #get additional payments
+            #@aditional_payments = get_additional_payments
+
+            @billing_account_payment_amts = get_billing_account_amounts
+            Rails.logger.debug("##### Billing Acct Payments: #{@billing_account_payment_amts}")
+            @payment_account_root = BizTxnAcctRoot.where("biz_txn_acct_id = ?",params[:payment_account_id]).first
+            @payment_account = @payment_account_root.account
+            @payment_date = params[:payment_date]
+            @total_payment = params[:total_payment]
+
+            money = Money.create(
+              :amount => @total_payment.to_f,
+              :description => "Payment Applied",
+              :currency => Currency.usd
+            )
+            financial_txn = FinancialTxn.create(
+              :apply_date => Date.strptime(@payment_date,"%m/%d/%Y"),
+              :money => money
+            )
+            financial_txn.description = "Payment Applied"
+            financial_txn.account = @payment_account_root
+            financial_txn.save
+
+            @billing_account_payment_amts.each do |hash|
+              amount = hash[:amount].to_f rescue 0
+              if amount > 0
+                comment = (params[:short_payment_comment] and hash[:short_payment]) ? params[:short_payment_comment] : nil
+                PaymentApplication.create(
+                  :financial_txn => financial_txn,
+                  :payment_applied_to => hash[:billing_account],
+                  :money => Money.create(:amount => hash[:amount].to_f),
+                  :comment => comment
+                )
+              end
+            end
+            case @payment_account.class.to_s
+            when "BankAccount"
+              result = @payment_account.purchase(financial_txn, ErpCommerce::ActiveMerchantWrappers::BankWrapper)
+              if !result[:payment].nil? and result[:payment].success
+                @authorization_code = result[:payment].authorization_code
+              else
+                @message = result[:message]
+              end
+            when "CreditCardAccount"
+              if financial_txn.apply_date == Date.today
+                result = @payment_account.purchase(financial_txn, params[:cvv], ErpCommerce::Config.active_merchant_gateway_wrapper)
+                if !result[:payment].nil? and result[:payment].success
+                  @authorization_code = result[:payment].authorization_code
+                else
+                  @message = result[:message]
+                end
+              else
+                result = @account.schedule_payment(financial_txn, financial_txn.apply_date, params[:cvv], ErpCommerce::Config.active_merchant_gateway_wrapper)
+                @message = "Error taking payment. Please try agian." unless result[:payment].success
+              end
+            end
+
+            if @message.nil?
+              render :json => {:success => true, :message => "Payment Successful!" }
+            else 
+              render :json => {:success => false, :message => @message }
+            end
           end
 
           def payment_accounts
-            #billing_account = BillingAccount.find(params[:billing_account_id])
-            
+            party = Party.find(params[:party_id])
 
-            payment_accounts = {:payment_accounts => [
-                {
-                  :id => 1,
-                  :description => 'My Bank Account',
-                  :account_type => 'Bank Account',
-                  :routing_number => '0123456',
-                  :account_number => '9999321',
-                  :edit_action => :edit_back_account
-                },
-                {
-                  :id => 2,
-                  :description => 'American Express',
-                  :account_type => 'Credit Card',
-                  :card_number => '1111222233334444',
-                  :security_code => '123',
-                  :exp_year => '9',
-                  :exp_month => '2012',
-                  :name_on_card => 'John Doe',
-                  :edit_action => :edit_credit_card_account
-                }
-              ]}
-
-            render :json => payment_accounts
+            render :json => party.payment_accounts_hash
           end
 
           def generate_statement
-            
+
+          end
+          def get_billing_account_amounts
+            billing_account_payment_amts = []
+            billing_account = BillingAccount.find(params["billing_account_id"])
+            amount = params[:total_payment]
+            billing_account_payment_amts << {:billing_account => billing_account, :amount => amount, :short_payment => (amount.to_f < billing_account.balance)}
+
+            billing_account_payment_amts
           end
 
         end
@@ -88,5 +143,5 @@ module ErpInvoicing
   end#ErpApp
 end#ErpInvoicing
 
-  
+
 
