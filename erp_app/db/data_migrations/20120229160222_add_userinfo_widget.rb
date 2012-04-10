@@ -12,9 +12,11 @@ class AddUserinfoWidget
           :xtype => 'userinfo'
         )
      
-      app.widgets << user
-      app.save
-
+      unless app.nil?
+        app.widgets << user
+        app.save
+      end
+      
       user.roles << Role.find_by_internal_identifier('admin')
       user.save
     end
