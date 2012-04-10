@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   #handle activation
   get "/users/activate/:activation_token" => 'erp_tech_svcs/user#activate'
   post "/users/reset_password" => 'erp_tech_svcs/user#reset_password'
+  post "/users/update_password" => 'erp_tech_svcs/user#update_password'
 end
