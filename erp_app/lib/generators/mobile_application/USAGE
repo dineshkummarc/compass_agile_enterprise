@@ -1,0 +1,24 @@
+Description:
+  Used to create stubs for creating a new Mobile application within
+  the Compass AE framework
+
+Example:
+    rails g mobile_application [application_name] [description] [icon-cls]
+
+    This will create:
+        1. A controller
+        2. Public folder structures
+
+           public/javascripts/erp_app/mobile/applications/[YOUR APP NAME]
+           public/stylesheets/erp_app/mobile/applications/[YOUR APP NAME]
+           public/images/erp_app/mobile/applications/[YOUR APP NAME]
+
+        3. A Javascript template for a mobile application
+        4. A data migration
+        5. Append to the routes file
+        
+        Run the migration with 
+        
+        rake db:migrate_data
+
+        and start adding functionality

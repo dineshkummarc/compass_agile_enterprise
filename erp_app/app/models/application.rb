@@ -17,7 +17,7 @@ class Application < ActiveRecord::Base
   end
 
   def locate_resources(resource_type)
-    resource_loader = self.resource_loader.constantize.new(self)
+    resource_loader = ErpApp::ApplicationResourceLoader::DesktopOrganizerLoader.new(self)
     resource_loader.locate_resources(resource_type)
   end
   

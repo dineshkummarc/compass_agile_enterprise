@@ -63,7 +63,7 @@ module ErpOrders
               :authorize_payments,
               :capture_payments,
               :rollback_authorizations,
-              :submit
+              :submit,:get_total_charges
             ].each { |m| delegate m, :to => :order_txn }
 
              #from OrderTxn And BizTxnEvent
@@ -74,9 +74,6 @@ module ErpOrders
               :txn_type,:txn_type=,
               :txn_type_iid,:txn_type_iid=,:create_dependent_txns,
               :account,:account=].each { |m| delegate m, :to => :order_txn }
-
-            
-
     		  end
     	  end
 

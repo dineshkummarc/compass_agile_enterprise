@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>CompassAE Mobile</title>
+    <%=include_sencha_touch :debug => true%>
+    <%=static_javascript_include_tag('erp_app/utility.js')%>
+    <%=static_javascript_include_tag('erp_app/mobile/mobile_base.js')%>
+    <%#=setup_js_authentication(@user, @desktop)%>
+    <%=create_authenticity_token_sencha_touch_field%>
+
+    <!--stylesheets-->
+    <%= static_stylesheet_link_tag('erp_app/mobile/mobile.css') %>
+    <!--end stylesheets-->
+
+    <script type="text/javascript">
+    var mobileApplications = [];
+    <%
+    @mobile.applications.each do |application|
+    %>
+    mobileApplications.push({
+      text:'<%=application.description%>',
+      iconCls:'<%=application.icon%>',
+      ui:'round',
+      handler:function(){
+        window.location = '<%=application.base_url%>'
+      }
+    });
+    <%
+    end
+    %>
+    </script>
+
+    <%= static_javascript_include_tag("erp_app/mobile/app.js")%>
+  </head>
+  <body>
+  </body>
+</html>

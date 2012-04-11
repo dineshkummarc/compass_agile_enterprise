@@ -1,6 +1,4 @@
-class Desktop < ActiveRecord::Base
-  acts_as_app_container
-
+class Desktop < AppContainer
   BACKGROUND_IMAGES_PATH = "#{Rails.root}/public/images/wallpaper"
 
   def shortcuts
@@ -80,8 +78,9 @@ class Desktop < ActiveRecord::Base
     end
 
     def find_by_user(user)
-      find_by_user_and_klass(user, Desktop)
+      Desktop.where('user_id = ?', user.id).first
     end
+    
   end
   
 end

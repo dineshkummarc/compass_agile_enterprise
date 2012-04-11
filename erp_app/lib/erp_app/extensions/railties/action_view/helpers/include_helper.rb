@@ -44,18 +44,18 @@ module ErpApp
               resources = ''
 
               if(opt[:debug])
-                resources << static_javascript_include_tag("extjs/sencha-touch-debug.js")
+                resources << static_javascript_include_tag("sencha_touch/sencha-touch-all-debug.js")
               else
-                resources << static_javascript_include_tag("extjs/sencha-touch.js")
+                resources << static_javascript_include_tag("sencha_touch/sencha-touch-all.js")
               end
 
               if opt[:theme] === false
                 #do nothing not theme loaded.
               elsif opt[:theme]
-                resources << static_stylesheet_link_tag("extjs/sench_touch/resources/css/#{opt[:theme]}")
+                resources << static_stylesheet_link_tag("sencha_touch/resources/css/#{opt[:theme]}")
               else
-                resources << static_stylesheet_link_tag("extjs/sench_touch/resources/css/sencha-touch.css")
-                resources << static_stylesheet_link_tag("extjs/sench_touch/resources/css/apple.css")
+                resources << static_stylesheet_link_tag("sencha_touch/resources/css/sencha-touch.css")
+                resources << static_stylesheet_link_tag("sencha_touch/resources/css/apple.css")
               end
 
               raw resources
@@ -110,6 +110,10 @@ module ErpApp
 
             def add_authenticity_token_to_extjs
               raw "<script type='text/javascript'>Ext.Ajax.extraParams = { authenticity_token: '#{form_authenticity_token}' }; Compass.ErpApp.AuthentictyToken = '#{form_authenticity_token}';</script>"
+            end
+
+            def create_authenticity_token_sencha_touch_field
+              raw "<script type='text/javascript'>Compass.ErpApp.Mobile.AuthentictyTokenField = {xtype:'hiddenfield', name:'authenticity_token', value:'#{form_authenticity_token}'}; </script>"
             end
 
             def load_shared_application_resources(resource_type)

@@ -1,0 +1,35 @@
+Ext.ns('Compass.ErpApp.Mobile.<%=class_name %>');
+
+Ext.application({
+  name: '<%=class_name %>',
+  useLoadMask: true,
+  launch: function () {
+    Ext.create("Ext.Container", {
+      fullscreen: true,
+      html:'Your New Mobile Application',
+      items: [
+      {
+        xtype:'toolbar',
+        ui:'light',
+        docked:'top',
+        items:[
+        {
+          text:'Home',
+          ui:'back',
+          handler:function(btn){
+            window.location = '/erp_app/mobile';
+          }
+        },
+        {
+          text:'Logout',
+          ui:'round',
+          handler:function(btn){
+            window.location = '/session/sign_out?login_url=/erp_app/mobile/login';
+          }
+        }
+        ]
+      }
+      ]
+    });
+  }
+});

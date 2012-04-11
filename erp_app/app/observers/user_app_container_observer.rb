@@ -4,12 +4,17 @@ class UserAppContainerObserver < ActiveRecord::Observer
   def after_create(user)
     desktop = ::Desktop.create
     desktop.user = user
-    #make sure to setup default preferences
     desktop.setup_default_preferences
+    desktop.save
 
     organizer = Organizer.create
     organizer.user = user
-    #make sure to setup default preferences
     organizer.setup_default_preferences
+    organizer.save
+
+    mobile = Mobile.create
+    mobile.user = user
+    mobile.setup_default_preferences
+    mobile.save
   end
 end

@@ -13,7 +13,7 @@ Example:
            public/stylesheets/erp_app/desktop/applications/[YOUR APP NAME]
            public/images/erp_app/desktop/applications/[YOUR APP NAME]
 
-        3. A template for javascript the class needed for a desktop application
+        3. A Javascript template for a desktop application
         4. A data migration
         5. Append to the routes file
         

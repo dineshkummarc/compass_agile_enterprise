@@ -155,6 +155,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UsersGrid",{
             appContainerType:'Organizer',
             title:'Organizer Applications'
           });
+          self.initialConfig.tabPanel.add(
+          {
+            xtype:'controlpanel_userapplicationmgtpanel',
+            userId:userId,
+            appContainerType:'Mobile',
+            title:'Mobile Applications'
+          });
         }
         self.initialConfig.tabPanel.setActiveTab(0);
         self.clearWindowStatus('Loading User...');

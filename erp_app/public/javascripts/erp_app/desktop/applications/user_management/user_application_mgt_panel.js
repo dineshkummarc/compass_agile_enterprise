@@ -54,7 +54,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
       jsonData:appsJson,
       success: function(responseObject) {
         self.clearWindowStatus();
-        if(self.initialConfig['userId'] == currentUser.id)
+        if(self.initialConfig['userId'] == currentUser.id && self.initialConfig.appContainerType == 'Desktop')
           Compass.ErpApp.Utility.promptReload();
       },
       failure: function() {
