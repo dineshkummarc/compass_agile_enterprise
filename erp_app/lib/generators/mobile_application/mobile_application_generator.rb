@@ -10,7 +10,7 @@ class MobileApplicationGenerator < Rails::Generators::NamedBase
     #make javascript
     template "public/app.js.erb", "public/javascripts/erp_app/mobile/applications/#{file_name}/app.js"
 
-    template "views/index.html.erb", "app/views/erp_app/mobile/#{file_name}/base/index.html.erb"
+    copy_file "views/index.html.erb", "app/views/erp_app/mobile/#{file_name}/base/index.html.erb"
     
     #make css folder
     empty_directory "public/stylesheets/erp_app/mobile/applications/#{file_name}"

@@ -11,7 +11,7 @@
     
     
     <!-- application javascript resources -->
-    <%=static_javascript_include_tag(@application.locate_resources('javascripts'))%>
+    <%= static_javascript_include_tag(@application.locate_resources('javascripts'))%>
     <!-- end application javascript resources -->
 
     <!--stylesheets-->
@@ -19,7 +19,7 @@
     <!--end stylesheets-->
 
     <!-- application stylesheet resources -->
-    <%=static_stylesheet_link_tag(@application.locate_resources('stylesheets'))%>
+    <%= static_stylesheet_link_tag(@application.locate_resources('stylesheets'))%>
     <!-- end application stylesheet resources -->
     
   </head>
