@@ -71,7 +71,7 @@ module ErpApp
 
           render :inline => "{entityType:'#{@user.party.business_party.class.to_s}',
                               businessParty:#{business_party},
-                              userInfo:#{@user.to_json(:only => [:username, :email, :last_login_at, :last_activity_at, :failed_login_count, :activation_state])}}"
+                              userInfo:#{@user.to_json(:only => [:username, :email, :last_login_at, :last_activity_at, :failed_logins_count, :activation_state])}}"
         end
 
         def delete
