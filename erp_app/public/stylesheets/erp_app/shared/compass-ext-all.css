@@ -2,6 +2,11 @@
     padding : 5px;
 }
 
+.icon-apartment {
+    background-image: url(/images/icons/apartment/apartment_16x16.png) !important;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/apartment/apartment_16x16.png', sizingMethod='crop');
+}
+
 .icon-console {
     background-image: url(/images/icons/console/console_16x16.png) !important;
 	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/console/console_16x16.png', sizingMethod='crop');

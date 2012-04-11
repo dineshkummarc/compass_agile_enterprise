@@ -10,27 +10,45 @@ module ErpTechSvcs
       end
     end
 
-    def reset_password
-      begin
-      login_url = params[:login_url].blank? ? ErpTechSvcs::Config.login_url : params[:login_url]
-      if user = (User.find_by_email(params[:login]) || User.find_by_username(params[:login]))
-        new_password = Sorcery::Model::TemporaryToken.generate_random_token
-        user.password_confirmation = new_password
-        if user.change_password!(new_password)
-          user.add_instance_attribute(:login_url,login_url)
-          user.add_instance_attribute(:domain, params[:domain])
-          user.deliver_reset_password_instructions!
-          message = "Password has been reset.  An email has been sent with further instructions to #{user.email}."
+    def update_password
+      if user = User.authenticate(current_user.username, params[:old_password])
+        user.password_confirmation = params[:password_confirmation]
+        if user.change_password!(params[:password])
           success = true
         else
-          message = "Error re-setting password."
+          #### validation failed ####
+          message = user.errors.full_messages
           success = false
         end
       else
-        message = "Invalid email address."
+        message = "Invalid current password."
         success = false
       end
-      render :json => {:success => success,:message => message}
+
+      request.xhr? ? (render :json => {:success => success, :message => message}) : (render :text => message)
+    end
+
+    def reset_password
+      begin
+        login_url = params[:login_url].blank? ? ErpTechSvcs::Config.login_url : params[:login_url]
+        if user = (User.find_by_email(params[:login]) || User.find_by_username(params[:login]))
+          new_password = Sorcery::Model::TemporaryToken.generate_random_token
+          user.password_confirmation = new_password
+          if user.change_password!(new_password)
+            user.add_instance_attribute(:login_url,login_url)
+            user.add_instance_attribute(:domain, params[:domain])
+            user.deliver_reset_password_instructions!
+            message = "Password has been reset.  An email has been sent with further instructions to #{user.email}."
+            success = true
+          else
+            message = "Error re-setting password."
+            success = false
+          end
+        else
+          message = "Invalid email address."
+          success = false
+        end
+        render :json => {:success => success,:message => message}
       rescue Exception=>ex
         logger.error ex.message
         logger.error ex.backtrace

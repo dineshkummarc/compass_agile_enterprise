@@ -110,11 +110,14 @@ module RailsDbAdmin
       records = []
 
       rows.each do |row|
-        record = nil
-        row.each {|k, v|
-          record = record.nil? ? {k.to_sym => v} : record.merge({k.to_sym => v})
-        }
-        records << record
+        # record = nil
+        # row.each {|k, v|
+        #   record = record.nil? ? {k.to_sym => v} : record.merge({k.to_sym => v})
+        # }
+        # records << record
+
+        # simplifying the above with to_hash.symbolize_keys
+        records << row.to_hash.symbolize_keys
       end
 
       records.reverse
