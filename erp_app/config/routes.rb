@@ -22,6 +22,10 @@ ErpApp::Engine.routes.draw do
   match '/mobile' => 'mobile/base#index'
   match '/mobile/login' => 'mobile/login#index'
 
+  #Mobile Applications
+  #user_management
+  match '/mobile/user_management(/:action)' => "mobile/user_management/base"
+
   #############################
   #Organizer Application Routes
   #############################
