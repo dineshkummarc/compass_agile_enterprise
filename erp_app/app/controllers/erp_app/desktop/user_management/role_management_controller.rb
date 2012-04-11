@@ -5,21 +5,26 @@ module ErpApp
 
 			  def available_roles
           user_id = params[:user_id]
-
           roles = Role.all
-          current_role_ids = User.find(user_id).roles.collect{|r| r.id}
-          roles.delete_if{|r| current_role_ids.include?(r.id)}
+
+          unless user_id.empty?
+            current_role_ids = User.find(user_id).roles.collect{|r| r.id}
+            roles.delete_if{|r| current_role_ids.include?(r.id)}
+          end
 
           render :json => roles.map{|role| {:text => role.description, :iconCls => 'icon-user', :leaf => true, :role_id => role.id}}
-			  end
+        end
 
-			  def current_roles
+        def current_roles
           user_id = params[:user_id]
-				
-          roles = User.find(user_id).roles
+          roles = []
+
+          unless user_id.empty?
+            roles = User.find(user_id).roles
+          end
 
           render :json => roles.map{|role| {:text => role.description, :iconCls => 'icon-user', :leaf => true, :role_id => role.id}}
-			  end
+        end
 
 			  def save_roles
           role_ids = params[:role_ids]
