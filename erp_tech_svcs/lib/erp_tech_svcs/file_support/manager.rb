@@ -88,7 +88,7 @@ module ErpTechSvcs
               parent = old_parents.count == 1 ? old_parents.first : self.class.find_parent(item, old_parents)
               path = File.join(parent[:id], item[:text]).gsub(root, '')
               icon_cls = File.extname(item[:text]).blank? ? 'icon-content' : 'icon-document'
-              child_hash = {:text => item[:text], :downloadPath => path, :iconCls => icon_cls, :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
+              child_hash = {:text => item[:text], :downloadPath => parent[:id], :iconCls => icon_cls, :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
               
               #attempt set security if this file is a file_asset model
               file = files.find{|file| file.directory == parent[:id].gsub(root,'') and file.name == item[:text]}

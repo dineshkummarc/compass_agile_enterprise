@@ -12,7 +12,12 @@ class DynamicFormDocument < ActiveRecord::Base
   end
 
   def send_email
-    WebsiteInquiryMailer.deliver_inquiry(self)
+    begin
+      WebsiteInquiryMailer.inquiry(self).deliver
+    rescue Exception => e
+      system_user = Party.find_by_description('Compass AE')
+      AuditLog.custom_application_log_message(system_user, e)
+    end
   end
   
   def self.class_exists?(class_name)

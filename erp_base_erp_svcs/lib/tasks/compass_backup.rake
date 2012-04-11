@@ -30,8 +30,13 @@ namespace :compass_ae do
     end
 
     namespace :postgres do
-      task :purge_old do
-        puts "Purging postgres dumps older than #{@purge_dumps_older_than}"
+      # age should be in days
+      task :purge_old, [:age] => :environment do |t,args|
+        age = (args.age.blank? ? @purge_dumps_older_than : args.age.to_i.days.ago)
+        puts "Purging postgres dumps older than #{age}"
+        puts green("Default is 2 weeks. You can pass in number of days if you want something different.") if args.age.blank?
+        puts green("Example: rake compass_ae:backup:postgres:purge_old[7]") if args.age.blank?
+
         chdir(PG_BACKUP_DIR)
         
         # get list of files and loop thru them
@@ -53,8 +58,8 @@ namespace :compass_ae do
           timeobject = Time.parse(timestamp)
 
           # compare time object with purge_dumps_older_than and delete if too old
-          if timeobject < @purge_dumps_older_than
-            puts red("Purging dump #{f}: Older than #{@purge_dumps_older_than}")
+          if timeobject < age
+            puts red("Purging dump #{f}: Older than #{age}")
             cmd = "rm -f #{f}"
             execute_command(cmd)
           end        

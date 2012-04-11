@@ -2,6 +2,7 @@ module Knitkit
   module ErpApp
     module Desktop
       class ArticlesController < Knitkit::ErpApp::Desktop::AppController
+        @@datetime_format = "%m/%d/%Y %l:%M%P"
 
         def new
           model = DesktopApplication.find_by_internal_identifier('knitkit')
@@ -98,15 +99,26 @@ module Knitkit
         end
 
         def get
+          website_section_id = params[:section_id]
+          section = WebsiteSection.find(website_section_id)
+
+          if section.type == 'Blog'
+            sort_default = 'created_at'
+            dir_default = 'DESC'
+          else
+            sort_default = 'title'
+            dir_default = 'ASC'
+          end            
+
           sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
-          sort = sort_hash[:property] || 'title'
-          dir  = sort_hash[:direction] || 'ASC'
+          sort = sort_hash[:property] || sort_default
+          dir  = sort_hash[:direction] || dir_default
           limit = params[:limit] || 10
           start = params[:start] || 0
 
-          website_section_id = params[:section_id]
-          articles = Article.joins("INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id").where("website_section_id = #{website_section_id}").order("#{sort} #{dir}").limit(limit).offset(start)
-          total_count = Article.joins("INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id").where("website_section_id = #{website_section_id}").count
+          articles = Article.joins("INNER JOIN website_section_contents ON website_section_contents.content_id = contents.id").where("website_section_id = #{website_section_id}")
+          total_count = articles.count
+          articles = articles.order("#{sort} #{dir}").limit(limit).offset(start)
 
           Article.class_exec(website_section_id) do
             @@website_section_id = website_section_id
@@ -127,23 +139,26 @@ module Knitkit
             articles_hash[:internal_identifier] = a.internal_identifier
             articles_hash[:display_title] = a.display_title
             articles_hash[:position] = a.position(website_section_id)
+            articles_hash[:created_at] = a.created_at.getlocal.strftime(@@datetime_format)
+            articles_hash[:updated_at] = a.updated_at.getlocal.strftime(@@datetime_format)
             articles_array << articles_hash
           end
 
-          render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :position, :internal_identifier, :display_title], :methods => [:website_section_position])}}"
+          render :inline => "{total:#{total_count},data:#{articles_array.to_json}}"
         end
       
         def all
           Article.include_root_in_json = false
           sort_hash = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
-          sort = sort_hash[:property] || 'created_at'
-          dir  = sort_hash[:direction] || 'DESC'
-          limit = params[:limit] || 40
+          sort = sort_hash[:property] || 'title'
+          dir  = sort_hash[:direction] || 'ASC'
+          limit = params[:limit] || 20
           start = params[:start] || 0
 
           articles = Article.includes(:website_section_contents)      
           articles = articles.where( :website_section_contents => { :content_id => nil } ) if params[:show_orphaned] == 'true'
-          articles = params[:iid].blank? ? articles.order("contents.#{sort} #{dir}") : articles.where('internal_identifier like ?', "%#{params[:iid]}%").order("contents.#{sort} #{dir}")
+          articles = articles.where('internal_identifier like ?', "%#{params[:iid]}%") unless params[:iid].blank?
+          articles = articles.order("contents.#{sort} #{dir}")
           total_count = articles.count
           articles = articles.limit(limit).offset(start)
 
@@ -160,11 +175,14 @@ module Knitkit
             articles_hash[:excerpt_html] = a.excerpt_html
             articles_hash[:created_by] = a.created_by.login rescue ''
             articles_hash[:last_update_by] = a.updated_by.login rescue ''
+            articles_hash[:created_at] = a.created_at.getlocal.strftime(@@datetime_format)
+            articles_hash[:updated_at] = a.updated_at.getlocal.strftime(@@datetime_format)
+
 
             articles_array << articles_hash
           end
 
-          render :inline => "{totalCount:#{total_count},data:#{articles_array.to_json(:only => [:content_area, :id, :title, :tag_list, :body_html, :excerpt_html, :sections, :internal_identifier, :display_title, :created_by, :last_update_by])}}"
+          render :inline => "{total:#{total_count},data:#{articles_array.to_json}}"
         end
 
         def article_attributes

@@ -1,8 +1,14 @@
 module ErpTechSvcs
   module Config
     class << self
-      attr_accessor :max_file_size_in_mb, :installation_domain, :login_url,
-                    :email_notifications_from, :file_assets_location
+      attr_accessor :max_file_size_in_mb, 
+                    :installation_domain, 
+                    :login_url,
+                    :email_notifications_from, 
+                    :file_assets_location, 
+                    :s3_url_expires_in_seconds,
+                    :s3_protocol,
+                    :file_storage
 
       def init!
         @defaults = {
@@ -10,7 +16,10 @@ module ErpTechSvcs
           :@installation_domain => 'localhost:3000',
           :@login_url => '/erp_app/login',
           :@email_notifications_from => 'notifications@noreply.com',
-          :@file_assets_location => 'file_assets'
+          :@file_assets_location => 'file_assets', # relative to Rails.root/
+          :@s3_url_expires_in_seconds => 60,
+          :@s3_protocol => 'https', # Can be either 'http' or 'https'
+          :@file_storage => :filesystem # Can be either :s3 or :filesystem
         }
       end
 

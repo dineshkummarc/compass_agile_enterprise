@@ -69,7 +69,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
             inputValue: 'yes',
             checked:record.get('display_title')
           },
-
           {
             boxLabel:'No',
             name:'display_title',
@@ -84,7 +83,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
           name:'internal_identifier',
           value: record.get('internal_identifier')
         },
-        addFormItems
+        addFormItems,
+        {
+          xtype: 'displayfield',
+          fieldLabel: 'Created At',
+          name: 'created_at',
+          value: record.data.created_at
+        },
+        {
+          xtype: 'displayfield',
+          fieldLabel: 'Updated At',
+          name: 'updated_at',
+          value: record.data.updated_at
+        }
         ]
       },
       listeners:{
@@ -163,6 +174,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
 
     // create the Data Store
     var store = Ext.create('Ext.data.Store', {
+      pageSize: 10,
       proxy: {
         type: 'ajax',
         url:'/knitkit/erp_app/desktop/articles/get/' + sectionId,
@@ -199,6 +211,12 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
       },
       {
         name:'display_title'
+      },
+      {
+        name:'created_at'
+      },
+      {
+        name:'updated_at'
       }
       ]
     });
@@ -509,7 +527,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.SectionArticlesGridPanel
       store:store,
       tbar: tbarItems,
       bbar: new Ext.PagingToolbar({
-        pageSize: 10,
         store: store,
         displayInfo: true,
         displayMsg: '{0} - {1} of {2}',

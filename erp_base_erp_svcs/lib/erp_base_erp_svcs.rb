@@ -60,9 +60,9 @@ module ErpBaseErpSvcs
           class_name = filename[0..-4]
           klass = class_name.camelize
 
-          #if there is a model in {rails_root}/app/models it needs to be reloaded.
-          #used to turn a class declaration into a class eval
-          if FileTest.exists?(root_models_path + filename)
+          #if there is a model in {rails_root}/app/models, it's not going to load our engine models.
+          #load the engine model here and change it to a class_eval
+          if File.exists?(root_models_path + filename)
             content = File.open(engine_models_path + filename) { |f| f.read }
             #make sure this class extends ActiveRecord::Base
             #we only want to do this for ActiveRecord models
@@ -75,6 +75,7 @@ module ErpBaseErpSvcs
           end
         end
       end if File.directory? engine_models_path
+      
     end
 
     def load_compass_ae_framework_extensions(engine)
@@ -90,6 +91,7 @@ module ErpBaseErpSvcs
         load file
       end
     end
+    
   end
 end
 
