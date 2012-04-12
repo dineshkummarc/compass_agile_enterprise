@@ -5,7 +5,6 @@ require 'paperclip'
 require 'delayed_job'
 require 'sorcery'
 require 'pdfkit'
-require 'sorcery'
 require "erp_tech_svcs/utils/compass_logger"
 require "erp_tech_svcs/utils/default_nested_set_methods"
 require "erp_tech_svcs/utils/compass_access_negotiator"
