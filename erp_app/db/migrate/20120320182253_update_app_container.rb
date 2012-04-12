@@ -1,17 +1,18 @@
 class UpdateAppContainer < ActiveRecord::Migration
   def up
-    add_column :app_containers, :type, :string
+    unless columns(:app_containers).collect {|c| c.name}.include?('type')
+      add_column :app_containers, :type, :string
 
-    AppContainer.all.each do |app_container|
-      app_container.type = app_container.app_container_record_type
-      app_container.save
+      execute("UPDATE app_containers SET type = app_container_record_type")
+
+      remove_column :app_containers, :app_container_record_id
+      remove_column :app_containers, :app_container_record_type
+
+      add_index :app_containers, :type
+
+      drop_table :desktops
+      drop_table :organizers
     end
-
-    remove_column :app_containers, :app_container_record_id
-    remove_column :app_containers, :app_container_record_type
-
-    drop_table :desktops
-    drop_table :organizers
   end
 
   def down

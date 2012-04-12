@@ -73,24 +73,12 @@ class BaseAppFramework < ActiveRecord::Migration
         t.references :user
         t.string :description
         t.string :internal_identifier
-
-        t.references :app_container_record, :polymorphic => true
+        t.string :type
 
         t.timestamps
       end
       add_index :app_containers, :user_id
-    end
-
-    unless table_exists?(:desktops)
-      create_table :desktops do |t|
-        t.timestamps
-      end
-    end
-
-    unless table_exists?(:organizers)
-      create_table :organizers do |t|
-        t.timestamps
-      end
+      add_index :app_containers, :type
     end
 
     unless table_exists?(:applications)
@@ -271,7 +259,7 @@ class BaseAppFramework < ActiveRecord::Migration
       :preference_options,:preference_options_preference_types,
       :valid_preference_types,:user_preferences,
       :app_containers,:app_containers_applications,
-      :desktops,:organizers,:applications_widgets,
+      :applications_widgets,
       :applications,:applications_desktops,
       :desktops,:widgets,:tree_menu_node_defs,
       :configurations,:configuration_items,
