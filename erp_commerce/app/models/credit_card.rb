@@ -8,8 +8,8 @@ class CreditCard < ActiveRecord::Base
   validates :first_name_on_card, :presence => {:message => 'First name on card cannot be blank.'}
   validates :last_name_on_card, :presence => {:message => 'Last name on card cannot be blank.'}
   #validates :card_type, :presence => {:message => 'Card type cannot be blank.'}
-  validates :expiration_month, :presence => {:message => 'Expiration month cannot be blank.'}
-  validates :expiration_year, :presence => {:message => 'Expiration year cannot be blank.'}
+  #validates :expiration_month, :presence => {:message => 'Expiration month cannot be blank.'}
+  #validates :expiration_year, :presence => {:message => 'Expiration year cannot be blank.'}
   validates :crypted_private_card_number, :presence => {:message => 'Card number cannot be blank.'}
 
   #the function EncryptionKey.get_key is meant to be overridden to provide a means for implementations to specify their 
