@@ -198,7 +198,7 @@ class Theme < ActiveRecord::Base
   end
 
   def delete_theme_files!
-    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
+    file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::Config.file_storage)
     file_support.delete_file(File.join(file_support.root,self.url), :force => true)
   end
 

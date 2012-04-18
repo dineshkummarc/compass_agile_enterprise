@@ -40,7 +40,7 @@ class Configuration < ActiveRecord::Base
     raise "Configuration item #{configuration_item_type.description} does not exist for configuration #{self.description}" if item.nil?
 
     item.clear_options
-    item.set_options(option_internal_identifiers)
+    item.set_options(option_internal_identifiers.flatten)
   end
 
   alias :update_item :update_configuration_item

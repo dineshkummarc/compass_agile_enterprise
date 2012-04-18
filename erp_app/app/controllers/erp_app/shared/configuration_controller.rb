@@ -31,7 +31,13 @@ module ErpApp
 
         begin
           params.each do |k,v|
-            configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier(k), v) unless (k.to_s == 'action' or k.to_s == 'controller' or k.to_s == 'id' or k.to_s == 'authenticity_token')
+            #options can come is a comma delimited strings and may need to be broken apart
+            options = [].tap do |options_array|
+              v.split(',').each do |option|
+                options_array << option
+              end
+            end
+            configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier(k), options) unless (k.to_s == 'action' or k.to_s == 'controller' or k.to_s == 'id' or k.to_s == 'authenticity_token')
           end
 
           render :json => {:success => true, :configurationItems => configuration.items.collect(&:to_js_hash)}

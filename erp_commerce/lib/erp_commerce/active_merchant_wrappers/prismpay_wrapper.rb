@@ -7,6 +7,7 @@ module ErpCommerce
     class PrismPayWrapper
 
       def self.authorize(credit_card, amount, cvv, gateway_options ={})
+        # same as purchase
       end
 
       def self.capture(credit_card, payment, cvv, gw_options ={})
@@ -16,9 +17,29 @@ module ErpCommerce
       end
 
       def self.void()
+        # payment.external_identifier
+        # payment.financial_txn.money.amount
+        # payment.authorization_code
       end
 
       def self.refund()
+        # payment.external_identifier
+        # payment.financial_txn.money.amount
+        # payment.authorization_code
+      end
+
+      def self.profile_sale(profile_id, amount, last_four, gw_options = {})
+        # conducts a profile_sale transaction
+        
+        result = {}
+        
+        gw_options.merge!({:login => 'TEST0'}) unless gw_options[:login]
+        
+        # ActiveMerchant::Billing:Base.mode = :test 
+        
+        gatway = ActiveMerchant::Billing::PrismPayAM.new(gw_options)
+        
+        
       end
 
       def self.purchase(credit_card, amount, cvv, gateway_options={})
@@ -28,9 +49,9 @@ module ErpCommerce
         result = {}             
 
         #this needs config options
-        gateway_options.merge!({:login => 'TEST0'})
+        gateway_options.merge!({:login => 'TEST0'}) unless gateway_options
 
-        ActiveMerchant::Billing::Base.mode = :test
+        # ActiveMerchant::Billing::Base.mode = :test 
       
         #setup gateway
         gateway = ActiveMerchant::Billing::PrismPayAM.new(gateway_options)
@@ -82,11 +103,6 @@ module ErpCommerce
         result
       end
 
-      private
-      
-      def purchase_auth(cc, amount, cvv, gw_options ={ }, action)
-      end
-
-    end#BrainTreeGatewayWrapper
+    end#PrismPayWrapper
   end#ActiveMerchantWrappers
 end#ErpCommerce

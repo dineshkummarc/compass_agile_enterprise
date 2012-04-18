@@ -31,13 +31,7 @@ class ConfigurationItem < ActiveRecord::Base
         self.options << (option ? option : ConfigurationOption.create(:value => value))
       end
     elsif self.configuration_item_type.is_multi_optional?
-      internal_identifiers_or_value.flatten!
-      if internal_identifiers_or_value.count > 1
-        internal_identifiers_or_value.split(',').each do |value|
-          self.options << self.configuration_item_type.find_configuration_option(value) unless value.blank?
-        end
-      else
-        value = internal_identifiers_or_value.first
+      internal_identifiers_or_value.each do |value|
         self.options << self.configuration_item_type.find_configuration_option(value) unless value.blank?
       end
     else
