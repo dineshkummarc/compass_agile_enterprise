@@ -29,36 +29,9 @@ module ErpTechSvcs
           !@@s3_connection.nil? ? (@@node_tree = build_node_tree(true)) : setup_connection
         end
 
-       #  def add_children(parent_hash, tree)
-       #    tree.children.each do |child|
-       #      Rails.logger.info child.inspect
-       #      if child.leaf?
-       #        child_hash = {
-       #        :last_modified => child.last_modified, 
-       #        :text => File.basename(child.prefix), 
-       #        :downloadPath => child.parent.key, 
-       #        :leaf => child.leaf?, 
-       #        :id => File.join(child.parent.key, child.key), 
-       #        :children => []
-       #        }
-       #      else
-       #        child_hash = add_children(child_hash, child)
-       #      end
-       #      parent_hash[:children] << child_hash
-       #    end
-       #    parent_hash
-       #  end
-
-       # def build_node_tree
-       #   tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
-
-       #   #objects = @@s3_bucket.objects
-       #   tree_data = add_children(tree_data, @@s3_bucket.as_tree)
-       # end
-
         def build_node_tree(reload=false)
           if !reload and !@@node_tree.nil?
-            Rails.logger.info "@@@@@@@@@@@@@@ cached node_tree: #{@@node_tree.inspect}"
+            #Rails.logger.info "@@@@@@@@@@@@@@ cached node_tree: #{@@node_tree.inspect}"
             return @@node_tree
           end
 
