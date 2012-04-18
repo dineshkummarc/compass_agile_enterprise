@@ -220,13 +220,13 @@ class Website < ActiveRecord::Base
     self.files.where("directory like '%/sites/#{self.iid}/images%'").all.each do |image_asset|
       contents = file_support.get_contents(File.join(file_support.root,image_asset.directory,image_asset.name))
       FileUtils.mkdir_p(File.join(image_assets_path,image_asset.directory))
-      File.open(File.join(image_assets_path,image_asset.directory,image_asset.name), 'w+') {|f| f.puts(contents) }
+      File.open(File.join(image_assets_path,image_asset.directory,image_asset.name), 'w+:ASCII-8BIT') {|f| f.puts(contents) }
     end
 
     self.files.where("directory like '%/#{Rails.application.config.erp_tech_svcs.file_assets_location}/sites/#{self.iid}%'").all.each do |file_asset|
       contents = file_support.get_contents(File.join(file_support.root,file_asset.directory,file_asset.name))
       FileUtils.mkdir_p(File.join(file_assets_path,file_asset.directory))
-      File.open(File.join(file_assets_path,file_asset.directory,file_asset.name), 'w+') {|f| f.puts(contents) }
+      File.open(File.join(file_assets_path,file_asset.directory,file_asset.name), 'w+:ASCII-8BIT') {|f| f.puts(contents) }
     end
 
     files = []
