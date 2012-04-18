@@ -80,4 +80,8 @@ class BankAccount < ActiveRecord::Base
 
   end
 
+  def refund
+    # implement a refund on an account
+  end
+
 end

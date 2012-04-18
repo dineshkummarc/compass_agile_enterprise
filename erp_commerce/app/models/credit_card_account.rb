@@ -131,4 +131,13 @@ class CreditCardAccount < ActiveRecord::Base
     end
     result
   end
+
+  def void
+    # implement a void transaction of a transaction
+  end
+  
+  def refund
+    # implement a refund on a card
+  end
+
 end
