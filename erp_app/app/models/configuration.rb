@@ -36,22 +36,11 @@ class Configuration < ActiveRecord::Base
   end
 
   def update_configuration_item(configuration_item_type, *option_internal_identifiers)
-    option_array = []
-    option_internal_identifiers.each do |option|
-      option.split(',').each do |sub_option|
-        option_array << sub_option
-      end
-    end
-    option_internal_identifiers = option_array
-    puts "*****************************"
-    puts option_internal_identifiers
-    puts option_internal_identifiers.is_a? Array
-    puts "*****************************"
     item = self.items.where('configuration_item_type_id = ?', configuration_item_type.id).first
     raise "Configuration item #{configuration_item_type.description} does not exist for configuration #{self.description}" if item.nil?
 
     item.clear_options
-    item.set_options(option_internal_identifiers)
+    item.set_options(option_internal_identifiers.flatten)
   end
 
   alias :update_item :update_configuration_item
