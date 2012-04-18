@@ -9,6 +9,12 @@ module ErpTechSvcs
 
         def setup_connection
           @@configuration = YAML::load_file(File.join(Rails.root,'config','s3.yml'))[Rails.env]
+          
+          # S3 debug logging
+          # AWS.config(
+          #   :logger => Logger.new($stdout),
+          #   :log_level => :info
+          # )
 
           @@s3_connection = AWS::S3.new(
             :access_key_id     => @@configuration['access_key_id'],
@@ -16,7 +22,7 @@ module ErpTechSvcs
           )
 
           @@s3_bucket = @@s3_connection.buckets[@@configuration['bucket'].to_sym]
-          @@node_tree = build_node_tree
+          @@node_tree = build_node_tree(true)
         end
 
         def reload
@@ -24,10 +30,14 @@ module ErpTechSvcs
         end
 
         def build_node_tree(reload=false)
+          if !reload and !@@node_tree.nil?
+            #Rails.logger.info "@@@@@@@@@@@@@@ cached node_tree: #{@@node_tree.inspect}"
+            return @@node_tree
+          end
+
           tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
           #objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
           objects = @@s3_bucket.objects
-
 
           nesting_depth = objects.collect{|object| object.key.split('/').count}.max
           unless nesting_depth.nil?
@@ -159,28 +169,51 @@ module ErpTechSvcs
       end
 
       def delete_file(path, options={})
+        path = path.sub(%r{^/},'')
         result = false
         message = nil
 
-        node = find_node(path)
-        if node[:children].empty?
-          is_directory = !node[:leaf]
-          path << '/' unless node[:leaf]
-          path = path.sub(%r{^/},'')
-          result = bucket.objects[path].delete
-          message = "File was deleted successfully"
-          result = true
-          ErpTechSvcs::FileSupport::S3Manager.reload
-        elsif options[:force]
-          node[:children].each do |child|
-            delete_file(child[:id], options)
+        begin
+          is_directory = !bucket.objects[path].exists?
+          if options[:force] or bucket.as_tree(:prefix => path).children.count == 0
+            bucket.objects.with_prefix(path).delete_all
+            message = "File was deleted successfully"
+            result = true
+            ErpTechSvcs::FileSupport::S3Manager.reload
+          else
+            message = FOLDER_IS_NOT_EMPTY
           end
-        else
-          message = FOLDER_IS_NOT_EMPTY
-        end unless node.nil?
+        rescue Exception => e
+          result = false
+          message = e
+        end    
 
-        return result, message, is_directory
+        return result, message, is_directory    
       end
+
+      # def delete_file(path, options={})
+      #   result = false
+      #   message = nil
+
+      #   node = find_node(path)
+      #   if node[:children].empty?
+      #     is_directory = !node[:leaf]
+      #     path << '/' unless node[:leaf]
+      #     path = path.sub(%r{^/},'')
+      #     result = bucket.objects[path].delete
+      #     message = "File was deleted successfully"
+      #     result = true
+      #     ErpTechSvcs::FileSupport::S3Manager.reload
+      #   elsif options[:force]
+      #     node[:children].each do |child|
+      #       delete_file(child[:id], options)
+      #     end
+      #   else
+      #     message = FOLDER_IS_NOT_EMPTY
+      #   end unless node.nil?
+
+      #   return result, message, is_directory
+      # end
 
       def exists?(path)
         begin
