@@ -17,7 +17,7 @@ Paperclip.interpolates(:file_url){|data, style|
     #if public is at the front of this path and we are using file_system remove it
     dir_pieces = url.split('/')
     unless dir_pieces[1] == 'public'
-      "/download/#{data.instance.name}?path=#{dir_pieces.delete_if{|name| name == data.instance.name}.join('/')}"
+      "/download/#{data.instance.name}?disposition=attachment&path=#{dir_pieces.delete_if{|name| name == data.instance.name}.join('/')}"
     else
       dir_pieces.delete_at(1) if dir_pieces[1] == 'public'
       dir_pieces.join('/')
