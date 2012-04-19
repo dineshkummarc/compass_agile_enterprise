@@ -75,9 +75,24 @@ module ActionView
 
     protected
 
+    def cache_template(path, file_support)
+      contents, message = file_support.get_contents(path)
+      path = path.sub(%r{^/},'')
+      #Rails.logger.info "creating cache with key: #{path}"
+      Rails.cache.write(path, contents, :expires_in => ErpTechSvcs::Config.s3_cache_expires_in_minutes.minutes)
+      return contents, message 
+    end
+
     def build_template(p, virtual_path, formats, file_support, locals=nil)
       handler, format = extract_handler_and_format(p, formats)
-      contents, message = file_support.get_contents(p)
+      contents = Rails.cache.read(p.sub(%r{^/},''))
+      if contents.nil?
+        contents, message = cache_template(p, file_support)
+      else
+        #Rails.logger.info "!!!!! USING CACHED TEMPLATE: #{contents.inspect}"
+        contents = contents.dup
+      end
+      
       Template.new(contents, p, handler, :virtual_path => virtual_path, :format => format, :updated_at => mtime(p, file_support), :locals => locals)
     end
   end

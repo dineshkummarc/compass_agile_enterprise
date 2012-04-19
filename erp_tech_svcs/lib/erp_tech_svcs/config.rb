@@ -8,7 +8,8 @@ module ErpTechSvcs
                     :file_assets_location, 
                     :s3_url_expires_in_seconds,
                     :s3_protocol,
-                    :file_storage
+                    :file_storage,
+                    :s3_cache_expires_in_minutes
 
       def init!
         @defaults = {
@@ -19,7 +20,8 @@ module ErpTechSvcs
           :@file_assets_location => 'file_assets', # relative to Rails.root/
           :@s3_url_expires_in_seconds => 60,
           :@s3_protocol => 'https', # Can be either 'http' or 'https'
-          :@file_storage => :filesystem # Can be either :s3 or :filesystem
+          :@file_storage => :filesystem, # Can be either :s3 or :filesystem
+          :@s3_cache_expires_in_minutes => 60
         }
       end
 

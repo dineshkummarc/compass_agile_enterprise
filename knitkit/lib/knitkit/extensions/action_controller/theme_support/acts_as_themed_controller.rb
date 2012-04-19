@@ -42,7 +42,6 @@ module Knitkit
                 current_theme_paths.each do |theme|
                   resolver = case ErpTechSvcs::Config.file_storage
                   when :s3
-                    ErpTechSvcs::FileSupport::S3Manager.reload
                     path = File.join(theme[:url], "templates") 
                     cached_resolver = ThemeSupport::Cache.theme_resolvers.find{|cached_resolver| cached_resolver.to_path == path}
                     if cached_resolver.nil?

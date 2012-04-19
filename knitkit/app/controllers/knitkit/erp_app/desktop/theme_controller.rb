@@ -340,7 +340,7 @@ module Knitkit
         end
 
         def set_file_support
-          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => Rails.application.config.erp_tech_svcs.file_storage)
+          @file_support = ErpTechSvcs::FileSupport::Base.new(:storage => ErpTechSvcs::Config.file_storage)
         end
   
       end#ThemeController

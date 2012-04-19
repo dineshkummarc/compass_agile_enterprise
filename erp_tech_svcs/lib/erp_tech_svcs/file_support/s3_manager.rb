@@ -12,7 +12,7 @@ module ErpTechSvcs
           
           # S3 debug logging
           # AWS.config(
-          #   :logger => Logger.new($stdout),
+          #   :logger => Rails.logger,
           #   :log_level => :info
           # )
 
@@ -22,58 +22,98 @@ module ErpTechSvcs
           )
 
           @@s3_bucket = @@s3_connection.buckets[@@configuration['bucket'].to_sym]
-          @@node_tree = build_node_tree(true)
+          cache_node_tree(build_node_tree(true))
         end
 
         def reload
-          !@@s3_connection.nil? ? (@@node_tree = build_node_tree(true)) : setup_connection
+          !@@s3_connection.nil? ? (cache_node_tree(build_node_tree(true))) : setup_connection
+        end
+
+        def cache_key
+          'node_tree'
+        end
+
+        def cache_node_tree(node_tree)
+          Rails.cache.write(cache_key, node_tree, :expires_in => ErpTechSvcs::Config.s3_cache_expires_in_minutes.minutes)
+          return node_tree
+        end
+
+        def add_children(parent_hash, tree)
+          tree.children.each do |child|
+            child_hash = {
+              :last_modified => '',
+              #:last_modified => (child.leaf? ? @@s3_bucket.objects[child.key].last_modified : ''), 
+              :text => (child.leaf? ? File.basename(child.key) : File.basename(child.prefix)), 
+              :downloadPath => (child.leaf? ? '/'+File.dirname(child.key) : "/#{child.parent.prefix}".sub(%r{/$},'')), 
+              :leaf => child.leaf?, 
+              :id => (child.leaf? ? '/'+child.key : "/#{child.prefix}".sub(%r{/$},'')), 
+              :children => []
+            }
+            child_hash = add_children(child_hash, child) unless child.leaf?
+            parent_hash[:children] << child_hash 
+          end
+
+          parent_hash
         end
 
         def build_node_tree(reload=false)
-          if !reload and !@@node_tree.nil?
-            #Rails.logger.info "@@@@@@@@@@@@@@ cached node_tree: #{@@node_tree.inspect}"
-            return @@node_tree
+          node_tree = Rails.cache.read(cache_key)
+          if !reload and !node_tree.nil?
+            #Rails.logger.info "@@@@@@@@@@@@@@ USING CACHED node_tree: #{node_tree.inspect}"
+            return node_tree
           end
 
-          tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
-          #objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
-          objects = @@s3_bucket.objects
-
-          nesting_depth = objects.collect{|object| object.key.split('/').count}.max
-          unless nesting_depth.nil?
-            levels = []
-            (1..nesting_depth).each do |i|
-              current_items = []
-              objects_this_depth = objects.collect{|object|
-                text = object.key.split('/')[i - 1]
-                path ='/' + (object.key.split('/')[0..(i-1)].join('/'))
-                if object.key.split('/').count >= i && current_items.select{|item| item[:text] == text and item[:path] == path}.empty?
-                  item_hash = {:text => text, :path => path, :last_modified => object.last_modified}
-                  current_items << item_hash
-                  item_hash
-                end
-              }
-              objects_this_depth.delete_if{|item| (item.nil? or item[:text].nil?)}
-              levels << objects_this_depth
-            end
-
-            old_parents = []
-            new_parents = [tree_data.first]
-            levels.each do |level|
-              old_parents = new_parents
-              new_parents = []
-              level.each do |item|
-                parent = old_parents.count == 1 ? old_parents.first : self.find_parent(item, old_parents)
-                path = File.join(parent[:id], item[:text])
-                child_hash = {:last_modified => item[:last_modified], :text => item[:text], :downloadPath => parent[:id], :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
-                new_parents << child_hash
-                parent[:children] << child_hash
-              end
-            end
-          end
-
-          tree_data
+          tree_data = {:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}
+          tree_data = [add_children(tree_data, @@s3_bucket.as_tree)]
         end
+
+        # OLD MANUALLY BUILT NODE TREE - THIS IS DEPRECATED AND CAN BE REMOVED, REPLACED WITH AWS-SDK bucket.as_tree SEEN ABOVE
+        # def build_node_tree(reload=false)
+        #   node_tree = Rails.cache.read('node_tree')
+        #   if !reload and !node_tree.nil?
+        #     Rails.logger.info "@@@@@@@@@@@@@@ USING CACHED node_tree: #{node_tree.inspect}"
+        #     return node_tree
+        #   end
+
+        #   tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
+        #   #objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
+        #   objects = @@s3_bucket.objects
+
+        #   nesting_depth = objects.collect{|object| object.key.split('/').count}.max
+        #   unless nesting_depth.nil?
+        #     levels = []
+        #     (1..nesting_depth).each do |i|
+        #       current_items = []
+        #       objects_this_depth = objects.collect{|object|
+        #         text = object.key.split('/')[i - 1]
+        #         path ='/' + (object.key.split('/')[0..(i-1)].join('/'))
+        #         if object.key.split('/').count >= i && current_items.select{|item| item[:text] == text and item[:path] == path}.empty?
+        #           item_hash = {:text => text, :path => path, :last_modified => object.last_modified}
+        #           current_items << item_hash
+        #           item_hash
+        #         end
+        #       }
+        #       objects_this_depth.delete_if{|item| (item.nil? or item[:text].nil?)}
+        #       levels << objects_this_depth
+        #     end
+
+        #     old_parents = []
+        #     new_parents = [tree_data.first]
+        #     levels.each do |level|
+        #       old_parents = new_parents
+        #       new_parents = []
+        #       level.each do |item|
+        #         parent = old_parents.count == 1 ? old_parents.first : self.find_parent(item, old_parents)
+        #         path = File.join(parent[:id], item[:text])
+        #         child_hash = {:last_modified => item[:last_modified], :text => item[:text], :downloadPath => parent[:id], :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
+        #         new_parents << child_hash
+        #         parent[:children] << child_hash
+        #       end
+        #     end
+        #   end
+
+        #   tree_data
+        # end
       end
 
       def buckets
@@ -92,22 +132,34 @@ module ErpTechSvcs
         ''
       end
 
+      def cache_key
+        ErpTechSvcs::FileSupport::S3Manager.cache_key
+      end
+
+      def clear_cache(path)
+        path = path.sub(%r{^/},'')
+        #Rails.logger.info "deleting cache with key: #{path}"
+        Rails.cache.delete(path) # delete template from cache
+        Rails.cache.delete(cache_key) # delete node tree from cache
+      end
+
       def update_file(path, content)
         path = path.sub(%r{^/},'')
         bucket.objects[path].write(content)
+        clear_cache(path)
       end
 
       def create_file(path, name, content)
         path = path.sub(%r{^/},'')
         bucket.objects[File.join(path, name)].write(content)
-        ErpTechSvcs::FileSupport::S3Manager.reload
+        clear_cache(path)
       end
 
       def create_folder(path, name)
         path = path.sub(%r{^/},'')
         folder = File.join(path, name) + "/"
         bucket.objects[folder].write('')
-        ErpTechSvcs::FileSupport::S3Manager.reload
+        clear_cache(path)
       end
 
       def save_move(path, new_parent_path)
@@ -125,7 +177,7 @@ module ErpTechSvcs
           if new_object = old_object.move_to(new_path, options)
             message = "#{name} was moved to #{new_path} successfully"
             result = true
-            ErpTechSvcs::FileSupport::S3Manager.reload
+            clear_cache(path)
           else
             message = "Error moving file #{path}"
           end
@@ -152,7 +204,7 @@ module ErpTechSvcs
           if new_object = old_object.move_to(new_path, options)
             message = "#{old_name} was renamed to #{name} successfully"
             result = true
-            ErpTechSvcs::FileSupport::S3Manager.reload
+            clear_cache(path)
           else
             message = "Error renaming #{old_name}"
           end
@@ -179,7 +231,7 @@ module ErpTechSvcs
             bucket.objects.with_prefix(path).delete_all
             message = "File was deleted successfully"
             result = true
-            ErpTechSvcs::FileSupport::S3Manager.reload
+            clear_cache(path)
           else
             message = FOLDER_IS_NOT_EMPTY
           end
@@ -190,30 +242,6 @@ module ErpTechSvcs
 
         return result, message, is_directory    
       end
-
-      # def delete_file(path, options={})
-      #   result = false
-      #   message = nil
-
-      #   node = find_node(path)
-      #   if node[:children].empty?
-      #     is_directory = !node[:leaf]
-      #     path << '/' unless node[:leaf]
-      #     path = path.sub(%r{^/},'')
-      #     result = bucket.objects[path].delete
-      #     message = "File was deleted successfully"
-      #     result = true
-      #     ErpTechSvcs::FileSupport::S3Manager.reload
-      #   elsif options[:force]
-      #     node[:children].each do |child|
-      #       delete_file(child[:id], options)
-      #     end
-      #   else
-      #     message = FOLDER_IS_NOT_EMPTY
-      #   end unless node.nil?
-
-      #   return result, message, is_directory
-      # end
 
       def exists?(path)
         begin
@@ -242,7 +270,7 @@ module ErpTechSvcs
 
       def build_tree(starting_path, options={})
         starting_path = "/" + starting_path unless starting_path.first == "/"
-        ErpTechSvcs::FileSupport::S3Manager.reload
+        #ErpTechSvcs::FileSupport::S3Manager.reload
         node_tree = find_node(starting_path, options)
         node_tree.nil? ? [] : node_tree
       end
@@ -251,7 +279,7 @@ module ErpTechSvcs
         parent = if options[:file_asset_holder]
           super
         else
-          parent = @@node_tree.first
+          parent = ErpTechSvcs::FileSupport::S3Manager.build_node_tree(false).first
           unless path.nil?
             path_pieces = path.split('/')
             path_pieces.each do |path_piece|

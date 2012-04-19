@@ -19,7 +19,6 @@
     current_theme_paths.each do |theme|
       resolver = case Rails.application.config.erp_tech_svcs.file_storage
       when :s3
-        ErpTechSvcs::FileSupport::S3Manager.reload
         path = File.join(theme[:url],'widgets',self.name,'views')
         cached_resolver = ErpApp::Widgets::Base.view_resolver_cache.find{|cached_resolver| cached_resolver.to_path == path}
         if cached_resolver.nil?

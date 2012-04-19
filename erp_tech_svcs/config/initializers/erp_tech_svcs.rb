@@ -7,5 +7,6 @@ Rails.application.config.erp_tech_svcs.configure do |config|
   config.s3_url_expires_in_seconds = 60 
   config.s3_protocol = 'https' # Can be either 'http' or 'https'
   config.file_storage = :filesystem # Can be either :s3 or :filesystem
+  config.s3_cache_expires_in_minutes = 60 
 end
 Rails.application.config.erp_tech_svcs.configure!
