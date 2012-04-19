@@ -60,6 +60,7 @@ module ErpTechSvcs
       response = {}
       #application = DesktopApplication.find_by_internal_identifier('user_management')
       begin
+        login_url = params[:login_url].blank? ? ErpTechSvcs::Config.login_url : params[:login_url]
         #current_user.with_capability(application, :create, 'User') do
         user = User.new(
           :email => params[:email],
@@ -68,7 +69,7 @@ module ErpTechSvcs
           :password_confirmation => params[:password_confirmation]
         )
         #set this to tell activation where to redirect_to for login and temp password
-        user.add_instance_attribute(:login_url, '/erp_app/login');
+        user.add_instance_attribute(:login_url, login_url);
         user.add_instance_attribute(:temp_password, params[:password]);
 
         if user.save

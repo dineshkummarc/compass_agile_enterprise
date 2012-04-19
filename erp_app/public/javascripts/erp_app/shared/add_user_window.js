@@ -19,6 +19,9 @@ Ext.define("Compass.ErpApp.AddUserWindow",{
                 xtype:'form',
                 frame: false,
                 bodyStyle:'padding:5px 5px 0',
+                baseParams: {
+                    login_url: config.loginUrl
+                },
                 url:'/users/new',
                 defaults: {
                     width: 225,
