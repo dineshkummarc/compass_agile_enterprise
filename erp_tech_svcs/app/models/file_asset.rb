@@ -11,19 +11,19 @@ Paperclip.interpolates(:file_path){|data, style|
 }
 
 Paperclip.interpolates(:file_url){|data, style|
-  dir = File.join(data.instance.directory, data.instance.name)
+  url = File.join(data.instance.directory, data.instance.name)
   case Rails.application.config.erp_tech_svcs.file_storage
   when :filesystem
     #if public is at the front of this path and we are using file_system remove it
-    dir_pieces = dir.split('/')
+    dir_pieces = url.split('/')
     unless dir_pieces[1] == 'public'
-      "/erp_app/public/download_file?path=#{File.join(Rails.root, dir_pieces.join('/'))}"
+      "/download/#{data.instance.name}?path=#{dir_pieces.delete_if{|name| name == data.instance.name}.join('/')}"
     else
       dir_pieces.delete_at(1) if dir_pieces[1] == 'public'
       dir_pieces.join('/')
     end
   when :s3
-    dir
+    url
   end
 }
 
@@ -118,6 +118,7 @@ class FileAsset < ActiveRecord::Base
 
     @type ||= FileAsset.type_for(name) if name
     @type = "TextFile" if @type.nil?
+    @name = name
 
     data = StringIO.new(data) if data.is_a?(String)
 
@@ -139,7 +140,7 @@ class FileAsset < ActiveRecord::Base
   def set_content_type
     unless @type.nil?
       klass = @type.constantize
-      content_type = klass == Image ? "image/#{self.extname.downcase}" : klass.content_type
+      content_type = klass == Image ? "image/#{File.extname(@name).gsub(/^\.+/, '')}" : klass.content_type
       self.data.instance_write(:content_type, content_type)
     end
   end
