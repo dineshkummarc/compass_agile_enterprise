@@ -45,9 +45,13 @@ class Website < ActiveRecord::Base
   alias :sections :website_sections
   alias :hosts :website_hosts
 
+  def to_label
+    self.name
+  end
+
   # creating method because we only want a getter, not a setter for iid
   def iid
-    internal_identifier
+    self.internal_identifier
   end
 
   def add_party_with_role(party, role_type)
