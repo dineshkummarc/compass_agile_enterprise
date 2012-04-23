@@ -263,7 +263,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.WestRegion",{
     var store = Ext.create('Ext.data.TreeStore', {
       proxy:{
         type: 'ajax',
-        url: '/knitkit/erp_app/desktop/websites'
+        url: '/knitkit/erp_app/desktop/websites',
+        timeout: 90000
       },
       root: {
         text: 'Websites',
