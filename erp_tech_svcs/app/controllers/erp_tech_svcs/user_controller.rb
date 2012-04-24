@@ -55,5 +55,48 @@ module ErpTechSvcs
         render :json => {:success => false,:message => 'Error sending email.'}
       end
     end
+
+    def new
+      response = {}
+      #application = DesktopApplication.find_by_internal_identifier('user_management')
+      begin
+        login_url = params[:login_url].blank? ? ErpTechSvcs::Config.login_url : params[:login_url]
+        #current_user.with_capability(application, :create, 'User') do
+        user = User.new(
+          :email => params[:email],
+          :username => params[:username],
+          :password => params[:password],
+          :password_confirmation => params[:password_confirmation]
+        )
+        #set this to tell activation where to redirect_to for login and temp password
+        user.add_instance_attribute(:login_url, login_url);
+        user.add_instance_attribute(:temp_password, params[:password]);
+
+        if user.save
+          if params[:party_id].empty?
+            individual = Individual.create(:gender => params[:gender], :current_first_name => params[:first_name], :current_last_name => params[:last_name])
+            user.party = individual.party
+          else 
+            party = Party.find(params[:party_id])
+            user.party = party
+          end
+
+          user.save
+          response = {:success => true}
+        else
+          message = "<ul>"
+          user.errors.collect do |e, m|
+            message << "<li>#{e} #{m}</li>"
+          end
+          message << "</ul>"
+          response = {:success => false, :message => message}
+        end
+
+        render :json => response
+      rescue ErpTechSvcs::Utils::CompassAccessNegotiator::Errors::UserDoesNotHaveCapability=>ex
+        render :json => {:success => false, :message => ex.message}
+      end
+    end
+
   end#UserController
 end#ErpTechSvcs
