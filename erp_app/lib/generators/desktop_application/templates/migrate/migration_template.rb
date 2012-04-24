@@ -7,9 +7,6 @@ class Create<%=class_name %>DesktopApplication
       :internal_identifier => '<%=file_name %>',
       :shortcut_id => '<%=file_name %>-win'
     )
-
-    app.save
-
     pt1 = PreferenceType.iid('desktop_shortcut')
     pt1.preferenced_records << app
     pt1.save
@@ -17,7 +14,6 @@ class Create<%=class_name %>DesktopApplication
     pt2 = PreferenceType.iid('autoload_application')
     pt2.preferenced_records << app
     pt2.save
-    
   end
 
   def self.down

@@ -5,7 +5,7 @@ module ErpApp
         def index
           @application = MobileApplication.find_by_internal_identifier('<%= file_name%>')
         end
-      end
-    end
-  end
-end
+      end#BaseController
+    end#<%= class_name %>
+  end#Mobile
+end#ErpApp
