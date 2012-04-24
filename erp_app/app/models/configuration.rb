@@ -7,12 +7,20 @@ class Configuration < ActiveRecord::Base
 
   has_many :configuration_items, :dependent => :destroy do
     def by_category(category)
-      includes({:configuration_item_type => [:category_classifications]}).where(:category_classifications => {:category_id => category})
+      includes({:configuration_item_type => [:category_classification]}).where(:category_classification => {:category_id => category})
+    end
+
+    def by_category
+      group_by(&:category)
     end
   end
   has_and_belongs_to_many :configuration_item_types do
     def by_category(category)
-      includes(:category_classifications).where(:category_classifications => {:category_id => category})
+      includes(:category_classification).where(:category_classification => {:category_id => category})
+    end
+
+    def by_category
+      group_by(&:category)
     end
   end
   
@@ -28,12 +36,18 @@ class Configuration < ActiveRecord::Base
     if item
       update_configuration_item(configuration_item_type, option_internal_identifiers)
     else
-      item = ConfigurationItem.create(:configuration_item_type => configuration_item_type)
-      item.set_options(option_internal_identifiers)
-      self.configuration_items << item
-      self.save
+      unless self.configuration_item_types.where("id = ?", configuration_item_type.id).first.nil?
+        item = ConfigurationItem.create(:configuration_item_type => configuration_item_type)
+        item.set_options(option_internal_identifiers)
+        self.configuration_items << item
+        self.save
+      else
+        raise "Configuration Item Type #{configuration_item_type.description} is not valid for this configuration"
+      end
     end
   end
+
+  alias :add_item :add_configuration_item
 
   def update_configuration_item(configuration_item_type, *option_internal_identifiers)
     item = self.items.where('configuration_item_type_id = ?', configuration_item_type.id).first
@@ -106,11 +120,9 @@ class Configuration < ActiveRecord::Base
   end
 
   class << self
-
     def find_template(iid)
       self.templates.where('internal_identifier = ?', iid).first
     end
-
   end
 
 end

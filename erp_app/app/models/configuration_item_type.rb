@@ -7,7 +7,11 @@ class ConfigurationItemType < ActiveRecord::Base
     end
   end
   has_many :configuration_items, :dependent => :destroy
-  has_many :category_classifications, :as => :classification, :dependent => :destroy
+  has_one :category_classification, :as => :classification, :dependent => :destroy
+
+  def category
+    self.category_classification.category unless self.category_classification.nil?
+  end
 
   alias :options :configuration_options
 

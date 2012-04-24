@@ -5,7 +5,7 @@ module ErpApp
       def setup_categories
         configuration = ::Configuration.find(params[:id])
         tree_array = [].tap do |array|
-          configuration.item_types.collect{|item| item.category_classifications.first.category}.uniq.each do |category|
+          configuration.item_types.collect{|item| item.category_classification.category}.uniq.each do |category|
             array << category.to_tree_hash(:only => [], :methods => [{:id => :categoryId}], :icon_cls => 'icon-index')
           end
         end

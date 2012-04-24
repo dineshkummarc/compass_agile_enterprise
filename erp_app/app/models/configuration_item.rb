@@ -7,6 +7,10 @@ class ConfigurationItem < ActiveRecord::Base
   alias :options :configuration_options
   alias :type :configuration_item_type
 
+  def category
+    self.type.category
+  end
+
   def to_js_hash
     {:id => self.id,
       :configruationItemType => self.type.to_js_hash,

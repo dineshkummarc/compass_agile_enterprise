@@ -69,33 +69,59 @@ module ErpApp
             :type => 'Configuration',
             :iconCls => 'icon-note',
             :leaf => false,
-            :children => []
+            :children => [
+              {:text => 'Types', :iconCls => 'icon-document', :leaf => false, :children => []},
+              {:text => 'Items', :iconCls => 'icon-document', :leaf => false, :children => []}
+            ]
           }
 
-          config.items.each do |config_item|
-            config_item_hash = {
-              :text => config_item.type.description,
-              :modelId => config_item.id,
-              :type => 'ConfigurationType',
-              :iconCls => 'icon-document',
-              :leaf => false,
-              :children => []
-            }
+          #set types
+          types_hash = config_hash[:children].find{|item| item[:text] == 'Types'}
+          config.item_types.by_category.each do |category, config_item_type|
+            category_hash = {:text => category.description, :iconCls => 'icon-document', :leaf => false, :children => []}
+            config_item_type.each do |categorized_config_item_type|
+              categorized_config_item_type_hash = {:text => categorized_config_item_type.description, :iconCls => 'icon-document', :leaf => false, :children => []}
+              if categorized_config_item_type.allow_user_defined_options
+                categorized_config_item_type_hash[:children] << {
+                  :text => "[User Defined]",
+                  :iconCls => 'icon-user',
+                  :leaf => true,
+                  :children => []
+                }
+              else
+                categorized_config_item_type.options.each do |option|
+                  categorized_config_item_type_hash[:children] << {
+                    :text => option.description,
+                    :iconCls => 'icon-accept',
+                    :leaf => true,
+                    :children => []
+                  }
+                end
+              end
 
-            config_item.options.each do |option|
-              config_option_hash = {
-                :text => option.value,
-                :modelId => option.id,
-                :type => 'ConfigurationOption',
-                :iconCls => 'icon-accept',
-                :leaf => true,
-                :children => []
-              }
-
-              config_item_hash[:children] << config_option_hash
+              category_hash[:children] << categorized_config_item_type_hash
             end
+            types_hash[:children] << category_hash
+          end
 
-            config_hash[:children] << config_item_hash
+          #set items
+          items_hash = config_hash[:children].find{|item| item[:text] == 'Items'}
+          config.items.by_category.each do |category, config_item|
+            category_hash = {:text => category.description, :iconCls => 'icon-document', :leaf => false, :children => []}
+            config_item.each do |categorized_config_item|
+              categorized_config_item_hash = {:text => categorized_config_item.type.description, :iconCls => 'icon-document', :leaf => false, :children => []}
+              categorized_config_item.options.each do |option|
+                categorized_config_item_hash[:children] << {
+                  :text => categorized_config_item.type.allow_user_defined_options ? option.value : option.description,
+                  :iconCls => 'icon-accept',
+                  :leaf => true,
+                  :children => []
+                }
+              end
+
+              category_hash[:children] << categorized_config_item_hash
+            end
+            items_hash[:children] << category_hash
           end
 
           config_hash
