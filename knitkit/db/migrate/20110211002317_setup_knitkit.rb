@@ -134,7 +134,7 @@ class SetupKnitkit < ActiveRecord::Migration
       create_table :published_websites do |t|
         t.references :website
         t.text :comment
-        t.decimal :version
+        t.decimal :version, :precision => 18, :scale => 6
         t.boolean :active
         t.integer :published_by_id
 
