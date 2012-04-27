@@ -217,13 +217,18 @@ class BaseAppFramework < ActiveRecord::Migration
     unless table_exists? :configuration_options
       create_table :configuration_options do |t|
         #custom columns go here
-        t.string :description
-        t.string :internal_identifier
-        t.string :value
-        t.text   :comment
+        t.string  :description
+        t.string  :internal_identifier
+        t.string  :value
+        t.text    :comment
+        t.boolean :user_defined, :default => false
 
         t.timestamps
       end
+
+      add_index :configuration_options, :value
+      add_index :configuration_options, :internal_identifier
+      add_index :configuration_options, :user_defined
     end
 
     unless table_exists?(:configuration_item_types_configuration_options)

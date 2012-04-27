@@ -66,6 +66,7 @@ ErpApp::Engine.routes.draw do
   #configuration_management
   match '/desktop/configuration_management/:action' => "desktop/configuration_management/base"
   match '/desktop/configuration_management/types/:action' => "desktop/configuration_management/types"
+  match '/desktop/configuration_management/options/:action' => "desktop/configuration_management/options"
 
   #widget proxy
   match '/widgets/:widget_name/:widget_action/:uuid(/:id)' => "widget_proxy#index", :as => :widget

@@ -1,3 +1,17 @@
+Ext.create('Ext.data.Store', {
+  pageSize:10,
+  storeId: 'configurationmanagement-optionsstore',
+  fields: ['description', 'value', 'internalIdentifier', 'comment'],
+  proxy: {
+    type: 'ajax',
+    url : '/erp_app/desktop/configuration_management/options/index.json',
+    reader: {
+      type: 'json',
+      root: 'options',
+      totalProperty:'totalCount'
+    }
+  }
+});
 
 Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.ConfigurationTypesPanel",{
   extend:"Ext.panel.Panel",
@@ -22,6 +36,55 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
     form.query('#addTypeBtn').first().show();
     form.query('#updateTypeBtn').first().hide();
     this.down('form').getForm().reset();
+  },
+
+  addOption : function(record){
+    Ext.create('Ext.window.Window',{
+      title:'Add Option',
+      items:[
+      {
+        xtype:'panel',
+        width:600,
+        bodyPadding:10,
+        items:[
+        {
+          xtype: 'combo',
+          store: 'configurationmanagement-optionsstore',
+          displayField: 'description',
+          valueField:'id',
+          width:500,
+          minChars:1,
+          typeAhead: false,
+          hideLabel: true,
+          hideTrigger:true,
+          anchor: '100%',
+          listConfig: {
+            loadingText: 'Searching...',
+            emptyText: 'No options found.',
+            getInnerTpl: function() {
+              return '<h3>{description}</h3><br/>{comment}';
+            }
+          },
+          pageSize: 10
+        },
+        {
+          xtype:'component',
+          style:'margin-top:10px',
+          html:'Search by value or internal identifier.'
+        }
+        ]
+      }
+      ],
+      buttonAlign:'center',
+      buttons:[
+      {
+        text:'Add Option',
+        handler:function(btn){
+          
+        }
+      }
+    ]
+    }).show();
   },
 
   constructor : function(config) {
@@ -83,22 +146,22 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       ],
       buttonAlign:'left',
       buttons:[
-        {
-          text:'Add Type',
-          itemId:'addTypeBtn',
-          hidden:false,
-          handler:function(btn){
+      {
+        text:'Add Type',
+        itemId:'addTypeBtn',
+        hidden:false,
+        handler:function(btn){
 
-          }
-        },
-        {
-          text:'Update Type',
-          itemId:'updateTypeBtn',
-          hidden:true,
-          handler:function(btn){
-
-          }
         }
+      },
+      {
+        text:'Update Type',
+        itemId:'updateTypeBtn',
+        hidden:true,
+        handler:function(btn){
+
+        }
+      }
       ]
     };
 

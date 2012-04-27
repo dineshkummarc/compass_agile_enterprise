@@ -36,6 +36,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement",{
         },
         {
           xtype:'configurationmanagement-configurationtypespanel'
+        },
+        {
+          xtype:'configurationmanagement-configurationoptionspanel'
         }
         ]
       }
