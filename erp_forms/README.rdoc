@@ -5,11 +5,11 @@ ERP Forms adds dynamic forms to Compass using ExtJS.
 
 == Models
 
-DynamicFormModel - Used for keeping track what models get forms. Every model that uses the has_dynamic_forms "mixin", extends DynamicFormDocument or simply wants to use DynamicForm, needs to be given a record in the dynamic_form_models table.
+DynamicFormModel - Used for keeping track of what models have forms. Every model that uses the has_dynamic_forms "mixin", extends DynamicFormDocument or simply wants to use DynamicForm, needs to be given a record in the dynamic_form_models table.
 
-DynamicDatum - This is where dynamic attributes are stored. Anything model that uses has_dynamic_data will store its data in the dynamic_data table.
+DynamicDatum - This is where dynamic attributes are stored. Any model that uses has_dynamic_data will store its data in the dynamic_data table.
 
-DynamicForm - Handles dynamic forms. Each model can have many forms which are looked up by model_name. Every model must have a default form but any form can be retrieved using an internal_identifier. Form definition is a JSON string which is equivalent to an ExtJS form items definition which is an array of hashes.
+DynamicForm - Handles dynamic forms. Each model can have many forms which are looked up by model_name. Every model must have a default form but any form can be retrieved using an internal_identifier. Form definition is a JSON string which is equivalent to an ExtJS form definition which is an array of hashes.
 
 DynamicFormDocument - This model enables the creation of dynamic records using has_dynamic_forms and has_dynamic_data. DynamicFormDocument can explicitly be subclassed or a subclass can be declared on the fly using the "declare" class method.
 
