@@ -6,7 +6,7 @@
 
 <% @results.each do |r| %>
 <p>
-  <a href="/<%=r[:link] %>"><%= r[:title] %></a><br />
+  <a href="<%=r[:link] %>"><%= r[:title] %></a><br />
   <%= raw r[:content].body_html[0..100] unless r[:content].body_html.nil? %><br />
 </p>
 <% end %>
