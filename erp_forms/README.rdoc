@@ -1,2 +1,86 @@
 = ErpForms
 
+ERP Forms adds dynamic forms to Compass using ExtJS. 
+
+
+Models
+======
+DynamicFormModel - Used for keeping track what models get forms. Every model that uses the has_dynamic_forms "mixin", extends DynamicFormDocument or simply wants to use DynamicForm, needs to be given a record in the dynamic_form_models table.
+
+DynamicDatum - This is where dynamic attributes are stored. Anything model that uses has_dynamic_data will store its data in the dynamic_data table.
+
+DynamicForm - Handles dynamic forms. Each model can have many forms which are looked up by model_name. Every model must have a default form but any form can be retrieved using an internal_identifier. Form definition is a JSON string which is equivalent to an ExtJS form items definition which is an array of hashes.
+
+DynamicFormDocument - This model enables the creation of dynamic records using has_dynamic_forms and has_dynamic_data. DynamicFormDocument can explicitly be subclassed or a subclass can be declared on the fly using the "declare" class method.
+
+
+Mixins
+======
+has_dynamic_forms - Adds dynamic forms to any model.
+
+has_dynamic_data - Adds dynamic data to any model
+
+
+Libraries
+=========
+DynamicGridColumn - Builds ExtJS dynamic grid columns. 
+
+DynamicFormField - Builds ExtJS dynamic form fields. This is done in text in order to support validation. Outputs JSON strings which can be parsed into JSON Ruby objects. See the instance method "definition_object" on DynamicForm.
+
+
+Examples
+========
+Creating a DynamicFormModel
+  DynamicFormModel.create({ :model_name => "MyDynamicModel" })
+
+Creating a DynamicForm
+  fields = []
+  fields << DynamicFormField.textfield({:fieldLabel => 'First Name', :name => 'first_name', :width => '200' })
+  fields << DynamicFormField.textfield({:fieldLabel => 'Last Name', :name => 'last_name', :width => '200' })
+  fields << DynamicFormField.email({:fieldLabel => 'Email', :name => 'email', :width => '200' })
+  fields << DynamicFormField.textarea({:fieldLabel => 'Message', :name => 'message', :width => '200' })    
+
+  d = DynamicForm.new
+  d.description = 'My Dynamic Form'
+  d.definition = DynamicForm.concat_fields_to_build_definition(fields)
+  d.model_name = 'MyDynamicModel'
+  d.internal_identifier = 'my_dyn_model'
+  d.default = true
+  d.dynamic_form_model_id = DynamicFormModel.find_by_model_name('MyDynamicModel').id
+  d.save
+
+Declaring a DynamicFormDocument on the fly
+  DynamicFormDocument.declare("MyDynamicModel")
+  @dyn_model = "MyDynamicModel".constantize.new
+  @dyn_model.data.created_with_form = @dyn_model.default_form
+
+  # create as many dynamic attributes as you need by prefixing them with "dyn_"
+  @dyn_model.data.dyn_my_dynamic_field = "hello world"
+  
+  @dyn_model.data.created_by = current_user.id
+  @dyn_model.save
+
+Subclassing DynamicFormDocument
+  class MyDynamicModel < DynamicFormDocument
+    # no need to declare mixins since they will be inherited from DynamicFormDocument
+    # so only reason to subclass is if you need custom methods
+  end
+
+Adding dynamic forms and data to an existing model
+  class Party
+    has_dynamic_forms
+    has_dynamic_data
+  end
+
+Using the Knitkit DynamicForms widget
+  Edit Section Layout, click Dynamic Forms widget icon and the following will be added to the layout:
+  <%= render_widget :dynamic_forms, :params => {:model_name => 'MyDynamicModel', :width => '350'} %>
+
+
+TODO
+=======
+Dynamic Forms desktop application featuring a Dynamic Grid for every DynamicFormModel as well as a Dynamic Form Builder.
+
+
+============================================================
+Copyright (c) 2011 Adam Hull
