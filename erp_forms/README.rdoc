@@ -3,8 +3,8 @@
 ERP Forms adds dynamic forms to Compass using ExtJS. 
 
 
-Models
-======
+== Models
+
 DynamicFormModel - Used for keeping track what models get forms. Every model that uses the has_dynamic_forms "mixin", extends DynamicFormDocument or simply wants to use DynamicForm, needs to be given a record in the dynamic_form_models table.
 
 DynamicDatum - This is where dynamic attributes are stored. Anything model that uses has_dynamic_data will store its data in the dynamic_data table.
@@ -14,22 +14,22 @@ DynamicForm - Handles dynamic forms. Each model can have many forms which are lo
 DynamicFormDocument - This model enables the creation of dynamic records using has_dynamic_forms and has_dynamic_data. DynamicFormDocument can explicitly be subclassed or a subclass can be declared on the fly using the "declare" class method.
 
 
-Mixins
-======
+== Mixins
+
 has_dynamic_forms - Adds dynamic forms to any model.
 
 has_dynamic_data - Adds dynamic data to any model
 
 
-Libraries
-=========
+== Libraries
+
 DynamicGridColumn - Builds ExtJS dynamic grid columns. 
 
 DynamicFormField - Builds ExtJS dynamic form fields. This is done in text in order to support validation. Outputs JSON strings which can be parsed into JSON Ruby objects. See the instance method "definition_object" on DynamicForm.
 
 
-Examples
-========
+== Examples
+
 Creating a DynamicFormModel
   DynamicFormModel.create({ :model_name => "MyDynamicModel" })
 
@@ -77,8 +77,8 @@ Using the Knitkit DynamicForms widget
   <%= render_widget :dynamic_forms, :params => {:model_name => 'MyDynamicModel', :width => '350'} %>
 
 
-TODO
-=======
+== TODO
+
 Dynamic Forms desktop application featuring a Dynamic Grid for every DynamicFormModel as well as a Dynamic Form Builder.
 
 
