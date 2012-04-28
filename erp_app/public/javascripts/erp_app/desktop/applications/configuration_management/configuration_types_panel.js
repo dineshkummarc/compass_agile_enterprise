@@ -1,27 +1,28 @@
-Ext.create('Ext.data.Store', {
-  pageSize:10,
-  storeId: 'configurationmanagement-optionsstore',
-  fields: ['description', 'value', 'internalIdentifier', 'comment'],
-  proxy: {
-    type: 'ajax',
-    url : '/erp_app/desktop/configuration_management/options/index.json',
-    reader: {
-      type: 'json',
-      root: 'options',
-      totalProperty:'totalCount'
-    }
-  }
-});
-
 Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.ConfigurationTypesPanel",{
   extend:"Ext.panel.Panel",
   alias:'widget.configurationmanagement-configurationtypespanel',
-  setWindowStatus : function(status){
-    this.findParentByType('statuswindow').setStatus(status);
-  },
 
-  clearWindowStatus : function(){
-    this.findParentByType('statuswindow').clearStatus();
+  deleteType : function(record){
+    var self = this;
+    Ext.Msg.confirm("Please Confirm", 'Are you sure you want to delete this type?',function(btn, text){
+      if(btn == 'yes'){
+        var waitMsg = Ext.Msg.wait('Status', 'Deleting type...')
+        Ext.Ajax.request({
+          url:'/erp_app/desktop/configuration_management/types/destroy',
+          params:{
+            id:record.get('model_id')
+          },
+          success:function(response){
+            waitMsg.close();
+            self.down('treepanel').getStore().load();
+          },
+          failure:function(response){
+            waitMsg.close();
+            Ext.Msg.alert('Error', 'There was an error deleting the type.');
+          }
+        });
+      }
+    });
   },
 
   editType : function(record){
@@ -38,9 +39,55 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
     this.down('form').getForm().reset();
   },
 
+  setAsDefault : function(record){
+    var self = this;
+    var waitMsg = Ext.Msg.wait('Status', 'Setting as default option...')
+    Ext.Ajax.request({
+      url:'/erp_app/desktop/configuration_management/types/set_option_as_default',
+      params:{
+        option_id:record.get('model_id'),
+        type_id:record.get('type_id')
+      },
+      success:function(response){
+        waitMsg.close();
+        self.down('treepanel').getStore().load();
+      },
+      failure:function(response){
+        waitMsg.close();
+        Ext.Msg.alert('Error', 'There was an error setting this option as a default option.');
+      }
+    });
+  },
+
+  removeOption : function(record){
+    var self = this;
+    Ext.Msg.confirm("Please Confirm", 'Are you sure you want to remove this option?',function(btn, text){
+      if(btn == 'yes'){
+        var waitMsg = Ext.Msg.wait('Status', 'Removing option...')
+        Ext.Ajax.request({
+          url:'/erp_app/desktop/configuration_management/types/remove_option',
+          params:{
+            option_id:record.get('model_id'),
+            type_id:record.get('type_id')
+          },
+          success:function(response){
+            waitMsg.close();
+            self.down('treepanel').getStore().load();
+          },
+          failure:function(response){
+            waitMsg.close();
+            Ext.Msg.alert('Error', 'There was an error removing the option.');
+          }
+        });
+      }
+    });
+  },
+
   addOption : function(record){
+    var self = this;
     Ext.create('Ext.window.Window',{
       title:'Add Option',
+      modelId:record.get('model_id'),
       items:[
       {
         xtype:'panel',
@@ -52,20 +99,23 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
           store: 'configurationmanagement-optionsstore',
           displayField: 'description',
           valueField:'id',
+          itemId:'configurationOption',
           width:500,
+          name:'option_id',
+          forceSelection:true,
           minChars:1,
           typeAhead: false,
           hideLabel: true,
           hideTrigger:true,
           anchor: '100%',
+          pageSize: 10,
           listConfig: {
             loadingText: 'Searching...',
             emptyText: 'No options found.',
             getInnerTpl: function() {
               return '<h3>{description}</h3><br/>{comment}';
             }
-          },
-          pageSize: 10
+          }
         },
         {
           xtype:'component',
@@ -80,10 +130,37 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       {
         text:'Add Option',
         handler:function(btn){
-          
+          var window = btn.up('window');
+          var selectedOption = window.down('panel').down('combo').getValue();
+          if(Ext.isEmpty(selectedOption)){
+            Ext.Msg.alert('Error', 'Please select an option.');
+          }
+          else{
+            var waitMsg = Ext.Msg.wait('Status', 'Adding option...')
+            Ext.Ajax.request({
+              url:'/erp_app/desktop/configuration_management/types/add_option',
+              params:{
+                model_id:window.initialConfig.modelId,
+                option_id:selectedOption
+              },
+              success:function(response){
+                waitMsg.close();
+                self.down('treepanel').getStore().load();
+              },
+              failure:function(response){
+                waitMsg.close();
+                var responseObj = Ext.decode(response.responseText);
+                var msg = 'There was an error adding the option.';
+                if(!Ext.isEmpty(responseObj.message)){
+                  msg = responseObj.message
+                }
+                Ext.Msg.alert('Error', msg);
+              }
+            });
+          }
         }
       }
-    ]
+      ]
     }).show();
   },
 
@@ -96,16 +173,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       height:'50%',
       bodyPadding:10,
       region:'center',
+      url: '/erp_app/desktop/configuration_management/types/create_or_update',
       defaultType:'textfield',
       items:[
       {
         fieldLabel:'Description',
         width:400,
+        allowBlank:false,
         name:'description'
       },
       {
         fieldLabel:'Internal Identifier',
         width:400,
+        allowBlank:false,
         name:'internal_identifier'
       },
       {
@@ -142,6 +222,23 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
           inputValue: 'no',
           checked:true
         }]
+      },
+      {
+        xtype:'combo',
+        width:400,
+        allowBlank:false,
+        fieldLabel:'Category',
+        name:'category_id',
+        store:'configurationmanagement-categoriesstore',
+        valueField:'category_id',
+        displayField:'description',
+        editable:false,
+        queryMode:'local',
+        forceSelection:true
+      },
+      {
+        xtype:'hidden',
+        name:'model_id'
       }
       ],
       buttonAlign:'left',
@@ -151,7 +248,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         itemId:'addTypeBtn',
         hidden:false,
         handler:function(btn){
-
+          var form = btn.up('form').getForm()
+          if(form.isValid()){
+            form.submit({
+              waitMsg:'Adding type...',
+              reset:true,
+              success:function(form, action){
+                btn.up('configurationmanagement-configurationtypespanel').down('treepanel').getStore().load();
+              },
+              failure:function(form, action){
+                Ext.Msg.alert('Error', 'There was an error adding the type.');
+              }
+            });
+          }
         }
       },
       {
@@ -159,7 +268,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         itemId:'updateTypeBtn',
         hidden:true,
         handler:function(btn){
-
+          var form = btn.up('form').getForm()
+          if(form.isValid()){
+            form.submit({
+              waitMsg:'Updating type...',
+              reset:true,
+              success:function(form, action){
+                btn.up('configurationmanagement-configurationtypespanel').down('treepanel').getStore().load();
+              },
+              failure:function(form, action){
+                Ext.Msg.alert('Error', 'There was an error updating type.');
+              }
+            });
+          }
         }
       }
       ]
@@ -180,7 +301,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         },
         fields:[
         {
-          name:'modelId'
+          name:'model_id'
+        },
+        {
+          name:'type_id'
         },
         {
           name:'type'
@@ -250,6 +374,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
               text:'Remove',
               handler:function(btn){
                 self.removeOption(record);
+              }
+            });
+
+            items.push({
+              iconCls:'icon-add',
+              text:'Set As Default',
+              handler:function(btn){
+                self.setAsDefault(record);
               }
             });
           }

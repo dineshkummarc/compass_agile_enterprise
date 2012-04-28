@@ -43,6 +43,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement",{
         ]
       }
 
+      Ext.getStore('configurationmanagement-categoriesstore').load();
+
       win = desktop.createWindow({
         id: 'configuration_management',
         title:'Configuration Management',

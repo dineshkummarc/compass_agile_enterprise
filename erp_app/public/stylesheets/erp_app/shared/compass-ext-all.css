@@ -238,6 +238,11 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_lock/document_lock_16x16.png', sizingMethod='crop');
 }
 
+.icon-document_check {
+    background-image:url( /images/icons/document_check/document_check_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_check/document_check_16x16.png', sizingMethod='crop');
+}
+
 .icon-folders {
     background-image:url( /images/icons/folders/folders_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/folders/folders_16x16.png', sizingMethod='crop');

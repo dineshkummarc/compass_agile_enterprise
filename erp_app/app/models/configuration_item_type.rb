@@ -5,6 +5,10 @@ class ConfigurationItemType < ActiveRecord::Base
     def default
       where('is_default = ?', true)
     end
+
+    def non_default
+      where('is_default = ?', false)
+    end
   end
   has_many :configuration_items, :dependent => :destroy
   has_one :category_classification, :as => :classification, :dependent => :destroy
@@ -16,6 +20,8 @@ class ConfigurationItemType < ActiveRecord::Base
   alias :options :configuration_options
 
   def add_default_configuration_option(option)
+    self.clear_options if(self.is_multi_optional? and !self.options.empty?)
+    
     existing_option = self.configuration_options.where(:id => option.id).first
     if existing_option.nil?
       ConfigurationItemTypeConfigurationOption.create(:configuration_item_type => self, :configuration_option => option, :is_default => true)
@@ -27,6 +33,25 @@ class ConfigurationItemType < ActiveRecord::Base
   end
 
   alias :add_default_option :add_default_configuration_option
+
+  def add_configuration_option(option)
+    self.clear_options if(!self.is_multi_optional? and !self.options.empty?)
+    existing_option = self.configuration_options.where(:id => option.id).first
+    if existing_option.nil?
+      self.options << option
+    end
+  end
+
+  alias :add_option :add_configuration_option
+
+  def remove_configuration_option(option)
+    existing_option = self.configuration_options.where(:id => option.id).first
+    unless existing_option.nil?
+      self.configuration_options.delete(option)
+    end
+  end
+
+  alias :remove_option :remove_configuration_option
 
   def is_multi_optional?
     self.is_multi_optional
@@ -43,7 +68,7 @@ class ConfigurationItemType < ActiveRecord::Base
   end
 
   def clear_options
-    self.options.delete_all
+    self.options.destroy_all
     self.save
   end
 

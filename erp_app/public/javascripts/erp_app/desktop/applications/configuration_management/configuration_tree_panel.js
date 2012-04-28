@@ -1,53 +1,3 @@
-Ext.create('Ext.data.Store', {
-  storeId: 'configurationmanagement-typesstore',
-  fields: ['display', 'value'],
-  data : [{
-    "display":"Website",
-    "value":"Website"
-  }]
-});
-
-Ext.create('Ext.data.Store', {
-  storeId: 'configurationmanagement-actionstore',
-  fields: ['display', 'value'],
-  data : [{
-    "display":"Copy",
-    "value":"copy"
-  },
-  {
-    "display":"Clone",
-    "value":"clone"
-  }]
-});
-
-Ext.create('Ext.data.Store', {
-  storeId: 'configurationmanagement-modelsstore',
-  fields: ['description', 'id'],
-  autoLoad:true,
-  proxy: {
-    type: 'ajax',
-    url : '/erp_app/desktop/configuration_management/configurable_models',
-    reader: {
-      type: 'json',
-      root: 'models'
-    }
-  }
-});
-
-Ext.create('Ext.data.Store', {
-  storeId: 'configurationmanagement-templatesstore',
-  fields: ['description', 'id'],
-  autoLoad:true,
-  proxy: {
-    type: 'ajax',
-    url : '/erp_app/desktop/configuration_management/configuration_templates_store',
-    reader: {
-      type: 'json',
-      root: 'templates'
-    }
-  }
-});
-
 Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.ConfigurationTreePanel",{
   extend:"Ext.tree.Panel",
   alias:'widget.configurationmanagement-configurationtreepanel',
@@ -59,13 +9,119 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
     this.findParentByType('statuswindow').clearStatus();
   },
 
+  addType : function(record){
+    var self = this;
+    Ext.create("Ext.window.Window",{
+      title:'Add Configuration Type',
+      items: {
+        xtype: 'form',
+        bodyPadding:5,
+        url:'/erp_app/desktop/configuration_management/add_type',
+        border: false,
+        items:[
+        {
+          name:'configuration_id',
+          xtype:'hidden',
+          value:record.get('model_id')
+        },
+        {
+          xtype:'combo',
+          name: 'category_id',
+          fieldLabel: 'Category',
+          displayField: 'description',
+          queryMode: 'local',
+          valueField: 'category_id',
+          store:'configurationmanagement-categoriesstore',
+          listeners:{
+            'select':function(combo, records, eOpts){
+              Ext.getStore('configurationmanagement-typesstore').load({
+                params:{
+                  category_id:records.first().get('category_id')
+                }
+              });
+              combo.up('form').down('#configurationTypeCombo').enable();
+            }
+          }
+        },
+        {
+          xtype:'combo',
+          name: 'type_id',
+          itemId:'configurationTypeCombo',
+          fieldLabel: 'Configuration Type',
+          displayField: 'description',
+          queryMode: 'local',
+          disabled:true,
+          valueField: 'id',
+          store:'configurationmanagement-typesstore'
+        }
+        ]
+      },
+      buttons:[
+      {
+        text:'Add Type',
+        handler:function(btn){
+          btn.up('window').down('form').submit({
+            waitMsg:'Adding Type',
+            reset:true,
+            success:function(form, action){
+              var obj = Ext.decode(action.response.responseText);
+              if(obj.success){
+                self.getStore().load({
+                  node:self.getRootNode()
+                });
+                btn.up('window').close();
+              }
+              else{
+                Ext.Msg.alert("Error", 'Error adding configuration type.');
+              }
+            },
+            failure:function(form, action){
+              Ext.Msg.alert("Error", 'Error adding configuration type.');
+            }
+          });
+        }
+      },
+      {
+        text:'Cancel',
+        handler:function(btn){
+          btn.up('window').close();
+        }
+      }
+      ]
+    }).show();
+  },
+
+  removeType : function(record){
+    var self = this;
+    Ext.Msg.confirm("Please Confirm", 'Are you sure you want remove this Configuration Type?',function(btn, text){
+      if(btn == 'yes'){
+        var waitMsg = Ext.Msg.wait('Status', 'Removing configuration type...')
+        Ext.Ajax.request({
+          url:'/erp_app/desktop/configuration_management/remove_type',
+          params:{
+            configuration_id:record.get('configuration_id'),
+            type_id:record.get('model_id')
+          },
+          success:function(response){
+            waitMsg.close();
+            self.down('treepanel').getStore().load();
+          },
+          failure:function(response){
+            waitMsg.close();
+            Ext.Msg.alert('Error', 'There was an error removing the configuration type.');
+          }
+        });
+      }
+    });
+  },
+
   showCreateConfiguration : function(){
     var self = this;
     Ext.create("Ext.window.Window",{
       title:'Create Configuration',
-      layout: 'fit',
-      items: { 
+      items: {
         xtype: 'form',
+        bodyPadding:5,
         url:'/erp_app/desktop/configuration_management/create_configuration',
         border: false,
         items:[
@@ -78,10 +134,17 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
           xtype:'combo',
           name: 'type',
           fieldLabel: 'Type',
-          store: 'configurationmanagement-typesstore',
           displayField: 'display',
           queryMode: 'local',
-          valueField: 'value'
+          valueField: 'value',
+          store:{
+            storeId: 'configurationmanagement-typesstore',
+            fields: ['display', 'value'],
+            data : [{
+              "display":"Website",
+              "value":"Website"
+            }]
+          }
         },
         {
           xtype:'combo',
@@ -89,7 +152,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
           fieldLabel: 'Model',
           store: 'configurationmanagement-modelsstore',
           displayField: 'description',
-          queryMode: 'local',
           valueField: 'id'
         },
         {
@@ -98,17 +160,26 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
           fieldLabel: 'Template',
           store: 'configurationmanagement-templatesstore',
           displayField: 'description',
-          queryMode: 'local',
           valueField: 'id'
         },
         {
           xtype:'combo',
           name: 'configuration_action',
           fieldLabel: 'Action',
-          store: 'configurationmanagement-actionstore',
           displayField: 'display',
           queryMode: 'local',
-          valueField: 'value'
+          valueField: 'value',
+          store:{
+            fields: ['display', 'value'],
+            data : [{
+              "display":"Copy",
+              "value":"copy"
+            },
+            {
+              "display":"Clone",
+              "value":"clone"
+            }]
+          }
         }
         ]
       },
@@ -209,6 +280,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       },
       {
         name:'leaf'
+      },
+      {
+        name:'configuration_id'
+      },
+      {
+        name:'isTemplate',
+        type:'boolean'
       }
       ]
     });
@@ -247,12 +325,32 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
                 self.deleteConfiguration(record);
               }
             });
-          }
 
-          var contextMenu = Ext.create("Ext.menu.Menu",{
-            items:items
-          });
-          contextMenu.showAt(e.xy);
+            if(record.data['isTemplate']){
+              items.push({
+                iconCls:'icon-add',
+                text:'Add Type',
+                handler:function(btn){
+                  self.addType(record);
+                }
+              });
+
+              if(record.data["type"] == "ConfigurationType"){
+                items.push({
+                  iconCls:'icon-delete',
+                  text:'Remove Type',
+                  handler:function(btn){
+                    self.removeType(record);
+                  }
+                });
+              }
+        
+              var contextMenu = Ext.create("Ext.menu.Menu",{
+                items:items
+              });
+              contextMenu.showAt(e.xy);
+            }
+          }
         }
       }
     }, config);
