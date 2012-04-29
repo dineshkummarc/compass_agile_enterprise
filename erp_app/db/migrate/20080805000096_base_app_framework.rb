@@ -206,12 +206,11 @@ class BaseAppFramework < ActiveRecord::Migration
       create_table :configuration_item_types_configurations, {:id => false} do |t|
         t.references :configuration_item_type
         t.references :configuration
-
-        t.timestamps
       end
 
       add_index :configuration_item_types_configurations, :configuration_item_type_id, :name => 'conf_conf_type_id_item_idx'
       add_index :configuration_item_types_configurations, :configuration_id, :name => 'conf_id_idx'
+      add_index :configuration_item_types_configurations, [:configuration_item_type_id, :configuration_id], :unique => true, :name => 'conf_config_type_uniq_idx'
     end
 
     unless table_exists? :configuration_options
@@ -248,8 +247,6 @@ class BaseAppFramework < ActiveRecord::Migration
       create_table :configuration_items_configuration_options, {:id => false} do |t|
         t.references :configuration_item
         t.references :configuration_option
-
-        t.timestamps
       end
 
       add_index :configuration_items_configuration_options, :configuration_item_id, :name => 'conf_item_conf_opt_id_item_idx'

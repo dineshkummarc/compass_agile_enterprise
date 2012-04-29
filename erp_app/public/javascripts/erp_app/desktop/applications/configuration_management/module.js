@@ -24,7 +24,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement",{
           rootText:'Configuration',
           title:'Configurations',
           width:'100%',
-          height:'100%'
+          height:'100%',
+          tbar:{
+            items:[
+            {
+              text:'Create Configuration',
+              iconCls:'icon-add',
+              scope:this,
+              handler:function(btn){
+                btn.up('configurationmanagement-configurationtreepanel').showCreateConfiguration();
+              }
+            }
+            ]
+          }
         },
         {
           xtype:'configurationmanagement-configurationtreepanel',
@@ -32,7 +44,27 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement",{
           rootText:'Templates',
           title:'Templates',
           width:'100%',
-          height:'100%'
+          height:'100%',
+          tbar:{
+            items:[
+            {
+              text:'Create Template',
+              iconCls:'icon-add',
+              scope:this,
+              handler:function(btn){
+                btn.up('configurationmanagement-configurationtreepanel').showCreateTemplate();
+              }
+            },
+            {
+              text:'Copy Template',
+              iconCls:'icon-copy',
+              scope:this,
+              handler:function(btn){
+                btn.up('configurationmanagement-configurationtreepanel').showCopyTemplate();
+              }
+            }
+            ]
+          }
         },
         {
           xtype:'configurationmanagement-configurationtypespanel'

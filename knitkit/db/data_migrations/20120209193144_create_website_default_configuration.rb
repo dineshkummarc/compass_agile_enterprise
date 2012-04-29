@@ -14,7 +14,6 @@ class CreateWebsiteDefaultConfiguration
       :internal_identifier => 'login_url',
       :allow_user_defined_options => true
     )
-    login_url_config_item_type.add_default_configuration_option(ConfigurationOption.create(:value => '/login'))
     CategoryClassification.create(:category => website_setup_category, :classification => login_url_config_item_type)
     configuration.configuration_item_types << login_url_config_item_type
     configuration.save
@@ -24,7 +23,6 @@ class CreateWebsiteDefaultConfiguration
       :internal_identifier => 'homepage_url',
       :allow_user_defined_options => true
     )
-    home_page_url_config_item_type.add_default_configuration_option(ConfigurationOption.create(:value => '/home'))
     CategoryClassification.create(:category => website_setup_category, :classification => home_page_url_config_item_type)
     configuration.configuration_item_types << home_page_url_config_item_type
     configuration.save

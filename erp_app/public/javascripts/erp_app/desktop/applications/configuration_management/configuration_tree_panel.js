@@ -104,7 +104,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
           },
           success:function(response){
             waitMsg.close();
-            self.down('treepanel').getStore().load();
+            self.getStore().load({
+              node:self.getRootNode()
+            });
           },
           failure:function(response){
             waitMsg.close();
@@ -128,10 +130,13 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         {
           xtype:'textfield',
           name: 'name',
-          fieldLabel: 'Name'
+          width:400,
+          fieldLabel: 'Name',
+          allowBlank:false
         },
         {
           xtype:'combo',
+          allowBlank:false,
           name: 'type',
           fieldLabel: 'Type',
           displayField: 'display',
@@ -148,7 +153,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         },
         {
           xtype:'combo',
+          allowBlank:false,
           name: 'model',
+          width:400,
           fieldLabel: 'Model',
           store: 'configurationmanagement-modelsstore',
           displayField: 'description',
@@ -156,7 +163,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         },
         {
           xtype:'combo',
+          allowBlank:false,
           name: 'template',
+          width:400,
           fieldLabel: 'Template',
           store: 'configurationmanagement-templatesstore',
           displayField: 'description',
@@ -164,6 +173,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
         },
         {
           xtype:'combo',
+          allowBlank:false,
           name: 'configuration_action',
           fieldLabel: 'Action',
           displayField: 'display',
@@ -218,6 +228,130 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
     }).show();
   },
 
+  showCreateTemplate : function(){
+    var self = this;
+    Ext.create("Ext.window.Window",{
+      title:'Create Template',
+      items: {
+        xtype: 'form',
+        bodyPadding:5,
+        url:'/erp_app/desktop/configuration_management/create_template',
+        border: false,
+        items:[
+        {
+          xtype:'textfield',
+          name: 'name',
+          width:400,
+          fieldLabel: 'Name',
+          allowBlank:false
+        }
+        ]
+      },
+      buttons:[
+      {
+        text:'Create',
+        handler:function(btn){
+          var form = btn.up('window').down('form').getForm();
+          if(form.isValid()){
+            form.submit({
+              waitMsg:'Creating Template',
+              reset:true,
+              success:function(form, action){
+                var obj = Ext.decode(action.response.responseText);
+                if(obj.success){
+                  self.getStore().load({
+                    node:self.getRootNode()
+                  });
+                  btn.up('window').close();
+                }
+                else{
+                  Ext.Msg.alert("Error", 'Error creating template');
+                }
+              },
+              failure:function(form, action){
+                Ext.Msg.alert("Error", 'Error creating template');
+              }
+            });
+          }
+        }
+      },
+      {
+        text:'Cancel',
+        handler:function(btn){
+          btn.up('window').close();
+        }
+      }
+      ]
+    }).show();
+  },
+
+  showCopyTemplate : function(){
+    var self = this;
+    Ext.create("Ext.window.Window",{
+      title:'Copy Template',
+      items: {
+        xtype: 'form',
+        bodyPadding:5,
+        url:'/erp_app/desktop/configuration_management/copy_template',
+        border: false,
+        items:[
+        {
+          xtype:'textfield',
+          name: 'name',
+          width:400,
+          fieldLabel: 'Name',
+          allowBlank:false
+        },
+        {
+          xtype:'combo',
+          allowBlank:false,
+          name: 'template',
+          width:400,
+          fieldLabel: 'Template',
+          store: 'configurationmanagement-templatesstore',
+          displayField: 'description',
+          valueField: 'id'
+        }
+        ]
+      },
+      buttons:[
+      {
+        text:'Copy',
+        handler:function(btn){
+          var form = btn.up('window').down('form').getForm();
+          if(form.isValid()){
+            form.submit({
+              waitMsg:'Copying Template',
+              reset:true,
+              success:function(form, action){
+                var obj = Ext.decode(action.response.responseText);
+                if(obj.success){
+                  self.getStore().load({
+                    node:self.getRootNode()
+                  });
+                  btn.up('window').close();
+                }
+                else{
+                  Ext.Msg.alert("Error", 'Error copying template');
+                }
+              },
+              failure:function(form, action){
+                Ext.Msg.alert("Error", 'Error copying template');
+              }
+            });
+          }
+        }
+      },
+      {
+        text:'Cancel',
+        handler:function(btn){
+          btn.up('window').close();
+        }
+      }
+      ]
+    }).show();
+  },
+
   deleteConfiguration : function(record){
     var self = this;
     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this Configuration?', function(btn){
@@ -229,10 +363,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       {
         self.setWindowStatus('Deleting Configuration...');
         Ext.Ajax.request({
-          url: '/erp_app/desktop/configuration_management/delete_configuration',
+          url: '/erp_app/desktop/configuration_management/destroy',
           method: 'POST',
           params:{
-            id:record.data['modelId']
+            id:record.data['model_id']
           },
           success: function(response) {
             self.clearWindowStatus();
@@ -267,7 +401,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       },
       fields:[
       {
-        name:'modelId'
+        name:'model_id'
       },
       {
         name:'type'
@@ -295,18 +429,6 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
       store:store,
       animate:false,
       autoScroll:true,
-      tbar:{
-        items:[
-        {
-          text:'Create Configuration',
-          iconCls:'icon-add',
-          scope:this,
-          handler:function(){
-            self.showCreateConfiguration();
-          }
-        }
-        ]
-      },
       enableDD:true,
       containerScroll: true,
       border: false,
@@ -334,23 +456,23 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ConfigurationManagement.Configur
                   self.addType(record);
                 }
               });
-
-              if(record.data["type"] == "ConfigurationType"){
-                items.push({
-                  iconCls:'icon-delete',
-                  text:'Remove Type',
-                  handler:function(btn){
-                    self.removeType(record);
-                  }
-                });
-              }
-        
-              var contextMenu = Ext.create("Ext.menu.Menu",{
-                items:items
-              });
-              contextMenu.showAt(e.xy);
             }
           }
+          
+          if(record.data['isTemplate'] && record.data["type"] == "ConfigurationType"){
+            items.push({
+              iconCls:'icon-delete',
+              text:'Remove Type',
+              handler:function(btn){
+                self.removeType(record);
+              }
+            });
+          }
+
+          var contextMenu = Ext.create("Ext.menu.Menu",{
+            items:items
+          });
+          contextMenu.showAt(e.xy);
         }
       }
     }, config);

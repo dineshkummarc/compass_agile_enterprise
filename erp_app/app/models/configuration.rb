@@ -1,9 +1,8 @@
 class Configuration < ActiveRecord::Base
   scope :templates, where('is_template = ?', true)
 
-  validates_each :is_template do |model, attr, value|
-    model.errors.add(attr, 'already template with this internal_identifier') if (value and !::Configuration.templates.where(:internal_identifier => model.internal_identifier).empty?)
-  end
+  validates :internal_identifier, :presence => true, :uniqueness =>  {:scope => [:id, :is_template]}
+  validates :is_template, :uniqueness => {:scope => :internal_identifier}
 
   has_many :configuration_items, :dependent => :destroy do
     def by_category(category)
@@ -14,7 +13,7 @@ class Configuration < ActiveRecord::Base
       group_by(&:category)
     end
   end
-  has_and_belongs_to_many :configuration_item_types do
+  has_and_belongs_to_many :configuration_item_types, :uniq => true do
     def by_category(category)
       includes(:category_classification).where(:category_classification => {:category_id => category})
     end
@@ -75,6 +74,8 @@ class Configuration < ActiveRecord::Base
   #   - the cloned configuration
   def clone(set_defaults=false)
     configuration_dup = self.dup
+    configuration_dup.internal_identifier = "#{self.internal_identifier} clone"
+    configuration_dup.description = "#{self.description} clone"
     configuration_dup.is_template = false
 
     self.configuration_item_types.each do |configuration_item_type|
@@ -91,7 +92,7 @@ class Configuration < ActiveRecord::Base
       end
       configuration_dup.save
     end
-
+    
     configuration_dup
   end
 
@@ -103,6 +104,8 @@ class Configuration < ActiveRecord::Base
   #   - the copied configuration
   def copy
     configuration_dup = self.clone
+    configuration_dup.internal_identifier = "#{self.internal_identifier} copy"
+    configuration_dup.description = "#{self.description} copy"
 
     #clone items
     self.configuration_items.each do |item|

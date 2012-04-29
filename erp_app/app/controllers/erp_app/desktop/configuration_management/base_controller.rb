@@ -6,9 +6,24 @@ module ErpApp
         def add_type
           configuration = ::Configuration.find(params[:configuration_id])
           type          = ConfigurationItemType.find(params[:type_id])
-
           configuration.configuration_item_types << type
-          render :json => configuration.save ? {:success => true} : {:success => false}
+
+          render :json => if configuration.configuration_item_types << type
+            {:success => true}
+          else
+            {:success => false}
+          end
+        end
+
+        def remove_type
+          configuration = ::Configuration.find(params[:configuration_id])
+          type          = ConfigurationItemType.find(params[:type_id])
+
+          render :json => if configuration.configuration_item_types.delete(type)
+            {:success => true}
+          else
+            {:success => false}
+          end
         end
 
         def configurations
@@ -31,7 +46,7 @@ module ErpApp
           render :json => configurations
         end
 
-        def delete_configuration
+        def destroy
           if ::Configuration.destroy(params[:id])
             render :json => {:success => true}
           else
@@ -60,12 +75,26 @@ module ErpApp
           render :json => {:success => true}
         end
 
-        def configuration_types
-
+        def create_template
+          if ::Configuration.create(:description => params[:name], :is_template => true, :internal_identifier => params[:name].gsub(//,'').underscore)
+            render :json => {:success => true}
+          else
+            render :json => {:success => false}
+          end
         end
 
-        def configuration_options
+        def copy_template
+          template = ::Configuration.find(params[:template])
+          clone    = template.clone
+          clone.is_template = true
+          clone.internal_identifier = params[:name].gsub(//,'').underscore
+          clone.description = params[:name]
 
+          if clone.save
+            render :json => {:success => true}
+          else
+            render :json => {:success => false}
+          end
         end
 
         private
@@ -73,7 +102,7 @@ module ErpApp
         def build_configuration_tree(config, include_items=true)
           config_hash = {
             :text => config.is_template ? config.description : "#{config.description}[#{config.configured_items.first.to_label}]",
-            :modelId => config.id,
+            :model_id => config.id,
             :type => 'Configuration',
             :isTemplate => config.is_template,
             :iconCls => 'icon-note',
@@ -86,7 +115,7 @@ module ErpApp
           config.item_types.by_category.each do |category, config_item_type|
             category_hash = {:text => category.description, :iconCls => 'icon-documents', :leaf => false, :children => []}
             config_item_type.each do |categorized_config_item_type|
-              categorized_config_item_type_hash = {:type => 'ConfigurationType', :model_id => categorized_config_item_type.id, :configuration_id => config.id, :text => categorized_config_item_type.description, :iconCls => 'icon-document_info', :leaf => false, :children => []}
+              categorized_config_item_type_hash = {:isTemplate => config.is_template, :type => 'ConfigurationType', :model_id => categorized_config_item_type.id, :configuration_id => config.id, :text => categorized_config_item_type.description, :iconCls => 'icon-document_info', :leaf => false, :children => []}
               if categorized_config_item_type.allow_user_defined_options
                 categorized_config_item_type_hash[:children] << {
                   :text => "[User Defined]",
