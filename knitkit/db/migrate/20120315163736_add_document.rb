@@ -4,6 +4,7 @@ class AddDocument < ActiveRecord::Migration
       t.string    :external_identifier
       t.string    :internal_identifier
       t.string    :description
+      t.datetime  :document_date
 
       t.references :document_record, :polymorphic => true
       t.references :document_type

@@ -10,6 +10,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
     var self = this;
     Ext.Ajax.request({
       url: '/knitkit/erp_app/desktop/site/activate_publication',
+      timeout: 90000,
       method: 'POST',
       params:{
         id:self.initialConfig.siteId,
@@ -115,19 +116,19 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
       {
         header: "Version",
         sortable:true,
-        width: 60,
+        width: 45,
         dataIndex: 'version'
       },
       {
         header: "Published",
-        width: 130,
+        width: 117,
         sortable:true,
         renderer: Ext.util.Format.dateRenderer('m/d/Y H:i:s'),
         dataIndex: 'created_at'
       },
       {
         header: "Published By",
-        width: 130,
+        width: 72,
         sortable:true,
         dataIndex: 'published_by_username'
       },
@@ -137,7 +138,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
         xtype:'actioncolumn',
         header:'Viewing',
         align:'center',
-        width:50,
+        width:46,
         items:[{
           getClass: function(v, meta, rec) {  // Or return a class from a function
             if (rec.get('viewing')) {
@@ -165,7 +166,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.Knitkit.PublishedGridPanel",{
         xtype:'actioncolumn',
         header:'Active',
         align:'center',
-        width:50,
+        width:44,
         items:[{
           getClass: function(v, meta, rec) {  // Or return a class from a function
             if (rec.get('active')) {

@@ -43,4 +43,4 @@ Gem Dependencies
 sunspot_rails
 sunspot
 
-Copyright (c) 2011 Adam Hull, released under the MIT license
+Copyright (c) 2011 Adam Hull

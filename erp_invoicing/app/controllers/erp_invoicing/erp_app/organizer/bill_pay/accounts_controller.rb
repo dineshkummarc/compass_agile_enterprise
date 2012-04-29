@@ -60,7 +60,7 @@ module ErpInvoicing
 
             @billing_account_payment_amts = get_billing_account_amounts
             Rails.logger.debug("##### Billing Acct Payments: #{@billing_account_payment_amts}")
-            @payment_account_root = BizTxnAcctRoot.where("biz_txn_acct_id = ?",params[:payment_account_id]).first
+            @payment_account_root = BizTxnAcctRoot.find(params[:payment_account_id])
             @payment_account = @payment_account_root.account
             @payment_date = params[:payment_date]
             @total_payment = params[:total_payment]
@@ -122,7 +122,18 @@ module ErpInvoicing
           def payment_accounts
             party = Party.find(params[:party_id])
 
-            render :json => party.payment_accounts_hash
+            results = party.accounts.map do |acct|
+              if acct.biz_txn_acct_type == "CreditCardAccount" || acct.biz_txn_acct_type == 'BankAccount'
+                { :id => acct.id,
+                  :description => acct.description,
+                  :account_type => acct.biz_txn_acct_type
+                }
+              end
+            end
+
+            results.reject!{|x| x.nil?}
+
+            render :json => results
           end
 
           def generate_statement

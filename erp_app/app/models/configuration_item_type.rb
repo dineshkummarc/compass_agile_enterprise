@@ -26,7 +26,7 @@ class ConfigurationItemType < ActiveRecord::Base
     if existing_option.nil?
       ConfigurationItemTypeConfigurationOption.create(:configuration_item_type => self, :configuration_option => option, :is_default => true)
     else
-      configuration_item_type_configuration_option = ConfigurationItemTypeConfigurationOption.where('configuration_option_id = ? and configuration_item_type_id = ?', existing_option.id, self.id)
+      configuration_item_type_configuration_option = ConfigurationItemTypeConfigurationOption.where('configuration_option_id = ? and configuration_item_type_id = ?', existing_option.id, self.id).first
       configuration_item_type_configuration_option.is_default = true
       configuration_item_type_configuration_option.save
     end

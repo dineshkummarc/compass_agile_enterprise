@@ -13,6 +13,11 @@ class Payment < ActiveRecord::Base
   aasm_state :authorized
   aasm_state :captured
   aasm_state :authorization_reversed
+  aasm_state :canceled
+
+  aasm_event :cancel do
+    transitions :to => :canceled, :from => [:pending]
+  end
 
   aasm_event :authorize do
       transitions :to => :authorized, :from => [:pending]
