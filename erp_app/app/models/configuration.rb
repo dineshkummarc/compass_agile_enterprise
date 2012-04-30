@@ -6,7 +6,7 @@ class Configuration < ActiveRecord::Base
 
   has_many :configuration_items, :dependent => :destroy do
     def by_category(category)
-      includes({:configuration_item_type => [:category_classification]}).where(:category_classification => {:category_id => category})
+      includes({:configuration_item_type => [:category_classification]}).where(:category_classifications => {:category_id => category})
     end
 
     def grouped_by_category
@@ -15,7 +15,7 @@ class Configuration < ActiveRecord::Base
   end
   has_and_belongs_to_many :configuration_item_types, :uniq => true do
     def by_category(category)
-      includes(:category_classification).where(:category_classification => {:category_id => category})
+      includes(:category_classification).where(:category_classifications => {:category_id => category})
     end
 
     def grouped_by_category
