@@ -112,7 +112,7 @@ module ErpApp
 
           #set types
           types_hash = {:text => 'Types', :iconCls => 'icon-document_info', :leaf => false, :children => []}
-          config.item_types.by_category.each do |category, config_item_type|
+          config.item_types.grouped_by_category.each do |category, config_item_type|
             category_hash = {:text => category.description, :iconCls => 'icon-documents', :leaf => false, :children => []}
             config_item_type.each do |categorized_config_item_type|
               categorized_config_item_type_hash = {:isTemplate => config.is_template, :type => 'ConfigurationType', :model_id => categorized_config_item_type.id, :configuration_id => config.id, :text => categorized_config_item_type.description, :iconCls => 'icon-document_info', :leaf => false, :children => []}
@@ -152,7 +152,7 @@ module ErpApp
           if include_items
             #set items
             items_hash = {:text => 'Items', :iconCls => 'icon-document_info', :leaf => false, :children => []}
-            config.items.by_category.each do |category, config_item|
+            config.items.grouped_by_category.each do |category, config_item|
               category_hash = {:text => category.description, :iconCls => 'icon-documents', :leaf => false, :children => []}
               config_item.each do |categorized_config_item|
                 categorized_config_item_hash = {:text => categorized_config_item.type.description, :iconCls => 'icon-document_info', :leaf => false, :children => []}

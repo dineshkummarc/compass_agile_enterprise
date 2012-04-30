@@ -9,7 +9,7 @@ class Configuration < ActiveRecord::Base
       includes({:configuration_item_type => [:category_classification]}).where(:category_classification => {:category_id => category})
     end
 
-    def by_category
+    def grouped_by_category
       group_by(&:category)
     end
   end
@@ -18,7 +18,7 @@ class Configuration < ActiveRecord::Base
       includes(:category_classification).where(:category_classification => {:category_id => category})
     end
 
-    def by_category
+    def grouped_by_category
       group_by(&:category)
     end
   end
