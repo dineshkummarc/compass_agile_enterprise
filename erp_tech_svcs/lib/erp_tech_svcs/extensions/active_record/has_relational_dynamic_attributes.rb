@@ -83,9 +83,7 @@ module ErpTechSvcs
           def destroy_dynamic_attribute_of_type (attribute_type_iid)
             self.attribute_values.includes(:attribute_type).destroy_all("attribute_types.internal_identifier = #{attribute_type_iid.to_s} or attribute_types.description = #{attribute_type_iid.to_s}")
           end
-
-          private
-
+          
           def add_dynamic_attribute(value, type, data_type)
             attribute_type = AttributeType.where('description = ? or internal_identifier = ?', type, type).first
             attribute_type = AttributeType.create(:description => type, :data_type => data_type) unless attribute_type
