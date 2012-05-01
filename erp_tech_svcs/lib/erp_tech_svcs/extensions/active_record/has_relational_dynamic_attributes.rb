@@ -20,18 +20,20 @@ module ErpTechSvcs
         end
 
         module SingletonMethods
-          def find_by_dynamic_attribute(value, *type_iids)
+          def find_by_dynamic_attribute(value, options={})
             arel_query = AttributeValue.where('attributed_record_type = ?', self.name)
                                        .where(AttributeValue.arel_table[:value].matches("%#{value}%"))
 
             or_clauses = nil
-            type_iids.each do |type_iid|
+            options[:type_iids].each do |type_iid|
               type = AttributeType.where('description = ? or internal_identifier = ?',type_iid,type_iid).first
               raise "Attribute Type '#{type_iid}' does not exist" if type.nil?
               or_clauses = or_clauses.nil? ? AttributeValue.arel_table[:attribute_type_id].eq(type.id) : or_clauses.or(AttributeValue.arel_table[:attribute_type_id].eq(type.id))
-            end
+            end if options[:type_iids]
             
             arel_query = arel_query.where(or_clauses) if or_clauses
+            arel_query = arel_query.limit(options[:limit]) if options[:limit]
+            arel_query = arel_query.offset(options[:offset]) if options[:offset]
             arel_query.all.collect(&:attributed_record)
           end
         end
@@ -85,7 +87,7 @@ module ErpTechSvcs
           private
 
           def add_dynamic_attribute(value, type, data_type)
-            attribute_type = AttributeType.where('description = ? or internal_identifier = ?', type).first
+            attribute_type = AttributeType.where('description = ? or internal_identifier = ?', type, type).first
             attribute_type = AttributeType.create(:description => type, :data_type => data_type) unless attribute_type
             attribute_value = AttributeValue.create(:value => value, :attribute_type => attribute_type)
             self.attribute_values << attribute_value
