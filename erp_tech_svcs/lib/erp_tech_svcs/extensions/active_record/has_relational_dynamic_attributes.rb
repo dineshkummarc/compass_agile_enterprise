@@ -48,7 +48,7 @@ module ErpTechSvcs
           end
 
           def update_first_dynamic_attribute_value_of_type(value, type)
-            attribute_type = AttributeType.find_by_internal_identifier(type)
+            attribute_type = AttributeType.where('description = ? or internal_identifier = ?', type, type).first
             attribute_value = self.attribute_values.where(:attribute_type_id => attribute_type.id).first
             attribute_value.value = value
             attribute_value.save!
