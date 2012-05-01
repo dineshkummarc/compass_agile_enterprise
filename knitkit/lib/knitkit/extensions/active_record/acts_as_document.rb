@@ -24,6 +24,7 @@ module Knitkit
 
             #from relational_dynamic_attributes
             [
+            :add_dynamic_attribute,
             :update_or_create_dynamic_attribute,
             :update_first_dynamic_attribute_value_of_type,
             :get_dynamic_attributes,
