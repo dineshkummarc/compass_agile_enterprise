@@ -11,7 +11,7 @@ module ErpApp
 
               uuid = Digest::SHA1.hexdigest(Time.now.to_s + rand(10000).to_s)
 
-              raw "<div id='#{uuid}'>Loading Widget...<script type='text/javascript'>Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params}, true);</script></div>"
+              raw "<div id=\"#{uuid}\">Loading ...<script type=\"text/javascript\">Compass.ErpApp.Widgets.setup('#{uuid}', '#{name}', '#{action}', #{params}, true);</script></div>"
             end
 
             def build_widget_url(action,id=nil,params={})

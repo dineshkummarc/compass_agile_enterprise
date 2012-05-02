@@ -12,7 +12,7 @@ Compass.ErpApp.Widgets = {
       success: function(response) {
         Ext.get(uuid).dom.innerHTML = response.responseText;
         Compass.ErpApp.Utility.evaluateScriptTags(Ext.get(uuid).dom);
-        Compass.ErpApp.JQuerySpport.setupHtmlReplace();
+        Compass.ErpApp.JQuerySupport.setupHtmlReplace();
         if(addToLoaded)
           Compass.ErpApp.Widgets.LoadedWidgets.push({
             id:uuid,
