@@ -7,6 +7,10 @@ class ConfigurationItem < ActiveRecord::Base
   alias :options :configuration_options
   alias :type :configuration_item_type
 
+  def category
+    self.type.category
+  end
+
   def to_js_hash
     {:id => self.id,
       :configruationItemType => self.type.to_js_hash,
@@ -27,8 +31,8 @@ class ConfigurationItem < ActiveRecord::Base
     if self.configuration_item_type.allow_user_defined_options?
       value = internal_identifiers_or_value.first
       unless value.blank?
-        option = ConfigurationOption.find_by_value(value)
-        self.options << (option ? option : ConfigurationOption.create(:value => value))
+        option = ConfigurationOption.find_by_value_and_user_defined(value, true)
+        self.options << (option ? option : ConfigurationOption.create(:value => value, :user_defined => true))
       end
     elsif self.configuration_item_type.is_multi_optional?
       internal_identifiers_or_value.each do |value|

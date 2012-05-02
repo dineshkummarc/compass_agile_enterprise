@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   validates_format_of :email, :with => /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/
 
   #username validations
-  validates :email, :presence => {:message => 'Username cannot be blank'}
+  validates :username, :presence => {:message => 'Username cannot be blank'}
   validates_uniqueness_of :username
 
   #these two methods allow us to assign instance level attributes that are not persisted.  These are used for mailers

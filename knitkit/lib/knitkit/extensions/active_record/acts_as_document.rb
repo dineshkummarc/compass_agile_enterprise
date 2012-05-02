@@ -24,9 +24,14 @@ module Knitkit
 
             #from relational_dynamic_attributes
             [
-            :update_or_create_attribute, :update_first_attribute_value_of_type,
-            :get_attributes,:get_values_of_type,:get_attribute_value_records_of_type,
-            :has_attribute_value_of_type?,:destroy_values_of_type
+            :add_dynamic_attribute,
+            :update_or_create_dynamic_attribute,
+            :update_first_dynamic_attribute_value_of_type,
+            :get_dynamic_attributes,
+            :get_dynamic_value_of_type,
+            :get_dynamic_attribute_of_type,
+            :has_dynamic_attribute_of_type?,
+            :destroy_dynamic_attribute_of_type
             ].each { |m| delegate m, :to => :document }
           end
 
