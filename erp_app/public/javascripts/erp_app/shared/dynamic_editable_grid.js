@@ -33,15 +33,27 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
                }
            };
         }
-
-        var store = Ext.create('Ext.data.Store', {
-            model: ((config.editable) ? config.model : undefined),
-            fields:config['fields'],
-            autoLoad: true,
-            autoSync: true,
-            pageSize: config['pageSize'],
-            proxy: config.proxy
-        });
+        if (config['storeId'] == "none"){
+          var store = Ext.create('Ext.data.Store', {
+              model: ((config.editable) ? config.model : undefined),
+              fields:config['fields'],
+              autoLoad: true,
+              autoSync: true,
+              pageSize: config['pageSize'],
+              proxy: config.proxy
+          });
+        } else {
+	      	var store = Ext.create('Ext.data.Store', {
+	              model: ((config.editable) ? config.model : undefined),
+	              fields:config['fields'],
+	              autoLoad: true,
+	              autoSync: true,
+	              pageSize: config['pageSize'],
+	              proxy: config.proxy,
+	              storeId: config['storeId'],
+	              autoLoad: true
+	          });
+        }
 
         this.store = store;
 
