@@ -69,10 +69,10 @@ class Configuration < ActiveRecord::Base
   #Will copy all configuration item types
   #
   # * *Args*
-  #   - +set_defaults+ -> create items and set default options
+  #   - +set_defaults+ -> create items and set default options default = true
   # * *Returns* :
   #   - the cloned configuration
-  def clone(set_defaults=false)
+  def clone(set_defaults=true)
     configuration_dup = self.dup
     configuration_dup.internal_identifier = "#{self.internal_identifier} clone"
     configuration_dup.description = "#{self.description} clone"
@@ -83,15 +83,13 @@ class Configuration < ActiveRecord::Base
     end
     configuration_dup.save
 
-    if set_defaults
-      configuration_dup.configuration_item_types.each do |configuration_item_type|
-        configuration_item = ConfigurationItem.create(:configuration_item_type => configuration_item_type)
-        configuration_item.configuration_options = configuration_item_type.options.default
-        configuration_item.save
-        configuration_dup.configuration_items << configuration_item
-      end
-      configuration_dup.save
+    configuration_dup.configuration_item_types.each do |configuration_item_type|
+      configuration_item = ConfigurationItem.create(:configuration_item_type => configuration_item_type)
+      configuration_item.configuration_options = configuration_item_type.options.default if set_defaults
+      configuration_item.save
+      configuration_dup.configuration_items << configuration_item
     end
+    configuration_dup.save
     
     configuration_dup
   end

@@ -20,7 +20,7 @@ class ConfigurationItemType < ActiveRecord::Base
   alias :options :configuration_options
 
   def add_default_configuration_option(option)
-    self.clear_options if(self.is_multi_optional? and !self.options.empty?)
+    self.clear_options if self.allow_user_defined_options?
     
     existing_option = self.configuration_options.where(:id => option.id).first
     if existing_option.nil?
@@ -35,7 +35,8 @@ class ConfigurationItemType < ActiveRecord::Base
   alias :add_default_option :add_default_configuration_option
 
   def add_configuration_option(option)
-    self.clear_options if(!self.is_multi_optional? and !self.options.empty?)
+    self.clear_options if self.allow_user_defined_options?
+    
     existing_option = self.configuration_options.where(:id => option.id).first
     if existing_option.nil?
       self.options << option
