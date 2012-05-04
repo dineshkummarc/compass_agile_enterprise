@@ -16,13 +16,13 @@
   <% end %>
 </div>
 <script type="text/javascript">
-$('#reset_password_form').bind('ajaxComplete', function(e, xhr, settings){
+jQuery('#reset_password_form').bind('ajaxComplete', function(e, xhr, settings){
   var response = jQuery.parseJSON(xhr.responseText);
   if(response.success){
-    $('#<%=widget_result_id%>').html('<div class="sexynotice">'+response.message+'</div>');
+    jQuery('#<%=widget_result_id%>').html('<div class="sexynotice">'+response.message+'</div>');
   }
   else{
-    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.message+'</div>');
+    jQuery('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.message+'</div>');
   }
 });
 </script>

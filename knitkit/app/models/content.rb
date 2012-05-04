@@ -161,10 +161,10 @@ class Content < ActiveRecord::Base
 
       results_hash = {}
       if section.attributes['type'] == 'Blog'
-        results_hash[:link] = section.permalink + '/' + content.permalink
+        results_hash[:link] = section.path + '/' + content.permalink
         results_hash[:title] = content.title
       else
-        results_hash[:link] = section.permalink
+        results_hash[:link] = section.path
         results_hash[:title] = section.title
       end
       results_hash[:section] = section

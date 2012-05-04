@@ -21,13 +21,13 @@
   <% end %>
 </div>
 <script type="text/javascript">
-$('#login_form').bind('ajaxComplete', function(e, xhr, settings){
+jQuery('#login_form').bind('ajaxComplete', function(e, xhr, settings){
   var response = jQuery.parseJSON(xhr.responseText);
   if(response.success){
     window.location = response.login_to;
   }
   else{
-    $('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.errors.reason+'</div>');
+    jQuery('#<%=widget_result_id%>').html('<div class="sexyerror">'+response.errors.reason+'</div>');
   }
 });
 </script>
