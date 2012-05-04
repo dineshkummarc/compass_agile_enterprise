@@ -8,6 +8,8 @@ class CreateHasAttributeTables < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :attribute_types, :internal_identifier,  :name => ':attribute_types_iid_idx'
     end
     unless table_exists?(:attribute_values)
       create_table :attribute_values do |t|
@@ -18,6 +20,10 @@ class CreateHasAttributeTables < ActiveRecord::Migration
 
         t.timestamps
       end
+
+      add_index :attribute_values, [:attributed_record_id, :attributed_record_type], :name => 'attribute_values_attributed_record_idx'
+      add_index :attribute_values, :attribute_type_id,  :name => 'attribute_values_attributed_type_idx'
+      add_index :attribute_values, :value,  :name => 'attribute_values_value_idx'
     end
   end
 
