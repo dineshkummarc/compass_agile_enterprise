@@ -24,7 +24,6 @@ module ErpApp
               options[:closable] = false if options[:closable].blank?
               options[:collapsible] = false if options[:collapsible].blank?
               options[:height] = 300 if options[:height].blank?
-              options[:storeId] = "none" if options[:storeId].blank?
               
               output = raw '<script type="text/javascript">'
               output += raw "Compass.ErpApp.Utility.JsLoader.load([
