@@ -14,7 +14,11 @@ class FinancialTxn < ActiveRecord::Base
   end
 
   def is_pending?
-    !has_payments? || has_pending_payment?
+    self.is_scheduled? || self.has_pending_payment?
+  end
+
+  def is_scheduled?
+    ((self.apply_date > Date.today) or (!self.has_payments?))
   end
 
   def has_payments?
