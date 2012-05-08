@@ -69,6 +69,7 @@ class ConfigurationItemType < ActiveRecord::Base
   end
 
   def clear_options
+    self.options.each{|option|option.destroy} if self.allow_user_defined_options?
     self.options.destroy_all
     self.save
   end
