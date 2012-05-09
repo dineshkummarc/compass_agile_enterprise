@@ -12,6 +12,11 @@
 	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/accept/accept_16x16.png', sizingMethod='crop');
 }
 
+.icon-harddrive {
+    background-image: url(/images/icons/hard_drive/hard_drive_16x16.png) !important;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/hard_drive/hard_drive_16x16.png', sizingMethod='crop');
+}
+
 .icon-mail {
     background-image: url(/images/icons/mail/mail_16x16.png) !important;
 	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/mail/mail_16x16.png', sizingMethod='crop');

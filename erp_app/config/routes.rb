@@ -41,6 +41,9 @@ ErpApp::Engine.routes.draw do
   match '/desktop' => "desktop/base#index"
 
   #Desktop Applications
+  #compass_drive
+  match '/desktop/compass_drive/:action' => "desktop/compass_drive/base"
+
   #scaffold
   match '/desktop/scaffold/:action' => "desktop/scaffold/base"
   match '/desktop/scaffold/role/:action(/:id)' => "desktop/scaffold/role#index"

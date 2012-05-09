@@ -1,4 +1,4 @@
-module Knitkit
+module ErpApp
   module Extensions
     module ActiveRecord
       module ActsAsDocument
@@ -60,4 +60,4 @@ module Knitkit
       end#ActsAsDocument
     end#ActiveRecord
   end#Extensions
-end#Knitkit
+end#ErpApp
