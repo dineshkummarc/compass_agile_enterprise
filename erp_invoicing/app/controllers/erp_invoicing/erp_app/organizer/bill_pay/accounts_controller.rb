@@ -67,14 +67,14 @@ module ErpInvoicing
 
             money = Money.create(
               :amount => @total_payment.to_f,
-              :description => "Payment Applied",
+              :description => "Online Payment",
               :currency => Currency.usd
             )
             financial_txn = FinancialTxn.create(
               :apply_date => Date.strptime(@payment_date,"%m/%d/%Y"),
               :money => money
             )
-            financial_txn.description = "Payment Applied"
+            financial_txn.description = "Online Payment"
             financial_txn.account = @payment_account_root
             financial_txn.save
 
@@ -94,13 +94,17 @@ module ErpInvoicing
             if financial_txn.apply_date == Date.today
               case @payment_account.class.to_s
               when "BankAccount"
-                result = @payment_account.purchase(financial_txn, ErpCommerce::ActiveMerchantWrappers::BankWrapper)
+                financial_txn.txn_type = BizTxnType.ach_sale
+                financial_txn.save
+                result = @payment_account.purchase(financial_txn, ErpCommerce::Config.active_merchant_gateway_wrapper)
                 if !result[:payment].nil? and result[:payment].success
                   @authorization_code = result[:payment].authorization_code
                 else
                   @message = result[:message]
                 end
               when "CreditCardAccount"
+                financial_txn.txn_type = BizTxnType.cc_sale
+                financial_txn.save
                 result = @payment_account.purchase(financial_txn, params[:cvv], ErpCommerce::Config.active_merchant_gateway_wrapper)
                 if !result[:payment].nil? and result[:payment].success
                   @authorization_code = result[:payment].authorization_code

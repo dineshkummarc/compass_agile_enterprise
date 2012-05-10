@@ -28,7 +28,10 @@ class RecurringPayment < ActiveRecord::Base
             :comment => "AutoPayment"
           )
 
-        end#make sure the payment is below the pay_up_to_amount
+          #make sure the payment is below the pay_up_to_amount
+        else
+          #notify payment greater than amount in autopay
+        end
       end#make sure the account has an outstanding balance
     end#make sure it has a payment account
     
