@@ -1,7 +1,7 @@
 class Payment < ActiveRecord::Base
   include AASM
 
-  belongs_to :financial_txn
+  belongs_to :financial_txn, :dependent => :destroy
   has_many   :payment_gateways
 
   aasm_column :current_state
