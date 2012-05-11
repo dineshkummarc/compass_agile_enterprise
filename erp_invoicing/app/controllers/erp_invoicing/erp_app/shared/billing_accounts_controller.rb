@@ -35,8 +35,9 @@ module ErpInvoicing
           result.tap do |result_tap|
             result_tap[:billing_accounts] = billing_accounts.all.collect do |billing_account|
               due_date = billing_account.due_date.blank? ? '' : billing_account.due_date.strftime("%Y-%m-%d")
-              billing_account.to_hash(:only => [], :methods => [:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,:balance_date], :additional_attributes => [{:due_date => due_date}])
+              billing_account.to_hash(:only => [], :methods => [:id,:send_paper_bills,:payable_online,:account_number,:calculate_balance,:payment_due,:balance,:balance_date], :additional_values => {:due_date => due_date})
             end#end billing_accounts collect
+            result_tap[:totalCount] = BillingAccount.count(:all)
           end#end result tap
         end
 
