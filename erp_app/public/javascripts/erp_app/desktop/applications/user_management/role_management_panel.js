@@ -42,15 +42,14 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.RoleManagementPan
     });
 
     var rolesJson = {
-      "role_ids":roleIds,
+      "role_ids[]":roleIds,
       "user_id":this.initialConfig['userId']
     };
 
     var self = this;
     Ext.Ajax.request({
       url: '/erp_app/desktop/user_management/role_management/save_roles',
-      method: 'PUT',
-      jsonData:rolesJson,
+      params:rolesJson,
       success: function(responseObject) {
         self.clearWindowStatus();
         if(self.initialConfig['userId'] == currentUser.id)
