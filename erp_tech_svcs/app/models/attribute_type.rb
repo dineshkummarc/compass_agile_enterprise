@@ -1,5 +1,5 @@
 class AttributeType < ActiveRecord::Base
-  has_many :attribute_values
+  has_many :attribute_values, :dependent => :destroy
 
   validates_uniqueness_of :internal_identifier
   validates :description, :presence => true
