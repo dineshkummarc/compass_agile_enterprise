@@ -12,10 +12,14 @@ ErpApp.CompassAccessNegotiator.ApplicationRoleManager = function(applications){
   this.applications = applications,
 
   this.findWidget = function(xtype){
+    var widget = null;
     for(var a=0; a < this.applications.length; a++){
       var application = this.applications[a];
-      return application.widgets.find("xtype == '"+xtype+"'");
+      widget = application.widgets.find("xtype == '"+xtype+"'");
+      if(!Ext.isEmpty(widget))
+          break;
     }
+    return widget;
   },
 
   /**
