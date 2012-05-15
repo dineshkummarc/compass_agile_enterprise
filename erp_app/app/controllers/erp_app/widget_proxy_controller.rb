@@ -14,7 +14,7 @@ module ErpApp
 
   		widget_obj = "::Widgets::#{@widget_name.camelize}::Base".constantize.new(self, @widget_name, @widget_action, @uuid, widget_params)
 
-      result = widget_obj.send(@widget_action)
+      result = widget_obj.process(@widget_action)
       result.nil? ? return : (render result)
 		end
     

@@ -1,3 +1,18 @@
+ErpApp::Widgets::Base.instance_eval do
+  def render_template(view, website=nil, locals={})
+    widget = Rails.application.config.erp_app.widgets.find{|item| item[:name] == self.widget_name}
+    paths = widget[:view_paths]
+
+    website.themes.active.map{ |theme| {:path => theme.path.to_s, :url => theme.url.to_s}}.each do |theme|
+      paths << File.join(theme[:url],'widgets',self.widget_name,'views')
+    end if website
+ 
+    paths.reverse!
+    ActionView::Base.new(paths).render(:template => view, :locals => locals)
+  end
+
+end
+
 ::ErpApp::Widgets::Base.class_eval do
   private
 

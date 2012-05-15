@@ -21,14 +21,8 @@ module ErpApp
 
       delegate :config, :params, :session, :request, :logger, :logged_in?, :current_user, :flash, :update_div_id, :update_html, :current_theme_paths, :request, :send_data, :to => :controller
 
-      attr_accessor :controller
       attr_reader   :state_name
-      attr_accessor :name
-      attr_accessor :div_id
-      attr_accessor :html
-      attr_accessor :view
-      attr_accessor :uuid
-      attr_accessor :widget_params
+      attr_accessor :controller, :name, :div_id,:html, :view, :uuid, :widget_params
       cattr_accessor :view_resolver_cache
 
       def log(*args); end
@@ -37,7 +31,7 @@ module ErpApp
         self.response_body = super
       end
 
-      def initialize(controller, name, view, uuid, widget_params)
+      def initialize(controller=nil, name=nil, view=nil, uuid=nil, widget_params=nil, website=nil)
         ErpApp::Widgets::Base.view_resolver_cache = [] if ErpApp::Widgets::Base.view_resolver_cache.nil?
         self.name = name
         self.controller = controller
@@ -153,6 +147,14 @@ module ErpApp
 
         def installed_widgets
           self.locate_widgets
+        end
+
+        def find_template(view)
+          resolvers = []
+          widget = Rails.application.config.erp_app.widgets.find{|item| item[:name] == self.widget_name}
+          widget[:view_paths].each do |view_path|
+            resolvers << ActionView::OptimizedFileSystemResolver.new(view_path)
+          end
         end
 
         private
