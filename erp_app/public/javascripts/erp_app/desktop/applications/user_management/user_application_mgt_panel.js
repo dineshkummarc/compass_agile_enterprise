@@ -42,7 +42,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
     });
 
     var appsJson = {
-      "app_ids":appIds,
+      "app_ids[]":appIds,
       "app_container_type":this.initialConfig['appContainerType'],
       "user_id":this.initialConfig['userId']
     };
@@ -50,8 +50,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.UserManagement.UserApplicationMg
     var self = this;
     Ext.Ajax.request({
       url: '/erp_app/desktop/user_management/application_management/save_applications',
-      method: 'PUT',
-      jsonData:appsJson,
+      params:appsJson,
       success: function(responseObject) {
         self.clearWindowStatus();
         if(self.initialConfig['userId'] == currentUser.id && self.initialConfig.appContainerType == 'Desktop')

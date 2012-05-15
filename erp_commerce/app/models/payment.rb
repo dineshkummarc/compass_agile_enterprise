@@ -1,7 +1,7 @@
 class Payment < ActiveRecord::Base
   include AASM
 
-  belongs_to :financial_txn
+  belongs_to :financial_txn, :dependent => :destroy
   has_many   :payment_gateways
 
   aasm_column :current_state
@@ -13,6 +13,11 @@ class Payment < ActiveRecord::Base
   aasm_state :authorized
   aasm_state :captured
   aasm_state :authorization_reversed
+  aasm_state :canceled
+
+  aasm_event :cancel do
+    transitions :to => :canceled, :from => [:pending]
+  end
 
   aasm_event :authorize do
       transitions :to => :authorized, :from => [:pending]

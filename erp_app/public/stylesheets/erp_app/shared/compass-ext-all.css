@@ -7,6 +7,21 @@
 	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/apartment/apartment_16x16.png', sizingMethod='crop');
 }
 
+.icon-accept {
+    background-image: url(/images/icons/accept/accept_16x16.png) !important;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/accept/accept_16x16.png', sizingMethod='crop');
+}
+
+.icon-mail {
+    background-image: url(/images/icons/mail/mail_16x16.png) !important;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/mail/mail_16x16.png', sizingMethod='crop');
+}
+
+.icon-note {
+    background-image: url(/images/icons/note/note_16x16.png) !important;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/note/note_16x16.png', sizingMethod='crop');
+}
+
 .icon-console {
     background-image: url(/images/icons/console/console_16x16.png) !important;
 	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/console/console_16x16.png', sizingMethod='crop');
@@ -228,6 +243,11 @@
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_lock/document_lock_16x16.png', sizingMethod='crop');
 }
 
+.icon-document_check {
+    background-image:url( /images/icons/document_check/document_check_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/document_check/document_check_16x16.png', sizingMethod='crop');
+}
+
 .icon-folders {
     background-image:url( /images/icons/folders/folders_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/folders/folders_16x16.png', sizingMethod='crop');
@@ -322,6 +342,11 @@
 .icon-arrow-right-blue {
     background-image:url( /images/icons/arrow_right_blue/arrow_right_blue_16x16.png ) !important;
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/arrow_right_blue/arrow_right_blue_16x16.png', sizingMethod='crop');
+}
+
+.icon-arrow-down-blue {
+    background-image:url( /images/icons/arrow_down_blue/arrow_down_blue_16x16.png ) !important;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/icons/arrow_down_blue/arrow_down_blue_16x16.png', sizingMethod='crop');
 }
 
 .icon-eye {

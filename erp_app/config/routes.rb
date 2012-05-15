@@ -63,6 +63,11 @@ ErpApp::Engine.routes.draw do
   match '/desktop/file_manager/base/:action' => "desktop/file_manager/base"
   match '/desktop/file_manager/download_file/:path' => "desktop/file_manager/base#download_file"
 
+  #configuration_management
+  match '/desktop/configuration_management/:action' => "desktop/configuration_management/base"
+  match '/desktop/configuration_management/types/:action' => "desktop/configuration_management/types"
+  match '/desktop/configuration_management/options/:action' => "desktop/configuration_management/options"
+
   #widget proxy
   match '/widgets/:widget_name/:widget_action/:uuid(/:id)' => "widget_proxy#index", :as => :widget
 

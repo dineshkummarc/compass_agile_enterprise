@@ -4,13 +4,13 @@ module ErpApp
 
     # DEPRECATED, use erp_app/public#download
     # def download_file
-   #    path = params[:path]
-   #    file_klass = FileAsset.type_by_extension(File.extname(path))
-   #    if file_klass == Image
-   #      send_file path, :type => "image/#{File.extname(path)}"
-   #    else
-   #      send_file path, :type => file_klass.content_type
-   #    end
+    #    path = params[:path]
+    #    file_klass = FileAsset.type_by_extension(File.extname(path))
+    #    if file_klass == Image
+    #      send_file path, :type => "image/#{File.extname(path)}"
+    #    else
+    #      send_file path, :type => file_klass.content_type
+    #    end
 	  # end
 
     # TODO:
@@ -18,11 +18,11 @@ module ErpApp
     # reorder menuitems
     # drag and drop image into ckeditor uses bad (but somehow not broken, i.e. ../../images/) url (filesystem on firefox, chrome OK) 
 
-    # Download Inline Example: /download/filename.ext?path=/directory    
+    # Download Inline Example: /download/filename.ext?path=/directory&disposition=inline
     # Download Prompt Example: /download/filename.ext?path=/directory&disposition=attachment
     def download
       filename = "#{params[:filename]}.#{params[:format]}"
-      disposition = params[:disposition] || 'inline'
+      disposition = params[:disposition]
 
       file = FileAsset.where(:name => filename)
       file = file.where(:directory => params[:path]) unless params[:path].blank?
@@ -53,7 +53,7 @@ module ErpApp
 
     protected
 
-    def serve_file(file, disposition)
+    def serve_file(file, disposition=nil)
       type = (file.type == 'Image' ? "image/#{params[:format]}" : file.content_type)
 
       if Rails.application.config.erp_tech_svcs.file_storage == :s3
@@ -63,7 +63,11 @@ module ErpApp
         redirect_to @file_support.bucket.objects[path].url_for(:read, options).to_s
       else
         # to use X-Sendfile or X-Accel-Redirect, set config.action_dispatch.x_sendfile_header in environment config file
-        send_file File.join(Rails.root,file.directory,file.name), :type => type, :disposition => disposition
+        if disposition
+          send_file File.join(Rails.root,file.directory,file.name), :type => type, :disposition => disposition
+        else
+          send_file File.join(Rails.root,file.directory,file.name), :type => type
+        end
       end
     end
 

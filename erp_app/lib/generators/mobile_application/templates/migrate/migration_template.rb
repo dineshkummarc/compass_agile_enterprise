@@ -6,8 +6,6 @@ class Create<%=class_name %>MobileApplication
       :internal_identifier => '<%=file_name %>',
       :base_url => '/erp_app/mobile/<%=file_name %>/index'
     )
-
-    app.save
   end
 
   def self.down

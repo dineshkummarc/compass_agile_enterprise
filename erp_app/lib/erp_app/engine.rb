@@ -4,6 +4,8 @@ module ErpApp
   class Engine < Rails::Engine
     isolate_namespace ErpApp
 
+    Mime::Type.register "application/json", :tree
+
     config.erp_app = ErpApp::Config
 
 	  initializer "erp_app_assets.merge_public" do |app|

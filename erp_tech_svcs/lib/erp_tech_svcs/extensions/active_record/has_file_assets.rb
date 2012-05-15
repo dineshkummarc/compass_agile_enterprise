@@ -34,8 +34,8 @@ module ErpTechSvcs
             capabilities.each do |capability_type, roles|
               file_asset.add_capability(capability_type, nil, roles)
             end if capabilities
-            
-            
+
+            file_asset
           end
 
           def images

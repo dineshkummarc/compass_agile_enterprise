@@ -20,26 +20,6 @@ class CreditCardAccount < ActiveRecord::Base
     end
     payments
   end
-  #financial_txn, params[:cvvs], credit_card, ErpCommerce::Config.active_merchant_gateway_wrapper, {}
-
-  #params
-  #financial_txn
-  #payment_date
-  #cvv
-  #gateway_wrapper
-  #
-  #Optional
-  #gateway_options
-  #credit_card_to_use
-  def schedule_payment(financial_txn, payment_date, cvv, gateway_wrapper,  gateway_options={},credit_card_to_use=nil)
-    result[:payment] = Payment.new
-    result[:payment].success = true
-    result[:payment].save
-    financial_txn.payments << result[:payment]
-    financial_txn.save
-    
-    result
-  end
 
   #params
   #financial_txn

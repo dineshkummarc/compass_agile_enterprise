@@ -60,21 +60,21 @@ module ErpInvoicing
 
             @billing_account_payment_amts = get_billing_account_amounts
             Rails.logger.debug("##### Billing Acct Payments: #{@billing_account_payment_amts}")
-            @payment_account_root = BizTxnAcctRoot.where("biz_txn_acct_id = ?",params[:payment_account_id]).first
+            @payment_account_root = BizTxnAcctRoot.find(params[:payment_account_id])
             @payment_account = @payment_account_root.account
             @payment_date = params[:payment_date]
             @total_payment = params[:total_payment]
 
             money = Money.create(
               :amount => @total_payment.to_f,
-              :description => "Payment Applied",
+              :description => "Online Payment",
               :currency => Currency.usd
             )
             financial_txn = FinancialTxn.create(
               :apply_date => Date.strptime(@payment_date,"%m/%d/%Y"),
               :money => money
             )
-            financial_txn.description = "Payment Applied"
+            financial_txn.description = "Online Payment"
             financial_txn.account = @payment_account_root
             financial_txn.save
 
@@ -90,25 +90,27 @@ module ErpInvoicing
                 )
               end
             end
-            case @payment_account.class.to_s
-            when "BankAccount"
-              result = @payment_account.purchase(financial_txn, ErpCommerce::ActiveMerchantWrappers::BankWrapper)
-              if !result[:payment].nil? and result[:payment].success
-                @authorization_code = result[:payment].authorization_code
-              else
-                @message = result[:message]
-              end
-            when "CreditCardAccount"
-              if financial_txn.apply_date == Date.today
+
+            if financial_txn.apply_date == Date.today
+              case @payment_account.class.to_s
+              when "BankAccount"
+                financial_txn.txn_type = BizTxnType.ach_sale
+                financial_txn.save
+                result = @payment_account.purchase(financial_txn, ErpCommerce::Config.active_merchant_gateway_wrapper)
+                if !result[:payment].nil? and result[:payment].success
+                  @authorization_code = result[:payment].authorization_code
+                else
+                  @message = result[:message]
+                end
+              when "CreditCardAccount"
+                financial_txn.txn_type = BizTxnType.cc_sale
+                financial_txn.save
                 result = @payment_account.purchase(financial_txn, params[:cvv], ErpCommerce::Config.active_merchant_gateway_wrapper)
                 if !result[:payment].nil? and result[:payment].success
                   @authorization_code = result[:payment].authorization_code
                 else
                   @message = result[:message]
                 end
-              else
-                result = @account.schedule_payment(financial_txn, financial_txn.apply_date, params[:cvv], ErpCommerce::Config.active_merchant_gateway_wrapper)
-                @message = "Error taking payment. Please try agian." unless result[:payment].success
               end
             end
 
@@ -122,7 +124,18 @@ module ErpInvoicing
           def payment_accounts
             party = Party.find(params[:party_id])
 
-            render :json => party.payment_accounts_hash
+            results = party.accounts.map do |acct|
+              if acct.biz_txn_acct_type == "CreditCardAccount" || acct.biz_txn_acct_type == 'BankAccount'
+                { :id => acct.id,
+                  :description => acct.description,
+                  :account_type => acct.biz_txn_acct_type
+                }
+              end
+            end
+
+            results.reject!{|x| x.nil?}
+
+            render :json => results
           end
 
           def generate_statement
