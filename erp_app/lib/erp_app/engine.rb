@@ -4,7 +4,7 @@ module ErpApp
   class Engine < Rails::Engine
     isolate_namespace ErpApp
 
-    Mime::Type.register "application/json", :tree
+    Mime::Type.register "json/tree", :tree
 
     config.erp_app = ErpApp::Config
 
