@@ -19,6 +19,9 @@ This engine is implemented with the premise that services like logging, tracing 
 - file\_assets\_location
   - Where you want file_assets to be saved to.
   - Default : file_assets
+- file\_storage
+  - File storage to use either s3 or filesystem.
+  - Default : :filesystem
 
 ### Override Initializer
 
@@ -30,6 +33,7 @@ To override these settings simple create a erp_tech_svcs.rb file in your initial
       config.email_notifications_from = 'notifications@noreply.com'
       config.max_file_size_in_mb = 5
       config.file_assets_location = 'file_assets'
+      config.file_storage = :filesystem
     end
     Rails.application.config.erp_tech_svcs.configure!
 

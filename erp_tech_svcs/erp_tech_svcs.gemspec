@@ -17,15 +17,14 @@ Gem::Specification.new do |s|
   
   s.files = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
-
+  
+  #compass dependencies
+  s.add_dependency 'erp_base_erp_svcs', "3.0.1"
+  s.add_development_dependency 'erp_dev_svcs', "3.0.1"
+  
   s.add_dependency('aws-sdk','1.3.9')
   s.add_dependency('delayed_job','2.1.4')
   s.add_dependency('paperclip','3.0.2')
   s.add_dependency('pdfkit','0.4.6')
-  s.add_dependency('sorcery','0.7.8')
-
-  #compass dependencies
-  s.add_dependency 'erp_base_erp_svcs', "3.0.1"
-  s.add_development_dependency 'erp_dev_svcs', "3.0.1"
-
+  s.add_dependency('sorcery','0.7.7')
 end

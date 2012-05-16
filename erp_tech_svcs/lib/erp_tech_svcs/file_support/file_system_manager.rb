@@ -4,7 +4,7 @@ module ErpTechSvcs
       REMOVE_FILES_REGEX = /^\./
 
       def root
-        File.join(Rails.root)
+        Rails.root
       end
 
       def update_file(path, content)

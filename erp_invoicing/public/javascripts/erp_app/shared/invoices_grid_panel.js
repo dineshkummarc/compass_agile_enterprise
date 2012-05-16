@@ -124,7 +124,7 @@ Ext.define("Compass.ErpApp.Shared.InvoicesGridPanel",{
       autoLoad: Compass.ErpApp.Utility.isBlank(config['autoLoad']) ? true : config['autoLoad'],
       autoSync: true,
       proxy: {
-        type: 'rest',
+        type: 'ajax',
         url:'/erp_invoicing/erp_app/shared/invoices/invoices',
         extraParams:{
           invoice_number:null,
@@ -138,11 +138,6 @@ Ext.define("Compass.ErpApp.Shared.InvoicesGridPanel",{
           totalProperty:'totalCount',
           messageProperty: 'messages'
         },
-        writer: {
-          type: 'json',
-          writeAllFields:true,
-          root: 'data'
-        },
         listeners: {
           exception: function(proxy, response, operation){
             Ext.MessageBox.show({
@@ -154,10 +149,6 @@ Ext.define("Compass.ErpApp.Shared.InvoicesGridPanel",{
           }
         }
       }
-    });
-
-    this.invoiceEditingPlugin = Ext.create('Ext.grid.plugin.RowEditing', {
-      clicksToMoveEditor: 1
     });
 
     var tbar = {
@@ -236,7 +227,6 @@ Ext.define("Compass.ErpApp.Shared.InvoicesGridPanel",{
       ]);
 
     config = Ext.apply({
-      plugins:[this.invoiceEditingPlugin],
       columns: [
       {
         header:'Invoice Number',

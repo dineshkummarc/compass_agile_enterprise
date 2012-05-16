@@ -76,7 +76,7 @@ module RailsDbAdmin
     end
 
     def primary_key?(table)
-      @connection.supports_primary_key? && @connection.primary_key(table) != nil
+      @connection.supports_primary_key? && !@connection.primary_key(table).nil?
     end
 
 	  

@@ -7,3 +7,6 @@ require 'erp_tech_svcs/file_support/file_manipulator'
 
 #path resolvers
 require 'erp_tech_svcs/file_support/railties/s3_resolver'
+
+#paperclip
+require 'erp_tech_svcs/file_support/paperclip_patch'

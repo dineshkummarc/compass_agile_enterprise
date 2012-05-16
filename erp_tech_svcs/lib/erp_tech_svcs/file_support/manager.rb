@@ -158,6 +158,10 @@ module ErpTechSvcs
         end
       end
 
+      def reload
+        # this is a template method
+      end
+
     end#Manager
   end#FileSupport
 end#ErpTechSvcs

@@ -8,7 +8,7 @@ module ErpProducts
               {
                 :id => product_type.id,
                 :title => product_type.description,
-                :imageUrl => product_type.images.empty? ? '/images/img_blank.png' : product_type.images.first.data.url,
+                :imageUrl => product_type.images.empty? ? '/images/img_blank.png' : product_type.images.first.data.url(nil, :escape => false),
                 :price => product_type.get_current_simple_amount_with_currency.nil? ? 'no price set' : product_type.get_current_simple_amount_with_currency,
                 :available => product_type.inventory_entries.first.number_available,
                 :sold => product_type.inventory_entries.first.number_sold,

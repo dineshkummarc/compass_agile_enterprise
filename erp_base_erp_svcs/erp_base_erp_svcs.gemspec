@@ -18,9 +18,6 @@ Gem::Specification.new do |s|
   s.files       = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.md"]
   s.test_files  = Dir["spec/**/*"]
 
-  #compass dependency
-  s.add_dependency('compass_ae_starter_kit', '~> 2.0.0')
-  
   s.add_dependency('attr_encrypted','1.2.0')
   s.add_dependency('awesome_nested_set','2.0.2')
   s.add_dependency('data_migrator','1.7')
@@ -28,10 +25,10 @@ Gem::Specification.new do |s|
   s.add_dependency('uuid','2.3.4')
 
   s.add_development_dependency "database_cleaner"
-  s.add_development_dependency "factory_girl_rails", "~> 1.3.0"
-  s.add_development_dependency "rspec-rails", "~> 2.7"
-  s.add_development_dependency "simplecov", "~> 0.5"
-  s.add_development_dependency "spork", "~> 0.9.0.rc"
-  s.add_development_dependency "sqlite3", "~> 1.3.4"
+  s.add_development_dependency "factory_girl_rails", "1.3.0"
+  s.add_development_dependency "rspec-rails", "2.7"
+  s.add_development_dependency "simplecov", "0.5"
+  s.add_development_dependency "spork", "0.9.0.rc"
+  s.add_development_dependency "sqlite3", "1.3.4"
   s.add_development_dependency "watchr"
 end

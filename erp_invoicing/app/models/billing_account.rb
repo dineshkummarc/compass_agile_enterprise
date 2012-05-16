@@ -74,19 +74,17 @@ class BillingAccount < ActiveRecord::Base
   end
 
   def payment_due=(amount, currency=Currency.usd)
-    unless amount.blank?
-      currency = Currency.usd
-      if amount.is_a?(Array)
-        currency = amount.last
-        amount = amount.first
-      end
-      if self.financial_txn_account.payment_due
-        self.financial_txn_account.payment_due.amount = amount
-      else
-        self.financial_txn_account.payment_due = Money.create(:amount => amount, :currency => currency)
-      end
-      self.financial_txn_account.payment_due.save
+    currency = Currency.usd
+    if amount.is_a?(Array)
+      currency = amount.last
+      amount = amount.first
     end
+    if self.financial_txn_account.payment_due
+      self.financial_txn_account.payment_due.amount = amount
+    else
+      self.financial_txn_account.payment_due = Money.create(:amount => amount, :currency => currency)
+    end
+    self.financial_txn_account.payment_due.save
   end
 
   def billing_date
@@ -128,20 +126,17 @@ class BillingAccount < ActiveRecord::Base
     end
   end
 
-  def balance=(amount)
-    unless amount.blank?
-      currency = Currency.usd
-      if amount.is_a?(Array)
-        currency = amount.last
-        amount = amount.first
-      end
-      if self.financial_txn_account.balance
-        self.financial_txn_account.balance.amount = amount
-      else
-        self.financial_txn_account.balance = Money.create(:amount => amount, :currency => currency)
-      end
-      self.financial_txn_account.balance.save
+  def balance=(amount, currency=Currency.usd)
+    if amount.is_a?(Array)
+      currency = amount.last
+      amount = amount.first
     end
+    if self.financial_txn_account.balance
+      self.financial_txn_account.balance.amount = amount
+    else
+      self.financial_txn_account.balance = Money.create(:amount => amount, :currency => currency)
+    end
+    self.financial_txn_account.balance.save
   end
 
   def current_invoice

@@ -115,6 +115,7 @@ module ErpDevSvcs
          [:erp_base_erp_svcs,
                      :erp_dev_svcs,
                      :erp_tech_svcs,
+                     :erp_app,
                      :erp_forms,
                      :erp_agreements,
                      :erp_products,
@@ -123,16 +124,15 @@ module ErpDevSvcs
                      :erp_commerce,
                      :erp_inventory,
                      :erp_communication_events,
-                     :erp_invoicing,
                      :erp_rules,
                      :erp_work_effort,
+                     :erp_invoicing,
                      :erp_financial_accounting,
                      :compass_ae_console,
                      :knitkit,
                      :rails_db_admin,
                      :compass_ae_starter_kit,
-                     :erp_search,
-                     :erp_app]
+                     :erp_search]
       end
 
     end

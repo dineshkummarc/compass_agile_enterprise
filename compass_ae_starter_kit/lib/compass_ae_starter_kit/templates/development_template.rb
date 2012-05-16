@@ -5,13 +5,13 @@ FileUtils.cp File.join(File.dirname(__FILE__),'../../../public','index.html'), '
 
 CompassAeStarterKit::FileSupport.patch_file 'config/initializers/session_store.rb',
 "# #{app_const}.config.session_store :active_record_store",
-"#{app_const}.config.session_store :active_record_store",
+"#{app_const}.config.session_store :active_record_store #use active_record for session storage, this is needed for knitkit",
 :patch_mode => :change
 
 CompassAeStarterKit::FileSupport.patch_file 'config/routes.rb',
 "#{app_const}.routes.draw do",
-" #mount CompassAE engines
- ErpBaseErpSvcs.mount_compass_ae_engines(self)",
+"  #mount CompassAE engines
+  ErpBaseErpSvcs.mount_compass_ae_engines(self)",
 :patch_mode => :insert_after
 
 CompassAeStarterKit::FileSupport.patch_file 'config/environments/production.rb',

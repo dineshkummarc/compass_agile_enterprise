@@ -37,9 +37,11 @@ module Knitkit
 
           end
 
-          render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(
-          :only => [:id, :content_id, :version, :title, :body_html, :excerpt_html, :created_at],
-          :methods => [:active, :published, :publisher])}}"
+          render :json => {:totalCount => content.versions.count,
+            :data => versions.collect{|version|version.to_hash(
+                :only => [:id, :content_id, :version, :title, :body_html, :excerpt_html, :updated_at],
+                :methods => [:active, :published, :publisher])}
+          }
         end
   
         def non_published_content_versions
@@ -52,7 +54,10 @@ module Knitkit
 
           versions = content.versions.order("#{sort} #{dir}").offset(start).limit(limit)
 
-          render :inline => "{\"totalCount\":#{content.versions.count},data:#{versions.to_json(:only => [:id, :version, :title, :body_html, :excerpt_html, :updated_at])}}"
+          render :json => {:totalCount => content.versions.count,
+            :data => versions.collect{|version|version.to_hash(
+                :only => [:id, :version, :title, :body_html, :excerpt_html, :updated_at])}
+          }
         end
 
         def publish_content
@@ -119,9 +124,11 @@ module Knitkit
             end
           end
 
-          render :inline => "{\"totalCount\":#{website_section.versions.count},data:#{versions.to_json(
-          :only => [:id, :version, :title, :updated_at],
-          :methods => [:active, :published, :publisher])}}"
+          render :json => {:totalCount => website_section.versions.count,
+            :data => versions.collect{|version|version.to_hash(
+                :only => [:id, :version, :title, :updated_at],
+                :methods => [:active, :published, :publisher])}
+          }
         end
 
         def get_website_section_version

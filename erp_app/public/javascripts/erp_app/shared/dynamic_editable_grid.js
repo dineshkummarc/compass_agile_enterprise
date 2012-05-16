@@ -6,43 +6,43 @@ Ext.define("Compass.ErpApp.Shared.DynamicEditableGrid",{
         //set a default proxy if none provided
         if (config.proxy === undefined ||
             config.proxy === null)
-        {
-           config.proxy =  {
-               type: 'rest',
-               url:config.url,
-               reader: {
-                   type: 'json',
-                   successProperty: 'success',
-                   root: 'data',
-                   messageProperty: 'message'
-               },
-               writer: {
-                   type: 'json',
-                   writeAllFields:true,
-                   root: 'data'
-               },
-               listeners: {
-                   exception: function(proxy, response, operation){
-                       Ext.MessageBox.show({
-                           title: 'REMOTE EXCEPTION',
-                           msg: operation.getError(),
-                           icon: Ext.MessageBox.ERROR,
-                           buttons: Ext.Msg.OK
-                       });
-                   }
-               }
-           };
+            {
+            config.proxy =  {
+                type: 'rest',
+                url:config.url,
+                reader: {
+                    type: 'json',
+                    successProperty: 'success',
+                    root: 'data',
+                    messageProperty: 'message'
+                },
+                writer: {
+                    type: 'json',
+                    writeAllFields:true,
+                    root: 'data'
+                },
+                listeners: {
+                    exception: function(proxy, response, operation){
+                        Ext.MessageBox.show({
+                            title: 'REMOTE EXCEPTION',
+                            msg: operation.getError(),
+                            icon: Ext.MessageBox.ERROR,
+                            buttons: Ext.Msg.OK
+                        });
+                    }
+                }
+            };
         }
-	      	var store = Ext.create('Ext.data.Store', {
-	              model: ((config.editable) ? config.model : undefined),
-	              fields:config['fields'],
-	              autoLoad: true,
-	              autoSync: true,
-	              pageSize: config['pageSize'],
-	              proxy: config.proxy,
-	              storeId: config['storeId'],
-	              autoLoad: true
-	          });
+        var store = Ext.create('Ext.data.Store', {
+            model: ((config.editable) ? config.model : undefined),
+            fields:config['fields'],
+            autoLoad: true,
+            autoSync: true,
+            pageSize: config['pageSize'],
+            proxy: config.proxy,
+            storeId: config['storeId'],
+            autoLoad: true
+        });
 
         this.store = store;
 

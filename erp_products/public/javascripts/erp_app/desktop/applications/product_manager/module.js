@@ -676,7 +676,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ProductManager.AddProductWindow"
       title:'Add New Product',
       width:800,
       layout:'fit',
-      height:525,
+      height:600,
       autoScroll:true,
       buttonAlign:'center',
       items:{

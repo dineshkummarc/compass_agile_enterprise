@@ -23,6 +23,9 @@ when 'setup_dev_env'
 when 'push_gems'
   require 'erp_dev_svcs/commands/push_gems'
   ErpDevSvcs::Commands::PushGems.execute
+when 'uninstall_gems'
+  require 'erp_dev_svcs/commands/uninstall_gems'
+  ErpDevSvcs::Commands::UninstallGems.execute
 else
   puts <<-EOT
 Usage: compass-util COMMAND [ARGS]
@@ -44,6 +47,8 @@ test            Execute the RSpec test suite in each mountable engine
 setup_dev_env   Creates dev Gemfiles, runs bundler update in each engine
                 so tests will work
 push_gems       Push gems to ruby gems or geminabox
+
+uninstall_gems  Uninstall installed gems
 EOT
   exit(1)
 end
