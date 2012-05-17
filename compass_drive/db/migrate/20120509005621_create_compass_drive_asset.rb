@@ -7,6 +7,7 @@ class CreateCompassDriveAsset < ActiveRecord::Migration
         t.boolean    :checked_out
         t.integer    :checkout_out_by_id
         t.datetime   :last_checkout_at
+        t.string     :name
 
         t.timestamps
       end
@@ -17,9 +18,9 @@ class CreateCompassDriveAsset < ActiveRecord::Migration
 
       CompassDriveAsset.create_versioned_table
 
-      add_index :compass_drive_versions, :file_asset_id, :name => 'compass_drive_asset_v_file_asset_idx'
-      add_index :compass_drive_versions, :checkout_out_by_id, :name => 'compass_drive_v_asset_checked_out_by_idx'
-      add_index :compass_drive_versions, :checked_out, :name => 'compass_drive_asset_v_checked_out_idx'
+      #add_index :compass_drive_versions, :file_asset_id, :name => 'compass_drive_asset_v_file_asset_idx'
+      #add_index :compass_drive_versions, :checkout_out_by_id, :name => 'compass_drive_v_asset_checked_out_by_idx'
+      #add_index :compass_drive_versions, :checked_out, :name => 'compass_drive_asset_v_checked_out_idx'
     end
   end
 

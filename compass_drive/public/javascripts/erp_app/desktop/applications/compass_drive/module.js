@@ -14,6 +14,21 @@ Ext.define("Compass.ErpApp.Desktop.Applications.CompassDrive",{
        var desktop = this.app.getDesktop();
         var win = desktop.getWindow('compass_drive');
         if(!win){
+
+            var repositoryTree = {
+              xtype:'compassdrive-repositorytreepanel',
+              region:'west',
+              split:true,
+              width:300,
+              collapsible:true
+            };
+
+            var detailsTabPanel = {
+              xtype:'tabpanel',
+              region:'center',
+              split:true
+            };
+
             win = desktop.createWindow({
                 id: 'compass_drive',
                 title:'CompassDrive',
@@ -23,8 +38,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.CompassDrive",{
                 shim:false,
                 animCollapse:false,
                 constrainHeader:true,
-                layout: 'fit',
-                items:[]
+                layout: 'border',
+                items:[repositoryTree, detailsTabPanel]
             });
         }
         win.show();
