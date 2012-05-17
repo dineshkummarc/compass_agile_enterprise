@@ -118,7 +118,7 @@ class WorkEffort < ActiveRecord::Base
   end
 
   def complete_work_effort
-    self.finished_at = DateTime.now
+    self.finished_at = Time.now
     self.actual_completion_time = time_diff_in_minutes(self.finished_at.to_time, self.started_at.to_time)
     self.save
     self.parent.start_effort unless self.parent.nil?
