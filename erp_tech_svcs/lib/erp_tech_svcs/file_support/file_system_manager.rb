@@ -4,7 +4,7 @@ module ErpTechSvcs
       REMOVE_FILES_REGEX = /^\./
 
       def root
-        Rails.root
+        Rails.root.to_s
       end
 
       def update_file(path, content)
@@ -21,8 +21,8 @@ module ErpTechSvcs
       end
 
       def save_move(path, new_parent_path)
-        old_path = File.join(root,path)
-        new_path = File.join(root,new_parent_path)
+        old_path = File.join(path)
+        new_path = File.join(new_parent_path)
         result = false
         unless File.exists? old_path
           message = FILE_DOES_NOT_EXIST

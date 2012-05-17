@@ -102,6 +102,8 @@ class Website < ActiveRecord::Base
     Role.create(:description => "Website #{self.title}", :internal_identifier => website_role_iid)
     configuration = ::Configuration.find_template('default_website_configuration').clone(true)
     configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier('contact_us_email_address'), self.email)
+    configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier('login_url'), '/login')
+    configuration.update_configuration_item(ConfigurationItemType.find_by_internal_identifier('homepage_url'), '/home')
     self.configurations << configuration
     self.save
   end
