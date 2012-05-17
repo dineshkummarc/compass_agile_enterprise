@@ -9,4 +9,5 @@ FactoryGirl.define do
   factory :biz_txn_event
   factory :biz_txn_acct
   factory :biz_txn_acct_party_role
+  factory :biz_txn_type
 end
