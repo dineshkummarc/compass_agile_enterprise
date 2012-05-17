@@ -7,17 +7,6 @@ Compass.ErpApp.Organizer.Layout = function(config){
     //used to build accordion menu
     var accordionMenuItems = []
 
-    var detailsPanel = {
-        id: 'details-panel',
-        title: 'Details',
-        height: 200,
-        region: 'south',
-        bodyStyle: 'padding-bottom:15px;background:#eee;',
-        autoScroll: true,
-        html: '<p class="details-info">When you select an application from the tree, additional details will display here.</p>'
-    };
-    this.detailsPanel = detailsPanel;
-
     var menu = Ext.create('Ext.menu.Menu', {
         items:[
         {
@@ -133,26 +122,15 @@ Compass.ErpApp.Organizer.Layout = function(config){
     };
 
     this.setup = function(){
-        this.accordianPanel = Ext.create("Ext.Panel",{
-            region : 'center',
+        this.WestPanel = {
+            region : 'west',
             margins : '0 0 0 0',
             cmargins : '0 0 0 0',
             width : 200,
-            collapsible: false,
-            layout: 'accordion',
-            items:accordionMenuItems
-        });
-
-        this.WestPanel = {
-            layout: 'border',
-            region : 'west',
-            activeItem: 0,
-            border: false,
             split:true,
             collapsible: true,
-            margins: '2 0 5 5',
-            width: 200,
-            items: [this.accordianPanel, this.detailsPanel]
+            layout: 'accordion',
+            items:accordionMenuItems
         };
 
         this.viewPort = Ext.create('Ext.container.Viewport', {

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>This is your confirmation</h1>
+    <p>Your order is complete.
+      <br/>Confirmation Number <%=@payment.authorization_code%>
+      <br/>Your order number is <%=@order.order_number%>
+      <br/>Your order status is <%=@order.status%>
+      <br/>Total for this order was <%=number_to_currency(@order.get_total_charges.sum{|money| money.amount})%>
+    </p>
+  </body>
+</html>

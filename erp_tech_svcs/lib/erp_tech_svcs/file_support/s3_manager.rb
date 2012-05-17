@@ -22,11 +22,11 @@ module ErpTechSvcs
           )
 
           @@s3_bucket = @@s3_connection.buckets[@@configuration['bucket'].to_sym]
-          cache_node_tree(build_node_tree(true))
+          build_node_tree(true)
         end
 
         def reload
-          !@@s3_connection.nil? ? (cache_node_tree(build_node_tree(true))) : setup_connection
+          !@@s3_connection.nil? ? build_node_tree(true) : setup_connection
         end
 
         def cache_key
@@ -35,7 +35,7 @@ module ErpTechSvcs
 
         def cache_node_tree(node_tree)
           Rails.cache.write(cache_key, node_tree, :expires_in => ErpTechSvcs::Config.s3_cache_expires_in_minutes.minutes)
-          return node_tree
+          node_tree
         end
 
         def add_children(parent_hash, tree)
@@ -65,6 +65,7 @@ module ErpTechSvcs
 
           tree_data = {:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}
           tree_data = [add_children(tree_data, @@s3_bucket.as_tree)]
+          cache_node_tree(tree_data)
         end
       end
 
@@ -93,7 +94,6 @@ module ErpTechSvcs
         #Rails.logger.info "deleting cache with key: #{path}"
         Rails.cache.delete(path) # delete template from cache
         Rails.cache.delete(cache_key) # delete node tree from cache
-        reload#preload the tree and cache
       end
 
       def update_file(path, content)

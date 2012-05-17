@@ -28,6 +28,6 @@ document.observe("dom:loaded", function() {
 
 /* jQuery implementation 
 NOTE: Does not work standalone like the prototype implementation did, you have to do it inline in the ajax response */
-$(function(){
+jQuery(function(){
   jQuery('.pagination a').attr('data-remote', 'true'); 
 });
