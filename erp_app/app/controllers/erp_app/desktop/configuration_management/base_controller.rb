@@ -6,7 +6,6 @@ module ErpApp
         def add_type
           configuration = ::Configuration.find(params[:configuration_id])
           type          = ConfigurationItemType.find(params[:type_id])
-          configuration.configuration_item_types << type
 
           render :json => if configuration.configuration_item_types << type
             {:success => true}

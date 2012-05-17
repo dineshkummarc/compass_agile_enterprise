@@ -119,9 +119,9 @@ Ext.define("Compass.ErpApp.Shared.InvoiceItemsGridPanel",{
           xtype:'button',
           iconCls: 'icon-add',
           handler: function(button) {
-            var grid = button.findParentByType('shared-invoiceitemsgridpanel');
+            var grid = button.up('shared-invoiceitemsgridpanel');
             var edit = grid.editingPlugin;
-            grid.store.insert(0, new Compass.ErpApp.Shared.InvoiceItem());
+            grid.store.insert(0, new Compass.ErpApp.Shared.InvoiceItem({invoice_id:grid.getStore().proxy.extraParams.invoice_id}));
             edit.startEdit(0,0);
           }
         },'-',

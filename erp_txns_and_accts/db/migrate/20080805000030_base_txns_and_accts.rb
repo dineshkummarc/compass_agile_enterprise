@@ -323,7 +323,7 @@ class BaseTxnsAndAccts < ActiveRecord::Migration
         t.column :balance_date,      :date
         t.column :calculate_balance, :boolean
         t.column :payment_due_id,    :integer
-        t.column :due_date,          :datetime
+        t.column :due_date,          :date
         
         #polymorphic tables 
         t.references  :financial_account, :polymorphic => true

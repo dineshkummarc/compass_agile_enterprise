@@ -84,6 +84,7 @@ module Widgets
         set_total_price(@order)
 
         if success
+          CheckoutMailer.email_confirmation(self.current_user.party.billing_email_address.email_address, @order, @payment).deliver
           render :update => {:id => "#{@uuid}_result", :view => :confirmation}
         else
           render :update => {:id => "#{@uuid}_result", :view => :payment}

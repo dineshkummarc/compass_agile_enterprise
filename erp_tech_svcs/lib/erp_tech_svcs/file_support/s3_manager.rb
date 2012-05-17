@@ -5,7 +5,7 @@ module ErpTechSvcs
   module FileSupport
     class S3Manager < Manager
       class << self
-        cattr_accessor :node_tree
+        cattr_accessor :node_tree, :s3_connection
 
         def setup_connection
           @@configuration = YAML::load_file(File.join(Rails.root,'config','s3.yml'))[Rails.env]
@@ -22,11 +22,11 @@ module ErpTechSvcs
           )
 
           @@s3_bucket = @@s3_connection.buckets[@@configuration['bucket'].to_sym]
-          cache_node_tree(build_node_tree(true))
+          build_node_tree(true)
         end
 
         def reload
-          !@@s3_connection.nil? ? (cache_node_tree(build_node_tree(true))) : setup_connection
+          !@@s3_connection.nil? ? build_node_tree(true) : setup_connection
         end
 
         def cache_key
@@ -35,7 +35,7 @@ module ErpTechSvcs
 
         def cache_node_tree(node_tree)
           Rails.cache.write(cache_key, node_tree, :expires_in => ErpTechSvcs::Config.s3_cache_expires_in_minutes.minutes)
-          return node_tree
+          node_tree
         end
 
         def add_children(parent_hash, tree)
@@ -65,55 +65,8 @@ module ErpTechSvcs
 
           tree_data = {:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}
           tree_data = [add_children(tree_data, @@s3_bucket.as_tree)]
+          cache_node_tree(tree_data)
         end
-
-        # OLD MANUALLY BUILT NODE TREE - THIS IS DEPRECATED AND CAN BE REMOVED, REPLACED WITH AWS-SDK bucket.as_tree SEEN ABOVE
-        # def build_node_tree(reload=false)
-        #   node_tree = Rails.cache.read('node_tree')
-        #   if !reload and !node_tree.nil?
-        #     Rails.logger.info "@@@@@@@@@@@@@@ USING CACHED node_tree: #{node_tree.inspect}"
-        #     return node_tree
-        #   end
-
-        #   tree_data = [{:text => @@s3_bucket.name, :leaf => false, :id => '', :children => []}]
-        #   #objects = reload ? @@s3_bucket.objects(:reload) : @@s3_bucket.objects()
-        #   objects = @@s3_bucket.objects
-
-        #   nesting_depth = objects.collect{|object| object.key.split('/').count}.max
-        #   unless nesting_depth.nil?
-        #     levels = []
-        #     (1..nesting_depth).each do |i|
-        #       current_items = []
-        #       objects_this_depth = objects.collect{|object|
-        #         text = object.key.split('/')[i - 1]
-        #         path ='/' + (object.key.split('/')[0..(i-1)].join('/'))
-        #         if object.key.split('/').count >= i && current_items.select{|item| item[:text] == text and item[:path] == path}.empty?
-        #           item_hash = {:text => text, :path => path, :last_modified => object.last_modified}
-        #           current_items << item_hash
-        #           item_hash
-        #         end
-        #       }
-        #       objects_this_depth.delete_if{|item| (item.nil? or item[:text].nil?)}
-        #       levels << objects_this_depth
-        #     end
-
-        #     old_parents = []
-        #     new_parents = [tree_data.first]
-        #     levels.each do |level|
-        #       old_parents = new_parents
-        #       new_parents = []
-        #       level.each do |item|
-        #         parent = old_parents.count == 1 ? old_parents.first : self.find_parent(item, old_parents)
-        #         path = File.join(parent[:id], item[:text])
-        #         child_hash = {:last_modified => item[:last_modified], :text => item[:text], :downloadPath => parent[:id], :leaf => !File.extname(item[:text]).blank?, :id => path, :children => []}
-        #         new_parents << child_hash
-        #         parent[:children] << child_hash
-        #       end
-        #     end
-        #   end
-
-        #   tree_data
-        # end
       end
 
       def buckets

@@ -16,8 +16,8 @@ Compass.ErpApp.Widgets.GoogleMap = {
                 type: 'memory'
             },
             data:[{
-                title:'Google Inc.',
-                address:'1600 Amphitheatre Parkway Mountain View, CA 94043'
+                title:'TrueNorth.',
+                address:'1 S Orange Ave Orlando, FL 32801'
             }]
         });
 

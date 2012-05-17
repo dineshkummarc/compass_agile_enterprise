@@ -60,7 +60,14 @@ module Knitkit
           model = DesktopApplication.find_by_internal_identifier('knitkit')
           begin
             current_user.with_capability(model, 'view', 'Theme') do
-              render :json => @theme.destroy ? {:success => true} : {:success => false}
+              if @theme.destroy
+                #clear resolver cache
+                path = File.join("#{@theme[:url]}","templates")
+                cached_resolver = ThemeSupport::Cache.theme_resolvers.find{|cached_resolver| cached_resolver.to_path == path}
+                render :json => {:success => true}
+              else
+                render :json =>  {:success => false}
+              end
             end
           rescue ErpTechSvcs::Utils::CompassAccessNegotiator::Errors::UserDoesNotHaveCapability=>ex
             render :json => {:success => false, :message => ex.message}
@@ -238,6 +245,9 @@ module Knitkit
                 if result && !is_folder
                   theme_file = get_theme_file(path)
                   theme_file.destroy
+                  #clear resolver cache
+                  path = File.join("#{@theme[:url]}","templates")
+                  cached_resolver = ThemeSupport::Cache.theme_resolvers.find{|cached_resolver| cached_resolver.to_path == path}
                 end
                 result = {:success => result, :error => message}
               rescue Exception=>ex
@@ -285,9 +295,9 @@ module Knitkit
           themes_index = path.index('themes')
           path = path[themes_index..path.length]
           theme_name = path.split('/')[1]
-          theme = site.themes.find_by_theme_id(theme_name)
+          @theme = site.themes.find_by_theme_id(theme_name)
 
-          theme
+          @theme
         end
 
         def get_theme_file(path)

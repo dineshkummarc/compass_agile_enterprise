@@ -18,20 +18,26 @@ Gem::Specification.new do |s|
   s.files       = Dir["{app,config,db,lib,tasks}/**/*"] + ["GPL-3-LICENSE", "Rakefile", "README.md"]
   s.test_files  = Dir["spec/**/*"]
 
-  #compass dependency
-  s.add_dependency('compass_ae_starter_kit', '~> 2.0.0')
-  
+  #this is needed for awesome_nested_set it will try to install rails 3.2
+  s.add_dependency 'railties', "~> 3.1.0"
+  s.add_dependency 'actionmailer', "~> 3.1.0"
+  s.add_dependency 'actionpack', "~> 3.1.0"
+  s.add_dependency 'activerecord', "~> 3.1.0"
+  s.add_dependency 'activeresource', "~> 3.1.0"
+  s.add_dependency 'activesupport', "~> 3.1.0"
+  s.add_dependency 'rails', "~> 3.1.0"
   s.add_dependency('attr_encrypted','1.2.0')
   s.add_dependency('awesome_nested_set','2.0.2')
   s.add_dependency('data_migrator','1.7')
   s.add_dependency('has_many_polymorphic','>= 2.0.1')
   s.add_dependency('uuid','2.3.4')
+  #nasty I know
 
   s.add_development_dependency "database_cleaner"
-  s.add_development_dependency "factory_girl_rails", "~> 1.3.0"
-  s.add_development_dependency "rspec-rails", "~> 2.7"
-  s.add_development_dependency "simplecov", "~> 0.5"
-  s.add_development_dependency "spork", "~> 0.9.0.rc"
-  s.add_development_dependency "sqlite3", "~> 1.3.4"
+  s.add_development_dependency "factory_girl_rails", "1.3.0"
+  s.add_development_dependency "rspec-rails", "2.7"
+  s.add_development_dependency "simplecov", "0.5"
+  s.add_development_dependency "spork", "0.9.0.rc"
+  s.add_development_dependency "sqlite3", "1.3.4"
   s.add_development_dependency "watchr"
 end

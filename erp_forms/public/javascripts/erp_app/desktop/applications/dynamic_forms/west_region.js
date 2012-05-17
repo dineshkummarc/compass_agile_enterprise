@@ -317,7 +317,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
               iconCls:'icon-add',
               listeners:{
                 'click':function(){
-                  self.addDynamicForm(record);
+                  //self.addDynamicForm(record);
+                  Ext.Msg.alert('Info', 'Form Builder not yet implemented');
                 }
               }
             });
@@ -341,7 +342,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
               iconCls:'icon-edit',
               listeners:{
                 'click':function(){
-                  self.getDynamicForm(record);
+                  //self.getDynamicForm(record);
+                  Ext.Msg.alert('Info', 'Form Builder not yet implemented');
                 }
               }
             });
@@ -351,7 +353,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
                 iconCls:'icon-edit',
                 listeners:{
                   'click':function(){
-                    self.setDefaultForm(record);
+                    //self.setDefaultForm(record);
+                    Ext.Msg.alert('Info', 'Form Builder not yet implemented');
                   }
                 }
               });
@@ -362,7 +365,8 @@ Ext.define("Compass.ErpApp.Desktop.Applications.DynamicForms.WestRegion",{
               iconCls:'icon-delete',
               listeners:{
                 'click':function(){
-                  self.deleteForm(record);
+                  //self.deleteForm(record);
+                  Ext.Msg.alert('Info', 'Form Builder not yet implemented');
                 }
               }
             });

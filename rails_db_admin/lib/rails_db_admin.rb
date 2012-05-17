@@ -2,6 +2,7 @@
 require 'erp_app'
 require 'erp_forms'
 
+require "rails_db_admin/version"
 require 'rails_db_admin/config'
 require 'rails_db_admin/extjs'
 require 'rails_db_admin/connection_handler'

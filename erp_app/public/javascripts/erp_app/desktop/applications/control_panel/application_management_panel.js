@@ -73,10 +73,10 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
         this.applicationsTree = Ext.create('Ext.tree.Panel', {
             store: store,
             width:200,
-            height:200,
             region:'west',
             useArrows: true,
             border: false,
+            split:true,
             listeners:{
                 scope:this,
                 'itemclick':function(view, record){
@@ -92,6 +92,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.ControlPanel.ApplicationManageme
         this.settingsCard = new Ext.Panel({
             layout:'card',
             region:'center',
+            split:true,
             autoDestroy:true
         });
 

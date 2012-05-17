@@ -22,6 +22,14 @@ class ConfigurationItemType < ActiveRecord::Base
   def add_default_configuration_option(option)
     self.clear_options if self.allow_user_defined_options?
     
+    #if this is not multi_optional clear out any default options set
+    unless self.is_multi_optional?
+      ConfigurationItemTypeConfigurationOption.where('configuration_item_type_id = ?', self.id).each do |configuration_item_type_configuration_option|
+        configuration_item_type_configuration_option.is_default = false
+      configuration_item_type_configuration_option.save
+      end
+    end
+
     existing_option = self.configuration_options.where(:id => option.id).first
     if existing_option.nil?
       ConfigurationItemTypeConfigurationOption.create(:configuration_item_type => self, :configuration_option => option, :is_default => true)

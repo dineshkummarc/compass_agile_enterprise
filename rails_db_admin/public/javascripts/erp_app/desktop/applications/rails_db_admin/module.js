@@ -15,9 +15,9 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
   },
 
   getTableData : function(table){
-    self = this;
+    var self = this;
 
-    var grid = new Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel({
+    var grid = Ext.create('Compass.ErpApp.Shared.DynamicEditableGridLoaderPanel',{
       title:table,
       setupUrl:'/rails_db_admin/erp_app/desktop/base/setup_table_grid/' + table,
       dataUrl:'/rails_db_admin/erp_app/desktop/base/table_data/' + table,
@@ -67,7 +67,7 @@ Ext.define("Compass.ErpApp.Desktop.Applications.RailsDbAdmin",{
           exception: function(proxy, response, operation){
             var msg;
             if (operation.getError() === undefined) {
-              responseObject = Ext.JSON.decode(response.responseText);
+              var responseObject = Ext.JSON.decode(response.responseText);
               msg = responseObject.exception;
             } else {
               msg = operation.getError();

@@ -17,11 +17,11 @@ Gem::Specification.new do |s|
   
   s.homepage    = 'http://development.compassagile.com'
   
-  s.add_dependency('compass_ae_starter_kit', '~> 2.0.0')
-  s.add_dependency('erp_base_erp_svcs',      '~> 3.0.0')
-  s.add_dependency('erp_tech_svcs',          '~> 3.0.0')
-  s.add_dependency('erp_app',                '~> 3.0.0')
-  s.add_dependency('erp_forms',              '~> 2.0.0')
-  s.add_dependency('knitkit',                '~> 2.0.0')
-  s.add_dependency('rails_db_admin',         '~> 2.0.0')
+  s.add_dependency('compass_ae_starter_kit', '~> 2.0.1')
+  s.add_dependency('erp_base_erp_svcs',      '~> 3.0.1')
+  s.add_dependency('erp_tech_svcs',          '~> 3.0.1')
+  s.add_dependency('erp_app',                '~> 3.0.1')
+  s.add_dependency('erp_forms',              '~> 2.0.1')
+  s.add_dependency('knitkit',                '~> 2.0.1')
+  s.add_dependency('rails_db_admin',         '~> 2.0.1')
 end

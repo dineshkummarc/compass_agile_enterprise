@@ -10,6 +10,7 @@ ErpApp.CompassAccessNegotiator.ApplicationRoleManager = function(applications){
      *
      */
   this.applications = applications,
+  this.registeredXtypes = [],
 
   this.findWidget = function(xtype){
     var widget = null;
@@ -17,7 +18,7 @@ ErpApp.CompassAccessNegotiator.ApplicationRoleManager = function(applications){
       var application = this.applications[a];
       widget = application.widgets.find("xtype == '"+xtype+"'");
       if(!Ext.isEmpty(widget))
-          break;
+        break;
     }
     return widget;
   },
@@ -85,18 +86,34 @@ ErpApp.CompassAccessNegotiator.ApplicationRoleManager = function(applications){
      * @param {ErpApp.CompassAccessNegotiator.User} user
      */
   this.validWidgets = function(application_iid, filter, user){
+    this.getRegisteredXtypes();
     var validXtypes = [];
     var application = this.applications.find("iid == '"+application_iid+"'");
     var xtypes = application.widgets.collect('xtype');
     for(var i = 0; i < xtypes.length; i++){
       if(this.hasAccessToWidget(xtypes[i], user)){
         if(filter[xtypes[i]] != true){
-          validXtypes.push(xtypes[i]);
+          if(this.registeredXtypes.contains(xtypes[i])){
+            validXtypes.push(xtypes[i]);
+          }
         }
       }
     }
     
     return validXtypes;
+  }
+
+  this.getRegisteredXtypes = function(){
+    var self = this;
+    if(this.registeredXtypes.length < 1){
+      Ext.Object.each(Ext.ClassManager.maps.aliasToName,function(key,value){
+        var xtype = key.split(".")[1];
+
+        if(!self.registeredXtypes.contains(xtype)){
+          self.registeredXtypes.push(xtype);
+        }
+      });
+    }
   }
 };
 

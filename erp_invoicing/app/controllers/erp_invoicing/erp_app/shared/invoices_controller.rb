@@ -30,12 +30,8 @@ module ErpInvoicing
 
         def email_invoice
           invoice = Invoice.find(params[:id])
-          begin
-            StatementMailer.statement_email(invoice, params[:to_email]).deliver
-          rescue Exception => e
-            system_user = Party.find_by_description('Compass AE')
-            AuditLog.custom_application_log_message(system_user, e)
-          end
+          DocumentMailer.email_document(params[:to_email], invoice.document).deliver
+
           render :json => {:success => true}
         end
 
@@ -46,7 +42,7 @@ module ErpInvoicing
 
         def invoices
           render :json => if request.put?
-            update_invoice
+            #update_invoice #not implemented yet
           elsif request.get?
             get_invoices
           elsif request.delete?
@@ -54,10 +50,38 @@ module ErpInvoicing
           end
         end
 
-        def delete_invoice
-          Invoice.find(params[:id]).destroy
+        def get_invoices
+          result = {:success => true, :invoices => [], :totalCount => 0}
 
-          {:success => true}
+          sort_hash      = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
+          sort           = sort_hash[:sort] || 'created_at'
+          dir            = sort_hash[:dir] || 'DESC'
+          limit          = params[:limit] || 50
+          start          = params[:start] || 0
+
+          invoices = Invoice.scoped
+          invoices = invoices.where('invoice_number = ?', params[:invoice_number]) unless params[:invoice_number].blank?
+          invoices = invoices.where('billing_account_id = ?', params[:billing_account_id]) unless params[:billing_account_id].blank?
+          invoices = invoices.order("#{sort} #{dir}").limit(limit).offset(start)
+          result[:totalCount] = invoices.count
+
+
+          invoices.all.each do |invoice|
+            result[:invoices] << {
+              :id => invoice.id,
+              :invoice_number => invoice.invoice_number,
+              :description => invoice.description,
+              :message => invoice.message,
+              :invoice_date => invoice.invoice_date,
+              :due_date => invoice.due_date,
+              :billing_account => invoice.billing_account.account_number,
+              :payment_due => invoice.payment_due
+              #:billed_to_party => (invoice.find_parties_by_role_type('billed_to').first.description rescue ''),
+              #:billed_from_party => (invoice.find_parties_by_role_type('billed_from').first.description rescue '')
+            }
+          end
+
+          result
         end
 
         def create_invoice
@@ -84,38 +108,10 @@ module ErpInvoicing
           end
         end
 
-        def get_invoices
-          result = {:success => true, :invoices => [], :totalCount => 0}
-    
-          sort_hash      = params[:sort].blank? ? {} : Hash.symbolize_keys(JSON.parse(params[:sort]).first)
-          sort           = sort_hash[:sort] || 'created_at'
-          dir            = sort_hash[:dir] || 'DESC'
-          limit          = params[:limit] || 50
-          start          = params[:start] || 0
+        def delete_invoice
+          Invoice.find(params[:id]).destroy
 
-          invoices = Invoice.scoped
-          invoices = invoices.where('invoice_number = ?', params[:invoice_number]) unless params[:invoice_number].blank?
-          invoices = invoices.where('billing_account_id = ?', params[:billing_account_id]) unless params[:billing_account_id].blank?
-          invoices = invoices.order("#{sort} #{dir}").limit(limit).offset(start)
-          result[:totalCount] = invoices.count
-          
-        
-          invoices.all.each do |invoice|
-            result[:invoices] << {
-              :id => invoice.id,
-              :invoice_number => invoice.invoice_number,
-              :description => invoice.description,
-              :message => invoice.message,
-              :invoice_date => invoice.invoice_date,
-              :due_date => invoice.due_date,
-              :billing_account => invoice.billing_account.account_number,
-              :payment_due => invoice.payment_due
-              #:billed_to_party => (invoice.find_parties_by_role_type('billed_to').first.description rescue ''),
-              #:billed_from_party => (invoice.find_parties_by_role_type('billed_from').first.description rescue '')
-            }
-          end
-
-          result
+          {:success => true}
         end
 
         def invoice_items

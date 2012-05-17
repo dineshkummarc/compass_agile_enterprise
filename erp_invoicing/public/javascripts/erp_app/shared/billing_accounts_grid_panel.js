@@ -23,6 +23,14 @@ Ext.define('Compass.ErpApp.Shared.BillingAccount',{
   {
     type:'presence',
     field: 'account_number'
+  },
+  {
+    type:'presence',
+    field: 'balance'
+  },
+  {
+    type:'presence',
+    field: 'payment_due'
   }
   ]
 });
@@ -113,7 +121,9 @@ Ext.define("Compass.ErpApp.Shared.BillingAccountsGridPanel",{
           var grid = button.up('shared-billingaccountsgridpanel');
           grid.store.insert(0, new Compass.ErpApp.Shared.BillingAccount({
             payment_due:0.00,
-            balance:0.00
+            balance:0.00,
+            due_date:new Date(),
+            balance_date:new Date()
           }));
           editingPlugin.startEdit(0,0);
         }
