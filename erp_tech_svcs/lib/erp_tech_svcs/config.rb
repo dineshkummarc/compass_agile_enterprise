@@ -9,7 +9,8 @@ module ErpTechSvcs
                     :s3_url_expires_in_seconds,
                     :s3_protocol,
                     :file_storage,
-                    :s3_cache_expires_in_minutes
+                    :s3_cache_expires_in_minutes,
+                    :session_expires_in_hours
 
       def init!
         @defaults = {
@@ -21,7 +22,8 @@ module ErpTechSvcs
           :@s3_url_expires_in_seconds => 60,
           :@s3_protocol => 'https', # Can be either 'http' or 'https'
           :@file_storage => :filesystem, # Can be either :s3 or :filesystem
-          :@s3_cache_expires_in_minutes => 60
+          :@s3_cache_expires_in_minutes => 60,
+          :@session_expires_in_hours => 12 # this is used by DeleteExpiredSessionsJob to purge inactive sessions from database 
         }
       end
 
