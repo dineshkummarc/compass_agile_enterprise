@@ -5,7 +5,7 @@ FileUtils.cp File.join(File.dirname(__FILE__),'../../../public','index.html'), '
 
 CompassAeStarterKit::FileSupport.patch_file 'config/initializers/session_store.rb',
 "# #{app_const}.config.session_store :active_record_store",
-"#{app_const}.config.session_store :active_record_store #use active_record for session storage, this is needed for knitkit",
+"#{app_const}.config.session_store :active_record_store, :expire_after => 12.hours #use active_record for session storage, this is needed for knitkit",
 :patch_mode => :change
 
 CompassAeStarterKit::FileSupport.patch_file 'config/routes.rb',
