@@ -15,20 +15,16 @@ module Knitkit
 
     protected
     def get_contents
-      Rails.cache.fetch("Contents_#{@website_section.path}", :expires_in => 300.minutes) do
+      Rails.cache.fetch("Contents_#{@website_section.path}", :expires_in => cache_expires_in) do
         Article.find_published_by_section(@active_publication, @website_section)
       end
     end
 
     def get_layout
-      Rails.cache.fetch("Layout_#{@website_section.path}", :expires_in => 300.minutes) do
+      Rails.cache.fetch("Layout_#{@website_section.path}", :expires_in => cache_expires_in) do
         @website_section.get_published_layout(@active_publication)
       end
     end
-
-    def get_cached_data(key)
-
-    end
-    
+   
   end
 end

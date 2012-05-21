@@ -16,12 +16,20 @@ module Knitkit
     end
   
     protected
+    def cache_expires_in
+      Knitkit::Config.cache_expiration_in_minutes.minutes
+    end
+
     def set_website
-      @website = Website.find_by_host(request.host_with_port)
+      @website = Rails.cache.fetch("Website_#{request.host_with_port}", :expires_in => cache_expires_in) do
+        Website.find_by_host(request.host_with_port)
+      end
     end
     
     def load_sections
-      @website_sections = @website.website_sections.positioned
+      @website_sections = Rails.cache.fetch("website_sections_#{@website.iid}", :expires_in => cache_expires_in) do
+        @website.website_sections.positioned
+      end
     end
 
     def clear_widget_params
@@ -42,17 +50,22 @@ module Knitkit
     end
 
     def set_login_path
-      @login_path = @website.configurations.first.get_configuration_item(ConfigurationItemType.find_by_internal_identifier('login_url')).options.first.value
+      @login_path = Rails.cache.fetch("login_path_#{@website.iid}", :expires_in => cache_expires_in) do
+        @website.configurations.first.get_configuration_item(ConfigurationItemType.find_by_internal_identifier('login_url')).options.first.value
+      end
     end
 
     def set_active_publication
-      @active_publication = @website.active_publication
-      if !session[:website_version].blank? && !session[:website_version].empty?
-        site_version_hash = session[:website_version].find{|item| item[:website_id] == @website.id}
-        unless site_version_hash.nil?
-          @active_publication = @website.published_websites.where('version = ?', site_version_hash[:version].to_f).first
+      @active_publication = Rails.cache.fetch("active_publication_#{@website.iid}", :expires_in => cache_expires_in) do
+        @active_publication = @website.active_publication
+        if !session[:website_version].blank? && !session[:website_version].empty?
+          site_version_hash = session[:website_version].find{|item| item[:website_id] == @website.id}
+          unless site_version_hash.nil?
+            @active_publication = @website.published_websites.where('version = ?', site_version_hash[:version].to_f).first
+          end
         end
       end
     end
+
   end
 end
