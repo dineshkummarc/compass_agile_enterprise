@@ -10,14 +10,31 @@ module ActionView
   module Helpers
     module AssetTagHelper
       def theme_javascript_path(theme, source)
-        theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
-        file = theme.files.where('name = ? and directory = ?', source, "#{theme.url}/javascripts").first
+        theme = get_theme(theme)
+        file = get_file(theme, source, "#{theme.url}/javascripts")
         file.nil? ? '' : file.data.url
       end
       alias_method :theme_path_to_javascript, :theme_javascript_path
 
+      def get_theme(theme)
+        return theme if theme.is_a?(Theme)        
+        cached_theme = Rails.cache.read("Theme_#{theme}")
+        return cached_theme if !cached_theme.nil?
+        theme = controller.website.themes.find_by_theme_id(theme)
+        Rails.cache.write("Theme_#{theme.theme_id}", theme, :expires_in => 300.minutes) if !theme.nil?
+        return theme
+      end
+
+      def get_file(theme, filename, directory)
+        cached_file = Rails.cache.read("File_#{directory}/#{filename}")
+        return cached_file if !cached_file.nil?
+        file = theme.files.where('name = ? and directory = ?', filename, directory).first
+        Rails.cache.write("File_#{directory}/#{filename}", file, :expires_in => ErpTechSvcs::Config.s3_cache_expires_in_minutes.minutes) if !file.nil?
+        return file
+      end
+
       def theme_javascript_include_tag(theme_id, *sources)
-        theme = controller.website.themes.find_by_theme_id(theme_id)
+        theme = get_theme(theme_id)
         return("could not find theme with the id #{theme_id}") unless theme
 
         options = sources.extract_options!.stringify_keys
@@ -40,14 +57,14 @@ module ActionView
       end
 
       def theme_stylesheet_path(theme, source)
-        theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
-        file = theme.files.where('name = ? and directory = ?', source, "#{theme.url}/stylesheets").first
+        theme = get_theme(theme) 
+        file = get_file(theme, source, "#{theme.url}/stylesheets")
         file.nil? ? '' : file.data.url
       end
       alias_method :theme_path_to_stylesheet, :theme_stylesheet_path
 
       def theme_stylesheet_link_tag(theme_id, *sources)
-        theme = controller.website.themes.find_by_theme_id(theme_id)
+        theme = get_theme(theme_id) 
         return("could not find theme with the id #{theme_id}") unless theme
         
         options = sources.extract_options!.stringify_keys
@@ -70,18 +87,18 @@ module ActionView
       end
 
       def theme_image_path(theme, source)
-        theme = controller.website.themes.find_by_theme_id(theme) unless theme.is_a?(Theme)
-        file = theme.files.where('name = ? and directory = ?', source, "#{theme.url}/images").first
+        theme = get_theme(theme)
+        file = get_file(theme, source, "#{theme.url}/images")
         file.nil? ? '' : file.data.url
       end
       alias_method :theme_path_to_image, :theme_image_path # aliased to avoid conflicts with an image_path named route
 
       def theme_image_tag(theme_id, source, options = {})
-        theme = controller.website.themes.find_by_theme_id(theme_id)
-        return("could not find theme with the id #{theme_id}") unless theme
+        #theme = get_theme(theme_id)
+        #return("could not find theme with the id #{theme_id}") unless theme
 
         options.symbolize_keys!
-        options[:src] = theme_path_to_image(theme, source)
+        options[:src] = theme_path_to_image(theme_id, source)
         options[:alt] ||= File.basename(options[:src], '.*').split('.').first.to_s.capitalize
 
         if size = options.delete(:size)
