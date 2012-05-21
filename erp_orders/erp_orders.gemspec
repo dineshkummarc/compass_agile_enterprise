@@ -18,9 +18,8 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   #compass dependencies
-  s.add_dependency "erp_app", "3.0.1"
-  s.add_dependency "erp_agreements", "3.0.1"
   s.add_dependency "erp_products", "3.0.1"
+  s.add_dependency "erp_txns_and_accts", "3.0.1"
 
   s.add_development_dependency "erp_dev_svcs", "3.0.1"
 end

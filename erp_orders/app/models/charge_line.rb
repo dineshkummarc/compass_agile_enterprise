@@ -3,10 +3,11 @@ class ChargeLine < ActiveRecord::Base
    belongs_to :charged_item, :polymorphic => true
    belongs_to :money
    has_many   :charge_line_payment_txns, :dependent => :destroy
+   has_many   :financial_txns, :through => :charge_line_payment_txns, :source => :financial_txn,
+                               :conditions => ["charge_line_payment_txns.payment_txn_type = ?", 'FinancialTxn']
    
    def payment_txns
-     #this is a stub for extensions
-     return []
+     self.financial_txns
    end
    
    def add_payment_txn(payment_txn)

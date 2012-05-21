@@ -3,6 +3,7 @@ require 'erp_base_erp_svcs'
 
 require 'paperclip'
 require 'delayed_job'
+require 'delayed_job_active_record'
 require 'sorcery'
 require 'pdfkit'
 require "erp_tech_svcs/version"

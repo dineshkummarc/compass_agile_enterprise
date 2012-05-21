@@ -6,8 +6,16 @@ ActiveRecord::Base.class_eval do
       #check for only option to get only attributes specified
       if options[:only]
         options[:only].each do |attribute|
-          attribute = attribute.to_sym
-          hash[attribute] = self.send(attribute)
+          if attribute.is_a?(Hash)
+            attribute.each do |k,v|
+              k = k.to_sym
+              v = v.to_sym
+              hash[v] = self.send(k)
+            end
+          else
+            attribute = attribute.to_sym
+            hash[attribute] = self.send(attribute)
+          end
         end
       else
         hash.merge!(self.attributes)

@@ -1,7 +1,6 @@
 class ProductInstance < ActiveRecord::Base
   acts_as_nested_set
   include ErpTechSvcs::Utils::DefaultNestedSetMethods
-  acts_as_priceable
   
   belongs_to :product_type	
   belongs_to :product_instance_status_type
